@@ -1,0 +1,32 @@
+{
+	"folders":
+	[
+		{
+			"path": "./"
+		}
+	],
+	"settings":
+    {
+        "sublimegdb_executables":
+        {
+        	"IOTest":
+            {
+        		"sublimegdb_workingdir": "/home/felipe/SINMEC/EFVLib/IOTest/source",
+                "workingdir": "/home/felipe/SINMEC_BUILD/EFVLib/build_sublime/bin/Debug",
+            	"commandline": "gdb --interpreter=mi ./IOTest"
+            },
+            "ScriptSystemTest":
+            {
+        		"sublimegdb_workingdir": "/home/felipe/SINMEC/EFVLib/ScriptSystemTest/source",
+                "workingdir": "/home/felipe/SINMEC_BUILD/EFVLib/build_sublime/bin/Debug",
+            	"commandline": "gdb --interpreter=mi ./ScriptSystemTest"
+            },
+            "BoostInterfaceTest":
+            {
+                "sublimegdb_workingdir": "/home/felipe/SINMEC/EFVLib/BoostInterfaceTest/source",
+                "workingdir": "/home/felipe/SINMEC_BUILD/EFVLib/build_sublime/bin/Debug",
+                "commandline": "gdb --interpreter=mi ./BoostInterfaceTest"
+            }
+        }
+    }
+}
