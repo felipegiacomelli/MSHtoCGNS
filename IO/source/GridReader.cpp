@@ -10,6 +10,7 @@ GridReader::GridReader(std::string&& filePath) {
 	this->filePath = filePath;
 	this->file = std::ifstream(this->filePath.c_str());
 	this->buffer = new char[800];
+	this->readPhysicalEntities();
 	this->readNodes();
 	this->readElements();
 }
@@ -18,15 +19,48 @@ void GridReader::readPhysicalEntities() {
 	int numberOfPhysicalEntities;
 	this->file.seekg(0, std::ios::beg); 
 	while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof()) this->file >> this->buffer;
-	if (this->file.eof()) throw std::runtime_error("There is no Physical Entities data in the grid file\n");
+	if (this->file.eof()) throw std::runtime_error("There is no Physical Entities data in the grid file");
 	this->file >> numberOfPhysicalEntities;
+	std::vector<int> entitiesTypes;			int type;
+	std::vector<int> entitiesNumbers;		int number;
+	std::vector<std::string> entitiesNames; std::string name;
+	for (int i = 0; i < numberOfPhysicalEntities; i++) {
+		file >> type >> number >> name;
+		entitiesTypes.push_back(type);
+		entitiesNumbers.push_back(number);
+		entitiesNames.push_back(name);
+	}
+
+	print(entitiesTypes  , "types"  ); std::cout << std::endl;
+	print(entitiesNumbers, "numbers"); std::cout << std::endl;
+	print(entitiesNames  , "names"  ); std::cout << std::endl;
+	
+	std::vector<int> boundaryNumbers;
+	std::vector<int> geometryNumbers;
+	for (int i = 0; i < numberOfPhysicalEntities; i++) {
+		if (entitiesTypes[i] == 1) {
+			boundaryNumbers.push_back(entitiesNumbers[i]);
+		}
+		else if (entitiesTypes[i] == 2) {
+			geometryNumbers.push_back(entitiesTypes[i]);
+		}
+		else {
+			throw std::runtime_error("Non supported physical entity found");
+		}
+	}
+	if (geometryNumbers.size() != 1) throw std::runtime_error("One and only one geometry supported");
+
+	this->gridData.boundaries.resize(boundaryNumbers.size());
+	for (int i = 0; i < boundaryNumbers.size(); i++) {
+		this->gridData.boundaries[i].name = entitiesNames[boundaryNumbers[i]-1];
+	}
 }
 
 void GridReader::readNodes() {
 	int numberOfNodes, temporary;
 	this->file.seekg(0, std::ios::beg); 
 	while (strcmp(this->buffer, "$Nodes") && !this->file.eof()) this->file >> this->buffer;
-	if (this->file.eof()) throw std::runtime_error("There is no Node data in the grid file\n");
+	if (this->file.eof()) throw std::runtime_error("There is no Node data in the grid file");
 	this->file >> numberOfNodes;
 	this->gridData.coordinates.resize(numberOfNodes, std::vector<double>(3));
 	for (int i = 0; i < numberOfNodes; i++) {
@@ -68,37 +102,35 @@ void GridReader::readElements() {
 	for (int i = 0; i < elements.size(); i++) {
 		if (elements[i][0] == 1) {
 			lineIndices.push_back(i);
-			continue;
 		}
-		if (elements[i][0] == 2) {
+		else if (elements[i][0] == 2) {
 			triangleIndices.push_back(i);
-			continue;
 		}
-		if (elements[i][0] == 3) {
+		else if (elements[i][0] == 3) {
 			quadrangleIndices.push_back(i);
-			continue;
 		} 
-		if (elements[i][0] == 4) {
+		else if (elements[i][0] == 4) {
 			tetrahedraIndices.push_back(i);
-			continue;
 		} 
-		if (elements[i][0] == 5) {
+		else if (elements[i][0] == 5) {
 			hexahedraIndices.push_back(i);
-			continue;
 		}
-		if (elements[i][0] == 7) {
+		else if (elements[i][0] == 7) {
 			pyramidsIndices.push_back(i);
-			continue;
+		}
+		else {
+			throw std::runtime_error("Non supported element found");
 		}
 	}
-	print(lineIndices, "lineIndices"); std::cout << std::endl;
-	print(triangleIndices, "triangleIndices"); std::cout << std::endl;
+	//print(lineIndices, "lineIndices"); std::cout << std::endl;
+	//print(triangleIndices, "triangleIndices"); std::cout << std::endl;
 	//print(elements, "elements"); std::cout << std::endl;
 }
 
 
 GridReader::~GridReader() {
 	//print(this->gridData.coordinates, "coordinates"); std::cout << std::endl;
+	printGridData(this->gridData);
 	delete this->buffer;
 }
 

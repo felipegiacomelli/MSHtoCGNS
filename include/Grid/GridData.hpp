@@ -8,9 +8,9 @@
 struct BoundaryGridData {
 	friend class boost::serialization::access;
 
-	std::vector<std::vector<int>>	lineConnectivity;			
-	std::vector<std::vector<int>>	triangleConnectivity;		
-	std::vector<std::vector<int>>	quadrangleConnectivity;		
+	std::vector<std::vector<int>> lineConnectivity;			
+	std::vector<std::vector<int>> triangleConnectivity;		
+	std::vector<std::vector<int>> quadrangleConnectivity;		
 	std::string	name;	
 
 	private:
