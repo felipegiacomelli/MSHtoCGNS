@@ -16,28 +16,29 @@ GridReader::GridReader(std::string&& filePath) {
 }
 
 void GridReader::readPhysicalEntities() {
-	int numberOfPhysicalEntities;
 	this->file.seekg(0, std::ios::beg); 
 	while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof()) this->file >> this->buffer;
 	if (this->file.eof()) throw std::runtime_error("There is no Physical Entities data in the grid file");
-	this->file >> numberOfPhysicalEntities;
+	this->file >> this->numberOfPhysicalEntities;
 	std::vector<int> entitiesTypes;			int type;
 	std::vector<int> entitiesNumbers;		int number;
 	std::vector<std::string> entitiesNames; std::string name;
-	for (int i = 0; i < numberOfPhysicalEntities; i++) {
+	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
 		file >> type >> number >> name;
-		entitiesTypes.push_back(type);
+		number--;
+		name.erase(name.begin()); name.erase(name.end()-1);
+ 		entitiesTypes.push_back(type);
 		entitiesNumbers.push_back(number);
 		entitiesNames.push_back(name);
 	}
 
-	print(entitiesTypes  , "types"  ); std::cout << std::endl;
-	print(entitiesNumbers, "numbers"); std::cout << std::endl;
-	print(entitiesNames  , "names"  ); std::cout << std::endl;
+	//print(entitiesTypes  , "types"  ); std::cout << std::endl;
+	//print(entitiesNumbers, "numbers"); std::cout << std::endl;
+	//print(entitiesNames  , "names"  ); std::cout << std::endl;
 	
 	std::vector<int> boundaryNumbers;
 	std::vector<int> geometryNumbers;
-	for (int i = 0; i < numberOfPhysicalEntities; i++) {
+	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
 		if (entitiesTypes[i] == 1) {
 			boundaryNumbers.push_back(entitiesNumbers[i]);
 		}
@@ -93,44 +94,20 @@ void GridReader::readElements() {
 		i->erase(i->begin());		
 	}
 
-	std::vector<int> lineIndices;
-	std::vector<int> triangleIndices;
-	std::vector<int> quadrangleIndices;
-	std::vector<int> tetrahedraIndices;
-	std::vector<int> hexahedraIndices;
-	std::vector<int> pyramidsIndices;
+	std::vector<std::vector<int>> physicalEntitiesElements(this->numberOfPhysicalEntities, std::vector<int>());
 	for (int i = 0; i < elements.size(); i++) {
-		if (elements[i][0] == 1) {
-			lineIndices.push_back(i);
-		}
-		else if (elements[i][0] == 2) {
-			triangleIndices.push_back(i);
-		}
-		else if (elements[i][0] == 3) {
-			quadrangleIndices.push_back(i);
-		} 
-		else if (elements[i][0] == 4) {
-			tetrahedraIndices.push_back(i);
-		} 
-		else if (elements[i][0] == 5) {
-			hexahedraIndices.push_back(i);
-		}
-		else if (elements[i][0] == 7) {
-			pyramidsIndices.push_back(i);
-		}
-		else {
-			throw std::runtime_error("Non supported element found");
-		}
+		physicalEntitiesElements[elements[i][2]-1].push_back(i);
 	}
 	//print(lineIndices, "lineIndices"); std::cout << std::endl;
 	//print(triangleIndices, "triangleIndices"); std::cout << std::endl;
-	//print(elements, "elements"); std::cout << std::endl;
+	print(elements, "elements"); std::cout << std::endl;
+	print(physicalEntitiesElements, "physicalEntitiesElements"); std::cout << std::endl;
 }
 
 
 GridReader::~GridReader() {
 	//print(this->gridData.coordinates, "coordinates"); std::cout << std::endl;
-	printGridData(this->gridData);
+	//printGridData(this->gridData);
 	delete this->buffer;
 }
 

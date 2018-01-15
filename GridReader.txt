@@ -1,0 +1,29 @@
+	std::vector<int> lineIndices;
+	std::vector<int> triangleIndices;
+	std::vector<int> quadrangleIndices;
+	std::vector<int> tetrahedraIndices;
+	std::vector<int> hexahedraIndices;
+	std::vector<int> pyramidsIndices;
+	for (int i = 0; i < elements.size(); i++) {
+		if (elements[i][0] == 1) {
+			lineIndices.push_back(i);
+		}
+		else if (elements[i][0] == 2) {
+			triangleIndices.push_back(i);
+		}
+		else if (elements[i][0] == 3) {
+			quadrangleIndices.push_back(i);
+		} 
+		else if (elements[i][0] == 4) {
+			tetrahedraIndices.push_back(i);
+		} 
+		else if (elements[i][0] == 5) {
+			hexahedraIndices.push_back(i);
+		}
+		else if (elements[i][0] == 7) {
+			pyramidsIndices.push_back(i);
+		}
+		else {
+			throw std::runtime_error("Non supported element found");
+		}
+	}

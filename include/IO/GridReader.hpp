@@ -22,6 +22,7 @@ class GridReader {
 		std::string filePath;
 		std::ifstream file;
 		char* buffer;
+		int numberOfPhysicalEntities;
 		GridData gridData;
 };
 
