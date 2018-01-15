@@ -1,14 +1,14 @@
-#include <IO/GridReader2D.hpp>
+#include <IO/GridReader3D.hpp>
 
-GridReader2D::GridReader2D(std::string&& filePath) : GridReader(std::move(filePath)) {
-	this->gridData.dimension = 2;
+GridReader3D::GridReader3D(std::string&& filePath) : GridReader(std::move(filePath)) {
+	this->gridData.dimension = 3;
 	this->readNodes();
 	this->readPhysicalEntities();
 	this->readElements();
 	this->addElements();
 }
 
-void GridReader2D::readPhysicalEntities() {
+void GridReader3D::readPhysicalEntities() {
 	this->file.seekg(0, std::ios::beg); 
 	while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof()) this->file >> this->buffer;
 	if (this->file.eof()) throw std::runtime_error("There is no Physical Entities data in the grid file");
@@ -27,10 +27,10 @@ void GridReader2D::readPhysicalEntities() {
 
 	std::vector<int> geometryNumbers;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
-		if (entitiesTypes[i] == 1) {
+		if (entitiesTypes[i] == 2) {
 			this->boundaryNumbers.push_back(entitiesNumbers[i]);
 		}
-		else if (entitiesTypes[i] == 2) {
+		else if (entitiesTypes[i] == 3) {
 			geometryNumbers.push_back(entitiesTypes[i]);
 		}
 		else {
@@ -46,7 +46,7 @@ void GridReader2D::readPhysicalEntities() {
 	}
 }
 
-void GridReader2D::addElements() {
+void GridReader3D::addElements() {
 	for (int i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
 		for (int j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
 			int index = this->physicalEntitiesElementIndices[i][j];
@@ -73,8 +73,9 @@ void GridReader2D::addElements() {
 				this->gridData.quadrangleConnectivity.push_back(quadrangle);
 			}
 			else {
-				throw std::runtime_error("Non supported element found");
+				throw std::runtime_error("Boundary element must be a line");
 			}
 		}
+	
 	}
 }

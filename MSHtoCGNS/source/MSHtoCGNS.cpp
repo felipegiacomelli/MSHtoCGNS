@@ -5,7 +5,7 @@
 void printGridData(GridData);
 
 int main() {
-	GridReader2D reader2D("/home/felipe/Downloads/mesh.msh");
+	GridReader2D reader2D("/home/felipe/Felipe/gmsh/square/45n_88e/square.msh");
 	GridData gridData = reader2D.getGridData();
 	printGridData(gridData);
 	return 0;

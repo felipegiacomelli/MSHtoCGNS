@@ -1,5 +1,5 @@
-#ifndef GRID_READER_2D_HPP
-#define GRID_READER_2D_HPP
+#ifndef GRID_READER_3D_HPP
+#define GRID_READER_3D_HPP
 
 #include <Grid/GridData.hpp>
 #include <Utilities/Vector.hpp>
@@ -8,10 +8,10 @@
 #include <string>
 #include <fstream>
 
-class GridReader2D : public GridReader {
+class GridReader3D : public GridReader {
 	public:
-		GridReader2D() = default;
-		GridReader2D(std::string&&);
+		GridReader3D() = default;
+		GridReader3D(std::string&&);
 
 	private:
 		void readPhysicalEntities() override;

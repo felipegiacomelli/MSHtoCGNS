@@ -18,8 +18,8 @@ class GridReader {
 
 	protected:
 		void readNodes();
+		void readElements();
 		virtual void readPhysicalEntities() = 0;
-		virtual void readElements() = 0;
 		virtual void addElements() = 0;
 
 		std::string filePath;
