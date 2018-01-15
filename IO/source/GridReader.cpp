@@ -10,9 +10,11 @@ GridReader::GridReader(std::string&& filePath) {
 	this->filePath = filePath;
 	this->file = std::ifstream(this->filePath.c_str());
 	this->buffer = new char[800];
+	this->gridData.dimension = 2;
 	this->readPhysicalEntities();
 	this->readNodes();
 	this->readElements();
+	this->addElements();
 }
 
 void GridReader::readPhysicalEntities() {
@@ -32,15 +34,10 @@ void GridReader::readPhysicalEntities() {
 		entitiesNames.push_back(name);
 	}
 
-	//print(entitiesTypes  , "types"  ); std::cout << std::endl;
-	//print(entitiesNumbers, "numbers"); std::cout << std::endl;
-	//print(entitiesNames  , "names"  ); std::cout << std::endl;
-	
-	std::vector<int> boundaryNumbers;
 	std::vector<int> geometryNumbers;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
 		if (entitiesTypes[i] == 1) {
-			boundaryNumbers.push_back(entitiesNumbers[i]);
+			this->boundaryNumbers.push_back(entitiesNumbers[i]);
 		}
 		else if (entitiesTypes[i] == 2) {
 			geometryNumbers.push_back(entitiesTypes[i]);
@@ -50,10 +47,11 @@ void GridReader::readPhysicalEntities() {
 		}
 	}
 	if (geometryNumbers.size() != 1) throw std::runtime_error("One and only one geometry supported");
+	this->geometryNumber = geometryNumbers[0];
 
 	this->gridData.boundaries.resize(boundaryNumbers.size());
 	for (int i = 0; i < boundaryNumbers.size(); i++) {
-		this->gridData.boundaries[i].name = entitiesNames[boundaryNumbers[i]-1];
+		this->gridData.boundaries[i].name = entitiesNames[boundaryNumbers[i]];
 	}
 }
 
@@ -71,7 +69,6 @@ void GridReader::readNodes() {
 
 void GridReader::readElements() {
 	int numberOfElements;
-	std::vector<std::vector<int>> elements;
 	this->file.seekg(0, std::ios::beg);
 	while (strcmp(this->buffer, "$Elements") && !this->file.eof()) this->file >> this->buffer;
 	if (this->file.eof()) { 
@@ -86,28 +83,56 @@ void GridReader::readElements() {
 			std::vector<int> element;
 			int value;
 			while (stream >> value) element.push_back(value);
-			elements.push_back(element);
+			this->elements.push_back(element);
 		}
 	}
-	elements.erase(elements.begin());
-	for (auto i = elements.begin(); i < elements.end(); i++) {
+	this->elements.erase(this->elements.begin());
+	for (auto i = this->elements.begin(); i < this->elements.end(); i++) {
 		i->erase(i->begin());		
 	}
 
-	std::vector<std::vector<int>> physicalEntitiesElements(this->numberOfPhysicalEntities, std::vector<int>());
-	for (int i = 0; i < elements.size(); i++) {
-		physicalEntitiesElements[elements[i][2]-1].push_back(i);
+	this->physicalEntitiesElementIndices.resize(this->numberOfPhysicalEntities, std::vector<int>());
+	for (int i = 0; i < this->elements.size(); i++) {
+		this->physicalEntitiesElementIndices[this->elements[i][2]-1].push_back(i);
 	}
-	//print(lineIndices, "lineIndices"); std::cout << std::endl;
-	//print(triangleIndices, "triangleIndices"); std::cout << std::endl;
-	print(elements, "elements"); std::cout << std::endl;
-	print(physicalEntitiesElements, "physicalEntitiesElements"); std::cout << std::endl;
 }
 
+void GridReader::addElements() {
+	for (int i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
+		for (int j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
+			int index = this->physicalEntitiesElementIndices[i][j];
+			int type  = this->elements[index][0];
+			if (type == 1) {
+				std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
+				std::vector<int>::const_iterator last  = this->elements[index].cend();
+				std::vector<int> line(first, last);
+				this->gridData.boundaries[i].lineConnectivity.push_back(line);
+			}
+			else if (type == 2) {
+				std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
+				std::vector<int>::const_iterator last  = this->elements[index].cend();
+				std::vector<int> triangle(first, last);
+				this->gridData.triangleConnectivity.push_back(triangle);
+			}
+			else if (type == 3) {
+				std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
+				std::vector<int>::const_iterator last  = this->elements[index].cend();
+				std::vector<int> quadrangle(first, last);
+				this->gridData.quadrangleConnectivity.push_back(quadrangle);
+			}
+			else {
+				throw std::runtime_error("Boundary element must be a line");
+			}
+		}
+	
+	}
+}
+
+GridData GridReader::getGridData() const {
+	return this->gridData;
+}
 
 GridReader::~GridReader() {
-	//print(this->gridData.coordinates, "coordinates"); std::cout << std::endl;
-	//printGridData(this->gridData);
 	delete this->buffer;
 }
 

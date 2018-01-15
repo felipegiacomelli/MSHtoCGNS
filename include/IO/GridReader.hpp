@@ -12,17 +12,22 @@ class GridReader {
 		GridReader() = default;
 		GridReader(std::string&&);
 
+		GridData getGridData() const;
+
 		~GridReader();
 
 	private:
 		void readPhysicalEntities();
 		void readNodes();
 		void readElements();
+		void addElements();
 
 		std::string filePath;
 		std::ifstream file;
 		char* buffer;
-		int numberOfPhysicalEntities;
+		int numberOfPhysicalEntities, geometryNumber;
+		std::vector<int> boundaryNumbers;
+		std::vector<std::vector<int>> elements, physicalEntitiesElementIndices;
 		GridData gridData;
 };
 
@@ -41,7 +46,7 @@ void printGridData(GridData gridData) {
 		if (gridData.dimension == 2) {
 			if (gridData.triangleConnectivity.size() > 0) {
 				std::cout << std::endl << "\tTriangle connectivity - " << gridData.triangleConnectivity.size() << std::endl;
-				//print(gridData.triangleConnectivity);
+				// print(gridData.triangleConnectivity, "");
 			}
 			if (gridData.quadrangleConnectivity.size() > 0) {
 				std::cout << std::endl << "\tQuadrangle connectivity - " << gridData.quadrangleConnectivity.size() << std::endl;
@@ -71,7 +76,8 @@ void printGridData(GridData gridData) {
 		if (gridData.dimension == 2) {
 			for (auto i = gridData.boundaries.cbegin(); i != gridData.boundaries.cend(); i ++) {
 				std::cout << std::endl << "\t" << i->name << std::endl;
-				//print(i->lineConnectivity);
+				if (i->lineConnectivity.size() > 0) std::cout << std::endl << "\t\tLine connectivity - " << i->lineConnectivity.size() << std::endl;
+				// print(i->lineConnectivity, "lineConnectivity");
 			}
 		}
 		else {
@@ -96,6 +102,6 @@ void printGridData(GridData gridData) {
 			std::cout << "\t" << i->name << std::endl;
 			std::cout << "\t" << i->elementsOnRegion.size() << std::endl;
 		}			
-	}
+}
 
 #endif
