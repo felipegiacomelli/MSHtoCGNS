@@ -26,7 +26,7 @@ int main() {
 		std::cout << std::endl << "\tGrid path: " << line;			
 		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl << std::endl;			
 		
-		std::ofstream output("./Grid2D.txt");
+		std::ofstream output("./2DGrid.txt");
 		outputGridData(gridData, output);
 	}
 
@@ -45,7 +45,7 @@ int main() {
 		std::cout << std::endl << "\tGrid path: " << line;			
 		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl << std::endl;			
 		
-		std::ofstream output("./Grid3D.txt");
+		std::ofstream output("./3DGrid.txt");
 		outputGridData(gridData, output);
 	}
 	return 0;

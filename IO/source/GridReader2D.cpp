@@ -51,26 +51,19 @@ void GridReader2D::addElements() {
 		for (unsigned int j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
 			int index = this->physicalEntitiesElementIndices[i][j];
 			int type  = this->elements[index][0];
+			std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
+			std::vector<int>::const_iterator last  = this->elements[index].cend();
+			std::vector<int> element(first, last); 
+			for (unsigned int i = 0; i < element.size(); i++) element[i]--;
+			
 			if (type == 1) {
-				std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
-				std::vector<int>::const_iterator last  = this->elements[index].cend();
-				std::vector<int> line(first, last); 
-				for (unsigned int i = 0; i < line.size(); i++) line[i]--;
-				this->gridData.boundaries[i].lineConnectivity.emplace_back(std::move(line));
+				this->gridData.boundaries[i].lineConnectivity.emplace_back(std::move(element));
 			}
 			else if (type == 2) {
-				std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
-				std::vector<int>::const_iterator last  = this->elements[index].cend();
-				std::vector<int> triangle(first, last);
-				for (unsigned int i = 0; i < triangle.size(); i++) triangle[i]--;
-				this->gridData.triangleConnectivity.emplace_back(std::move(triangle));
+				this->gridData.triangleConnectivity.emplace_back(std::move(element));
 			}
 			else if (type == 3) {
-				std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
-				std::vector<int>::const_iterator last  = this->elements[index].cend();
-				std::vector<int> quadrangle(first, last);
-				for (unsigned int i = 0; i < quadrangle.size(); i++) quadrangle[i]--;
-				this->gridData.quadrangleConnectivity.emplace_back(std::move(quadrangle));
+				this->gridData.quadrangleConnectivity.emplace_back(std::move(element));
 			}
 			else {
 				throw std::runtime_error("Non supported element found");
