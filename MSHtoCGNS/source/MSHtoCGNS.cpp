@@ -5,8 +5,10 @@
 #include <IO/GridReader3D.hpp>
 
 #include <chrono>
+#include <fstream>
 
 void printGridData(GridData);
+void outputGridData(GridData, std::ofstream&);
 
 int main() {
 	{
@@ -23,7 +25,9 @@ int main() {
 		
 		std::cout << std::endl << "\tGrid path: " << line;			
 		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl << std::endl;			
-		printGridData(gridData);
+		
+		std::ofstream output("./Grid2D.txt");
+		outputGridData(gridData, output);
 	}
 
 	{
@@ -40,7 +44,9 @@ int main() {
 		
 		std::cout << std::endl << "\tGrid path: " << line;			
 		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl << std::endl;			
-		printGridData(gridData);
+		
+		std::ofstream output("./Grid3D.txt");
+		outputGridData(gridData, output);
 	}
 	return 0;
 }
@@ -117,3 +123,73 @@ void printGridData(GridData gridData) {
 			std::cout << "\t" << i->elementsOnRegion.size() << std::endl;
 		}			
 }
+
+void outputGridData(GridData gridData, std::ofstream& file) {
+		int numberOfNodes = gridData.coordinates.size();
+		int numberOfElements = gridData.triangleConnectivity.size() + gridData.triangleConnectivity.size() + gridData.quadrangleConnectivity.size() + gridData.tetrahedronConnectivity.size() + gridData.hexahedronConnectivity.size() + gridData.pyramidConnectivity.size() + gridData.prismConnectivity.size(); 
+		
+		file << std::endl;
+		file << "\tGridData ###"        << std::endl;
+		file << "\tNumber of nodes:   " << std::setw(5) << std::right << numberOfNodes    << std::endl;
+		file << "\tNumber of element: " << std::setw(5) << std::right << numberOfElements << std::endl;
+	
+		file << std::endl << "\tCoordinates" << std::endl;
+		output(gridData.coordinates, file);
+		
+		if (gridData.dimension == 2) {
+			if (gridData.triangleConnectivity.size() > 0) {
+				file << std::endl << "\tTriangle connectivity" << std::endl;
+				output(gridData.triangleConnectivity, file);
+			}
+			if (gridData.quadrangleConnectivity.size() > 0) {
+				file << std::endl << "\tQuadrangle connectivity" << std::endl;
+				output(gridData.quadrangleConnectivity, file);				
+			}
+		}
+		else {
+			if (gridData.tetrahedronConnectivity.size() > 0) {
+				file << std::endl << "\tTetrahedron connectivity" << std::endl;
+				output(gridData.tetrahedronConnectivity, file);
+			}
+			if (gridData.hexahedronConnectivity.size() > 0) {
+				file << std::endl << "\tHexahedron connectivity" << std::endl;
+				output(gridData.hexahedronConnectivity, file);				
+			}
+			if (gridData.pyramidConnectivity.size() > 0) {
+				file << std::endl << "\tPyramid connectivity" << std::endl;
+				output(gridData.pyramidConnectivity, file);
+			}
+			if (gridData.prismConnectivity.size() > 0) {
+				file << std::endl << "\tPrism connectivity" << std::endl;
+				output(gridData.prismConnectivity, file);				
+			}				
+		}
+	
+		file << std::endl << "\tBoundaries ###" << std::endl;
+		if (gridData.dimension == 2) {
+			for (auto i = gridData.boundaries.cbegin(); i != gridData.boundaries.cend(); i ++) {
+				file << std::endl << "\t" << i->name << std::endl;
+				output(i->lineConnectivity, file);
+			}
+		}
+		else {
+			for (auto i = gridData.boundaries.cbegin(); i != gridData.boundaries.cend(); i ++) {
+				file << std::endl << "\t" << i->name << std::endl;
+				output(i->triangleConnectivity, file);
+				file << std::endl;
+				output(i->quadrangleConnectivity, file);
+			}
+		}	
+	
+		file << std::endl << "\tWells ###" << std::endl;
+		for (auto i = gridData.wells.cbegin(); i != gridData.wells.cend(); i ++) {
+			file << "\t" << i->name << std::endl;
+			file << "\t" << i->wellNode << std::endl;
+		}	
+		
+		file << std::endl << "\tRegions ###" << std::endl;
+		for (auto i = gridData.regions.cbegin(); i != gridData.regions.cend(); i ++) {
+			file << "\t" << i->name << std::endl;
+			file << "\t" << i->elementsOnRegion.size() << std::endl;
+		}			
+}	

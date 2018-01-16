@@ -31,7 +31,10 @@ template<typename T>
 void print(const std::vector<std::vector<T>>&, std::string&&);
 
 template<typename T>
-void output(const std::vector<T>&, std::string&&);
+void output(const std::vector<T>&, std::ofstream&);
+
+template<typename T>
+void output(const std::vector<std::vector<T>>&, std::ofstream&);
 
 #include "Vector.tpp"
 

@@ -95,12 +95,20 @@ void print(const std::vector<std::vector<T>>& a, std::string&& message) {
 }
 
 template<typename T>
-void output(const std::vector<T>& a, std::string&& path) {
-	std::ofstream file;
-	file.open(std::string(path).c_str());
-	for (auto i = a.cbegin(); i != a.cend()-1; i++) {
-		file << *i << ", ";
+void output(const std::vector<T>& a, std::ofstream& file) {
+	file << std::fixed << std::setprecision(3);
+	for (auto i = a.cbegin(); i != a.cend(); i ++) {
+		file << "\t" << std::setw(6) << std::right << *i;
 	}
-	file << *(a.end()-1);
-	file.close();
+}
+
+template<typename T>
+void output(const std::vector<std::vector<T>>& a, std::ofstream& file) {
+	file << std::fixed << std::setprecision(3) << std::right;
+	for (auto i = a.cbegin(); i != a.cend(); i ++) {
+		for (auto j = i->cbegin(); j != i->cend(); j ++) {
+			file << "\t" << std::setw(6) << std::right << *j;
+		}
+		file << std::endl;
+	}
 }
