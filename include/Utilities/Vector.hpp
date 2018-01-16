@@ -6,22 +6,14 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <cgnslib.h>
 
 // Conversion
-template<typename T>
-T* determine_array_1d(const std::vector<T>&);
-
-template<typename T>
-T* determine_array_1d(const std::vector<std::vector<T>>&);
-
-template<typename T>
-T** determine_array_2d(const std::vector<std::vector<T>>&);
-
-template<typename T>
-std::vector<T> make_1d(const std::vector<std::vector<T>>&);
+template<typename T, typename U>
+T* determine_array_1d(const std::vector<U>&);
 
 template<typename T, typename U>
-std::vector<std::vector<T>> make_2d(const std::vector<std::vector<T>>&, const U&, const U&);
+T* determine_array_1d(const std::vector<std::vector<U>>&);
 
 // Output
 template<typename T>

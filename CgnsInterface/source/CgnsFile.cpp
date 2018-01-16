@@ -1,6 +1,6 @@
 #include <CgnsInterface/CgnsFile.hpp>
 
-CgnsFile::CgnsFile(const Grid& grid, const std::string& folderPath) : grid(grid), folderPath(folderPath), baseName("Base"), zoneName("Zone"), physicalDimension(3) {
+CgnsFile::CgnsFile(const GridData& gridData, const std::string& folderPath) : gridData(gridData), folderPath(folderPath), baseName("Base"), zoneName("Zone"), physicalDimension(3) {
 	this->zoneSizes.resize(3);
 }
 
@@ -9,7 +9,7 @@ void CgnsFile::initialize() {
 	this->writeZone();
 	this->writeCoordinates();
 	this->writeSections();
-	this->writeBoundaryConditions();
+	//this->writeBoundaryConditions();
 }
 
 void CgnsFile::writePermanentField(const std::vector<double>& field, const std::string& fieldName) {
@@ -34,7 +34,7 @@ void CgnsFile::writeTimeSteps(const std::vector<double>& timeSteps) {
 }
 
 void CgnsFile::writeTransientField(const std::vector<std::vector<double>>& field, const std::string& fieldName) {
-	if (field.size() != this->numberOfTimeSteps) throw std::runtime_error("field and timeSteps sizes mismatch.");
+	if (static_cast<cgsize_t>(field.size()) != this->numberOfTimeSteps) throw std::runtime_error("field and timeSteps sizes mismatch.");
 	
 	this->fieldsIndices.emplace_back(0);
 	int fieldIndex = this->fieldsIndices.size() - 1;	

@@ -15,7 +15,7 @@
 class CgnsFile2D : public CgnsFile {
 	public:
 		CgnsFile2D() = default;
-		CgnsFile2D(const Grid&, const std::string&);
+		CgnsFile2D(const GridData&, const std::string&);
 
 		~CgnsFile2D();
 
@@ -24,7 +24,7 @@ class CgnsFile2D : public CgnsFile {
 		void writeZone() override;
 		void writeCoordinates() override;
 		void writeSections() override;
-		void writeBoundaryConditions() override;
+		//void writeBoundaryConditions() override;
 };
 
 #endif

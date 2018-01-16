@@ -14,7 +14,7 @@
 class CgnsFile {
 	public:
 		CgnsFile() = default;
-		CgnsFile(const Grid&, const std::string&);
+		CgnsFile(const GridData&, const std::string&);
 
 		void initialize();
 		void writePermanentField(const std::vector<double>&, const std::string&);
@@ -28,9 +28,9 @@ class CgnsFile {
 		virtual void writeZone() = 0;
 		virtual void writeCoordinates() = 0;
 		virtual void writeSections() = 0;
-		virtual void writeBoundaryConditions() = 0;
+		//virtual void writeBoundaryConditions() = 0;
 
-		Grid grid;
+		GridData gridData;
 		std::string folderPath, baseName, zoneName, fileName;
 		cgsize_t cellDimension, physicalDimension, numberOfNodes, numberOfElements, numberOfTimeSteps;
 		std::vector<cgsize_t> zoneSizes;

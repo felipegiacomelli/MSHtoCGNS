@@ -1,70 +1,30 @@
 /*
 // Conversion
 */
-template<typename T>
-T* determine_array_1d(const std::vector<T>& a) {
+template<typename T, typename U>
+T* determine_array_1d(const std::vector<U>& a) {
 	T* b = new T[a.size()];
 
-	for (auto i = 0; i < a.size(); i++) {
-		b[i] = a[i];
+	for (unsigned int i = 0; i < a.size(); i++) {
+		b[i] = static_cast<T>(a[i]);
 	}
 
-	return b;
-}
-
-template<typename T>
-T* determine_array_1d(const std::vector<std::vector<T>>& a) {
-	auto rows = a.size();
-	auto columns = a[0].size();
-
-	T* b = new T[rows*columns];
-
-	for (auto i = 0; i < rows; i++) {
-		for (auto j = 0; j < columns; j++) {
-			b[i*columns + j] = a[i][j];
-		}
-	}
-
-	return b;
-}
-
-template<typename T>
-T** determine_array_2d(const std::vector<std::vector<T>>& a) {
-	T** b = new T*[a.size()];
-	for (auto i = 0; i < a.size(); i++) {
-		b[i] = new T[a[0].size()];
-	}
-
-	for (auto i = 0; i < a.size(); i++) {
-		for (auto j = 0; j < a[0].size(); j++) {
-			b[i][j] = a[i][j];
-		}
-	}
-
-	return b;
-}
-
-template<typename T>
-std::vector<T> make_1d(const std::vector<std::vector<T>>& a) {
-	auto rows = a.size(); 
-	auto columns = a[0].size();
-	std::vector<T> b(rows*columns);
-	for (auto i = 0; i < rows; i++) {
-		for (auto j = 0; j < columns; j++) {
-			b[i*columns + j] = a[i][j];
-		}
-	}	
 	return b;
 }
 
 template<typename T, typename U>
-std::vector<std::vector<T>> make_2d(const std::vector<T>& a, const U& rows, const U& columns) {
-	std::vector< std::vector<T> > b(rows, std::vector<T>(columns));
-	for (auto i = 0; i < rows; i++) {
-		for (auto j = 0; j < columns; j++) {
-			b[i][j] = a[i*columns + j];
+T* determine_array_1d(const std::vector<std::vector<U>>& a) {
+	unsigned int rows = a.size();
+	unsigned int columns = a[0].size();
+
+	T* b = new T[rows*columns];
+
+	for (unsigned int i = 0; i < rows; i++) {
+		for (unsigned int j = 0; j < columns; j++) {
+			b[i*columns + j] = static_cast<T>(a[i][j]);
 		}
-	}	
+	}
+
 	return b;
 }
 
