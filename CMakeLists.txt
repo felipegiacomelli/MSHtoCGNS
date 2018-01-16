@@ -109,6 +109,7 @@ endmacro ()
 add_subdirectory (BoostInterface)
 add_subdirectory (BoostInterfaceTest)
 add_subdirectory (IO)
+add_subdirectory (CgnsInterface)
 add_subdirectory (MSHtoCGNS) 
 ##################################################################
 
