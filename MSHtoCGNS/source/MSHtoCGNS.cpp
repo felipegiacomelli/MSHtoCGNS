@@ -1,11 +1,17 @@
 #include <BoostInterface/Filesystem.hpp>
 #include <Grid/GridData.hpp>
+#include <IO/GridReader.hpp>
 #include <IO/GridReader2D.hpp>
 
 void printGridData(GridData);
 
 int main() {
-	GridReader2D reader2D("/home/felipe/Felipe/gmsh/square/45n_88e/square.msh");
+	std::ifstream file("../../../Script.txt");
+	std::string line;
+	std::getline(file, line);
+	std::istringstream stream(line);
+
+	GridReader2D reader2D(std::move(line));
 	GridData gridData = reader2D.getGridData();
 	printGridData(gridData);
 	return 0;

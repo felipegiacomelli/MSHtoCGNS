@@ -33,7 +33,7 @@ if (UNIX)
 		set (LIBRARY_TYPE_OUTPUT_DIRECTORY "Static")
     endif ()
 
-	set (CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} "-g -DDEBUG" CACHE STRING "Setting default compiler flags.")
+	set (CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} "-g -DDEBUG -Wall" CACHE STRING "Setting default compiler flags.")
 	set (CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3 -DNDEBUG -Wno-expansion-to-defined -Wno-deprecated-declarations -Wunused-variable" CACHE STRING "Setting default compiler flags")
 
 	set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${BUILD_TYPE_OUTPUT_DIRECTORY})
@@ -60,9 +60,6 @@ endif ()
 ##################################################################
 set (CMAKE_MODULE_PATH $ENV{CMAKE_MODULES})
 set (BOOST_VERSION "1.65.1")
-set (PETSC_VERSION "3.8.2" )
-set (METIS_VERSION "5.1.0" )
-set (HDF5_VERSION  "1.8.19")
 set (CGNS_VERSION  "3.3.0" )
 
 ##############
