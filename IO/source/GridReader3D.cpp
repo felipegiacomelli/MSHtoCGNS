@@ -25,10 +25,10 @@ void GridReader3D::readPhysicalEntities() {
 		entitiesNames.push_back(name);
 	}
 
-	std::vector<int> geometryNumbers;
+	std::vector<int> geometryNumbers, boundaryNumbers;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
 		if (entitiesTypes[i] == 2) {
-			this->boundaryNumbers.push_back(entitiesNumbers[i]);
+			boundaryNumbers.push_back(entitiesNumbers[i]);
 		}
 		else if (entitiesTypes[i] == 3) {
 			geometryNumbers.push_back(entitiesTypes[i]);
@@ -41,41 +41,54 @@ void GridReader3D::readPhysicalEntities() {
 	this->geometryNumber = geometryNumbers[0];
 
 	this->gridData.boundaries.resize(boundaryNumbers.size());
-	for (int i = 0; i < boundaryNumbers.size(); i++) {
+	for (unsigned int i = 0; i < boundaryNumbers.size(); i++) {
 		this->gridData.boundaries[i].name = entitiesNames[boundaryNumbers[i]];
 	}
 }
 
 void GridReader3D::addElements() {
-	for (int i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
-		for (int j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
+	for (unsigned int i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
+		for (unsigned int j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
 			int index = this->physicalEntitiesElementIndices[i][j];
 			int type  = this->elements[index][0];
-			if (type == 1) {
-				std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
-				std::vector<int>::const_iterator last  = this->elements[index].cend();
-				std::vector<int> line(first, last); 
-				for (int i = 0; i < line.size(); i++) line[i]--;
-				this->gridData.boundaries[i].lineConnectivity.push_back(line);
-			}
-			else if (type == 2) {
+			if (type == 2) {
 				std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
 				std::vector<int>::const_iterator last  = this->elements[index].cend();
 				std::vector<int> triangle(first, last);
-				for (int i = 0; i < triangle.size(); i++) triangle[i]--;
-				this->gridData.triangleConnectivity.push_back(triangle);
+				for (unsigned int i = 0; i < triangle.size(); i++) triangle[i]--;
+				this->gridData.boundaries[i].triangleConnectivity.emplace_back(std::move(triangle));
 			}
 			else if (type == 3) {
 				std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
 				std::vector<int>::const_iterator last  = this->elements[index].cend();
 				std::vector<int> quadrangle(first, last);
-				for (int i = 0; i < quadrangle.size(); i++) quadrangle[i]--;
-				this->gridData.quadrangleConnectivity.push_back(quadrangle);
+				for (unsigned int i = 0; i < quadrangle.size(); i++) quadrangle[i]--;
+				this->gridData.boundaries[i].quadrangleConnectivity.emplace_back(std::move(quadrangle));
+			}
+			else if (type == 4) {
+				std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
+				std::vector<int>::const_iterator last  = this->elements[index].cend();
+				std::vector<int> tetrahedron(first, last);
+				for (unsigned int i = 0; i < tetrahedron.size(); i++) tetrahedron[i]--;
+				this->gridData.tetrahedronConnectivity.emplace_back(std::move(tetrahedron));
+			}
+			else if (type == 5) {
+				std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
+				std::vector<int>::const_iterator last  = this->elements[index].cend();
+				std::vector<int> hexahedron(first, last);
+				for (unsigned int i = 0; i < hexahedron.size(); i++) hexahedron[i]--;
+				this->gridData.hexahedronConnectivity.emplace_back(std::move(hexahedron));
+			}
+			else if (type == 7) {
+				std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
+				std::vector<int>::const_iterator last  = this->elements[index].cend();
+				std::vector<int> pyramid(first, last);
+				for (unsigned int i = 0; i < pyramid.size(); i++) pyramid[i]--;
+				this->gridData.pyramidConnectivity.emplace_back(std::move(pyramid));
 			}
 			else {
-				throw std::runtime_error("Boundary element must be a line");
+				throw std::runtime_error("Non supported element found");
 			}
 		}
-	
 	}
 }

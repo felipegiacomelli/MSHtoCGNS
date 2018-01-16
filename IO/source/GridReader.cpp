@@ -49,7 +49,7 @@ void GridReader::readElements() {
 	}
 
 	this->physicalEntitiesElementIndices.resize(this->numberOfPhysicalEntities, std::vector<int>());
-	for (int i = 0; i < this->elements.size(); i++) {
+	for (unsigned int i = 0; i < this->elements.size(); i++) {
 		this->physicalEntitiesElementIndices[this->elements[i][2]-1].push_back(i);
 	}
 }

@@ -26,7 +26,6 @@ class GridReader {
 		std::ifstream file;
 		char* buffer;
 		int numberOfPhysicalEntities, geometryNumber;
-		std::vector<int> boundaryNumbers;
 		std::vector<std::vector<int>> elements, physicalEntitiesElementIndices;
 		GridData gridData;
 };

@@ -2,18 +2,46 @@
 #include <Grid/GridData.hpp>
 #include <IO/GridReader.hpp>
 #include <IO/GridReader2D.hpp>
+#include <IO/GridReader3D.hpp>
+
+#include <chrono>
 
 void printGridData(GridData);
 
 int main() {
-	std::ifstream file("../../../Script.txt");
-	std::string line;
-	std::getline(file, line);
-	std::istringstream stream(line);
+	{
+		std::ifstream file("../../../Script2D.txt");
+		std::string line;
+		std::getline(file, line);
+		std::istringstream stream(line);
+	
+		auto start = std::chrono::steady_clock::now();
+		GridReader2D reader2D(std::move(line));
+		GridData gridData = reader2D.getGridData();
+		auto end = std::chrono::steady_clock::now();
+		std::chrono::duration<double> elapsedSeconds = end - start;
+		
+		std::cout << std::endl << "\tGrid path: " << line;			
+		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl << std::endl;			
+		printGridData(gridData);
+	}
 
-	GridReader2D reader2D(std::move(line));
-	GridData gridData = reader2D.getGridData();
-	printGridData(gridData);
+	{
+		std::ifstream file("../../../Script3D.txt");
+		std::string line;
+		std::getline(file, line);
+		std::istringstream stream(line);
+	
+		auto start = std::chrono::steady_clock::now();
+		GridReader3D reader3D(std::move(line));
+		GridData gridData = reader3D.getGridData();
+		auto end = std::chrono::steady_clock::now();
+		std::chrono::duration<double> elapsedSeconds = end - start;
+		
+		std::cout << std::endl << "\tGrid path: " << line;			
+		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl << std::endl;			
+		printGridData(gridData);
+	}
 	return 0;
 }
 
