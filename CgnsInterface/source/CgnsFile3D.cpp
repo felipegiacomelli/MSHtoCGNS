@@ -40,6 +40,7 @@ void CgnsFile3D::writeCoordinates() {
 
 void CgnsFile3D::writeSections() {
 	cgsize_t* connectivities = determine_array_1d<cgsize_t>(gridData.tetrahedronConnectivity);
+	for (unsigned int i = 0; i < gridData.tetrahedronConnectivity.size()*gridData.tetrahedronConnectivity[0].size(); i++) connectivities[i]++;
 	cgsize_t elementStart = 1;
 	cgsize_t elementEnd = numberOfElements;
 	cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", TETRA_4, elementStart, elementEnd, zoneSizes[2], connectivities, &sectionIndices[0]);
@@ -47,8 +48,9 @@ void CgnsFile3D::writeSections() {
 
 	for (unsigned int i = 0; i < gridData.boundaries.size(); i++) {
 		elementStart = elementEnd + 1;
-		elementEnd = elementStart + gridData.boundaries[i].quadrangleConnectivity.size() - 1;
+		elementEnd = elementStart + gridData.boundaries[i].triangleConnectivity.size() - 1;
 		connectivities = determine_array_1d<cgsize_t>(gridData.boundaries[i].triangleConnectivity);
+		for (unsigned int j = 0; j < gridData.boundaries[i].triangleConnectivity.size()*gridData.boundaries[i].triangleConnectivity[0].size(); j++) connectivities[j]++;
 		cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), TRI_3, elementStart, elementEnd, this->zoneSizes[2], connectivities, &this->sectionIndices[i+1]);
 		delete connectivities;
 	}
@@ -61,6 +63,20 @@ void CgnsFile3D::writeSections() {
 //		delete indices;
 //	}
 //}
+
+void CgnsFile3D::writeBoundaryConditions() {
+	for (unsigned int i = 0; i < gridData.boundaries.size(); i++) {
+		std::set<int> vertices;
+		for (auto j = gridData.boundaries[i].triangleConnectivity.cbegin(); j != gridData.boundaries[i].triangleConnectivity.cend(); j++) {
+			for (auto k = j->cbegin(); k != j->cend(); k++) {
+				vertices.insert(*k+1);
+			}
+		}
+		cgsize_t* indices = determine_array_1d<cgsize_t>(vertices); 
+		cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), BCWall, PointList, vertices.size(), indices, &this->boundaryIndices[i]);
+		delete indices;
+	}
+}
 
 CgnsFile3D::~CgnsFile3D() {
 	cg_close(this->fileIndex);

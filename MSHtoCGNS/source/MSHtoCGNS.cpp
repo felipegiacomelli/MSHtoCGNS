@@ -3,6 +3,7 @@
 #include <IO/GridReader2D.hpp>
 #include <IO/GridReader3D.hpp>
 #include <CgnsInterface/CgnsFile2D.hpp>
+#include <CgnsInterface/CgnsFile3D.hpp>
 
 #include <chrono>
 #include <fstream>
@@ -48,9 +49,16 @@ int main() {
 		GridData gridData = reader3D.getGridData();
 		auto end = std::chrono::steady_clock::now();
 		std::chrono::duration<double> elapsedSeconds = end - start;
-		
 		std::cout << std::endl << "\tGrid path: " << line;			
-		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl << std::endl;			
+		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;	
+		
+		start = std::chrono::steady_clock::now();
+		CgnsFile3D cgnsFile3D(gridData, "./"); 
+		cgnsFile3D.initialize(); 
+		end = std::chrono::steady_clock::now();
+		elapsedSeconds = end - start;
+		std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";			
+		std::cout << std::endl << "\tOutput file location       : " << cgnsFile3D.getFileName() << std::endl << std::endl;				
 		
 		std::ofstream output("./3DGrid.txt");
 		outputGridData(gridData, output);
