@@ -1,5 +1,5 @@
-#ifndef CGNS_INTERFACE_CGNS_FILE_2D_HPP	
-#define CGNS_INTERFACE_CGNS_FILE_2D_HPP
+#ifndef CGNS_FILE_2D_HPP	
+#define CGNS_FILE_2D_HPP
 
 #include <iostream>
 #include <string>
@@ -24,7 +24,7 @@ class CgnsFile2D : public CgnsFile {
 		void writeZone() override;
 		void writeCoordinates() override;
 		void writeSections() override;
-		//void writeBoundaryConditions() override;
+		void writeBoundaryConditions() override;
 };
 
 #endif

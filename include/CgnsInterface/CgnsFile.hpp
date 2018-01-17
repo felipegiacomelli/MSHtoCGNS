@@ -1,14 +1,16 @@
-#ifndef CGNS_INTERFACE_CGNS_FILE_HPP	
-#define CGNS_INTERFACE_CGNS_FILE_HPP
+#ifndef CGNS_FILE_HPP	
+#define CGNS_FILE_HPP
 
 #include <iostream>
 #include <string>
 #include <vector>
+#include <set>
 
 #include <cgnslib.h>
 
 #include <BoostInterface/Filesystem.hpp>
 #include <Utilities/Vector.hpp>
+#include <Utilities/Set.hpp>
 #include <Grid/GridData.hpp>
 
 class CgnsFile {
@@ -21,6 +23,8 @@ class CgnsFile {
 		void writeTimeSteps(const std::vector<double>&);
 		void writeTransientField(const std::vector<std::vector<double>>&, const std::string&);
 
+		std::string getFileName() const;
+
 		~CgnsFile() = default;
 
 	protected:
@@ -28,7 +32,7 @@ class CgnsFile {
 		virtual void writeZone() = 0;
 		virtual void writeCoordinates() = 0;
 		virtual void writeSections() = 0;
-		//virtual void writeBoundaryConditions() = 0;
+		virtual void writeBoundaryConditions() = 0;
 
 		GridData gridData;
 		std::string folderPath, baseName, zoneName, fileName;

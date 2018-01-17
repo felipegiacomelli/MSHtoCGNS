@@ -9,7 +9,7 @@ void CgnsFile::initialize() {
 	this->writeZone();
 	this->writeCoordinates();
 	this->writeSections();
-	//this->writeBoundaryConditions();
+	this->writeBoundaryConditions();
 }
 
 void CgnsFile::writePermanentField(const std::vector<double>& field, const std::string& fieldName) {
@@ -43,4 +43,8 @@ void CgnsFile::writeTransientField(const std::vector<std::vector<double>>& field
 	for (int i = 1; i < this->numberOfTimeSteps; i++) {
 		cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->solutionIndices[i], RealDouble, fieldName.c_str(), &field[i][0], &this->fieldsIndices[fieldIndex]);
 	}
+}
+
+std::string CgnsFile::getFileName() const {
+	return this->fileName;
 }

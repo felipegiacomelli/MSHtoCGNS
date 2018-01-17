@@ -1,12 +1,11 @@
-#ifndef UTILITIES_VECTOR_HPP
-#define UTILITIES_VECTOR_HPP
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
 
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <vector>
 #include <fstream>
-#include <cgnslib.h>
 
 // Conversion
 template<typename T, typename U>

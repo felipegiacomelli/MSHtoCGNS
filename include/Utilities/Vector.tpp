@@ -4,11 +4,9 @@
 template<typename T, typename U>
 T* determine_array_1d(const std::vector<U>& a) {
 	T* b = new T[a.size()];
-
 	for (unsigned int i = 0; i < a.size(); i++) {
 		b[i] = static_cast<T>(a[i]);
 	}
-
 	return b;
 }
 
@@ -16,15 +14,12 @@ template<typename T, typename U>
 T* determine_array_1d(const std::vector<std::vector<U>>& a) {
 	unsigned int rows = a.size();
 	unsigned int columns = a[0].size();
-
 	T* b = new T[rows*columns];
-
 	for (unsigned int i = 0; i < rows; i++) {
 		for (unsigned int j = 0; j < columns; j++) {
 			b[i*columns + j] = static_cast<T>(a[i][j]);
 		}
 	}
-
 	return b;
 }
 
