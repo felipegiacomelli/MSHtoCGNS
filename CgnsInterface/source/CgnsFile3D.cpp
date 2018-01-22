@@ -56,14 +56,6 @@ void CgnsFile3D::writeSections() {
 	}
 }
 
-//void CgnsFile3D::writeBoundaryConditions() {
-//	for (int i = 0; i < gridData.boundaries.size(); i++) {
-//		cgsize_t* indices = determine_array_1d(gridData.boundaries[i].nodeIndices); 
-//		cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), BCWall, PointList, this->gridData.boundaries[i].nodeIndices.size(), indices, &this->boundaryIndices[i]);
-//		delete indices;
-//	}
-//}
-
 void CgnsFile3D::writeBoundaryConditions() {
 	for (unsigned int i = 0; i < gridData.boundaries.size(); i++) {
 		std::set<int> vertices;

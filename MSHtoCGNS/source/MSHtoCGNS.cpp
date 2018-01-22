@@ -13,7 +13,7 @@ void outputGridData(GridData, std::ofstream&);
 
 int main() {
 	{
-		std::ifstream file("../../../Script2D.txt");
+		std::ifstream file("../../../Zeta/Script2D.txt");
 		std::string line;
 		std::getline(file, line);
 		std::istringstream stream(line);
@@ -34,12 +34,12 @@ int main() {
 		std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";			
 		std::cout << std::endl << "\tOutput file location       : " << cgnsFile2D.getFileName() << std::endl << std::endl;			
 		
-		std::ofstream output("./2DGrid.txt");
-		outputGridData(gridData, output);
+		//std::ofstream output("./2DGrid.txt");
+		//outputGridData(gridData, output);
 	}
 	std::cout << "\t#########################################################################" << std::endl;
 	{
-		std::ifstream file("../../../Script3D.txt");
+		std::ifstream file("../../../Zeta/Script3D.txt");
 		std::string line;
 		std::getline(file, line);
 		std::istringstream stream(line);
@@ -60,8 +60,8 @@ int main() {
 		std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";			
 		std::cout << std::endl << "\tOutput file location       : " << cgnsFile3D.getFileName() << std::endl << std::endl;				
 		
-		std::ofstream output("./3DGrid.txt");
-		outputGridData(gridData, output);
+		//std::ofstream output("./3DGrid.txt");
+		//outputGridData(gridData, output);
 	}
 	return 0;
 }
