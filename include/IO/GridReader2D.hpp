@@ -11,7 +11,7 @@
 class GridReader2D : public GridReader {
 	public:
 		GridReader2D() = default;
-		GridReader2D(std::string&&);
+		GridReader2D(const std::string&);
 
 	private:
 		void readPhysicalEntities() override;

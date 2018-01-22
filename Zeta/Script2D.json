@@ -1,0 +1,8 @@
+
+{
+    "path" :
+    {
+        "input"  : "/home/felipe/Felipe/gmsh/square/45n_88e/square.msh",
+        "output" : "/home/felipe/Build/workspace/grids/Felipe/MSHtoCGNS/Square/"
+    }
+}

@@ -10,7 +10,7 @@
 class GridReader {
 	public:
 		GridReader() = default;
-		GridReader(std::string&&);
+		GridReader(const std::string&);
 
 		GridData getGridData() const;
 

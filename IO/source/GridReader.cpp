@@ -6,7 +6,7 @@
 // …
 // $EndElements
 
-GridReader::GridReader(std::string&& filePath) {
+GridReader::GridReader(const std::string& filePath) {
 	this->filePath = filePath;
 	this->file = std::ifstream(this->filePath.c_str());
 	this->buffer = new char[800];

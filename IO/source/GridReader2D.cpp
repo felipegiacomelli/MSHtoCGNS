@@ -1,6 +1,6 @@
 #include <IO/GridReader2D.hpp>
 
-GridReader2D::GridReader2D(std::string&& filePath) : GridReader(std::move(filePath)) {
+GridReader2D::GridReader2D(const std::string& filePath) : GridReader(std::move(filePath)) {
 	this->gridData.dimension = 2;
 	this->readNodes();
 	this->readPhysicalEntities();

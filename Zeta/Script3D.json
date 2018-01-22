@@ -1,0 +1,8 @@
+
+{
+    "path" :
+    {
+        "input"  : "/home/felipe/Felipe/gmsh/cube/1117n_5868e/cube.msh",
+        "output" : "/home/felipe/Build/workspace/grids/Felipe/MSHtoCGNS/Cube/"
+    }
+}

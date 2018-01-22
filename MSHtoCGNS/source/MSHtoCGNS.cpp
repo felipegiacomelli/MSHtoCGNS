@@ -1,4 +1,5 @@
 #include <BoostInterface/Filesystem.hpp>
+#include <BoostInterface/PropertyTree.hpp>
 #include <Grid/GridData.hpp>
 #include <IO/GridReader2D.hpp>
 #include <IO/GridReader3D.hpp>
@@ -13,21 +14,21 @@ void outputGridData(GridData, std::ofstream&);
 
 int main() {
 	{
-		std::ifstream file("../../../Zeta/Script2D.txt");
-		std::string line;
-		std::getline(file, line);
-		std::istringstream stream(line);
-	
+   		boost::property_tree::ptree iroot;
+    	boost::property_tree::read_json("../../../Zeta/Script2D.json", iroot);
+    	std::string inputPath  = iroot.get<std::string>("path.input");
+    	std::string outputPath = iroot.get<std::string>("path.output");
+
 		auto start = std::chrono::steady_clock::now();
-		GridReader2D reader2D(std::move(line));
+		GridReader2D reader2D(inputPath);
 		GridData gridData = reader2D.getGridData();
 		auto end = std::chrono::steady_clock::now();
 		std::chrono::duration<double> elapsedSeconds = end - start;
-		std::cout << std::endl << "\tGrid path: " << line;			
+		std::cout << std::endl << "\tGrid path: " << inputPath;			
 		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;			
 		
 		start = std::chrono::steady_clock::now();
-		CgnsFile2D cgnsFile2D(gridData, "./"); 
+		CgnsFile2D cgnsFile2D(gridData, outputPath); 
 		cgnsFile2D.initialize(); 
 		end = std::chrono::steady_clock::now();
 		elapsedSeconds = end - start;
@@ -39,21 +40,21 @@ int main() {
 	}
 	std::cout << "\t#########################################################################" << std::endl;
 	{
-		std::ifstream file("../../../Zeta/Script3D.txt");
-		std::string line;
-		std::getline(file, line);
-		std::istringstream stream(line);
-	
+   		boost::property_tree::ptree iroot;
+    	boost::property_tree::read_json("../../../Zeta/Script3D.json", iroot);
+    	std::string inputPath  = iroot.get<std::string>("path.input");
+    	std::string outputPath = iroot.get<std::string>("path.output");
+
 		auto start = std::chrono::steady_clock::now();
-		GridReader3D reader3D(std::move(line));
+		GridReader3D reader3D(inputPath);
 		GridData gridData = reader3D.getGridData();
 		auto end = std::chrono::steady_clock::now();
 		std::chrono::duration<double> elapsedSeconds = end - start;
-		std::cout << std::endl << "\tGrid path: " << line;			
+		std::cout << std::endl << "\tGrid path: " << inputPath;			
 		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;	
 		
 		start = std::chrono::steady_clock::now();
-		CgnsFile3D cgnsFile3D(gridData, "./"); 
+		CgnsFile3D cgnsFile3D(gridData, outputPath); 
 		cgnsFile3D.initialize(); 
 		end = std::chrono::steady_clock::now();
 		elapsedSeconds = end - start;

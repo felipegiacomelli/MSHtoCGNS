@@ -1,6 +1,6 @@
 #include <IO/GridReader3D.hpp>
 
-GridReader3D::GridReader3D(std::string&& filePath) : GridReader(std::move(filePath)) {
+GridReader3D::GridReader3D(const std::string& filePath) : GridReader(std::move(filePath)) {
 	this->gridData.dimension = 3;
 	this->readNodes();
 	this->readPhysicalEntities();
