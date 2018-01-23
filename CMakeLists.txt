@@ -48,8 +48,8 @@ endif ()
 ##################################################################
 project (MSHtoCGNS)
 set (VERSION_MAJOR "0")
-set (VERSION_MINOR "4")
-set (VERSION_PATCH "1")
+set (VERSION_MINOR "3")
+set (VERSION_PATCH "0")
 set (VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 	set (CMAKE_INSTALL_PREFIX "$ENV{HOME}/Libraries/${PROJECT_NAME}-${VERSION}" CACHE PATH "Installation location" FORCE)
@@ -109,6 +109,7 @@ endmacro ()
 add_subdirectory (BoostInterface)
 add_subdirectory (BoostInterfaceTest)
 add_subdirectory (IO)
+add_subdirectory (IOTest)
 add_subdirectory (CgnsInterface)
 add_subdirectory (MSHtoCGNS) 
 ##################################################################
@@ -118,6 +119,8 @@ add_subdirectory (MSHtoCGNS)
 #################################################################
 enable_testing()
 add_test(NAME BoostInterfaceTest COMMAND BoostInterfaceTest)
+add_test(NAME IOTest COMMAND IOTest)
+#################################################################
 
 ##################################################################
 # DISPLAY INFORMATION

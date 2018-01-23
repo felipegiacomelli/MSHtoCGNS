@@ -1,10 +1,6 @@
 #ifndef CGNS_FILE_3D_HPP	
 #define CGNS_FILE_3D_HPP
 
-#include <iostream>
-#include <string>
-#include <vector>
-
 #include <cgnslib.h>
 
 #include <BoostInterface/Filesystem.hpp>

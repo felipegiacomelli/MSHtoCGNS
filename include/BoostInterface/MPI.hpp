@@ -6,10 +6,6 @@
 #include <boost/mpi/communicator.hpp>
 #include <boost/serialization/access.hpp>
 
-using namespace boost;
-using MPICommunicator = boost::mpi::communicator;
-using MPIEnvironment = boost::mpi::environment;
-
 bool isMasterProcessor(const int&);
 
 #endif

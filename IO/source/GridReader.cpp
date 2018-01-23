@@ -1,12 +1,7 @@
 #include <IO/GridReader.hpp>
 
-// $Elements
-// number-of-elements
-// elm-number elm-type number-of-tags < tag > … node-number-list
-// …
-// $EndElements
-
 GridReader::GridReader(const std::string& filePath) {
+	if (!boost::filesystem::exists(filePath)) throw std::runtime_error("There is no .msh file in the given path");
 	this->filePath = filePath;
 	this->file = std::ifstream(this->filePath.c_str());
 	this->buffer = new char[800];

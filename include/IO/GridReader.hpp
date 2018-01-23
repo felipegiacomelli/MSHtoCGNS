@@ -1,6 +1,7 @@
 #ifndef GRID_READER_HPP
 #define GRID_READER_HPP
 
+#include <BoostInterface/Filesystem.hpp>
 #include <Grid/GridData.hpp>
 #include <Utilities/Vector.hpp>
 

@@ -5,7 +5,6 @@
 
 #include <boost/filesystem.hpp>
 
-bool exists(const std::string&);
 void createDirectory(const std::string&);
 void deleteDirectory(const std::string&);
 

@@ -1,5 +1,5 @@
 #include <BoostInterface/MPI.hpp>
 
-bool isMasterProcessor(const int& WorldRank) {
-	return WorldRank == 0;
+bool isMasterProcessor(const int& worldRank) {
+	return worldRank == 0;
 }

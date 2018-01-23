@@ -1,11 +1,6 @@
 #ifndef CGNS_FILE_HPP	
 #define CGNS_FILE_HPP
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <set>
-
 #include <cgnslib.h>
 
 #include <BoostInterface/Filesystem.hpp>
