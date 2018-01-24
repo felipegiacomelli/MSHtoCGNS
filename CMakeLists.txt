@@ -34,7 +34,7 @@ if (UNIX)
     endif ()
 
 	set (CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} "-g -DDEBUG -Wall" CACHE STRING "Setting default compiler flags.")
-	set (CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3 -DNDEBUG -Wno-expansion-to-defined -Wno-deprecated-declarations -Wunused-variable" CACHE STRING "Setting default compiler flags")
+	set (CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3 -DNDEBUG -Wno-expansion-to-defined -Wno-deprecated-declarations" CACHE STRING "Setting default compiler flags")
 
 	set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${BUILD_TYPE_OUTPUT_DIRECTORY})
 	set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${BUILD_TYPE_OUTPUT_DIRECTORY})
