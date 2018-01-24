@@ -23,7 +23,7 @@ FixtureTestSuite(Suite2D, Fixture2D)
 TestCase(Coordinates) {
 	std::vector<std::vector<double>> coordinates = this->gridData.coordinates;
 
-	checkEqual(coordinates.size(), 5);
+	checkEqual(static_cast<int>(coordinates.size()), 5);
 	checkClose(coordinates[0][0], 0.0, TOLERANCE); checkClose(coordinates[0][1], 0.0, TOLERANCE); checkClose(coordinates[0][2], 0.0, TOLERANCE);
 	checkClose(coordinates[1][0], 1.0, TOLERANCE); checkClose(coordinates[1][1], 0.0, TOLERANCE); checkClose(coordinates[1][2], 0.0, TOLERANCE);
 	checkClose(coordinates[2][0], 1.0, TOLERANCE); checkClose(coordinates[2][1], 1.0, TOLERANCE); checkClose(coordinates[2][2], 0.0, TOLERANCE);
@@ -34,7 +34,7 @@ TestCase(Coordinates) {
 TestCase(Elements) {
 	std::vector<std::vector<int>> triangles = this->gridData.triangleConnectivity;
 
-	checkEqual(triangles.size(), 4);
+	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0], 0); checkEqual(triangles[0][1], 1); checkEqual(triangles[0][2], 4);
 	checkEqual(triangles[1][0], 0); checkEqual(triangles[1][1], 4); checkEqual(triangles[1][2], 3);
 	checkEqual(triangles[2][0], 1); checkEqual(triangles[2][1], 2); checkEqual(triangles[2][2], 4);
@@ -47,7 +47,7 @@ TestCase(West) {
 	check(west.name == std::string("West"));
 
 	std::vector<std::vector<int>> lines = west.lineConnectivity;
-	checkEqual(lines.size(), 1);
+	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 3); checkEqual(lines[0][1], 0);
 }
 
@@ -57,7 +57,7 @@ TestCase(East) {
 	check(east.name == std::string("East"));
 
 	std::vector<std::vector<int>> lines = east.lineConnectivity;
-	checkEqual(lines.size(), 1);
+	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 1); checkEqual(lines[0][1], 2);
 }
 
@@ -67,7 +67,7 @@ TestCase(South) {
 	check(south.name == std::string("South"));
 
 	std::vector<std::vector<int>> lines = south.lineConnectivity;
-	checkEqual(lines.size(), 1);
+	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 0); checkEqual(lines[0][1], 1);
 }
 
@@ -77,7 +77,7 @@ TestCase(North) {
 	check(north.name == std::string("North"));
 
 	std::vector<std::vector<int>> lines = north.lineConnectivity;
-	checkEqual(lines.size(), 1);
+	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 2); checkEqual(lines[0][1], 3);
 }
 
@@ -99,7 +99,7 @@ FixtureTestSuite(Suite3D, Fixture3D)
 TestCase(Coordinates) {
 	std::vector<std::vector<double>> coordinates = this->gridData.coordinates;
 
-	checkEqual(coordinates.size(), 14);
+	checkEqual(static_cast<int>(coordinates.size()), 14);
 	checkClose(coordinates[ 0][0], 0.0, TOLERANCE); checkClose(coordinates[ 0][1], 0.0, TOLERANCE); checkClose(coordinates[ 0][2], 0.0, TOLERANCE);
 	checkClose(coordinates[ 1][0], 1.0, TOLERANCE); checkClose(coordinates[ 1][1], 0.0, TOLERANCE); checkClose(coordinates[ 1][2], 0.0, TOLERANCE);
 	checkClose(coordinates[ 2][0], 1.0, TOLERANCE); checkClose(coordinates[ 2][1], 1.0, TOLERANCE); checkClose(coordinates[ 2][2], 0.0, TOLERANCE);
@@ -119,7 +119,7 @@ TestCase(Coordinates) {
 TestCase(Elements) {
 	std::vector<std::vector<int>> tetrahedra = this->gridData.tetrahedronConnectivity;
 
-	checkEqual(tetrahedra.size(), 24);
+	checkEqual(static_cast<int>(tetrahedra.size()), 24);
 	checkEqual(tetrahedra[ 0][0], 11); checkEqual(tetrahedra[ 0][1], 13); checkEqual(tetrahedra[ 0][2], 12); checkEqual(tetrahedra[ 0][3],  9);
 	checkEqual(tetrahedra[ 1][0], 13); checkEqual(tetrahedra[ 1][1],  8); checkEqual(tetrahedra[ 1][2], 11); checkEqual(tetrahedra[ 1][3], 12);
 	checkEqual(tetrahedra[ 2][0], 13); checkEqual(tetrahedra[ 2][1], 12); checkEqual(tetrahedra[ 2][2],  9); checkEqual(tetrahedra[ 2][3], 10);
@@ -146,44 +146,83 @@ TestCase(Elements) {
 	checkEqual(tetrahedra[23][0],  4); checkEqual(tetrahedra[23][1],  8); checkEqual(tetrahedra[23][2], 13); checkEqual(tetrahedra[23][3], 10);
 }
 
-// TestCase(West) {
-// 	BoundaryGridData west = this->gridData.boundaries[0];
+TestCase(West) {
+	BoundaryGridData west = this->gridData.boundaries[0];
 
-// 	check(west.name == std::string("West"));
+	check(west.name == std::string("West"));
 
-// 	std::vector<std::vector<int>> lines = west.lineConnectivity;
-// 	checkEqual(lines.size(), 1);
-// 	checkEqual(lines[0][0], 3); checkEqual(lines[0][1], 0);
-// }
+	std::vector<std::vector<int>> triangles = west.triangleConnectivity;
+	checkEqual(static_cast<int>(triangles.size()), 4);
+	checkEqual(triangles[0][0], 0); checkEqual(triangles[0][1], 8); checkEqual(triangles[0][2], 3);
+	checkEqual(triangles[1][0], 0); checkEqual(triangles[1][1], 4); checkEqual(triangles[1][2], 8);
+	checkEqual(triangles[2][0], 3); checkEqual(triangles[2][1], 8); checkEqual(triangles[2][2], 7);
+	checkEqual(triangles[3][0], 4); checkEqual(triangles[3][1], 7); checkEqual(triangles[3][2], 8);
+}
 
-// TestCase(East) {
-// 	BoundaryGridData east = this->gridData.boundaries[1];
+TestCase(East) {
+	BoundaryGridData east = this->gridData.boundaries[1];
 
-// 	check(east.name == std::string("East"));
+	check(east.name == std::string("East"));
 
-// 	std::vector<std::vector<int>> lines = east.lineConnectivity;
-// 	checkEqual(lines.size(), 1);
-// 	checkEqual(lines[0][0], 1); checkEqual(lines[0][1], 2);
-// }
+	std::vector<std::vector<int>> triangles = east.triangleConnectivity;
+	checkEqual(static_cast<int>(triangles.size()), 4);
+	checkEqual(triangles[0][0], 2); checkEqual(triangles[0][1], 9); checkEqual(triangles[0][2], 1);
+	checkEqual(triangles[1][0], 9); checkEqual(triangles[1][1], 5); checkEqual(triangles[1][2], 1);
+	checkEqual(triangles[2][0], 6); checkEqual(triangles[2][1], 9); checkEqual(triangles[2][2], 2);
+	checkEqual(triangles[3][0], 9); checkEqual(triangles[3][1], 6); checkEqual(triangles[3][2], 5);
+}
 
-// TestCase(South) {
-// 	BoundaryGridData south = this->gridData.boundaries[2];
+TestCase(South) {
+	BoundaryGridData south = this->gridData.boundaries[2];
 
-// 	check(south.name == std::string("South"));
+	check(south.name == std::string("South"));
 
-// 	std::vector<std::vector<int>> lines = south.lineConnectivity;
-// 	checkEqual(lines.size(), 1);
-// 	checkEqual(lines[0][0], 0); checkEqual(lines[0][1], 1);
-// }
+	std::vector<std::vector<int>> triangles = south.triangleConnectivity;
+	checkEqual(static_cast<int>(triangles.size()), 4);	
+	checkEqual(triangles[0][0],  1); checkEqual(triangles[0][1], 10); checkEqual(triangles[0][2], 0);
+	checkEqual(triangles[1][0], 10); checkEqual(triangles[1][1],  4); checkEqual(triangles[1][2], 0);
+	checkEqual(triangles[2][0],  5); checkEqual(triangles[2][1], 10); checkEqual(triangles[2][2], 1);
+	checkEqual(triangles[3][0], 10); checkEqual(triangles[3][1],  5); checkEqual(triangles[3][2], 4);
 
-// TestCase(North) {
-// 	BoundaryGridData north = this->gridData.boundaries[3];
+}
 
-// 	check(north.name == std::string("North"));
+TestCase(North) {
+	BoundaryGridData north = this->gridData.boundaries[3];
 
-// 	std::vector<std::vector<int>> lines = north.lineConnectivity;
-// 	checkEqual(lines.size(), 1);
-// 	checkEqual(lines[0][0], 2); checkEqual(lines[0][1], 3);
-// }
+	check(north.name == std::string("North"));
+
+	std::vector<std::vector<int>> triangles = north.triangleConnectivity;
+	checkEqual(static_cast<int>(triangles.size()), 4);
+	checkEqual(triangles[0][0],  3); checkEqual(triangles[0][1], 11); checkEqual(triangles[0][2], 2);
+	checkEqual(triangles[1][0], 11); checkEqual(triangles[1][1],  6); checkEqual(triangles[1][2], 2);
+	checkEqual(triangles[2][0],  7); checkEqual(triangles[2][1], 11); checkEqual(triangles[2][2], 3);
+	checkEqual(triangles[3][0], 11); checkEqual(triangles[3][1],  7); checkEqual(triangles[3][2], 6);
+}
+
+TestCase(Bottom) {
+	BoundaryGridData bottom = this->gridData.boundaries[4];
+
+	check(bottom.name == std::string("Bottom"));
+
+	std::vector<std::vector<int>> triangles = bottom.triangleConnectivity;
+	checkEqual(static_cast<int>(triangles.size()), 4);
+	checkEqual(triangles[0][0],  0); checkEqual(triangles[0][1], 12); checkEqual(triangles[0][2],  1);
+	checkEqual(triangles[1][0],  0); checkEqual(triangles[1][1],  3); checkEqual(triangles[1][2], 12);
+	checkEqual(triangles[2][0],  1); checkEqual(triangles[2][1], 12); checkEqual(triangles[2][2],  2);
+	checkEqual(triangles[3][0],  2); checkEqual(triangles[3][1], 12); checkEqual(triangles[3][2], 3);
+}
+
+TestCase(Top) {
+	BoundaryGridData top = this->gridData.boundaries[5];
+
+	check(top.name == std::string("Top"));
+
+	std::vector<std::vector<int>> triangles = top.triangleConnectivity;
+	checkEqual(static_cast<int>(triangles.size()), 4);
+	checkEqual(triangles[0][0],  5); checkEqual(triangles[0][1], 13); checkEqual(triangles[0][2], 4);
+	checkEqual(triangles[1][0], 13); checkEqual(triangles[1][1],  7); checkEqual(triangles[1][2], 4);
+	checkEqual(triangles[2][0],  6); checkEqual(triangles[2][1], 13); checkEqual(triangles[2][2], 5);
+	checkEqual(triangles[3][0],  7); checkEqual(triangles[3][1], 13); checkEqual(triangles[3][2], 6);
+}
 
 TestSuiteEnd()
