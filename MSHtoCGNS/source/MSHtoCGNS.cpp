@@ -13,58 +13,59 @@ void printGridData(GridData);
 void outputGridData(GridData, std::ofstream&);
 
 int main() {
-	{
-   		boost::property_tree::ptree iroot;
-    	boost::property_tree::read_json("../../../Zeta/Script2D.json", iroot);
-    	std::string inputPath  = iroot.get<std::string>("path.input");
-    	std::string outputPath = iroot.get<std::string>("path.output");
-
-		auto start = std::chrono::steady_clock::now();
-		GridReader2D reader2D(inputPath);
-		GridData gridData = reader2D.getGridData();
-		auto end = std::chrono::steady_clock::now();
-		std::chrono::duration<double> elapsedSeconds = end - start;
-		std::cout << std::endl << "\tGrid path: " << inputPath;			
-		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;			
-		
-		start = std::chrono::steady_clock::now();
-		CgnsFile2D cgnsFile2D(gridData, outputPath); 
-		cgnsFile2D.initialize(); 
-		end = std::chrono::steady_clock::now();
-		elapsedSeconds = end - start;
-		std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";			
-		std::cout << std::endl << "\tOutput file location       : " << cgnsFile2D.getFileName() << std::endl << std::endl;			
-		
-		//std::ofstream output("./2DGrid.txt");
-		//outputGridData(gridData, output);
-		//printGridData(gridData);
-	}
-	// std::cout << "\t#########################################################################" << std::endl;
 	//{
-	//	boost::property_tree::ptree iroot;
-	//	boost::property_tree::read_json("../../../Zeta/Script3D.json", iroot);
-	//	std::string inputPath  = iroot.get<std::string>("path.input");
-	//	std::string outputPath = iroot.get<std::string>("path.output");
-
+   	//	boost::property_tree::ptree iroot;
+    //	boost::property_tree::read_json("../../../Zeta/Script2D.json", iroot);
+    //	std::string inputPath  = iroot.get<std::string>("path.input");
+    //	std::string outputPath = iroot.get<std::string>("path.output");
+	//
 	//	auto start = std::chrono::steady_clock::now();
-	//	GridReader3D reader3D(inputPath);
-	//	GridData gridData = reader3D.getGridData();
+	//	GridReader2D reader2D(inputPath);
+	//	GridData gridData = reader2D.getGridData();
 	//	auto end = std::chrono::steady_clock::now();
 	//	std::chrono::duration<double> elapsedSeconds = end - start;
 	//	std::cout << std::endl << "\tGrid path: " << inputPath;			
-	//	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;	
-	//
+	//	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;			
+	//	
 	//	start = std::chrono::steady_clock::now();
-	//	CgnsFile3D cgnsFile3D(gridData, outputPath); 
-	//	cgnsFile3D.initialize(); 
+	//	CgnsFile2D cgnsFile2D(gridData, outputPath); 
+	//	cgnsFile2D.initialize(); 
 	//	end = std::chrono::steady_clock::now();
 	//	elapsedSeconds = end - start;
 	//	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";			
-	//	std::cout << std::endl << "\tOutput file location       : " << cgnsFile3D.getFileName() << std::endl << std::endl;				
-	//
-	//	//std::ofstream output("./3DGrid.txt");
+	//	std::cout << std::endl << "\tOutput file location       : " << cgnsFile2D.getFileName() << std::endl << std::endl;			
+	//	
+	//	//std::ofstream output("./2DGrid.txt");
 	//	//outputGridData(gridData, output);
+	//	//printGridData(gridData);
 	//}
+	// std::cout << "\t#########################################################################" << std::endl;
+	{
+		boost::property_tree::ptree iroot;
+		boost::property_tree::read_json("../../../Zeta/Script3D.json", iroot);
+		std::string inputPath  = iroot.get<std::string>("path.input");
+		std::string outputPath = iroot.get<std::string>("path.output");
+
+		auto start = std::chrono::steady_clock::now();
+		GridReader3D reader3D(inputPath);
+		GridData gridData = reader3D.getGridData();
+		auto end = std::chrono::steady_clock::now();
+		std::chrono::duration<double> elapsedSeconds = end - start;
+		std::cout << std::endl << "\tGrid path: " << inputPath;			
+		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;	
+	
+		start = std::chrono::steady_clock::now();
+		CgnsFile3D cgnsFile3D(gridData, outputPath); 
+		cgnsFile3D.initialize(); 
+		end = std::chrono::steady_clock::now();
+		elapsedSeconds = end - start;
+		std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";			
+		std::cout << std::endl << "\tOutput file location       : " << cgnsFile3D.getFileName() << std::endl << std::endl;				
+	
+		//std::ofstream output("./3DGrid.txt");
+		//outputGridData(gridData, output);
+		//printGridData(gridData);
+	}
 	return 0;
 }
 

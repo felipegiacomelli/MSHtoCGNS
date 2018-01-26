@@ -2,7 +2,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/gmsh/cube/1117n_5868e/cube.msh",
-        "output" : "/home/felipe/Build/workspace/grids/Felipe/MSHtoCGNS/Cube/"
+        "input"  : "/home/felipe/Felipe/gmsh/cube/structured/1331n_1728e/cube.msh",
+        "output" : "/home/felipe/Build/workspace/grids/Felipe/MSHtoCGNS/Cube/Structured/"
     }
 }
