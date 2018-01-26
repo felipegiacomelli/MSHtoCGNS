@@ -39,7 +39,7 @@ void CgnsFile3D::defineBoundaryType() {
 		else throw std::runtime_error("Line boundary is not supported");
 	}
 
-	if (std::all_of(boundaryTypes.cbegin(), boundaryTypes.cend(), [](bool i){return i == true;} )) {
+	if (std::all_of(boundaryTypes.cbegin(), boundaryTypes.cend(), [](bool i){return i == true;})) {
 		this->triangularBoundary   = true;
 		this->quadrangularBoundary = false;
 	}
@@ -110,9 +110,9 @@ void CgnsFile3D::writeSections() {
 }
 
 void CgnsFile3D::writeBoundaryConditions() {
-	std::set<int> vertices;
 	if (this->triangularBoundary) {
 		for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
+			std::set<int> vertices;
 			for (auto j = this->gridData.boundaries[i].triangleConnectivity.cbegin(); j != this->gridData.boundaries[i].triangleConnectivity.cend(); j++) {
 				for (auto k = j->cbegin(); k != j->cend(); k++) {
 					vertices.insert(*k+1);
@@ -125,6 +125,7 @@ void CgnsFile3D::writeBoundaryConditions() {
 	}
 	if (this->quadrangularBoundary) {
 		for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
+			std::set<int> vertices;
 			for (auto j = this->gridData.boundaries[i].quadrangleConnectivity.cbegin(); j != this->gridData.boundaries[i].quadrangleConnectivity.cend(); j++) {
 				for (auto k = j->cbegin(); k != j->cend(); k++) {
 					vertices.insert(*k+1);
