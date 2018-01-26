@@ -16,7 +16,8 @@ class CgnsFile3D : public CgnsFile {
 		~CgnsFile3D();
 
 	private:
-		void defineGridType() override; 
+		void defineGeometryType() override; 
+		void defineBoundaryType(); 
 		void writeBase() override;
 		void writeZone() override;
 		void writeCoordinates() override;
@@ -24,6 +25,7 @@ class CgnsFile3D : public CgnsFile {
 		void writeBoundaryConditions() override;
 
 		bool tetrahedralGrid, hexahedralGrid;
+		bool triangularBoundary, quadrangularBoundary;
 };
 
 #endif

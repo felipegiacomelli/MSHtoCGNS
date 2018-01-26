@@ -16,7 +16,7 @@ class CgnsFile2D : public CgnsFile {
 		~CgnsFile2D();
 
 	private:
-		void defineGridType() override; 
+		void defineGeometryType() override; 
 		void writeBase() override;
 		void writeZone() override;
 		void writeCoordinates() override;

@@ -7,13 +7,14 @@ CgnsFile3D::CgnsFile3D(const GridData& gridData, const std::string& folderPath) 
 	this->boundaryIndices.resize(6);
 	this->numberOfNodes    = this->gridData.coordinates.size();
 	this->cellDimension    = this->gridData.dimension;
-	this->defineGridType();
+	this->defineGeometryType();
+	this->defineBoundaryType();
 	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->numberOfNodes) + std::string("n_") + std::to_string(this->numberOfElements) + "e/"; createDirectory(folderName);
 	this->fileName = folderName + std::string("Grid.cgns");
 	cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
 }
 
-void CgnsFile3D::defineGridType() {
+void CgnsFile3D::defineGeometryType() {
 	if (this->gridData.tetrahedronConnectivity.size() > 0 && this->gridData.hexahedronConnectivity.size() == 0) {
 		this->tetrahedralGrid = true;
 		this->hexahedralGrid  = false;
@@ -24,7 +25,28 @@ void CgnsFile3D::defineGridType() {
 		this->hexahedralGrid  = true;
 		this->numberOfElements = this->gridData.hexahedronConnectivity.size();
 	}
-	else throw std::runtime_error("Grid type not supported");
+	else throw std::runtime_error("Geometry type not supported");
+}
+
+void CgnsFile3D::defineBoundaryType() {
+	std::vector<bool> boundaryTypes;
+	for (auto i = this->gridData.boundaries.cbegin(); i < this->gridData.boundaries.cend(); i++) {
+		if (i->lineConnectivity.size() == 0) {
+			if      (i->triangleConnectivity.size()  > 0 && i->quadrangleConnectivity.size() == 0) boundaryTypes.emplace_back(true);
+			else if (i->triangleConnectivity.size() == 0 && i->quadrangleConnectivity.size() >  0) boundaryTypes.emplace_back(false);
+			else std::runtime_error("Boundary is empty");
+		}
+		else throw std::runtime_error("Line boundary is not supported");
+	}
+
+	if (std::all_of(boundaryTypes.cbegin(), boundaryTypes.cend(), [](bool i){return i == true;} )) {
+		this->triangularBoundary   = true;
+		this->quadrangularBoundary = false;
+	}
+	else {
+		this->triangularBoundary   = false;
+		this->quadrangularBoundary = true;
+	}
 }
 
 void CgnsFile3D::writeBase() {
@@ -55,7 +77,7 @@ void CgnsFile3D::writeCoordinates() {
 void CgnsFile3D::writeSections() {
 	cgsize_t elementStart = 1;
 	cgsize_t elementEnd = this->numberOfElements;
-	if (tetrahedralGrid) {
+	if (this->tetrahedralGrid) {
 		cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.tetrahedronConnectivity);
 		for (unsigned int i = 0; i < this->gridData.tetrahedronConnectivity.size()*this->gridData.tetrahedronConnectivity[0].size(); i++) connectivities[i]++;
 		cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", TETRA_4, elementStart, elementEnd, zoneSizes[2], connectivities, &sectionIndices[0]);
@@ -70,7 +92,7 @@ void CgnsFile3D::writeSections() {
 			delete connectivities;
 		}
 	}
-	if (hexahedralGrid) {
+	if (this->hexahedralGrid) {
 		cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.hexahedronConnectivity);
 		for (unsigned int i = 0; i < this->gridData.hexahedronConnectivity.size()*this->gridData.hexahedronConnectivity[0].size(); i++) connectivities[i]++;
 		cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", HEXA_8, elementStart, elementEnd, zoneSizes[2], connectivities, &sectionIndices[0]);
@@ -89,7 +111,7 @@ void CgnsFile3D::writeSections() {
 
 void CgnsFile3D::writeBoundaryConditions() {
 	std::set<int> vertices;
-	if (tetrahedralGrid) {
+	if (this->triangularBoundary) {
 		for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
 			for (auto j = this->gridData.boundaries[i].triangleConnectivity.cbegin(); j != this->gridData.boundaries[i].triangleConnectivity.cend(); j++) {
 				for (auto k = j->cbegin(); k != j->cend(); k++) {
@@ -101,7 +123,7 @@ void CgnsFile3D::writeBoundaryConditions() {
 			delete indices;
 		}
 	}
-	if (hexahedralGrid) {
+	if (this->quadrangularBoundary) {
 		for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
 			for (auto j = this->gridData.boundaries[i].quadrangleConnectivity.cbegin(); j != this->gridData.boundaries[i].quadrangleConnectivity.cend(); j++) {
 				for (auto k = j->cbegin(); k != j->cend(); k++) {
