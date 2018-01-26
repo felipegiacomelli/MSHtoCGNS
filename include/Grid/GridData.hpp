@@ -68,8 +68,6 @@ struct GridData {
 	std::vector<std::vector<int>> quadrangleConnectivity;		
 	std::vector<std::vector<int>> tetrahedronConnectivity;	
 	std::vector<std::vector<int>> hexahedronConnectivity;		
-	std::vector<std::vector<int>> pyramidConnectivity;		
-	std::vector<std::vector<int>> prismConnectivity;			
 
 	std::vector<BoundaryGridData> boundaries; 
 	std::vector<WellGridData> wells;		
@@ -87,8 +85,6 @@ struct GridData {
 			archive &this->quadrangleConnectivity;
 			archive &this->tetrahedronConnectivity;
 			archive &this->hexahedronConnectivity;
-			archive &this->pyramidConnectivity;
-			archive &this->prismConnectivity;
 			archive &this->boundaries;
 			archive &this->wells;
 			archive &this->regions;

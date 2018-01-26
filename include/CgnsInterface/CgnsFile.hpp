@@ -23,6 +23,7 @@ class CgnsFile {
 		~CgnsFile() = default;
 
 	protected:
+		virtual void defineGridType() = 0; 
 		virtual void writeBase() = 0;
 		virtual void writeZone() = 0;
 		virtual void writeCoordinates() = 0;

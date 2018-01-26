@@ -37,39 +37,40 @@ int main() {
 		
 		//std::ofstream output("./2DGrid.txt");
 		//outputGridData(gridData, output);
+		//printGridData(gridData);
 	}
-	std::cout << "\t#########################################################################" << std::endl;
-	{
-   		boost::property_tree::ptree iroot;
-    	boost::property_tree::read_json("../../../Zeta/Script3D.json", iroot);
-    	std::string inputPath  = iroot.get<std::string>("path.input");
-    	std::string outputPath = iroot.get<std::string>("path.output");
+	// std::cout << "\t#########################################################################" << std::endl;
+	//{
+	//	boost::property_tree::ptree iroot;
+	//	boost::property_tree::read_json("../../../Zeta/Script3D.json", iroot);
+	//	std::string inputPath  = iroot.get<std::string>("path.input");
+	//	std::string outputPath = iroot.get<std::string>("path.output");
 
-		auto start = std::chrono::steady_clock::now();
-		GridReader3D reader3D(inputPath);
-		GridData gridData = reader3D.getGridData();
-		auto end = std::chrono::steady_clock::now();
-		std::chrono::duration<double> elapsedSeconds = end - start;
-		std::cout << std::endl << "\tGrid path: " << inputPath;			
-		std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;	
-		
-		start = std::chrono::steady_clock::now();
-		CgnsFile3D cgnsFile3D(gridData, outputPath); 
-		cgnsFile3D.initialize(); 
-		end = std::chrono::steady_clock::now();
-		elapsedSeconds = end - start;
-		std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";			
-		std::cout << std::endl << "\tOutput file location       : " << cgnsFile3D.getFileName() << std::endl << std::endl;				
-		
-		//std::ofstream output("./3DGrid.txt");
-		//outputGridData(gridData, output);
-	}
+	//	auto start = std::chrono::steady_clock::now();
+	//	GridReader3D reader3D(inputPath);
+	//	GridData gridData = reader3D.getGridData();
+	//	auto end = std::chrono::steady_clock::now();
+	//	std::chrono::duration<double> elapsedSeconds = end - start;
+	//	std::cout << std::endl << "\tGrid path: " << inputPath;			
+	//	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;	
+	//
+	//	start = std::chrono::steady_clock::now();
+	//	CgnsFile3D cgnsFile3D(gridData, outputPath); 
+	//	cgnsFile3D.initialize(); 
+	//	end = std::chrono::steady_clock::now();
+	//	elapsedSeconds = end - start;
+	//	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";			
+	//	std::cout << std::endl << "\tOutput file location       : " << cgnsFile3D.getFileName() << std::endl << std::endl;				
+	//
+	//	//std::ofstream output("./3DGrid.txt");
+	//	//outputGridData(gridData, output);
+	//}
 	return 0;
 }
 
 void printGridData(GridData gridData) {
 		int numberOfNodes = gridData.coordinates.size();
-		int numberOfElements = gridData.triangleConnectivity.size() + gridData.quadrangleConnectivity.size() + gridData.tetrahedronConnectivity.size() + gridData.hexahedronConnectivity.size() + gridData.pyramidConnectivity.size() + gridData.prismConnectivity.size(); 
+		int numberOfElements = gridData.triangleConnectivity.size() + gridData.quadrangleConnectivity.size() + gridData.tetrahedronConnectivity.size() + gridData.hexahedronConnectivity.size(); 
 		
 		std::cout << std::endl;
 		std::cout << "\tGridData ###"        << std::endl;
@@ -97,15 +98,7 @@ void printGridData(GridData gridData) {
 			if (gridData.hexahedronConnectivity.size() > 0) {
 				std::cout << std::endl << "\tHexahedron connectivity - " << gridData.hexahedronConnectivity.size() << std::endl;
 				//print(gridData.hexahedronConnectivity);				
-			}
-			if (gridData.pyramidConnectivity.size() > 0) {
-				std::cout << std::endl << "\tPyramid connectivity - " << gridData.pyramidConnectivity.size() << std::endl;
-				//print(gridData.pyramidConnectivity);
-			}
-			if (gridData.prismConnectivity.size() > 0) {
-				std::cout << std::endl << "\tPrism connectivity - " << gridData.prismConnectivity.size() << std::endl;
-				//print(gridData.prismConnectivity);				
-			}				
+			}			
 		}
 	
 		std::cout << std::endl << "\tBoundaries ###" << std::endl;
@@ -142,7 +135,7 @@ void printGridData(GridData gridData) {
 
 void outputGridData(GridData gridData, std::ofstream& file) {
 		int numberOfNodes = gridData.coordinates.size();
-		int numberOfElements = gridData.triangleConnectivity.size() + gridData.triangleConnectivity.size() + gridData.quadrangleConnectivity.size() + gridData.tetrahedronConnectivity.size() + gridData.hexahedronConnectivity.size() + gridData.pyramidConnectivity.size() + gridData.prismConnectivity.size(); 
+		int numberOfElements = gridData.triangleConnectivity.size() + gridData.triangleConnectivity.size() + gridData.quadrangleConnectivity.size() + gridData.tetrahedronConnectivity.size() + gridData.hexahedronConnectivity.size(); 
 		
 		file << std::endl;
 		file << "\tGridData ###"        << std::endl;
@@ -171,14 +164,6 @@ void outputGridData(GridData gridData, std::ofstream& file) {
 				file << std::endl << "\tHexahedron connectivity" << std::endl;
 				output(gridData.hexahedronConnectivity, file);				
 			}
-			if (gridData.pyramidConnectivity.size() > 0) {
-				file << std::endl << "\tPyramid connectivity" << std::endl;
-				output(gridData.pyramidConnectivity, file);
-			}
-			if (gridData.prismConnectivity.size() > 0) {
-				file << std::endl << "\tPrism connectivity" << std::endl;
-				output(gridData.prismConnectivity, file);				
-			}				
 		}
 	
 		file << std::endl << "\tBoundaries ###" << std::endl;

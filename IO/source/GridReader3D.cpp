@@ -68,9 +68,6 @@ void GridReader3D::addElements() {
 			else if (type == 5) {
 				this->gridData.hexahedronConnectivity.emplace_back(std::move(element));
 			}
-			else if (type == 7) {
-				this->gridData.pyramidConnectivity.emplace_back(std::move(element));
-			}
 			else {
 				throw std::runtime_error("Non supported element found");
 			}

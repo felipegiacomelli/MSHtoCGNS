@@ -6,11 +6,26 @@ CgnsFile2D::CgnsFile2D(const GridData& gridData, const std::string& folderPath) 
 	this->sectionIndices.resize(5);
 	this->boundaryIndices.resize(4);
 	this->numberOfNodes    = this->gridData.coordinates.size();
-	this->numberOfElements = this->gridData.triangleConnectivity.size();
 	this->cellDimension    = this->gridData.dimension;
-	std::string folderName = this->folderPath + std::string("/") + std::to_string(numberOfNodes) + std::string("n_") + std::to_string(numberOfElements) + "e/"; createDirectory(folderName);
+	this->defineGridType();
+	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->numberOfNodes) + std::string("n_") + std::to_string(this->numberOfElements) + "e/"; 
+	createDirectory(folderName);
 	this->fileName = folderName + std::string("Grid.cgns");
 	cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
+}
+
+void CgnsFile2D::defineGridType() {
+	if (this->gridData.triangleConnectivity.size() > 0 && this->gridData.quadrangleConnectivity.size() == 0) {
+		this->triangularGrid   = true;
+		this->quadrangularGrid = false;
+		this->numberOfElements = this->gridData.triangleConnectivity.size();
+	}
+	else if (this->gridData.triangleConnectivity.size() == 0 && this->gridData.quadrangleConnectivity.size() > 0) {
+		this->triangularGrid   = false;
+		this->quadrangularGrid = true;
+		this->numberOfElements = this->gridData.quadrangleConnectivity.size();
+	}
+	else throw std::runtime_error("Grid type not supported");
 }
 
 void CgnsFile2D::writeBase() {
@@ -39,27 +54,35 @@ void CgnsFile2D::writeCoordinates() {
 }
 
 void CgnsFile2D::writeSections() {
-	cgsize_t* connectivities = determine_array_1d<cgsize_t>(gridData.triangleConnectivity);
-	for (unsigned int i = 0; i < gridData.triangleConnectivity.size()*gridData.triangleConnectivity[0].size(); i++) connectivities[i]++;
 	cgsize_t elementStart = 1;
-	cgsize_t elementEnd = numberOfElements;
-	cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", TRI_3, elementStart, elementEnd, zoneSizes[2], connectivities, &sectionIndices[0]);
-	delete connectivities;
+	cgsize_t elementEnd = this->numberOfElements;
+	if (this->triangularGrid) {
+		cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.triangleConnectivity);
+		for (unsigned int i = 0; i < this->gridData.triangleConnectivity.size()*this->gridData.triangleConnectivity[0].size(); i++) connectivities[i]++;
+		cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", TRI_3, elementStart, elementEnd, zoneSizes[2], connectivities, &sectionIndices[0]);
+		delete connectivities;
+	}
+	if (this->quadrangularGrid) {
+		cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.quadrangleConnectivity);
+		for (unsigned int i = 0; i < this->gridData.quadrangleConnectivity.size()*this->gridData.quadrangleConnectivity[0].size(); i++) connectivities[i]++;
+		cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", QUAD_4, elementStart, elementEnd, zoneSizes[2], connectivities, &sectionIndices[0]);
+		delete connectivities;
+	}
 
-	for (unsigned int i = 0; i < gridData.boundaries.size(); i++) {
+	for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
 		elementStart = elementEnd + 1;
-		elementEnd = elementStart + gridData.boundaries[i].lineConnectivity.size() - 1;
-		connectivities = determine_array_1d<cgsize_t>(gridData.boundaries[i].lineConnectivity);
-		for (unsigned int j = 0; j < gridData.boundaries[i].lineConnectivity.size()*gridData.boundaries[i].lineConnectivity[0].size(); j++) connectivities[j]++;
+		elementEnd = elementStart + this->gridData.boundaries[i].lineConnectivity.size() - 1;
+		cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.boundaries[i].lineConnectivity);
+		for (unsigned int j = 0; j < this->gridData.boundaries[i].lineConnectivity.size()*this->gridData.boundaries[i].lineConnectivity[0].size(); j++) connectivities[j]++;
 		cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), BAR_2, elementStart, elementEnd, this->zoneSizes[2], connectivities, &this->sectionIndices[i+1]);
 		delete connectivities;
 	}
 }
 
 void CgnsFile2D::writeBoundaryConditions() {
-	for (unsigned int i = 0; i < gridData.boundaries.size(); i++) {
+	for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
 		std::set<int> vertices;
-		for (auto j = gridData.boundaries[i].lineConnectivity.cbegin(); j != gridData.boundaries[i].lineConnectivity.cend(); j++) {
+		for (auto j = this->gridData.boundaries[i].lineConnectivity.cbegin(); j != this->gridData.boundaries[i].lineConnectivity.cend(); j++) {
 			for (auto k = j->cbegin(); k != j->cend(); k++) {
 				vertices.insert(*k+1);
 			}

@@ -16,11 +16,14 @@ class CgnsFile2D : public CgnsFile {
 		~CgnsFile2D();
 
 	private:
+		void defineGridType() override; 
 		void writeBase() override;
 		void writeZone() override;
 		void writeCoordinates() override;
 		void writeSections() override;
 		void writeBoundaryConditions() override;
+
+		bool triangularGrid, quadrangularGrid;
 };
 
 #endif

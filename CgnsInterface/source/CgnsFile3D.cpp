@@ -42,7 +42,7 @@ void CgnsFile3D::writeSections() {
 	cgsize_t* connectivities = determine_array_1d<cgsize_t>(gridData.tetrahedronConnectivity);
 	for (unsigned int i = 0; i < gridData.tetrahedronConnectivity.size()*gridData.tetrahedronConnectivity[0].size(); i++) connectivities[i]++;
 	cgsize_t elementStart = 1;
-	cgsize_t elementEnd = numberOfElements;
+	cgsize_t elementEnd = this->numberOfElements;
 	cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", TETRA_4, elementStart, elementEnd, zoneSizes[2], connectivities, &sectionIndices[0]);
 	delete connectivities;
 
