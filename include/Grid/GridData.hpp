@@ -5,7 +5,7 @@
 #include <BoostInterface/UniquePointer.hpp>
 #include <BoostInterface/SharedPointer.hpp>
 
-struct BoundaryGridData {
+struct BoundaryData {
 	friend class boost::serialization::access;
 
 	std::vector<std::vector<int>> lineConnectivity;			
@@ -23,7 +23,7 @@ struct BoundaryGridData {
 		}
 };
 
-struct WellGridData {
+struct WellData {
 	friend class boost::serialization::access;
 
 	int	wellNode;			
@@ -69,8 +69,8 @@ struct GridData {
 	std::vector<std::vector<int>> tetrahedronConnectivity;	
 	std::vector<std::vector<int>> hexahedronConnectivity;		
 
-	std::vector<BoundaryGridData> boundaries; 
-	std::vector<WellGridData> wells;		
+	std::vector<BoundaryData> boundaries; 
+	std::vector<WellData> wells;		
 	std::vector<RegionData> regions;	
 
 	private:

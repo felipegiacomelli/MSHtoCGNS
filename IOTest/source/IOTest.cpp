@@ -42,7 +42,7 @@ TestCase(Elements) {
 }
 
 TestCase(West) {
-	BoundaryGridData west = this->gridData.boundaries[0];
+	BoundaryData west = this->gridData.boundaries[0];
 
 	check(west.name == std::string("West"));
 
@@ -52,7 +52,7 @@ TestCase(West) {
 }
 
 TestCase(East) {
-	BoundaryGridData east = this->gridData.boundaries[1];
+	BoundaryData east = this->gridData.boundaries[1];
 
 	check(east.name == std::string("East"));
 
@@ -62,7 +62,7 @@ TestCase(East) {
 }
 
 TestCase(South) {
-	BoundaryGridData south = this->gridData.boundaries[2];
+	BoundaryData south = this->gridData.boundaries[2];
 
 	check(south.name == std::string("South"));
 
@@ -72,7 +72,7 @@ TestCase(South) {
 }
 
 TestCase(North) {
-	BoundaryGridData north = this->gridData.boundaries[3];
+	BoundaryData north = this->gridData.boundaries[3];
 
 	check(north.name == std::string("North"));
 
@@ -147,7 +147,7 @@ TestCase(Elements) {
 }
 
 TestCase(West) {
-	BoundaryGridData west = this->gridData.boundaries[0];
+	BoundaryData west = this->gridData.boundaries[0];
 
 	check(west.name == std::string("West"));
 
@@ -160,7 +160,7 @@ TestCase(West) {
 }
 
 TestCase(East) {
-	BoundaryGridData east = this->gridData.boundaries[1];
+	BoundaryData east = this->gridData.boundaries[1];
 
 	check(east.name == std::string("East"));
 
@@ -173,7 +173,7 @@ TestCase(East) {
 }
 
 TestCase(South) {
-	BoundaryGridData south = this->gridData.boundaries[2];
+	BoundaryData south = this->gridData.boundaries[2];
 
 	check(south.name == std::string("South"));
 
@@ -186,7 +186,7 @@ TestCase(South) {
 }
 
 TestCase(North) {
-	BoundaryGridData north = this->gridData.boundaries[3];
+	BoundaryData north = this->gridData.boundaries[3];
 
 	check(north.name == std::string("North"));
 
@@ -199,7 +199,7 @@ TestCase(North) {
 }
 
 TestCase(Bottom) {
-	BoundaryGridData bottom = this->gridData.boundaries[4];
+	BoundaryData bottom = this->gridData.boundaries[4];
 
 	check(bottom.name == std::string("Bottom"));
 
@@ -212,7 +212,7 @@ TestCase(Bottom) {
 }
 
 TestCase(Top) {
-	BoundaryGridData top = this->gridData.boundaries[5];
+	BoundaryData top = this->gridData.boundaries[5];
 
 	check(top.name == std::string("Top"));
 
