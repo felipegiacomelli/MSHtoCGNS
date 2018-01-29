@@ -2,14 +2,14 @@
 
 #include <BoostInterface/Test.hpp>
 #include <Grid/GridData.hpp>
-#include <IO/GridReader2D.hpp>
-#include <IO/GridReader3D.hpp>
+#include <IO/MshReader2D.hpp>
+#include <IO/MshReader3D.hpp>
 
 #define TOLERANCE 1e-12
 
 struct Fixture2D {
 	Fixture2D() {
-		GridReader2D gridReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5n_8e.msh");
+		MshReader2D gridReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5n_8e.msh");
 		this->gridData = gridReader2D.getGridData();
 	}
 
@@ -85,7 +85,7 @@ TestSuiteEnd()
 
 struct Fixture3D {
 	Fixture3D() {
-		GridReader3D gridReader3D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_48e.msh");
+		MshReader3D gridReader3D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_48e.msh");
 		this->gridData = gridReader3D.getGridData();
 	}
 

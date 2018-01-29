@@ -1,14 +1,14 @@
-#include <IO/GridReader3D.hpp>
+#include <IO/MshReader2D.hpp>
 
-GridReader3D::GridReader3D(const std::string& filePath) : GridReader(std::move(filePath)) {
-	this->gridData.dimension = 3;
+MshReader2D::MshReader2D(const std::string& filePath) : MshReader(std::move(filePath)) {
+	this->gridData.dimension = 2;
 	this->readNodes();
 	this->readPhysicalEntities();
 	this->readElements();
 	this->addElements();
 }
 
-void GridReader3D::readPhysicalEntities() {
+void MshReader2D::readPhysicalEntities() {
 	this->file.seekg(0, std::ios::beg); 
 	while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof()) this->file >> this->buffer;
 	if (this->file.eof()) throw std::runtime_error("There is no Physical Entities data in the grid file");
@@ -27,10 +27,10 @@ void GridReader3D::readPhysicalEntities() {
 
 	std::vector<int> geometryNumbers, boundaryNumbers;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
-		if (entitiesTypes[i] == 2) {
+		if (entitiesTypes[i] == 1) {
 			boundaryNumbers.push_back(entitiesNumbers[i]);
 		}
-		else if (entitiesTypes[i] == 3) {
+		else if (entitiesTypes[i] == 2) {
 			geometryNumbers.push_back(entitiesTypes[i]);
 		}
 		else {
@@ -46,27 +46,24 @@ void GridReader3D::readPhysicalEntities() {
 	}
 }
 
-void GridReader3D::addElements() {
+void MshReader2D::addElements() {
 	for (unsigned int i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
 		for (unsigned int j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
 			int index = this->physicalEntitiesElementIndices[i][j];
 			int type  = this->elements[index][0];
 			std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
 			std::vector<int>::const_iterator last  = this->elements[index].cend();
-			std::vector<int> element(first, last);
+			std::vector<int> element(first, last); 
 			for (unsigned int i = 0; i < element.size(); i++) element[i]--;
 			
-			if (type == 2) {
-				this->gridData.boundaries[i].triangleConnectivity.emplace_back(std::move(element));
+			if (type == 1) {
+				this->gridData.boundaries[i].lineConnectivity.emplace_back(std::move(element));
+			}
+			else if (type == 2) {
+				this->gridData.triangleConnectivity.emplace_back(std::move(element));
 			}
 			else if (type == 3) {
-				this->gridData.boundaries[i].quadrangleConnectivity.emplace_back(std::move(element));
-			}
-			else if (type == 4) {
-				this->gridData.tetrahedronConnectivity.emplace_back(std::move(element));
-			}
-			else if (type == 5) {
-				this->gridData.hexahedronConnectivity.emplace_back(std::move(element));
+				this->gridData.quadrangleConnectivity.emplace_back(std::move(element));
 			}
 			else {
 				throw std::runtime_error("Non supported element found");

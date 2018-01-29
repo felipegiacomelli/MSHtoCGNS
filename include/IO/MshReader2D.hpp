@@ -1,17 +1,17 @@
-#ifndef GRID_READER_3D_HPP
-#define GRID_READER_3D_HPP
+#ifndef MSH_READER_2D_HPP
+#define MSH_READER_2D_HPP
 
 #include <Grid/GridData.hpp>
 #include <Utilities/Vector.hpp>
-#include <IO/GridReader.hpp>
+#include <IO/MshReader.hpp>
 
 #include <string>
 #include <fstream>
 
-class GridReader3D : public GridReader {
+class MshReader2D : public MshReader {
 	public:
-		GridReader3D() = default;
-		GridReader3D(const std::string&);
+		MshReader2D() = default;
+		MshReader2D(const std::string&);
 
 	private:
 		void readPhysicalEntities() override;

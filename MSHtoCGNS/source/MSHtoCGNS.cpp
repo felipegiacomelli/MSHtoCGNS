@@ -1,8 +1,8 @@
 #include <BoostInterface/Filesystem.hpp>
 #include <BoostInterface/PropertyTree.hpp>
 #include <Grid/GridData.hpp>
-#include <IO/GridReader2D.hpp>
-#include <IO/GridReader3D.hpp>
+#include <IO/MshReader2D.hpp>
+#include <IO/MshReader3D.hpp>
 #include <CgnsInterface/CgnsFile2D.hpp>
 #include <CgnsInterface/CgnsFile3D.hpp>
 
@@ -20,7 +20,7 @@ int main() {
     //	std::string outputPath = iroot.get<std::string>("path.output");
 	//
 	//	auto start = std::chrono::steady_clock::now();
-	//	GridReader2D reader2D(inputPath);
+	//	MshReader2D reader2D(inputPath);
 	//	GridData gridData = reader2D.getGridData();
 	//	auto end = std::chrono::steady_clock::now();
 	//	std::chrono::duration<double> elapsedSeconds = end - start;
@@ -47,7 +47,7 @@ int main() {
 		std::string outputPath = iroot.get<std::string>("path.output");
 
 		auto start = std::chrono::steady_clock::now();
-		GridReader3D reader3D(inputPath);
+		MshReader3D reader3D(inputPath);
 		GridData gridData = reader3D.getGridData();
 		auto end = std::chrono::steady_clock::now();
 		std::chrono::duration<double> elapsedSeconds = end - start;

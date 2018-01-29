@@ -1,5 +1,5 @@
-#ifndef GRID_READER_HPP
-#define GRID_READER_HPP
+#ifndef MSH_READER_HPP
+#define MSH_READER_HPP
 
 #include <BoostInterface/Filesystem.hpp>
 #include <Grid/GridData.hpp>
@@ -8,14 +8,14 @@
 #include <string>
 #include <fstream>
 
-class GridReader {
+class MshReader {
 	public:
-		GridReader() = default;
-		GridReader(const std::string&);
+		MshReader() = default;
+		MshReader(const std::string&);
 
 		GridData getGridData() const;
 
-		~GridReader();
+		~MshReader();
 
 	protected:
 		void readNodes();

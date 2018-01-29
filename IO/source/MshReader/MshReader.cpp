@@ -1,13 +1,13 @@
-#include <IO/GridReader.hpp>
+#include <IO/MshReader.hpp>
 
-GridReader::GridReader(const std::string& filePath) {
+MshReader::MshReader(const std::string& filePath) {
 	if (!boost::filesystem::exists(filePath)) throw std::runtime_error("There is no .msh file in the given path");
 	this->filePath = filePath;
 	this->file = std::ifstream(this->filePath.c_str());
 	this->buffer = new char[800];
 }
 
-void GridReader::readNodes() {
+void MshReader::readNodes() {
 	int numberOfNodes, temporary;
 	this->file.seekg(0, std::ios::beg); 
 	while (strcmp(this->buffer, "$Nodes") && !this->file.eof()) this->file >> this->buffer;
@@ -19,7 +19,7 @@ void GridReader::readNodes() {
 	}
 }
 
-void GridReader::readElements() {
+void MshReader::readElements() {
 	int numberOfElements;
 	this->file.seekg(0, std::ios::beg);
 	while (strcmp(this->buffer, "$Elements") && !this->file.eof()) this->file >> this->buffer;
@@ -49,11 +49,11 @@ void GridReader::readElements() {
 	}
 }
 
-GridData GridReader::getGridData() const {
+GridData MshReader::getGridData() const {
 	return this->gridData;
 }
 
-GridReader::~GridReader() {
+MshReader::~MshReader() {
 	delete this->buffer;
 }
 
