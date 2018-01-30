@@ -1,6 +1,8 @@
 #include <BoostInterface/Test.hpp>
 #include <BoostInterface/Filesystem.hpp>
 
+#include <BoostInterface/Filesystem.hpp>
+
 TestSuite(Filesystem)
 
 TestCase(CreateDirectory) {
