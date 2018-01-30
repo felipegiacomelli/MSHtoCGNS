@@ -7,6 +7,7 @@ CgnsReader::CgnsReader(const std::string& filePath) {
 	this->zoneSizes.resize(3);
 	this->readBase();
 	this->readZone();
+	this->readSection();
 	this->readDimension();
 }
 

@@ -59,9 +59,9 @@ void CgnsReader2D::readElements() {
 				connectivities.resize(numberOfVertices*numberOfElements);
 				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, section, &connectivities[0], 0);
 				for (int e = 0; e < numberOfElements; e++) {
-					std::vector<int> quadrilateral(numberOfVertices);
-					for (int k = 0; k < numberOfVertices; k++) quadrilateral[k] = connectivities[e*numberOfVertices+k]-1;
-					this->gridData.triangleConnectivity.emplace_back(std::move(quadrilateral));	
+					std::vector<int> quadrangle(numberOfVertices);
+					for (int k = 0; k < numberOfVertices; k++) quadrangle[k] = connectivities[e*numberOfVertices+k]-1;
+					this->gridData.quadrangleConnectivity.emplace_back(std::move(quadrangle));	
 				}
 				break; 
 			}
@@ -82,18 +82,9 @@ void CgnsReader2D::readElements() {
 				this->gridData.boundaries.emplace_back(std::move(boundaryData));
 				break; 
 			}
-			case NODE: {
-				int numberOfVertices = 2;	
-				connectivities.resize(numberOfVertices*numberOfElements);
-				WellData wellData;
-				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, section, &connectivities[0], 0);
-				wellData.wellNode = connectivities[0];
-				wellData.name = buffer;
-				this->gridData.wells.emplace_back(std::move(wellData));
-				break; 
-			}
 			default:
-				std::cout << "\nUnsupported element encountered" << std::endl;	cg_error_exit();
+				std::cout << "\nUnsupported element encountered" << std::endl;	
+				cg_error_exit();
 				break;
 		}
 	}
