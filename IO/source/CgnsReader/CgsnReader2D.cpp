@@ -31,167 +31,70 @@ void CgnsReader2D::readNodes() {
 }
 
 void CgnsReader2D::readElements() {
-	vector<int> bfe, wfe, aHee;
-	int nRegions = 0;
-	vector<string> rNames;
-	if (gridData->dimension == 3) { //.................................................................................... THREE-DIMENSIONAL GRID CONNECTIVITY
-		// Loop over the number of sections and read the element connectivities.
-		// As CGNS starts the numbering at 1 the for-loop starts at 1 as well.
-		vector< vector<int> > aTet, aHex, aPyr, aPri, aTri, aQua;
-		vector<int> rTet, rHex, rPyr, rPri;
-		for (int section = 1; section <= nSections; section++) {
-			ElementType_t type;
-			cgsize_t eBeg, eEnd; 
-			int nBdry, parentFlag;
-			vector<cgsize_t> conn;
-			// Determines the element type and set the pointer for the connectivity accordingly.
-			if (cg_section_read(cgfile, base, zone, section, buf, &type, &eBeg, &eEnd, &nBdry, &parentFlag) != CG_OK) {
-				cerr << "\nThere was a problem when reading section" << section << endl;	cg_error_exit();
-			}
-			int eSize = eEnd - eBeg + 1;
-
-			// Reads connectivity and builds auxiliar connectivity matrices for different element types
-			switch(type) {
-				case MIXED: {
-					aTri.clear();
-					aQua.clear();
-					cgsize_t connSize;
-					int npe;
-					cg_ElementDataSize(cgfile, base, zone, section, &connSize);
-					conn.resize(connSize);
-					cg_elements_read(cgfile, base, zone, section, &conn[0], 0);
-					int i = 0;
-					for (int e = 0; e < eSize; ++e) {
-						cg_npe(ElementType_t(conn[i]), &npe);
-						vector<int> aux(npe);
-						for (int k = 0; k < npe; ++k) aux[k] = conn[i+1+k]-1;
-						switch(conn[i]) {
-							case TETRA_4:
-								aTet.push_back(aux);	rTet.push_back(nRegions);		break;
-							case HEXA_8:
-								aHex.push_back(aux);	rHex.push_back(nRegions);		break;
-							case PYRA_5:
-								aPyr.push_back(aux);	rPyr.push_back(nRegions);		break;
-							case PENTA_6:
-								aPri.push_back(aux);	rPri.push_back(nRegions);		break;
-							case TRI_3:
-								aTri.push_back(aux);	break;
-							case QUAD_4:
-								aQua.push_back(aux);	break;
-						}
-						i += npe + 1;
-					}
-					if (conn[0] == TRI_3 || conn[0] == QUAD_4) { // if section is actually a boundary
-						BoundaryGridData newBoun;
-						newBoun.triangleConnectivity.resize(aTri.size(), IntVector(3));
-						newBoun.quadrangleConnectivity.resize(aQua.size(), IntVector(4));
-						for (int e = 0; e < aTri.size(); ++e) 
-							for (int k = 0; k < 3; ++k) 
-								newBoun.triangleConnectivity[e][k] = aTri[e][k];
-						for (int e = 0; e < aQua.size(); ++e) 
-							for (int k = 0; k < 4; ++k) 
-								newBoun.quadrangleConnectivity[e][k] = aQua[e][k];
-						newBoun.name = buf;
-						gridData->boundaries.push_back(newBoun);
-						bfe.push_back(eBeg);
-					}
-					else {
-						rNames.push_back(buf);
-						nRegions++;
-					}
-					break; 
-				}
-				case TETRA_4: {
-					int npe = 4;	conn.resize(npe*eSize);
-					cg_elements_read(cgfile, base, zone, section, &conn[0], 0);
-					vector<int> aux(npe);
-					for (int e = 0; e < eSize; ++e) {
-						for (int k = 0; k < npe; ++k) aux[k] = conn[e*npe+k]-1;
-						aTet.push_back(aux);	rTet.push_back(nRegions);		
-					}
-					break; 
-				}
-				case HEXA_8: {
-					int npe = 8;	conn.resize(npe*eSize);
-					cg_elements_read(cgfile, base, zone, section, &conn[0], 0);
-					vector<int> aux(npe);
-					for (int e = 0; e < eSize; ++e) {
-						for (int k = 0; k < npe; ++k) aux[k] = conn[e*npe+k]-1;
-						aHex.push_back(aux);	rHex.push_back(nRegions);		
-					}
-					break; 
-				}
-				case PYRA_5: {
-					int npe = 5;	conn.resize(npe*eSize);
-					cg_elements_read(cgfile, base, zone, section, &conn[0], 0);
-					vector<int> aux(npe);
-					for (int e = 0; e < eSize; ++e) {
-						for (int k = 0; k < npe; ++k) aux[k] = conn[e*npe+k]-1;
-						aPyr.push_back(aux);	rPyr.push_back(nRegions);		
-					}
-					break; 
-				}
-				case PENTA_6: {
-					int npe = 6;	conn.resize(npe*eSize);
-					cg_elements_read(cgfile, base, zone, section, &conn[0], 0);
-					vector<int> aux(npe);
-					for (int e = 0; e < eSize; ++e) {
-						for (int k = 0; k < npe; ++k) aux[k] = conn[e*npe+k]-1;
-						aPri.push_back(aux);	rPri.push_back(nRegions);		
-					}
-					break; 
-				}
-				case QUAD_4: {
-					int npe = 4;	conn.resize(npe*eSize);
-					BoundaryGridData newBoun;
-					newBoun.quadrangleConnectivity.resize(eSize, IntVector(npe));
-					cg_elements_read(cgfile, base, zone, section, &conn[0], 0);
-					for (int e = 0; e < eSize; ++e) 
-						for (int k = 0; k < npe; ++k) 
-							newBoun.quadrangleConnectivity[e][k] = conn[e*npe+k]-1;
-					newBoun.name = buf;
-					gridData->boundaries.push_back(newBoun);
-					bfe.push_back(eBeg);
-					break; 
-				}
-				case TRI_3: {
-					int npe = 3;	conn.resize(npe*eSize);
-					BoundaryGridData newBoun;
-					newBoun.triangleConnectivity.resize(eSize, IntVector(npe));
-					cg_elements_read(cgfile, base, zone, section, &conn[0], 0);
-					for (int e = 0; e < eSize; ++e) 
-						for (int k = 0; k < npe; ++k) 
-							newBoun.triangleConnectivity[e][k] = conn[e*npe+k]-1;
-					newBoun.name = buf;
-					gridData->boundaries.push_back(newBoun);
-					bfe.push_back(eBeg);
-					break; 
-				}
-				case BAR_2: {
-					int npe = 2;	conn.resize(npe*eSize);
-					WellGridData newWell;
-					newWell.lineConnectivity.resize(eSize, IntVector(npe));
-					cg_elements_read(cgfile, base, zone, section, &conn[0], 0);
-					for (int e = 0; e < eSize; ++e) 
-						for (int k = 0; k < npe; ++k) 
-							newWell.lineConnectivity[e][k] = conn[e*npe+k]-1;
-					newWell.name = buf;
-					gridData->wells.push_back(newWell);
-					wfe.push_back(eBeg);
-					break; 
-				}
-				case NODE:
-					conn.resize(eSize);
-					cg_elements_read(cgfile, base, zone, section, &conn[0], 0);
-					for (int e = 0; e < eSize; ++e) aHee.push_back(conn[e]-1);
-					break;
-				default:
-					cout << "\nUnsupported element encountered" << endl;	cg_error_exit();
-					break;
-			}
-			if (type == TETRA_4 || type == HEXA_8 || type == PYRA_5 || type == PENTA_6) {
-				rNames.push_back(buf);
-				nRegions++;
-			}
+	for (int section = 1; section <= this->numberOfSections; section++) {
+		ElementType_t type;
+		cgsize_t elementStart, elementEnd; 
+		int nBdry, parentFlag;
+		std::vector<cgsize_t> connectivities;
+		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, section, buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag) != CG_OK) {
+			std::cerr << "\nThere was a problem when reading section" << section << std::endl;	
+			cg_error_exit();
 		}
+		int numberOfElements = elementEnd - elementStart + 1;
+		
+		switch (type) {
+			case TRI_3: {
+				int numberOfVertices = 3;	
+				connectivities.resize(numberOfVertices*numberOfElements);
+				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, section, &connectivities[0], 0);
+				for (int e = 0; e < numberOfElements; e++) {
+					std::vector<int> triangle(numberOfVertices);
+					for (int k = 0; k < numberOfVertices; k++) triangle[k] = connectivities[e*numberOfVertices+k] - 1;
+					this->gridData.triangleConnectivity.emplace_back(std::move(triangle));	
+				}
+				break; 
+			}
+			case QUAD_4: {
+				int numberOfVertices = 4;	
+				connectivities.resize(numberOfVertices*numberOfElements);
+				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, section, &connectivities[0], 0);
+				for (int e = 0; e < numberOfElements; e++) {
+					std::vector<int> quadrilateral(numberOfVertices);
+					for (int k = 0; k < numberOfVertices; k++) quadrilateral[k] = connectivities[e*numberOfVertices+k]-1;
+					this->gridData.triangleConnectivity.emplace_back(std::move(quadrilateral));	
+				}
+				break; 
+			}
+			case BAR_2: {
+				int numberOfVertices = 2;	
+				connectivities.resize(numberOfVertices*numberOfElements);
+				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, section, &connectivities[0], 0);
+				std::vector<std::vector<int>> lineConnectivity;
+				for (int e = 0; e < numberOfElements; e++) {
+					std::vector<int> line(numberOfVertices);
+					for (int k = 0; k < numberOfVertices; k++) line[k] = connectivities[e*numberOfVertices+k]-1;
+					lineConnectivity.emplace_back(std::move(line));
+				}
+				
+				BoundaryData boundaryData;
+				boundaryData.name = buffer;
+				boundaryData.lineConnectivity = std::move(lineConnectivity);
+				this->gridData.boundaries.emplace_back(std::move(boundaryData));
+				break; 
+			}
+			case NODE: {
+				int numberOfVertices = 2;	
+				connectivities.resize(numberOfVertices*numberOfElements);
+				WellData wellData;
+				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, section, &connectivities[0], 0);
+				wellData.wellNode = connectivities[0];
+				wellData.name = buffer;
+				this->gridData.wells.emplace_back(std::move(wellData));
+				break; 
+			}
+			default:
+				std::cout << "\nUnsupported element encountered" << std::endl;	cg_error_exit();
+				break;
+		}
+	}
 }

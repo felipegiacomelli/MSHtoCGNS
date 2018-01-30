@@ -46,9 +46,13 @@ void CgnsReader2D(std::string Path, int base, int zone, GridDataShared gridData)
 					for (int k = 0; k < npe; ++k) aux[k] = conn[i+1+k]-1;
 					switch(conn[i]) {
 						case TRI_3:
-							aTri.push_back(aux);	rTri.push_back(nRegions);		break;
+							aTri.push_back(aux);	
+							rTri.push_back(nRegions);		
+							break;
 						case QUAD_4:
-							aQua.push_back(aux);	rQua.push_back(nRegions);		break;
+							aQua.push_back(aux);	
+							rQua.push_back(nRegions);		
+							break;
 					}
 					i += npe + 1;
 				}
@@ -104,6 +108,9 @@ void CgnsReader2D(std::string Path, int base, int zone, GridDataShared gridData)
 				break;
 		}
 	}
+
+	// PAROU AQUI 
+
 	// Store connectivity information into internal data structure.
 	gridData->triangleConnectivity.resize(aTri.size(), std::vector<int>(3));
 	for (int j = 0; j < aTri.size(); ++j) 
