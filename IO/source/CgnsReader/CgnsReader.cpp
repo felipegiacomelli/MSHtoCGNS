@@ -8,7 +8,6 @@ CgnsReader::CgnsReader(const std::string& filePath) {
 	this->readBase();
 	this->readZone();
 	this->readSection();
-	this->readDimension();
 }
 
 void CgnsReader::checkFile() {
@@ -21,52 +20,48 @@ void CgnsReader::checkFile() {
 
 void CgnsReader::readBase() {
 	if (cg_nbases(this->cgnsFile, &this->cgnsBase)) {
-		std::cerr << "\nThere is no base" << std::endl; 
+		throw std::runtime_error("The CGNS file has no base");
 		cg_error_exit();
 	}
 	if (this->cgnsBase != 1) { 
-		std::cerr << "\nMore than one base is not supported" << std::endl; 
+		throw std::runtime_error("The CGNS file has more than one base");
 		cg_error_exit(); 
+	}
+	if (cg_base_read(this->cgnsFile, this->cgnsBase, this->buffer, &this->cellDimension, &this->physicalDimension)) {
+		throw std::runtime_error("Could not read base");
+		cg_error_exit();
 	}
 }
 
 void CgnsReader::readZone() {
 	if (cg_nzones(this->cgnsFile, this->cgnsBase, &this->cgnsZone)) { 
-		std::cerr << "\nThere is no zone" << std::endl; 
+		throw std::runtime_error("The CGNS file has no zone");
 		cg_error_exit(); 
 	}
 	if (this->cgnsZone != 1) { 
-		std::cout << "\nMore than one zone is not supported" << std::endl; 
+		throw std::runtime_error("The CGNS file has more than one zone");
 		cg_error_exit(); 
 	}
 	if (cg_zone_type(this->cgnsFile, this->cgnsBase, this->cgnsZone, &this->zoneType)) {
-		std::cerr << "\nError reading zone type" << std::endl;	
+		throw std::runtime_error("Could not read zone type");
 		cg_error_exit();
 	}
 	if (this->zoneType != Unstructured) { 
-		std::cout << "\nUnstructured zone expected" << std::endl; 
+		throw std::runtime_error("Only unstructured zones are supported");
 		cg_error_exit(); 
 	}
 	if (cg_zone_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, this->buffer, &this->zoneSizes[0])) {
-		std::cerr << "\nThere was a problem when reading zone" << std::endl;	
+		throw std::runtime_error("Could not read zone");
 		cg_error_exit();
 	}
 }
 
 void CgnsReader::readSection() {
 	if (cg_nsections(this->cgnsFile, this->cgnsBase, this->cgnsZone, &this->numberOfSections)) {
-		std::cerr << "\nThere was a problem when reading sections" << std::endl;	
+		throw std::runtime_error("Could not read number of sections");
 		cg_error_exit();
 	}
 }
-
-void CgnsReader::readDimension() {
-	if (cg_base_read(this->cgnsFile, this->cgnsBase, this->buffer, &this->cellDimension, &this->physicalDimension)) {
-		std::cerr << "\nThere was a problem when reading base" << std::endl;	
-		cg_error_exit();
-	}
-}
-
 
 GridData CgnsReader::getGridData() const {
 	return this->gridData;

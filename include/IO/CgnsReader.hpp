@@ -24,7 +24,6 @@ class CgnsReader {
 		void readBase();
 		void readZone();
 		void readSection();
-		void readDimension();
 		virtual void readNodes() = 0;
 		virtual void readElements() = 0;
 

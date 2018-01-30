@@ -38,6 +38,12 @@ TestCase(Elements) {
 	checkEqual(triangles[3][0], 2); checkEqual(triangles[3][1], 3); checkEqual(triangles[3][2], 4);
 }
 
+TestCase(Boundaries) {
+	std::vector<BoundaryData> boundaries = this->gridData.boundaries;
+
+	checkEqual(static_cast<int>(boundaries.size()), 4);
+}
+
 TestCase(West) {
 	BoundaryData west = this->gridData.boundaries[0];
 

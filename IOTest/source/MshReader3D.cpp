@@ -67,6 +67,12 @@ TestCase(Elements) {
 	checkEqual(tetrahedra[23][0],  4); checkEqual(tetrahedra[23][1],  8); checkEqual(tetrahedra[23][2], 13); checkEqual(tetrahedra[23][3], 10);
 }
 
+TestCase(Boundaries) {
+	std::vector<BoundaryData> boundaries = this->gridData.boundaries;
+
+	checkEqual(static_cast<int>(boundaries.size()), 6);
+}
+
 TestCase(West) {
 	BoundaryData west = this->gridData.boundaries[0];
 
@@ -129,7 +135,7 @@ TestCase(Bottom) {
 	checkEqual(triangles[0][0],  0); checkEqual(triangles[0][1], 12); checkEqual(triangles[0][2],  1);
 	checkEqual(triangles[1][0],  0); checkEqual(triangles[1][1],  3); checkEqual(triangles[1][2], 12);
 	checkEqual(triangles[2][0],  1); checkEqual(triangles[2][1], 12); checkEqual(triangles[2][2],  2);
-	checkEqual(triangles[3][0],  2); checkEqual(triangles[3][1], 12); checkEqual(triangles[3][2], 3);
+	checkEqual(triangles[3][0],  2); checkEqual(triangles[3][1], 12); checkEqual(triangles[3][2],  3);
 }
 
 TestCase(Top) {
