@@ -12,6 +12,7 @@ CgnsFile3D::CgnsFile3D(const GridData& gridData, const std::string& folderPath) 
 	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->numberOfNodes) + std::string("n_") + std::to_string(this->numberOfElements) + "e/"; 
 	createDirectory(folderName);
 	this->fileName = folderName + std::string("Grid.cgns");
+	cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
 }
 
 void CgnsFile3D::defineGeometryType() {
@@ -133,7 +134,7 @@ void CgnsFile3D::writeBoundaryConditions() {
 			}
 			cgsize_t* indices = determine_array_1d<cgsize_t>(vertices); 
 			cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), BCWall, PointList, vertices.size(), indices, &this->boundaryIndices[i]);
-			delete indices;
+			delete indices;		
 		}
 	}
 }
