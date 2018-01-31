@@ -48,3 +48,7 @@ void CgnsFile::writeTransientField(const std::vector<std::vector<double>>& field
 std::string CgnsFile::getFileName() const {
 	return this->fileName;
 }
+
+CgnsFile::~CgnsFile() {
+	cg_close(this->fileIndex);
+}

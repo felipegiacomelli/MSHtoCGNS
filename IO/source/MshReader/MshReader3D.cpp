@@ -55,22 +55,23 @@ void MshReader3D::addElements() {
 			std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
 			std::vector<int>::const_iterator last  = this->elements[index].cend();
 			std::vector<int> element(first, last);
-			for (unsigned int i = 0; i < element.size(); i++) element[i]--;
+			std::transform(std::begin(element), std::end(element), std::begin(element), [](const int& x){return x - 1;});
 			
-			if (type == 2) {
-				this->gridData.boundaries[i].triangleConnectivity.emplace_back(std::move(element));
-			}
-			else if (type == 3) {
-				this->gridData.boundaries[i].quadrangleConnectivity.emplace_back(std::move(element));
-			}
-			else if (type == 4) {
-				this->gridData.tetrahedronConnectivity.emplace_back(std::move(element));
-			}
-			else if (type == 5) {
-				this->gridData.hexahedronConnectivity.emplace_back(std::move(element));
-			}
-			else {
-				throw std::runtime_error("Non supported element found");
+			switch (type) {
+				case 2: 
+					this->gridData.boundaries[i].triangleConnectivity.emplace_back(std::move(element));
+					break;
+				case 3: 
+					this->gridData.boundaries[i].quadrangleConnectivity.emplace_back(std::move(element));
+					break;
+				case 4: 
+					this->gridData.tetrahedronConnectivity.emplace_back(std::move(element));
+					break;
+				case 5: 
+					this->gridData.hexahedronConnectivity.emplace_back(std::move(element));
+					break;
+				default: 
+					throw std::runtime_error("Non supported element found");
 			}
 		}
 	}

@@ -74,7 +74,6 @@ void CgnsReader2D::readElements() {
 					for (int k = 0; k < numberOfVertices; k++) line[k] = connectivities[e*numberOfVertices+k]-1;
 					lineConnectivity.emplace_back(std::move(line));
 				}
-				
 				BoundaryData boundaryData;
 				boundaryData.name = buffer;
 				boundaryData.lineConnectivity = std::move(lineConnectivity);

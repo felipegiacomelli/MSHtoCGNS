@@ -23,36 +23,6 @@ struct BoundaryData {
 		}
 };
 
-struct WellData {
-	friend class boost::serialization::access;
-
-	int	wellNode;			
-	std::vector<std::vector<int>> lineConnectivity;	
-	std::string	name;	
-
-	private:
-		template<class Archive_>
-		void serialize(Archive_ &archive, const unsigned int version) {
-			archive &this->wellNode;
-			archive &this->lineConnectivity;
-			archive &this->name;
-		}
-};
-
-struct RegionData {
-	friend class boost::serialization::access;
-
-	std::vector<int> elementsOnRegion;	
-	std::string	name;			
-
-	private:
-		template<class Archive_>
-		void serialize(Archive_ &archive, const unsigned int version) {
-			archive &this->elementsOnRegion;
-			archive &this->name;
-		}
-};
-
 struct GridData {
 	friend class boost::serialization::access;
 
@@ -70,8 +40,6 @@ struct GridData {
 	std::vector<std::vector<int>> hexahedronConnectivity;		
 
 	std::vector<BoundaryData> boundaries; 
-	std::vector<WellData> wells;		
-	std::vector<RegionData> regions;	
 
 	private:
 		template<class Archive_>
@@ -86,8 +54,6 @@ struct GridData {
 			archive &this->tetrahedronConnectivity;
 			archive &this->hexahedronConnectivity;
 			archive &this->boundaries;
-			archive &this->wells;
-			archive &this->regions;
 		}
 };
 

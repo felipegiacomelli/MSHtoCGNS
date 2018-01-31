@@ -7,14 +7,12 @@
 #include <vector>
 #include <fstream>
 
-// Conversion
 template<typename T, typename U>
 T* determine_array_1d(const std::vector<U>&);
 
 template<typename T, typename U>
 T* determine_array_1d(const std::vector<std::vector<U>>&);
 
-// Output
 template<typename T>
 void print(const std::vector<T>&, std::string&&);
 

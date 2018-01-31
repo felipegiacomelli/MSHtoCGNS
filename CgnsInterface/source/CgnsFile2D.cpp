@@ -92,7 +92,3 @@ void CgnsFile2D::writeBoundaryConditions() {
 		delete indices;
 	}
 }
-
-CgnsFile2D::~CgnsFile2D() {
-	cg_close(this->fileIndex);
-}

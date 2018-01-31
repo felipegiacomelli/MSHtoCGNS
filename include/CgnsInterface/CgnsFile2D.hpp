@@ -13,7 +13,7 @@ class CgnsFile2D : public CgnsFile {
 		CgnsFile2D() = default;
 		CgnsFile2D(const GridData&, const std::string&);
 
-		~CgnsFile2D();
+		~CgnsFile2D() = default;
 
 	private:
 		void defineGeometryType() override; 

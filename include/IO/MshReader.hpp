@@ -8,6 +8,8 @@
 #include <string>
 #include <fstream>
 
+enum class MshElement {BAR_2 = 1};
+
 class MshReader {
 	public:
 		MshReader() = default;

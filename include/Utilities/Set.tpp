@@ -1,6 +1,3 @@
-/*
-// Conversion
-*/
 template<typename T, typename U>
 T* determine_array_1d(const std::set<U>& a) {
 	T* b = new T[a.size()];
@@ -12,9 +9,6 @@ T* determine_array_1d(const std::set<U>& a) {
 	return b;
 }
 
-/*
-// Output
-*/
 template<typename T>
 void print(const std::set<T>& a, std::string&& message) {
 	std::cout << std::fixed << std::setprecision(3);

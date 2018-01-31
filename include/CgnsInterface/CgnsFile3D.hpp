@@ -13,7 +13,7 @@ class CgnsFile3D : public CgnsFile {
 		CgnsFile3D() = default;
 		CgnsFile3D(const GridData&, const std::string&);
 
-		~CgnsFile3D();
+		~CgnsFile3D() = default;
 
 	private:
 		void defineGeometryType() override; 

@@ -48,7 +48,7 @@ endif ()
 ##################################################################
 project (MSHtoCGNS)
 set (VERSION_MAJOR "0")
-set (VERSION_MINOR "3")
+set (VERSION_MINOR "4")
 set (VERSION_PATCH "0")
 set (VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -111,8 +111,8 @@ add_subdirectory (BoostInterfaceTest)
 add_subdirectory (IO)
 add_subdirectory (IOTest)
 add_subdirectory (CgnsInterface)
+# add_subdirectory (CgnsInterfaceTest)
 add_subdirectory (MSHtoCGNS) 
-##################################################################
 
 #################################################################
 # TESTING
@@ -120,7 +120,6 @@ add_subdirectory (MSHtoCGNS)
 enable_testing()
 add_test(NAME BoostInterfaceTest COMMAND BoostInterfaceTest)
 add_test(NAME IOTest COMMAND IOTest)
-#################################################################
 
 ##################################################################
 # DISPLAY INFORMATION

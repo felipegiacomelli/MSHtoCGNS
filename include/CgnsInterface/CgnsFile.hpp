@@ -20,7 +20,7 @@ class CgnsFile {
 
 		std::string getFileName() const;
 
-		~CgnsFile() = default;
+		~CgnsFile();
 
 	protected:
 		virtual void defineGeometryType() = 0; 
