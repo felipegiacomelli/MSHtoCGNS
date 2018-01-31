@@ -1,21 +1,29 @@
 #include <BoostInterface/Test.hpp>
 #include <Grid/GridData.hpp>
 #include <IO/MshReader2D.hpp>
+#include <IO/CgnsReader2D.hpp>
+#include <CgnsInterface/CgnsFile2D.hpp>
 
 #define TOLERANCE 1e-12
 
-struct Msh2D {
-	Msh2D() {
+struct Cgns2D {
+	Cgns2D() {
+		createDirectory("./");
 		MshReader2D mshReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5n_4e.msh");
-		this->gridData = mshReader2D.getGridData();
+		CgnsFile2D cgnsFile2D(mshReader2D.getGridData(), "./");
+		cgnsFile2D.initialize();
+		CgnsReader2D cgnsReader2D("./5n_4e/Grid.cgns");
+		this->gridData = cgnsReader2D.getGridData();
 	}
 
-	~Msh2D() = default;
+	~Cgns2D() {
+		deleteDirectory("./5n_4e/");
+	};
 
 	GridData gridData;
 };
 
-FixtureTestSuite(ReadMsh2D, Msh2D)
+FixtureTestSuite(ReadCgns2D, Cgns2D)
 
 TestCase(Coordinates) {
 	std::vector<std::vector<double>> coordinates = this->gridData.coordinates;

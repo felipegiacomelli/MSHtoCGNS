@@ -6,8 +6,8 @@
 
 struct Cgns3D {
 	Cgns3D() {
-		CgnsReader3D gridReader3D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/27n_8e.cgns");
-		this->gridData = gridReader3D.getGridData();
+		CgnsReader3D cgnsReader3D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/27n_8e.cgns");
+		this->gridData = cgnsReader3D.getGridData();
 	}
 
 	~Cgns3D() = default;

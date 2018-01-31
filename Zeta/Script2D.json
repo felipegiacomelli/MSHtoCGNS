@@ -2,7 +2,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/gmsh/square/structured/121n_140e/square.msh",
-        "output" : "/home/felipe/Build/workspace/grids/Felipe/MSHtoCGNS/Square/Structured/"
+        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5n_4e.msh",
+        "output" : "/home/felipe/Downloads/"
     }
 }
