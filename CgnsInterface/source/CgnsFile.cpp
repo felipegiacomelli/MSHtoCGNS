@@ -1,20 +1,24 @@
 #include <CgnsInterface/CgnsFile.hpp>
 
 CgnsFile::CgnsFile(const GridData& gridData, const std::string& folderPath) : gridData(gridData), folderPath(folderPath), baseName("Base"), zoneName("Zone"), physicalDimension(3) {
-	this->zoneSizes.resize(3);
-	this->coordinateIndices.resize(3);
-	this->sectionIndices.resize(this->gridData.boundaries.size() + 1);
-	this->boundaryIndices.resize(this->gridData.boundaries.size());
 	this->numberOfNodes = this->gridData.coordinates.size();
 	this->cellDimension = this->gridData.dimension;
 }
 
 void CgnsFile::initialize() {
+	this->resizeVectors();
 	this->writeBase();
 	this->writeZone();
 	this->writeCoordinates();
 	this->writeSections();
 	this->writeBoundaryConditions();
+}
+
+void CgnsFile::resizeVectors() {
+	this->zoneSizes.resize(3);
+	this->coordinateIndices.resize(3);
+	this->sectionIndices.resize(this->gridData.boundaries.size() + 1);
+	this->boundaryIndices.resize(this->gridData.boundaries.size());
 }
 
 void CgnsFile::writePermanentField(const std::vector<double>& field, const std::string& fieldName) {

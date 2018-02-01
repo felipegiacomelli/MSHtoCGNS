@@ -13,7 +13,6 @@ class CgnsFile {
 		CgnsFile() = default;
 		CgnsFile(const GridData&, const std::string&);
 
-		void initialize();
 		void writePermanentField(const std::vector<double>&, const std::string&);
 		void writeTimeSteps(const std::vector<double>&);
 		void writeTransientField(const std::vector<std::vector<double>>&, const std::string&);
@@ -23,6 +22,9 @@ class CgnsFile {
 		virtual ~CgnsFile();
 
 	protected:
+		void initialize();
+		void resizeVectors();
+		virtual void setupFile() = 0;
 		virtual void defineGeometryType() = 0; 
 		virtual void writeBase() = 0;
 		virtual void writeZone() = 0;

@@ -29,7 +29,6 @@ int main() {
 		
 		start = std::chrono::steady_clock::now();
 		CgnsFile2D cgnsFile2D(gridData, outputPath); 
-		cgnsFile2D.initialize(); 
 		end = std::chrono::steady_clock::now();
 		elapsedSeconds = end - start;
 		std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";			
@@ -56,7 +55,6 @@ int main() {
 	
 		start = std::chrono::steady_clock::now();
 		CgnsFile3D cgnsFile3D(gridData, outputPath); 
-		cgnsFile3D.initialize(); 
 		end = std::chrono::steady_clock::now();
 		elapsedSeconds = end - start;
 		std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";			

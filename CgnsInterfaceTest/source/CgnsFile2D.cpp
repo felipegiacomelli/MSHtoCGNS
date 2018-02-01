@@ -8,10 +8,8 @@
 
 struct Cgns2D {
 	Cgns2D() {
-		createDirectory("./");
 		MshReader2D mshReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5n_4e.msh");
 		CgnsFile2D cgnsFile2D(mshReader2D.getGridData(), "./");
-		cgnsFile2D.initialize();
 		CgnsReader2D cgnsReader2D("./5n_4e/Grid.cgns");
 		this->gridData = cgnsReader2D.getGridData();
 	}

@@ -2,11 +2,9 @@
 
 CgnsFile2D::CgnsFile2D(const GridData& gridData, const std::string& folderPath) : 
 	CgnsFile(gridData, folderPath) {
-	this->defineGeometryType();
-	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->numberOfNodes) + std::string("n_") + std::to_string(this->numberOfElements) + "e/"; 
-	createDirectory(folderName);
-	this->fileName = folderName + std::string("Grid.cgns");
+	this->setupFile();
 	cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
+	this->initialize();
 }
 
 void CgnsFile2D::defineGeometryType() {
@@ -21,6 +19,13 @@ void CgnsFile2D::defineGeometryType() {
 		this->numberOfElements = this->gridData.quadrangleConnectivity.size();
 	}
 	else throw std::runtime_error("Geometry type not supported");
+}
+
+void CgnsFile2D::setupFile() {
+	this->defineGeometryType();
+	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->numberOfNodes) + std::string("n_") + std::to_string(this->numberOfElements) + "e/"; 
+	createDirectory(folderName);
+	this->fileName = folderName + std::string("Grid.cgns");
 }
 
 void CgnsFile2D::writeBase() {

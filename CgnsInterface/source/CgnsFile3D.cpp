@@ -2,12 +2,9 @@
 
 CgnsFile3D::CgnsFile3D(const GridData& gridData, const std::string& folderPath) : 
 	CgnsFile(gridData, folderPath) {
-	this->defineGeometryType();
-	this->defineBoundaryType();
-	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->numberOfNodes) + std::string("n_") + std::to_string(this->numberOfElements) + "e/"; 
-	createDirectory(folderName);
-	this->fileName = folderName + std::string("Grid.cgns");
+	this->setupFile();
 	cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
+	this->initialize();
 }
 
 void CgnsFile3D::defineGeometryType() {
@@ -43,6 +40,14 @@ void CgnsFile3D::defineBoundaryType() {
 		this->triangularBoundary   = false;
 		this->quadrangularBoundary = true;
 	}
+}
+
+void CgnsFile3D::setupFile() {
+	this->defineGeometryType();
+	this->defineBoundaryType();
+	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->numberOfNodes) + std::string("n_") + std::to_string(this->numberOfElements) + "e/"; 
+	createDirectory(folderName);
+	this->fileName = folderName + std::string("Grid.cgns");
 }
 
 void CgnsFile3D::writeBase() {

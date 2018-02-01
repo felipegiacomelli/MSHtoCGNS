@@ -8,18 +8,15 @@
 
 struct Cgns3D {
 	Cgns3D() {
-		createDirectory("./");
 		MshReader3D mshReader3D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.msh");
 		CgnsFile3D cgnsFile3D(mshReader3D.getGridData(), "./");
-		cgnsFile3D.initialize();
 		CgnsReader3D cgnsReader3D("./14n_24e/Grid.cgns");
 		this->gridData = cgnsReader3D.getGridData();
 	}
 	
-	~Cgns3D() = default;
-	//~Cgns3D() {
-	//	deleteDirectory("./14n_24e/");
-	//};
+	~Cgns3D() {
+		deleteDirectory("./14n_24e/");
+	};
 
 	GridData gridData;
 };
