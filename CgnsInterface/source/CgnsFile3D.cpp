@@ -2,11 +2,6 @@
 
 CgnsFile3D::CgnsFile3D(const GridData& gridData, const std::string& folderPath) : 
 	CgnsFile(gridData, folderPath) {
-	this->coordinateIndices.resize(3);
-	this->sectionIndices.resize(7);
-	this->boundaryIndices.resize(6);
-	this->numberOfNodes    = this->gridData.coordinates.size();
-	this->cellDimension    = this->gridData.dimension;
 	this->defineGeometryType();
 	this->defineBoundaryType();
 	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->numberOfNodes) + std::string("n_") + std::to_string(this->numberOfElements) + "e/"; 

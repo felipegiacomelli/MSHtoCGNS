@@ -2,11 +2,6 @@
 
 CgnsFile2D::CgnsFile2D(const GridData& gridData, const std::string& folderPath) : 
 	CgnsFile(gridData, folderPath) {
-	this->coordinateIndices.resize(3);
-	this->sectionIndices.resize(5);
-	this->boundaryIndices.resize(4);
-	this->numberOfNodes    = this->gridData.coordinates.size();
-	this->cellDimension    = this->gridData.dimension;
 	this->defineGeometryType();
 	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->numberOfNodes) + std::string("n_") + std::to_string(this->numberOfElements) + "e/"; 
 	createDirectory(folderName);

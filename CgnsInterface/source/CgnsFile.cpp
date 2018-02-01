@@ -2,6 +2,11 @@
 
 CgnsFile::CgnsFile(const GridData& gridData, const std::string& folderPath) : gridData(gridData), folderPath(folderPath), baseName("Base"), zoneName("Zone"), physicalDimension(3) {
 	this->zoneSizes.resize(3);
+	this->coordinateIndices.resize(3);
+	this->sectionIndices.resize(this->gridData.boundaries.size() + 1);
+	this->boundaryIndices.resize(this->gridData.boundaries.size());
+	this->numberOfNodes = this->gridData.coordinates.size();
+	this->cellDimension = this->gridData.dimension;
 }
 
 void CgnsFile::initialize() {

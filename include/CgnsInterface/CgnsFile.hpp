@@ -8,9 +8,6 @@
 #include <Utilities/Set.hpp>
 #include <Grid/GridData.hpp>
 
-//enum class GeometryType = {};
-//enum class BoundaryType = {};
-
 class CgnsFile {
 	public:
 		CgnsFile() = default;
@@ -23,7 +20,7 @@ class CgnsFile {
 
 		std::string getFileName() const;
 
-		~CgnsFile();
+		virtual ~CgnsFile();
 
 	protected:
 		virtual void defineGeometryType() = 0; 
