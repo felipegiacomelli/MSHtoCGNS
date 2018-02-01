@@ -26,8 +26,8 @@ class CgnsFile {
 		void resizeVectors();
 		virtual void setupFile() = 0;
 		virtual void defineGeometryType() = 0; 
-		virtual void writeBase() = 0;
-		virtual void writeZone() = 0;
+		virtual void writeBase();
+		virtual void writeZone();
 		virtual void writeCoordinates() = 0;
 		virtual void writeSections() = 0;
 		virtual void writeBoundaryConditions() = 0;
@@ -38,6 +38,7 @@ class CgnsFile {
 		std::vector<cgsize_t> zoneSizes;
 		std::vector<int> coordinateIndices, sectionIndices, boundaryIndices, solutionIndices, fieldsIndices;
 		int fileIndex, baseIndex, zoneIndex, solutionIndex, fieldIndex;
+		ElementType_t geometry, boundary;
 };
 
 #endif

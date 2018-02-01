@@ -21,6 +21,17 @@ void CgnsFile::resizeVectors() {
 	this->boundaryIndices.resize(this->gridData.boundaries.size());
 }
 
+void CgnsFile::writeBase() {
+	cg_base_write(this->fileIndex, this->baseName.c_str(), this->cellDimension, this->physicalDimension, &this->baseIndex);
+}
+
+void CgnsFile::writeZone() {
+	this->zoneSizes[0] = this->numberOfNodes;
+	this->zoneSizes[1] = this->numberOfElements;
+	this->zoneSizes[2] = 0;	
+	cg_zone_write(this->fileIndex, this->baseIndex, this->zoneName.c_str(), &this->zoneSizes[0], Unstructured, &this->zoneIndex);
+}
+
 void CgnsFile::writePermanentField(const std::vector<double>& field, const std::string& fieldName) {
 	cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, fieldName.c_str(), Vertex, &this->solutionIndex);
 	cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->solutionIndex, RealDouble, fieldName.c_str(), &field[0], &this->fieldIndex);
