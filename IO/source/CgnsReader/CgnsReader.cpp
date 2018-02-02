@@ -1,19 +1,16 @@
 #include <IO/CgnsReader.hpp>
 
-CgnsReader::CgnsReader(const std::string& filePath) {
-	this->filePath = filePath;
+CgnsReader::CgnsReader(const std::string& filePath) : filePath(filePath), buffer(new char[800]), zoneSizes(std::vector<cgsize_t>(3)) {
 	this->checkFile();
-	this->buffer = new char[800];
-	this->zoneSizes.resize(3);
 	this->readBase();
 	this->readZone();
 	this->readSection();
 }
 
 void CgnsReader::checkFile() {
-	if (!boost::filesystem::exists(this->filePath)) throw std::runtime_error("There is no .cgns file in the given path");
+	if (!boost::filesystem::exists(this->filePath)) throw std::runtime_error("There is no file in the given path");
 	if (cg_open(this->filePath.c_str(), CG_MODE_READ, &this->cgnsFile)) {
-		std::cerr << "\nThere is a problem opening the file " << this->filePath << std::endl; 
+		std::cerr << std::endl << "Could not open the the file " << this->filePath << std::endl; 
 		cg_error_exit();
 	}
 }
@@ -57,10 +54,13 @@ void CgnsReader::readZone() {
 }
 
 void CgnsReader::readSection() {
-	if (cg_nsections(this->cgnsFile, this->cgnsBase, this->cgnsZone, &this->numberOfSections)) {
+	int numberOfSections;
+	if (cg_nsections(this->cgnsFile, this->cgnsBase, this->cgnsZone, &numberOfSections)) {
 		throw std::runtime_error("Could not read number of sections");
 		cg_error_exit();
 	}
+	this->sectionIndices = std::vector<int>(numberOfSections);
+	std::iota(this->sectionIndices.begin(), this->sectionIndices.end(), 1);
 }
 
 GridData CgnsReader::getGridData() const {

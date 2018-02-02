@@ -35,11 +35,11 @@ void CgnsReader3D::readNodes() {
 }
 
 void CgnsReader3D::readElements() {
-	for (int section = 1; section <= this->numberOfSections; section++) {
+	for (auto section = this->sectionIndices.cbegin(); section != this->sectionIndices.cend(); section++) {
 		ElementType_t type;
 		cgsize_t elementStart, elementEnd; 
 		int nBdry, parentFlag;
-		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, section, buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag) != CG_OK) {
+		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag) != CG_OK) {
 			throw std::runtime_error("Could not read section");
 			cg_error_exit();
 		}
@@ -49,7 +49,7 @@ void CgnsReader3D::readElements() {
 			case TETRA_4: {
 				int numberOfVertices = 4;	
 				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
-				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, section, &connectivities[0], 0);
+				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> tetrahedron(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) tetrahedron[k] = connectivities[e*numberOfVertices+k] - 1;
@@ -60,7 +60,7 @@ void CgnsReader3D::readElements() {
 			case HEXA_8: {
 				int numberOfVertices = 8;	
 				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
-				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, section, &connectivities[0], 0);
+				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> hexahedron(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) hexahedron[k] = connectivities[e*numberOfVertices+k]-1;
@@ -71,7 +71,7 @@ void CgnsReader3D::readElements() {
 			case TRI_3: {
 				int numberOfVertices = 3;	
 				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
-				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, section, &connectivities[0], 0);
+				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
 				std::vector<std::vector<int>> triangleConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> triangle(numberOfVertices);
@@ -87,7 +87,7 @@ void CgnsReader3D::readElements() {
 			case QUAD_4: {
 				int numberOfVertices = 4;	
 				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
-				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, section, &connectivities[0], 0);
+				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
 				std::vector<std::vector<int>> quadrangleConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> quadrangle(numberOfVertices);

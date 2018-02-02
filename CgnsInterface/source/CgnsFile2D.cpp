@@ -44,14 +44,14 @@ void CgnsFile2D::writeSections() {
 	switch (this->geometry) {
 		case TRI_3:  {
 			cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.triangleConnectivity);
-			for (unsigned int i = 0; i < this->gridData.triangleConnectivity.size()*this->gridData.triangleConnectivity[0].size(); i++) connectivities[i]++;
+			std::transform(&connectivities[0], &connectivities[gridData.triangleConnectivity.size()*3], &connectivities[0], [](const cgsize_t& x){return x + 1;});
 			cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", TRI_3, 1, this->numberOfElements, zoneSizes[2], connectivities, &sectionIndices[0]);
 			delete connectivities;
 			break;
 		}
 		case QUAD_4: {
 			cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.quadrangleConnectivity);
-			for (unsigned int i = 0; i < this->gridData.quadrangleConnectivity.size()*this->gridData.quadrangleConnectivity[0].size(); i++) connectivities[i]++;
+			std::transform(&connectivities[0], &connectivities[gridData.quadrangleConnectivity.size()*4], &connectivities[0], [](const cgsize_t& x){return x + 1;});
 			cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", QUAD_4, 1, this->numberOfElements, zoneSizes[2], connectivities, &sectionIndices[0]);
 			delete connectivities;
 			break;
@@ -67,7 +67,7 @@ void CgnsFile2D::writeSections() {
 	for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
 		elementEnd = elementStart + this->gridData.boundaries[i].lineConnectivity.size() - 1;
 		cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.boundaries[i].lineConnectivity);
-		for (unsigned int j = 0; j < this->gridData.boundaries[i].lineConnectivity.size()*this->gridData.boundaries[i].lineConnectivity[0].size(); j++) connectivities[j]++;
+		std::transform(&connectivities[0], &connectivities[this->gridData.boundaries[i].lineConnectivity.size()*2], &connectivities[0], [](const cgsize_t& x){return x + 1;});
 		cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), BAR_2, elementStart, elementEnd, this->zoneSizes[2], connectivities, &this->sectionIndices[i+1]);
 		delete connectivities;
 		elementStart = elementEnd + 1;

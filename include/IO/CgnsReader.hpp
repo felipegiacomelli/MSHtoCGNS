@@ -7,6 +7,7 @@
 
 #include <string>
 #include <fstream>
+#include <numeric>
 
 #include <cgnslib.h>
 
@@ -29,7 +30,8 @@ class CgnsReader {
 
 		std::string filePath;
 		char* buffer;
-		int cgnsFile, cgnsBase, cgnsZone, numberOfSections, cellDimension, physicalDimension;
+		int cgnsFile, cgnsBase, cgnsZone, cellDimension, physicalDimension;
+		std::vector<int> sectionIndices;
 		ZoneType_t zoneType;
 		std::vector<cgsize_t> zoneSizes;
 		cgsize_t numberOfNodes;
