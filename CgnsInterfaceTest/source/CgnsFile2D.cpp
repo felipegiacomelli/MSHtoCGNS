@@ -10,15 +10,26 @@ struct Cgns2D {
 	Cgns2D() {
 		MshReader2D mshReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5n_4e.msh");
 		CgnsFile2D cgnsFile2D(mshReader2D.getGridData(), "./");
-		CgnsReader2D cgnsReader2D("./5n_4e/Grid.cgns");
+		this->filePath = "./5n_4e/Grid.cgns";
+		CgnsReader2D cgnsReader2D(this->filePath);
 		this->gridData = cgnsReader2D.getGridData();
+		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->cgnsFile);
 	}
 
 	~Cgns2D() {
+		cg_close(this->cgnsFile);
 		deleteDirectory("./5n_4e/");
 	};
 
+	std::string filePath;
 	GridData gridData;
+	int cgnsFile;
+	char elementSectionName[100];
+	ElementType_t type;
+	cgsize_t elementStart;
+	cgsize_t elementEnd;
+	int nbndry;
+	int parent_flag;
 };
 
 FixtureTestSuite(ReadCgns2D, Cgns2D)
@@ -42,6 +53,9 @@ TestCase(Elements) {
 	checkEqual(triangles[1][0], 0); checkEqual(triangles[1][1], 4); checkEqual(triangles[1][2], 3);
 	checkEqual(triangles[2][0], 1); checkEqual(triangles[2][1], 2); checkEqual(triangles[2][2], 4);
 	checkEqual(triangles[3][0], 2); checkEqual(triangles[3][1], 3); checkEqual(triangles[3][2], 4);
+	cg_section_read(this->cgnsFile, 1, 1, 1, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 1);
+	checkEqual(this->elementEnd  , 4);
 }
 
 TestCase(Boundaries) {
@@ -58,6 +72,9 @@ TestCase(West) {
 	std::vector<std::vector<int>> lines = west.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 3); checkEqual(lines[0][1], 0);
+	cg_section_read(this->cgnsFile, 1, 1, 2, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 5);
+	checkEqual(this->elementEnd  , 5);
 }
 
 TestCase(East) {
@@ -68,6 +85,9 @@ TestCase(East) {
 	std::vector<std::vector<int>> lines = east.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 1); checkEqual(lines[0][1], 2);
+	cg_section_read(this->cgnsFile, 1, 1, 3, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 6);
+	checkEqual(this->elementEnd  , 6);
 }
 
 TestCase(South) {
@@ -78,6 +98,9 @@ TestCase(South) {
 	std::vector<std::vector<int>> lines = south.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 0); checkEqual(lines[0][1], 1);
+	cg_section_read(this->cgnsFile, 1, 1, 4, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 7);
+	checkEqual(this->elementEnd  , 7);
 }
 
 TestCase(North) {
@@ -88,6 +111,9 @@ TestCase(North) {
 	std::vector<std::vector<int>> lines = north.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 2); checkEqual(lines[0][1], 3);
+	cg_section_read(this->cgnsFile, 1, 1, 5, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 8);
+	checkEqual(this->elementEnd  , 8);
 }
 
 TestSuiteEnd()
