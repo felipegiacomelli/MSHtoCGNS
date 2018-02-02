@@ -19,7 +19,7 @@ void CgnsFile3D::defineGeometryType() {
 }
 
 void CgnsFile3D::defineBoundaryType() {
-	std::vector<bool> boundaryTypes;
+	std::vector<bool> boundaryTypes;	
 	for (auto i = this->gridData.boundaries.cbegin(); i < this->gridData.boundaries.cend(); i++) {
 		if (i->lineConnectivity.size() == 0) {
 			if      (i->triangleConnectivity.size()  > 0 && i->quadrangleConnectivity.size() == 0) boundaryTypes.emplace_back(true);
@@ -80,24 +80,28 @@ void CgnsFile3D::writeSections() {
 
 	switch (this->boundary) {
 		case TRI_3: {
+			cgsize_t elementStart = this->numberOfElements + 1;
+			cgsize_t elementEnd;
 			for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
-				cgsize_t elementStart = this->numberOfElements + 1;
-				cgsize_t elementEnd = elementStart + this->gridData.boundaries[i].triangleConnectivity.size() - 1;
+				elementEnd = elementStart + this->gridData.boundaries[i].triangleConnectivity.size() - 1;
 				cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.boundaries[i].triangleConnectivity);
 				for (unsigned int j = 0; j < this->gridData.boundaries[i].triangleConnectivity.size()*this->gridData.boundaries[i].triangleConnectivity[0].size(); j++) connectivities[j]++;
 				cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), TRI_3, elementStart, elementEnd, this->zoneSizes[2], connectivities, &this->sectionIndices[i+1]);
 				delete connectivities;
+				elementStart = elementEnd + 1;
 			}
 			break;
 		}
 		case QUAD_4: {
+			cgsize_t elementStart = this->numberOfElements + 1;
+			cgsize_t elementEnd;
 			for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
-				cgsize_t elementStart = this->numberOfElements + 1;
-				cgsize_t elementEnd = elementStart + this->gridData.boundaries[i].quadrangleConnectivity.size() - 1;
+				elementEnd = elementStart + this->gridData.boundaries[i].quadrangleConnectivity.size() - 1;
 				cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.boundaries[i].quadrangleConnectivity);
 				for (unsigned int j = 0; j < this->gridData.boundaries[i].quadrangleConnectivity.size()*this->gridData.boundaries[i].quadrangleConnectivity[0].size(); j++) connectivities[j]++;
 				cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), QUAD_4, elementStart, elementEnd, this->zoneSizes[2], connectivities, &this->sectionIndices[i+1]);
 				delete connectivities;
+				elementStart = elementEnd + 1;
 			}
 			break;
 		}

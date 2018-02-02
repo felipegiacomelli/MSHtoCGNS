@@ -61,14 +61,16 @@ void CgnsFile2D::writeSections() {
 			cg_error_exit();
 			break;
 	}
-
+	
+	cgsize_t elementStart = this->numberOfElements + 1;
+	cgsize_t elementEnd;
 	for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
-		cgsize_t elementStart = this->numberOfElements + 1;
-		cgsize_t elementEnd = elementStart + this->gridData.boundaries[i].lineConnectivity.size() - 1;
+		elementEnd = elementStart + this->gridData.boundaries[i].lineConnectivity.size() - 1;
 		cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.boundaries[i].lineConnectivity);
 		for (unsigned int j = 0; j < this->gridData.boundaries[i].lineConnectivity.size()*this->gridData.boundaries[i].lineConnectivity[0].size(); j++) connectivities[j]++;
 		cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), BAR_2, elementStart, elementEnd, this->zoneSizes[2], connectivities, &this->sectionIndices[i+1]);
 		delete connectivities;
+		elementStart = elementEnd + 1;
 	}
 }
 
