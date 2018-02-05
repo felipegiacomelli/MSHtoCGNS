@@ -52,8 +52,8 @@ void MshReader2D::addElements() {
 		for (unsigned int j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
 			int index = this->physicalEntitiesElementIndices[i][j];
 			int type  = this->elements[index][0];
-			std::vector<int>::const_iterator first = this->elements[index].cbegin() + 4;
-			std::vector<int>::const_iterator last  = this->elements[index].cend();
+			auto first = this->elements[index].cbegin() + 4;
+			auto last  = this->elements[index].cend();
 			std::vector<int> element(first, last); 
 			std::transform(std::begin(element), std::end(element), std::begin(element), [](const int& x){return x - 1;});
 			

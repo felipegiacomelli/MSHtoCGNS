@@ -1,9 +1,7 @@
 template<typename T, typename U>
 T* determine_array_1d(const std::vector<U>& a) {
 	T* b = new T[a.size()];
-	for (unsigned int i = 0; i < a.size(); i++) {
-		b[i] = static_cast<T>(a[i]);
-	}
+	for (unsigned int i = 0; i < a.size(); i++) b[i] = static_cast<T>(a[i]);
 	return b;
 }
 
@@ -24,9 +22,7 @@ template<typename T>
 void print(const std::vector<T>& a, std::string&& message) {
 	std::cout << std::fixed << std::setprecision(3);
 	std::cout << "\t" << message << std::endl;
-	for (auto i = a.cbegin(); i != a.cend(); i++) {
-		std::cout << "\t" << *i;
-	}
+	for (auto i = a.cbegin(); i != a.cend(); i++) std::cout << "\t" << *i;
 	std::cout << std::endl;
 }
 
@@ -46,9 +42,8 @@ void print(const std::vector<std::vector<T>>& a, std::string&& message) {
 template<typename T>
 void output(const std::vector<T>& a, std::ofstream& file) {
 	file << std::fixed << std::setprecision(3);
-	for (auto i = a.cbegin(); i != a.cend(); i ++) {
-		file << "\t" << std::setw(6) << std::right << *i;
-	}
+	for (auto i = a.cbegin(); i != a.cend(); i ++) file << "\t" << std::setw(6) << std::right << *i;		
+	file << std::endl;
 }
 
 template<typename T>

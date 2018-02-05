@@ -2,7 +2,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/gmsh/fluid/cylinder/cylinder.msh",
+        "input"  : "/home/felipe/Felipe/gmsh/fluid/half_cylinder/159049n_314265e/half_cylinder.msh",
         "output" : "/home/felipe/Downloads/"
     }
 }

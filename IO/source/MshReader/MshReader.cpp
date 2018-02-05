@@ -1,10 +1,8 @@
 #include <IO/MshReader.hpp>
 
-MshReader::MshReader(const std::string& filePath) {
+MshReader::MshReader(const std::string& filePath): filePath(filePath), buffer(new char[800]) {
 	if (!boost::filesystem::exists(filePath)) throw std::runtime_error("There is no .msh file in the given path");
-	this->filePath = filePath;
 	this->file = std::ifstream(this->filePath.c_str());
-	this->buffer = new char[800];
 }
 
 void MshReader::readNodes() {
@@ -35,7 +33,7 @@ void MshReader::readElements() {
 			std::vector<int> element;
 			int value;
 			while (stream >> value) element.push_back(value);
-			this->elements.push_back(element);
+			this->elements.emplace_back(std::move(element));
 		}
 	}
 	this->elements.erase(this->elements.begin());
