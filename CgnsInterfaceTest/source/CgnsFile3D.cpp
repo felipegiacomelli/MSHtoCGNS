@@ -8,9 +8,7 @@
 
 struct Cgns3D {
 	Cgns3D() {
-		MshReader3D mshReader3D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.msh");
-		CgnsFile3D cgnsFile3D(mshReader3D.getGridData(), "./");
-		this->filePath = "./14n_24e/Grid.cgns";
+		this->filePath = "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.cgns";
 		CgnsReader3D cgnsReader3D(this->filePath);
 		this->gridData = cgnsReader3D.getGridData();
 		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->cgnsFile);
@@ -18,7 +16,6 @@ struct Cgns3D {
 	
 	~Cgns3D() {
 		cg_close(this->cgnsFile);
-		deleteDirectory("./14n_24e/");
 	};
 
 	std::string filePath;

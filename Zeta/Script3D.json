@@ -2,7 +2,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/gmsh/cube/unstructured/14n_24e/cube.msh",
-        "output" : "/home/felipe/Downloads/"
+        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.msh",
+        "output" : "./"
     }
 }
