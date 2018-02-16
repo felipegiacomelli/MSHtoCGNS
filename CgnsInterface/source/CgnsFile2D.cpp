@@ -64,7 +64,7 @@ void CgnsFile2D::writeSections() {
 	
 	cgsize_t elementStart = this->numberOfElements + 1;
 	cgsize_t elementEnd;
-	for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
+	for (unsigned i = 0; i < this->gridData.boundaries.size(); i++) {
 		elementEnd = elementStart + this->gridData.boundaries[i].lineConnectivity.size() - 1;
 		cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.boundaries[i].lineConnectivity);
 		std::transform(&connectivities[0], &connectivities[this->gridData.boundaries[i].lineConnectivity.size()*2], &connectivities[0], [](const cgsize_t& x){return x + 1;});
@@ -75,7 +75,7 @@ void CgnsFile2D::writeSections() {
 }
 
 void CgnsFile2D::writeBoundaryConditions() {
-	for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
+	for (unsigned i = 0; i < this->gridData.boundaries.size(); i++) {
 		std::set<int> vertices;
 		for (auto j = this->gridData.boundaries[i].lineConnectivity.cbegin(); j != this->gridData.boundaries[i].lineConnectivity.cend(); j++) {
 			for (auto k = j->cbegin(); k != j->cend(); k++) {

@@ -42,14 +42,14 @@ void MshReader3D::readPhysicalEntities() {
 	this->geometryNumber = geometryNumbers[0];
 
 	this->gridData.boundaries.resize(boundaryNumbers.size());
-	for (unsigned int i = 0; i < boundaryNumbers.size(); i++) {
+	for (unsigned i = 0; i < boundaryNumbers.size(); i++) {
 		this->gridData.boundaries[i].name = entitiesNames[boundaryNumbers[i]];
 	}
 }
 
 void MshReader3D::addElements() {
-	for (unsigned int i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
-		for (unsigned int j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
+	for (unsigned i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
+		for (unsigned j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
 			int index = this->physicalEntitiesElementIndices[i][j];
 			int type  = this->elements[index][0];
 			auto first = this->elements[index].cbegin() + 4;

@@ -15,7 +15,7 @@ struct BoundaryData {
 
 	private:
 		template<class Archive_>
-		void serialize(Archive_ &archive, const unsigned int version) {
+		void serialize(Archive_ &archive, const unsigned version) {
 			archive &this->lineConnectivity;
 			archive &this->triangleConnectivity;
 			archive &this->quadrangleConnectivity;
@@ -43,7 +43,7 @@ struct GridData {
 
 	private:
 		template<class Archive_>
-		void serialize(Archive_ & archive, const unsigned int version) {
+		void serialize(Archive_ & archive, const unsigned version) {
 			archive &this->thickness;
 			archive &this->dimension;
 			archive &this->numberOfLocalVertices;

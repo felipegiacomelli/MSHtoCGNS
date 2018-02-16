@@ -82,7 +82,7 @@ void CgnsFile3D::writeSections() {
 		case TRI_3: {
 			cgsize_t elementStart = this->numberOfElements + 1;
 			cgsize_t elementEnd;
-			for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
+			for (unsigned i = 0; i < this->gridData.boundaries.size(); i++) {
 				elementEnd = elementStart + this->gridData.boundaries[i].triangleConnectivity.size() - 1;
 				cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.boundaries[i].triangleConnectivity);
 				std::transform(&connectivities[0], &connectivities[gridData.boundaries[i].triangleConnectivity.size()*3], &connectivities[0], [](const cgsize_t& x){return x + 1;});
@@ -95,7 +95,7 @@ void CgnsFile3D::writeSections() {
 		case QUAD_4: {
 			cgsize_t elementStart = this->numberOfElements + 1;
 			cgsize_t elementEnd;
-			for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
+			for (unsigned i = 0; i < this->gridData.boundaries.size(); i++) {
 				elementEnd = elementStart + this->gridData.boundaries[i].quadrangleConnectivity.size() - 1;
 				cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData.boundaries[i].quadrangleConnectivity);
 				std::transform(&connectivities[0], &connectivities[gridData.boundaries[i].quadrangleConnectivity.size()*4], &connectivities[0], [](const cgsize_t& x){return x + 1;});
@@ -114,7 +114,7 @@ void CgnsFile3D::writeSections() {
 void CgnsFile3D::writeBoundaryConditions() {
 	switch (this->boundary) {
 		case TRI_3: {
-			for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
+			for (unsigned i = 0; i < this->gridData.boundaries.size(); i++) {
 				std::set<int> vertices;
 				for (auto j = this->gridData.boundaries[i].triangleConnectivity.cbegin(); j != this->gridData.boundaries[i].triangleConnectivity.cend(); j++) {
 					for (auto k = j->cbegin(); k != j->cend(); k++) {
@@ -128,7 +128,7 @@ void CgnsFile3D::writeBoundaryConditions() {
 			break;
 		}
 		case QUAD_4: {
-			for (unsigned int i = 0; i < this->gridData.boundaries.size(); i++) {
+			for (unsigned i = 0; i < this->gridData.boundaries.size(); i++) {
 				std::set<int> vertices;
 				for (auto j = this->gridData.boundaries[i].quadrangleConnectivity.cbegin(); j != this->gridData.boundaries[i].quadrangleConnectivity.cend(); j++) {
 					for (auto k = j->cbegin(); k != j->cend(); k++) {

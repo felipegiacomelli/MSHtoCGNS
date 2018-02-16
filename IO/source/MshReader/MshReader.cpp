@@ -42,7 +42,7 @@ void MshReader::readElements() {
 	}
 
 	this->physicalEntitiesElementIndices.resize(this->numberOfPhysicalEntities, std::vector<int>());
-	for (unsigned int i = 0; i < this->elements.size(); i++) {
+	for (unsigned i = 0; i < this->elements.size(); i++) {
 		this->physicalEntitiesElementIndices[this->elements[i][2]-1].push_back(i);
 	}
 }
