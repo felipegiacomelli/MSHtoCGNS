@@ -8,7 +8,10 @@ CgnsReader::CgnsReader(const std::string& filePath) : filePath(filePath), buffer
 }
 
 void CgnsReader::checkFile() {
+    boost::filesystem::path input(this->filePath);
+	if (!boost::filesystem::exists(input.parent_path())) throw std::runtime_error("CgnsReader: The parent path does not exist");
 	if (!boost::filesystem::exists(this->filePath)) throw std::runtime_error("There is no file in the given path");
+	if (input.extension() != ".cgns") throw std::runtime_error("CgnsReader: The file extension is not .cgns");
 	if (cg_open(this->filePath.c_str(), CG_MODE_READ, &this->cgnsFile)) {
 		std::cerr << std::endl << "Could not open the the file " << this->filePath << std::endl; 
 		cg_error_exit();

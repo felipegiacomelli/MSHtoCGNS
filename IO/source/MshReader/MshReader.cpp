@@ -1,7 +1,14 @@
 #include <IO/MshReader.hpp>
 
 MshReader::MshReader(const std::string& filePath): filePath(filePath), buffer(new char[800]) {
-	if (!boost::filesystem::exists(filePath)) throw std::runtime_error("There is no .msh file in the given path");
+	this->checkFile();
+}
+
+void MshReader::checkFile() {
+    boost::filesystem::path input(this->filePath);
+	if (!boost::filesystem::exists(input.parent_path())) throw std::runtime_error("MshReader: The parent path does not exist");
+	if (!boost::filesystem::exists(this->filePath)) throw std::runtime_error("MshReader: There is no file in the given path");
+	if (input.extension() != ".msh") throw std::runtime_error("MshReader: The file extension is not .msh");
 	this->file = std::ifstream(this->filePath.c_str());
 }
 
@@ -37,14 +44,23 @@ void MshReader::readElements() {
 		}
 	}
 	this->elements.erase(this->elements.begin());
+	
+	if (elements[0][2] != 2) throw std::runtime_error("Elements must have exactly 2 tags");
+
 	for (auto i = this->elements.begin(); i < this->elements.end(); i++) {
-		i->erase(i->begin());		
+		i->erase(i->begin());
+		i->erase(i->begin()+1);
+		i->erase(i->begin()+2);
 	}
 
 	this->physicalEntitiesElementIndices.resize(this->numberOfPhysicalEntities, std::vector<int>());
 	for (unsigned i = 0; i < this->elements.size(); i++) {
-		this->physicalEntitiesElementIndices[this->elements[i][2]-1].push_back(i);
+		this->physicalEntitiesElementIndices[this->elements[i][1]-1].push_back(i);
 	}
+
+	//std::cout << std::endl;
+	//print(elements, "elements");
+	//std::cout << std::endl;
 }
 
 GridData MshReader::getGridData() const {
@@ -54,4 +70,3 @@ GridData MshReader::getGridData() const {
 MshReader::~MshReader() {
 	delete this->buffer;
 }
-

@@ -40,7 +40,6 @@ void MshReader3D::readPhysicalEntities() {
 		}
 	}
 	if (geometryNumbers.size() != 1) throw std::runtime_error("One and only one geometry supported");
-	this->geometryNumber = geometryNumbers[0];
 
 	this->gridData.boundaries.resize(boundaryNumbers.size());
 	for (unsigned i = 0; i < boundaryNumbers.size(); i++) {
@@ -53,7 +52,7 @@ void MshReader3D::addElements() {
 		for (unsigned j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
 			int index = this->physicalEntitiesElementIndices[i][j];
 			int type  = this->elements[index][0];
-			auto first = this->elements[index].cbegin() + 4;
+			auto first = this->elements[index].cbegin() + 2;
 			auto last  = this->elements[index].cend();
 			std::vector<int> element(first, last);
 			std::transform(std::begin(element), std::end(element), std::begin(element), [](const int& x){return x - 1;});

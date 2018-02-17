@@ -112,38 +112,11 @@ void CgnsFile3D::writeSections() {
 }
 
 void CgnsFile3D::writeBoundaryConditions() {
-	switch (this->boundary) {
-		case TRI_3: {
-			for (unsigned i = 0; i < this->gridData.boundaries.size(); i++) {
-				std::set<int> vertices;
-				for (auto j = this->gridData.boundaries[i].triangleConnectivity.cbegin(); j != this->gridData.boundaries[i].triangleConnectivity.cend(); j++) {
-					for (auto k = j->cbegin(); k != j->cend(); k++) {
-						vertices.insert(*k+1);
-					}
-				}
-				cgsize_t* indices = determine_array_1d<cgsize_t>(vertices); 
-				cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), BCWall, PointList, vertices.size(), indices, &this->boundaryIndices[i]);
-				delete indices;
-			}
-			break;
-		}
-		case QUAD_4: {
-			for (unsigned i = 0; i < this->gridData.boundaries.size(); i++) {
-				std::set<int> vertices;
-				for (auto j = this->gridData.boundaries[i].quadrangleConnectivity.cbegin(); j != this->gridData.boundaries[i].quadrangleConnectivity.cend(); j++) {
-					for (auto k = j->cbegin(); k != j->cend(); k++) {
-						vertices.insert(*k+1);
-					}
-				}
-				cgsize_t* indices = determine_array_1d<cgsize_t>(vertices); 
-				cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), BCWall, PointList, vertices.size(), indices, &this->boundaryIndices[i]);
-				delete indices;		
-			}
-			break;
-		}
-		default: 
-			throw std::runtime_error("Boundary type not supported");
-			cg_error_exit();
-			break;
-		}
+	for (unsigned i = 0; i < this->gridData.boundaries.size(); i++) {
+		int numberOfVertices = this->gridData.boundaries[i].verticesIndices.size();
+		cgsize_t* indices = determine_array_1d<cgsize_t>(this->gridData.boundaries[i].verticesIndices); 
+		std::transform(&indices[0], &indices[numberOfVertices], &indices[0], [](const cgsize_t& x){return x + 1;});
+		cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), BCWall, PointList, numberOfVertices, indices, &this->boundaryIndices[i]);
+		delete indices;
+	}
 }

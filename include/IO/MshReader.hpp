@@ -9,8 +9,6 @@
 #include <string>
 #include <fstream>
 
-enum class MshElement {BAR_2 = 1};
-
 class MshReader {
 	public:
 		MshReader() = default;
@@ -21,6 +19,7 @@ class MshReader {
 		~MshReader();
 
 	protected:
+		void checkFile();
 		void readNodes();
 		void readElements();
 		virtual void readPhysicalEntities() = 0;
@@ -30,7 +29,7 @@ class MshReader {
 		std::string filePath;
 		std::ifstream file;
 		char* buffer;
-		int numberOfPhysicalEntities, geometryNumber;
+		int numberOfPhysicalEntities;
 		std::vector<std::vector<int>> elements, physicalEntitiesElementIndices;
 		GridData gridData;
 };
