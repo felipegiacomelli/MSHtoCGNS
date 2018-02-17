@@ -110,7 +110,7 @@ void CgnsReader3D::readElements() {
 }
 
 void CgnsReader3D::defineBoundaryVerticesIndices() {
-	for (auto boundary = this->gridData.boundaries.begin(); boundary < this->gridData.boundaries.end(); boundary++) {
+	for (auto boundary = this->gridData.boundaries.begin(); boundary != this->gridData.boundaries.end(); boundary++) {
 		std::set<int> verticesIndices;
 		if (boundary->triangleConnectivity.size() > 0) {
 			for (auto j = boundary->triangleConnectivity.cbegin(); j != boundary->triangleConnectivity.cend(); j++) {

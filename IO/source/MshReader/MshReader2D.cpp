@@ -29,14 +29,18 @@ void MshReader2D::readPhysicalEntities() {
 
 	std::vector<int> geometryNumbers, boundaryNumbers;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
-		if (entitiesTypes[i] == 1) {
-			boundaryNumbers.push_back(entitiesNumbers[i]);
-		}
-		else if (entitiesTypes[i] == 2) {
-			geometryNumbers.push_back(entitiesTypes[i]);
-		}
-		else {
-			throw std::runtime_error("Non supported physical entity found");
+		switch(entitiesTypes[i]) {
+			case 1: {
+				boundaryNumbers.push_back(entitiesNumbers[i]);
+				break;
+			}
+			case 2: {
+				geometryNumbers.push_back(entitiesTypes[i]);;
+				break;
+			}
+			default: 
+				throw std::runtime_error("Non supported physical entity found");
+				break;
 		}
 	}
 	if (geometryNumbers.size() != 1) throw std::runtime_error("One and only one geometry supported");

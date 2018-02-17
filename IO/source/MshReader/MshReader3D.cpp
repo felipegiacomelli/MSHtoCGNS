@@ -29,14 +29,18 @@ void MshReader3D::readPhysicalEntities() {
 
 	std::vector<int> geometryNumbers, boundaryNumbers;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
-		if (entitiesTypes[i] == 2) {
-			boundaryNumbers.push_back(entitiesNumbers[i]);
-		}
-		else if (entitiesTypes[i] == 3) {
-			geometryNumbers.push_back(entitiesTypes[i]);
-		}
-		else {
-			throw std::runtime_error("Non supported physical entity found");
+		switch(entitiesTypes[i]) {
+			case 2: {
+				boundaryNumbers.push_back(entitiesNumbers[i]);
+				break;
+			}
+			case 3: {
+				geometryNumbers.push_back(entitiesTypes[i]);;
+				break;
+			}
+			default: 
+				throw std::runtime_error("Non supported physical entity found");
+				break;
 		}
 	}
 	if (geometryNumbers.size() != 1) throw std::runtime_error("One and only one geometry supported");
@@ -78,7 +82,7 @@ void MshReader3D::addElements() {
 }
 
 void MshReader3D::defineBoundaryVerticesIndices() {
-	for (auto boundary = this->gridData.boundaries.begin(); boundary < this->gridData.boundaries.end(); boundary++) {
+	for (auto boundary = this->gridData.boundaries.begin(); boundary != this->gridData.boundaries.end(); boundary++) {
 		std::set<int> verticesIndices;
 		if (boundary->triangleConnectivity.size() > 0) {
 			for (auto j = boundary->triangleConnectivity.cbegin(); j != boundary->triangleConnectivity.cend(); j++) {
