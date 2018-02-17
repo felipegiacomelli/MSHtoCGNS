@@ -13,10 +13,6 @@ class CgnsFile {
 		CgnsFile() = default;
 		CgnsFile(const GridData&, const std::string&);
 
-		void writePermanentField(const std::vector<double>&, const std::string&);
-		void writeTimeSteps(const std::vector<double>&);
-		void writeTransientField(const std::vector<std::vector<double>>&, const std::string&);
-
 		std::string getFileName() const;
 
 		virtual ~CgnsFile();

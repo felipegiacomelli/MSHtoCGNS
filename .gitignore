@@ -32,3 +32,7 @@
 
 # Folders
 build_sublime/
+
+# Application setup files
+Zeta/Script2D.json
+Zeta/Script3D.json

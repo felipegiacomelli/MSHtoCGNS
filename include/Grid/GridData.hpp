@@ -10,12 +10,13 @@ struct BoundaryData {
 
 	std::vector<std::vector<int>> lineConnectivity;			
 	std::vector<std::vector<int>> triangleConnectivity;		
-	std::vector<std::vector<int>> quadrangleConnectivity;		
+	std::vector<std::vector<int>> quadrangleConnectivity;
+	std::vector<int> verticesIndices;		
 	std::string	name;	
 
 	private:
-		template<class Archive_>
-		void serialize(Archive_ &archive, const unsigned version) {
+		template<class Archive>
+		void serialize(Archive &archive, const unsigned version) {
 			archive &this->lineConnectivity;
 			archive &this->triangleConnectivity;
 			archive &this->quadrangleConnectivity;
@@ -42,8 +43,8 @@ struct GridData {
 	std::vector<BoundaryData> boundaries; 
 
 	private:
-		template<class Archive_>
-		void serialize(Archive_ & archive, const unsigned version) {
+		template<class Archive>
+		void serialize(Archive & archive, const unsigned version) {
 			archive &this->thickness;
 			archive &this->dimension;
 			archive &this->numberOfLocalVertices;
