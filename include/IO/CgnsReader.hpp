@@ -26,10 +26,9 @@ class CgnsReader {
 		void readBase();
 		void readZone();
 		void readNumberOfSections();
-		void readNumberOfBoundaries();
 		virtual void readNodes() = 0;
 		virtual void readElements() = 0;
-		void readBoundaries();
+		virtual void defineBoundaryVerticesIndices() = 0;
 
 		std::string filePath;
 		char* buffer;

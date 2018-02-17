@@ -5,7 +5,6 @@ CgnsReader::CgnsReader(const std::string& filePath) : filePath(filePath), buffer
 	this->readBase();
 	this->readZone();
 	this->readNumberOfSections();
-	this->readNumberOfBoundaries();
 }
 
 void CgnsReader::checkFile() {
@@ -62,17 +61,6 @@ void CgnsReader::readNumberOfSections() {
 	}
 	this->sectionIndices = std::vector<int>(numberOfSections);
 	std::iota(this->sectionIndices.begin(), this->sectionIndices.end(), 1);
-}
-
-void CgnsReader::readNumberOfBoundaries() {
-	int numberOfBoundaries;
-	if (cg_nbocos(this->cgnsFile, this->cgnsBase, this->cgnsZone, &numberOfBoundaries)) {
-		throw std::runtime_error("Could not read number of boundaries");
-		cg_error_exit();
-	}
-	this->boundaryIndices = std::vector<int>(numberOfBoundaries);
-	// if (this->boundaryIndices.size() != this->sectionIndices.size()-1) throw std::runtime_error("Number of boundaries and sections mismatch");
-	std::iota(this->boundaryIndices.begin(), this->boundaryIndices.end(), 1);
 }
 
 GridData CgnsReader::getGridData() const {

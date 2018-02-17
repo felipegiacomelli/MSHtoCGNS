@@ -6,6 +6,7 @@ CgnsReader2D::CgnsReader2D(const std::string& filePath) :
 	this->gridData.thickness = 1.0;
 	this->readNodes();
 	this->readElements();
+	this->defineBoundaryVerticesIndices();
 }
 
 void CgnsReader2D::readNodes() {
@@ -71,7 +72,7 @@ void CgnsReader2D::readElements() {
 				std::vector<std::vector<int>> lineConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> line(numberOfVertices);
-					for (int k = 0; k < numberOfVertices; k++) line[k] = connectivities[e*numberOfVertices+k]-1;
+					for (int k = 0; k < numberOfVertices; k++) line[k] = connectivities[e*numberOfVertices+k] - 1;
 					lineConnectivity.emplace_back(std::move(line));
 				}
 				BoundaryData boundaryData;
@@ -85,5 +86,17 @@ void CgnsReader2D::readElements() {
 				cg_error_exit();
 				break;
 		}
+	}
+}
+
+void CgnsReader2D::defineBoundaryVerticesIndices() {
+	for (auto boundary = this->gridData.boundaries.begin(); boundary < this->gridData.boundaries.end(); boundary++) {
+		std::set<int> verticesIndices;
+		for (auto j = boundary->lineConnectivity.cbegin(); j != boundary->lineConnectivity.cend(); j++) {
+			for (auto k = j->cbegin(); k != j->cend(); k++) {
+				verticesIndices.insert(*k);
+			}
+		}
+		boundary->verticesIndices = std::vector<int>(verticesIndices.begin(), verticesIndices.end());
 	}
 }

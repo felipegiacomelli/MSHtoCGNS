@@ -18,7 +18,7 @@ struct Cgns2D {
 FixtureTestSuite(ReadCgns2D, Cgns2D)
 
 TestCase(Coordinates) {
-	std::vector<std::vector<double>> coordinates = this->gridData.coordinates;
+	auto coordinates = this->gridData.coordinates;
 
 	checkEqual(static_cast<int>(coordinates.size()), 9);
 	checkClose(coordinates[0][0], 0.0, TOLERANCE); checkClose(coordinates[0][1], 0.0, TOLERANCE); checkClose(coordinates[0][2], 0.0, TOLERANCE);
@@ -33,7 +33,7 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-	std::vector<std::vector<int>> quadrangles = this->gridData.quadrangleConnectivity;
+	auto quadrangles = this->gridData.quadrangleConnectivity;
 
 	checkEqual(static_cast<int>(quadrangles.size()), 4);
 	checkEqual(quadrangles[0][0], 0); checkEqual(quadrangles[0][1], 1); checkEqual(quadrangles[0][2], 4); checkEqual(quadrangles[0][3], 3);
@@ -43,7 +43,7 @@ TestCase(Elements) {
 }
 
 TestCase(Boundaries) {
-	std::vector<BoundaryData> boundaries = this->gridData.boundaries;
+	auto boundaries = this->gridData.boundaries;
 
 	checkEqual(static_cast<int>(boundaries.size()), 4);
 }
@@ -53,10 +53,16 @@ TestCase(West) {
 
 	check(west.name == std::string("West"));
 
-	std::vector<std::vector<int>> lines = west.lineConnectivity;
+	auto lines = west.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 2);
 	checkEqual(lines[0][0], 6); checkEqual(lines[0][1], 3);
 	checkEqual(lines[1][0], 3); checkEqual(lines[1][1], 0);
+
+	auto verticesIndices = west.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 3);
+	checkEqual(verticesIndices[0], 0);
+	checkEqual(verticesIndices[1], 3); 
+	checkEqual(verticesIndices[2], 6);
 }
 
 TestCase(East) {
@@ -64,10 +70,16 @@ TestCase(East) {
 
 	check(east.name == std::string("East"));
 
-	std::vector<std::vector<int>> lines = east.lineConnectivity;
+	auto lines = east.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 2);
 	checkEqual(lines[0][0], 2); checkEqual(lines[0][1], 5);
 	checkEqual(lines[1][0], 5); checkEqual(lines[1][1], 8);
+	
+	auto verticesIndices = east.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 3);
+	checkEqual(verticesIndices[0], 2);
+	checkEqual(verticesIndices[1], 5); 
+	checkEqual(verticesIndices[2], 8);
 }
 
 TestCase(South) {
@@ -75,10 +87,16 @@ TestCase(South) {
 
 	check(south.name == std::string("South"));
 
-	std::vector<std::vector<int>> lines = south.lineConnectivity;
+	auto lines = south.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 2);
 	checkEqual(lines[0][0], 0); checkEqual(lines[0][1], 1);
 	checkEqual(lines[1][0], 1); checkEqual(lines[1][1], 2);
+	
+	auto verticesIndices = south.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 3);
+	checkEqual(verticesIndices[0], 0);
+	checkEqual(verticesIndices[1], 1); 
+	checkEqual(verticesIndices[2], 2);
 }
 
 TestCase(North) {
@@ -86,10 +104,16 @@ TestCase(North) {
 
 	check(north.name == std::string("North"));
 
-	std::vector<std::vector<int>> lines = north.lineConnectivity;
+	auto lines = north.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 2);
 	checkEqual(lines[0][0], 8); checkEqual(lines[0][1], 7);
 	checkEqual(lines[1][0], 7); checkEqual(lines[1][1], 6);
+
+	auto verticesIndices = north.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 3);
+	checkEqual(verticesIndices[0], 6);
+	checkEqual(verticesIndices[1], 7); 
+	checkEqual(verticesIndices[2], 8);
 }
 
 TestSuiteEnd()

@@ -18,7 +18,7 @@ struct Cgns3D {
 FixtureTestSuite(ReadCgns3D, Cgns3D)
 
 TestCase(Coordinates) {
-	std::vector<std::vector<double>> coordinates = this->gridData.coordinates;
+	auto coordinates = this->gridData.coordinates;
 
 	checkEqual(static_cast<int>(coordinates.size()), 27);
 	checkClose(coordinates[ 0][0], 0.0, TOLERANCE); checkClose(coordinates[ 0][1], 0.0, TOLERANCE); checkClose(coordinates[ 0][2], 0.0, TOLERANCE);
@@ -51,7 +51,7 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-	std::vector<std::vector<int>> hexahedra = this->gridData.hexahedronConnectivity;
+	auto hexahedra = this->gridData.hexahedronConnectivity;
 
 	checkEqual(static_cast<int>(hexahedra.size()), 8);
 	checkEqual(hexahedra[ 0][0],  0); checkEqual(hexahedra[ 0][1],  1); checkEqual(hexahedra[ 0][2],  4); checkEqual(hexahedra[ 0][3],  3); checkEqual(hexahedra[ 0][4],  9); checkEqual(hexahedra[ 0][5], 10); checkEqual(hexahedra[ 0][6], 13); checkEqual(hexahedra[ 0][7], 12);
@@ -65,7 +65,7 @@ TestCase(Elements) {
 }
 
 TestCase(Boundaries) {
-	std::vector<BoundaryData> boundaries = this->gridData.boundaries;
+	auto boundaries = this->gridData.boundaries;
 
 	checkEqual(static_cast<int>(boundaries.size()), 6);
 }
@@ -75,12 +75,24 @@ TestCase(West) {
 
 	check(west.name == std::string("West"));
 
-	std::vector<std::vector<int>> quadrangles = west.quadrangleConnectivity;
+	auto quadrangles = west.quadrangleConnectivity;
 	checkEqual(static_cast<int>(quadrangles.size()), 4);
 	checkEqual(quadrangles[0][0],  0); checkEqual(quadrangles[0][1],  9); checkEqual(quadrangles[0][2], 12); checkEqual(quadrangles[0][3],  3);
 	checkEqual(quadrangles[1][0],  3); checkEqual(quadrangles[1][1], 12); checkEqual(quadrangles[1][2], 15); checkEqual(quadrangles[1][3],  6);
 	checkEqual(quadrangles[2][0],  9); checkEqual(quadrangles[2][1], 18); checkEqual(quadrangles[2][2], 21); checkEqual(quadrangles[2][3], 12);
 	checkEqual(quadrangles[3][0], 12); checkEqual(quadrangles[3][1], 21); checkEqual(quadrangles[3][2], 24); checkEqual(quadrangles[3][3], 15);
+
+	auto verticesIndices = west.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 9);
+	checkEqual(verticesIndices[0],  0);
+	checkEqual(verticesIndices[1],  3); 
+	checkEqual(verticesIndices[2],  6);
+	checkEqual(verticesIndices[3],  9);
+	checkEqual(verticesIndices[4], 12); 
+	checkEqual(verticesIndices[5], 15);
+	checkEqual(verticesIndices[6], 18);
+	checkEqual(verticesIndices[7], 21); 
+	checkEqual(verticesIndices[8], 24);
 }
 
 TestCase(East) {
@@ -88,12 +100,24 @@ TestCase(East) {
 
 	check(east.name == std::string("East"));
 
-	std::vector<std::vector<int>> quadrangles = east.quadrangleConnectivity;
+	auto quadrangles = east.quadrangleConnectivity;
 	checkEqual(static_cast<int>(quadrangles.size()), 4);
 	checkEqual(quadrangles[0][0],  2); checkEqual(quadrangles[0][1],  5); checkEqual(quadrangles[0][2], 14); checkEqual(quadrangles[0][3], 11);
 	checkEqual(quadrangles[1][0],  5); checkEqual(quadrangles[1][1],  8); checkEqual(quadrangles[1][2], 17); checkEqual(quadrangles[1][3], 14);
 	checkEqual(quadrangles[2][0], 11); checkEqual(quadrangles[2][1], 14); checkEqual(quadrangles[2][2], 23); checkEqual(quadrangles[2][3], 20);
 	checkEqual(quadrangles[3][0], 14); checkEqual(quadrangles[3][1], 17); checkEqual(quadrangles[3][2], 26); checkEqual(quadrangles[3][3], 23);
+
+	auto verticesIndices = east.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 9);
+	checkEqual(verticesIndices[0],  2);
+	checkEqual(verticesIndices[1],  5); 
+	checkEqual(verticesIndices[2],  8);
+	checkEqual(verticesIndices[3], 11);
+	checkEqual(verticesIndices[4], 14); 
+	checkEqual(verticesIndices[5], 17);
+	checkEqual(verticesIndices[6], 20);
+	checkEqual(verticesIndices[7], 23); 
+	checkEqual(verticesIndices[8], 26);
 }
 
 TestCase(South) {
@@ -101,12 +125,24 @@ TestCase(South) {
 
 	check(south.name == std::string("South"));
 
-	std::vector<std::vector<int>> quadrangles = south.quadrangleConnectivity;
+	auto quadrangles = south.quadrangleConnectivity;
 	checkEqual(static_cast<int>(quadrangles.size()), 4);	
 	checkEqual(quadrangles[0][0],  0); checkEqual(quadrangles[0][1],  1); checkEqual(quadrangles[0][2], 10); checkEqual(quadrangles[0][3],  9);
 	checkEqual(quadrangles[1][0],  1); checkEqual(quadrangles[1][1],  2); checkEqual(quadrangles[1][2], 11); checkEqual(quadrangles[1][3], 10);
 	checkEqual(quadrangles[2][0],  9); checkEqual(quadrangles[2][1], 10); checkEqual(quadrangles[2][2], 19); checkEqual(quadrangles[2][3], 18);
 	checkEqual(quadrangles[3][0], 10); checkEqual(quadrangles[3][1], 11); checkEqual(quadrangles[3][2], 20); checkEqual(quadrangles[3][3], 19);
+	
+	auto verticesIndices = south.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 9);
+	checkEqual(verticesIndices[0],  0);
+	checkEqual(verticesIndices[1],  1); 
+	checkEqual(verticesIndices[2],  2);
+	checkEqual(verticesIndices[3],  9);
+	checkEqual(verticesIndices[4], 10); 
+	checkEqual(verticesIndices[5], 11);
+	checkEqual(verticesIndices[6], 18);
+	checkEqual(verticesIndices[7], 19); 
+	checkEqual(verticesIndices[8], 20);
 } 
 
 TestCase(North) {
@@ -114,12 +150,24 @@ TestCase(North) {
 
 	check(north.name == std::string("North"));
 
-	std::vector<std::vector<int>> quadrangles = north.quadrangleConnectivity;
+	auto quadrangles = north.quadrangleConnectivity;
 	checkEqual(static_cast<int>(quadrangles.size()), 4);
 	checkEqual(quadrangles[0][0],  7); checkEqual(quadrangles[0][1],  6); checkEqual(quadrangles[0][2], 15); checkEqual(quadrangles[0][3], 16);
 	checkEqual(quadrangles[1][0],  8); checkEqual(quadrangles[1][1],  7); checkEqual(quadrangles[1][2], 16); checkEqual(quadrangles[1][3], 17);
 	checkEqual(quadrangles[2][0], 16); checkEqual(quadrangles[2][1], 15); checkEqual(quadrangles[2][2], 24); checkEqual(quadrangles[2][3], 25);
 	checkEqual(quadrangles[3][0], 17); checkEqual(quadrangles[3][1], 16); checkEqual(quadrangles[3][2], 25); checkEqual(quadrangles[3][3], 26);
+
+	auto verticesIndices = north.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 9);
+	checkEqual(verticesIndices[0],  6);
+	checkEqual(verticesIndices[1],  7); 
+	checkEqual(verticesIndices[2],  8);
+	checkEqual(verticesIndices[3], 15);
+	checkEqual(verticesIndices[4], 16); 
+	checkEqual(verticesIndices[5], 17);
+	checkEqual(verticesIndices[6], 24);
+	checkEqual(verticesIndices[7], 25); 
+	checkEqual(verticesIndices[8], 26);
 }
 
 TestCase(Bottom) {
@@ -127,12 +175,24 @@ TestCase(Bottom) {
 
 	check(bottom.name == std::string("Bottom"));
 
-	std::vector<std::vector<int>> quadrangles = bottom.quadrangleConnectivity;
+	auto quadrangles = bottom.quadrangleConnectivity;
 	checkEqual(static_cast<int>(quadrangles.size()), 4);
 	checkEqual(quadrangles[0][0], 1); checkEqual(quadrangles[0][1], 0); checkEqual(quadrangles[0][2], 3); checkEqual(quadrangles[0][3], 4);
 	checkEqual(quadrangles[1][0], 2); checkEqual(quadrangles[1][1], 1); checkEqual(quadrangles[1][2], 4); checkEqual(quadrangles[1][3], 5);
 	checkEqual(quadrangles[2][0], 4); checkEqual(quadrangles[2][1], 3); checkEqual(quadrangles[2][2], 6); checkEqual(quadrangles[2][3], 7);
 	checkEqual(quadrangles[3][0], 5); checkEqual(quadrangles[3][1], 4); checkEqual(quadrangles[3][2], 7); checkEqual(quadrangles[3][3], 8);
+	
+	auto verticesIndices = bottom.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 9);
+	checkEqual(verticesIndices[0], 0);
+	checkEqual(verticesIndices[1], 1); 
+	checkEqual(verticesIndices[2], 2);
+	checkEqual(verticesIndices[3], 3);
+	checkEqual(verticesIndices[4], 4); 
+	checkEqual(verticesIndices[5], 5);
+	checkEqual(verticesIndices[6], 6);
+	checkEqual(verticesIndices[7], 7); 
+	checkEqual(verticesIndices[8], 8);
 }
 
 TestCase(Top) {
@@ -140,12 +200,24 @@ TestCase(Top) {
 
 	check(top.name == std::string("Top"));
 
-	std::vector<std::vector<int>> quadrangles = top.quadrangleConnectivity;
+	auto quadrangles = top.quadrangleConnectivity;
 	checkEqual(static_cast<int>(quadrangles.size()), 4);
 	checkEqual(quadrangles[0][0], 18); checkEqual(quadrangles[0][1], 19); checkEqual(quadrangles[0][2], 22); checkEqual(quadrangles[0][3], 21);
 	checkEqual(quadrangles[1][0], 19); checkEqual(quadrangles[1][1], 20); checkEqual(quadrangles[1][2], 23); checkEqual(quadrangles[1][3], 22);
 	checkEqual(quadrangles[2][0], 21); checkEqual(quadrangles[2][1], 22); checkEqual(quadrangles[2][2], 25); checkEqual(quadrangles[2][3], 24);
 	checkEqual(quadrangles[3][0], 22); checkEqual(quadrangles[3][1], 23); checkEqual(quadrangles[3][2], 26); checkEqual(quadrangles[3][3], 25);
+
+	auto verticesIndices = top.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 9);
+	checkEqual(verticesIndices[0], 18);
+	checkEqual(verticesIndices[1], 19); 
+	checkEqual(verticesIndices[2], 20);
+	checkEqual(verticesIndices[3], 21);
+	checkEqual(verticesIndices[4], 22); 
+	checkEqual(verticesIndices[5], 23);
+	checkEqual(verticesIndices[6], 24);
+	checkEqual(verticesIndices[7], 25); 
+	checkEqual(verticesIndices[8], 26);
 }
 
 TestSuiteEnd()

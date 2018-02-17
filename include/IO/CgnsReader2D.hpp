@@ -17,6 +17,7 @@ class CgnsReader2D : public CgnsReader {
 	private:
 		void readNodes() override;
 		void readElements() override;
+		void defineBoundaryVerticesIndices() override;
 };
 
 #endif

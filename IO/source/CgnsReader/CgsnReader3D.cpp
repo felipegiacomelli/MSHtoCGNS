@@ -5,6 +5,7 @@ CgnsReader3D::CgnsReader3D(const std::string& filePath) :
 	this->gridData.dimension = this->cellDimension;
 	this->readNodes();
 	this->readElements();
+	this->defineBoundaryVerticesIndices();
 }
 
 void CgnsReader3D::readNodes() {
@@ -63,7 +64,7 @@ void CgnsReader3D::readElements() {
 				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> hexahedron(numberOfVertices);
-					for (int k = 0; k < numberOfVertices; k++) hexahedron[k] = connectivities[e*numberOfVertices+k]-1;
+					for (int k = 0; k < numberOfVertices; k++) hexahedron[k] = connectivities[e*numberOfVertices+k] - 1;
 					this->gridData.hexahedronConnectivity.emplace_back(std::move(hexahedron));	
 				}
 				break; 
@@ -91,7 +92,7 @@ void CgnsReader3D::readElements() {
 				std::vector<std::vector<int>> quadrangleConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> quadrangle(numberOfVertices);
-					for (int k = 0; k < numberOfVertices; k++) quadrangle[k] = connectivities[e*numberOfVertices+k]-1;
+					for (int k = 0; k < numberOfVertices; k++) quadrangle[k] = connectivities[e*numberOfVertices+k] - 1;
 					quadrangleConnectivity.emplace_back(std::move(quadrangle));	
 				}				
 				BoundaryData boundaryData;
@@ -104,6 +105,28 @@ void CgnsReader3D::readElements() {
 				throw std::runtime_error("Non supported element found");
 				cg_error_exit();
 				break;
+		}
+	}
+}
+
+void CgnsReader3D::defineBoundaryVerticesIndices() {
+	for (auto boundary = this->gridData.boundaries.begin(); boundary < this->gridData.boundaries.end(); boundary++) {
+		std::set<int> verticesIndices;
+		if (boundary->triangleConnectivity.size() > 0) {
+			for (auto j = boundary->triangleConnectivity.cbegin(); j != boundary->triangleConnectivity.cend(); j++) {
+				for (auto k = j->cbegin(); k != j->cend(); k++) {
+					verticesIndices.insert(*k);
+				}
+			}
+			boundary->verticesIndices = std::vector<int>(verticesIndices.begin(), verticesIndices.end());
+		}
+		else {
+			for (auto j = boundary->quadrangleConnectivity.cbegin(); j != boundary->quadrangleConnectivity.cend(); j++) {
+				for (auto k = j->cbegin(); k != j->cend(); k++) {
+					verticesIndices.insert(*k);
+				}
+			}
+			boundary->verticesIndices = std::vector<int>(verticesIndices.begin(), verticesIndices.end());
 		}
 	}
 }
