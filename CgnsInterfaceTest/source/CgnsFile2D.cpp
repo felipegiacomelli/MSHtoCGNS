@@ -8,14 +8,17 @@
 
 struct Cgns2D {
 	Cgns2D() {
-		this->filePath = "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5n_4e.cgns";
-		CgnsReader2D cgnsReader2D(this->filePath);
-		this->gridData = cgnsReader2D.getGridData();
+		CgnsReader2D a("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5n_4e.cgns");
+		CgnsFile2D cgnsFile2D(a.getGridData(), "./");
+		this->filePath = cgnsFile2D.getFileName();
+		CgnsReader2D b(this->filePath);
+		this->gridData = b.getGridData();
 		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->cgnsFile);
 	}
 
 	~Cgns2D() {
 		cg_close(this->cgnsFile);
+		deleteDirectory("./5n_4e/");
 	};
 
 	std::string filePath;
@@ -32,7 +35,7 @@ struct Cgns2D {
 FixtureTestSuite(ReadCgns2D, Cgns2D)
 
 TestCase(Coordinates) {
-	std::vector<std::vector<double>> coordinates = this->gridData.coordinates;
+	auto coordinates = this->gridData.coordinates;
 
 	checkEqual(static_cast<int>(coordinates.size()), 5);
 	checkClose(coordinates[0][0], 0.0, TOLERANCE); checkClose(coordinates[0][1], 0.0, TOLERANCE); checkClose(coordinates[0][2], 0.0, TOLERANCE);
@@ -43,7 +46,7 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-	std::vector<std::vector<int>> triangles = this->gridData.triangleConnectivity;
+	auto triangles = this->gridData.triangleConnectivity;
 
 	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0], 0); checkEqual(triangles[0][1], 1); checkEqual(triangles[0][2], 4);
@@ -56,7 +59,7 @@ TestCase(Elements) {
 }
 
 TestCase(Boundaries) {
-	std::vector<BoundaryData> boundaries = this->gridData.boundaries;
+	auto boundaries = this->gridData.boundaries;
 
 	checkEqual(static_cast<int>(boundaries.size()), 4);
 }
@@ -66,12 +69,18 @@ TestCase(West) {
 
 	check(west.name == std::string("West"));
 
-	std::vector<std::vector<int>> lines = west.lineConnectivity;
+	auto lines = west.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 3); checkEqual(lines[0][1], 0);
+	
 	cg_section_read(this->cgnsFile, 1, 1, 2, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 5);
 	checkEqual(this->elementEnd  , 5);
+
+	auto verticesIndices = west.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 2);
+	checkEqual(verticesIndices[0], 0);
+	checkEqual(verticesIndices[1], 3); 
 }
 
 TestCase(East) {
@@ -79,12 +88,17 @@ TestCase(East) {
 
 	check(east.name == std::string("East"));
 
-	std::vector<std::vector<int>> lines = east.lineConnectivity;
+	auto lines = east.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 1); checkEqual(lines[0][1], 2);
 	cg_section_read(this->cgnsFile, 1, 1, 3, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 6);
 	checkEqual(this->elementEnd  , 6);
+
+	auto verticesIndices = east.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 2);
+	checkEqual(verticesIndices[0], 1);
+	checkEqual(verticesIndices[1], 2); 
 }
 
 TestCase(South) {
@@ -92,12 +106,17 @@ TestCase(South) {
 
 	check(south.name == std::string("South"));
 
-	std::vector<std::vector<int>> lines = south.lineConnectivity;
+	auto lines = south.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 0); checkEqual(lines[0][1], 1);
 	cg_section_read(this->cgnsFile, 1, 1, 4, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 7);
 	checkEqual(this->elementEnd  , 7);
+
+	auto verticesIndices = south.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 2);
+	checkEqual(verticesIndices[0], 0);
+	checkEqual(verticesIndices[1], 1); 
 }
 
 TestCase(North) {
@@ -105,12 +124,17 @@ TestCase(North) {
 
 	check(north.name == std::string("North"));
 
-	std::vector<std::vector<int>> lines = north.lineConnectivity;
+	auto lines = north.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 2); checkEqual(lines[0][1], 3);
 	cg_section_read(this->cgnsFile, 1, 1, 5, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 8);
 	checkEqual(this->elementEnd  , 8);
+
+	auto verticesIndices = north.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 2);
+	checkEqual(verticesIndices[0], 2);
+	checkEqual(verticesIndices[1], 3); 	
 }
 
 TestSuiteEnd()

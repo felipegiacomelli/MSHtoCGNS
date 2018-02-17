@@ -8,14 +8,17 @@
 
 struct Cgns3D {
 	Cgns3D() {
-		this->filePath = "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.cgns";
-		CgnsReader3D cgnsReader3D(this->filePath);
-		this->gridData = cgnsReader3D.getGridData();
+		CgnsReader3D a("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.cgns");
+		CgnsFile3D cgnsFile3D(a.getGridData(), "./");
+		this->filePath = cgnsFile3D.getFileName();
+		CgnsReader3D b(this->filePath);
+		this->gridData = b.getGridData();
 		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->cgnsFile);
 	}
 	
 	~Cgns3D() {
 		cg_close(this->cgnsFile);
+		deleteDirectory("./14n_24e/");
 	};
 
 	std::string filePath;
@@ -32,7 +35,7 @@ struct Cgns3D {
 FixtureTestSuite(ReadCgns3D, Cgns3D)
 
 TestCase(Coordinates) {
-	std::vector<std::vector<double>> coordinates = this->gridData.coordinates;
+	auto coordinates = this->gridData.coordinates;
 
 	checkEqual(static_cast<int>(coordinates.size()), 14);
 	checkClose(coordinates[ 0][0], 0.0, TOLERANCE); checkClose(coordinates[ 0][1], 0.0, TOLERANCE); checkClose(coordinates[ 0][2], 0.0, TOLERANCE);
@@ -52,7 +55,7 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-	std::vector<std::vector<int>> tetrahedra = this->gridData.tetrahedronConnectivity;
+	auto tetrahedra = this->gridData.tetrahedronConnectivity;
 
 	checkEqual(static_cast<int>(tetrahedra.size()), 24);
 	checkEqual(tetrahedra[ 0][0], 13); checkEqual(tetrahedra[ 0][1],  9); checkEqual(tetrahedra[ 0][2], 10); checkEqual(tetrahedra[ 0][3], 12); 
@@ -95,7 +98,7 @@ TestCase(West) {
 
 	check(west.name == std::string("West"));
 
-	std::vector<std::vector<int>> triangles = west.triangleConnectivity;
+	auto triangles = west.triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0], 0); checkEqual(triangles[0][1], 8); checkEqual(triangles[0][2], 3); 
 	checkEqual(triangles[1][0], 0); checkEqual(triangles[1][1], 4); checkEqual(triangles[1][2], 8); 
@@ -104,6 +107,14 @@ TestCase(West) {
 	cg_section_read(this->cgnsFile, 1, 1, 2, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 25);
 	checkEqual(this->elementEnd  , 28);
+
+	auto verticesIndices = west.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 5);
+	checkEqual(verticesIndices[0], 0);
+	checkEqual(verticesIndices[1], 3); 
+	checkEqual(verticesIndices[2], 4);
+	checkEqual(verticesIndices[3], 7);
+	checkEqual(verticesIndices[4], 8); 
 }
 
 TestCase(East) {
@@ -111,7 +122,7 @@ TestCase(East) {
 
 	check(east.name == std::string("East"));
 
-	std::vector<std::vector<int>> triangles = east.triangleConnectivity;
+	auto triangles = east.triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0], 2); checkEqual(triangles[0][1], 9); checkEqual(triangles[0][2], 1); 
 	checkEqual(triangles[1][0], 9); checkEqual(triangles[1][1], 5); checkEqual(triangles[1][2], 1); 
@@ -120,6 +131,14 @@ TestCase(East) {
 	cg_section_read(this->cgnsFile, 1, 1, 3, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 29);
 	checkEqual(this->elementEnd  , 32);
+
+	auto verticesIndices = east.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 5);
+	checkEqual(verticesIndices[0], 1);
+	checkEqual(verticesIndices[1], 2); 
+	checkEqual(verticesIndices[2], 5);
+	checkEqual(verticesIndices[3], 6);
+	checkEqual(verticesIndices[4], 9); 
 }
 
 TestCase(South) {
@@ -127,7 +146,7 @@ TestCase(South) {
 
 	check(south.name == std::string("South"));
 
-	std::vector<std::vector<int>> triangles = south.triangleConnectivity;
+	auto triangles = south.triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 4);	
 	checkEqual(triangles[0][0],  1); checkEqual(triangles[0][1], 10); checkEqual(triangles[0][2], 0);
 	checkEqual(triangles[1][0], 10); checkEqual(triangles[1][1],  4); checkEqual(triangles[1][2], 0);
@@ -136,6 +155,14 @@ TestCase(South) {
 	cg_section_read(this->cgnsFile, 1, 1, 4, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 33);
 	checkEqual(this->elementEnd  , 36);
+
+	auto verticesIndices = south.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 5);
+	checkEqual(verticesIndices[0],  0);
+	checkEqual(verticesIndices[1],  1); 
+	checkEqual(verticesIndices[2],  4);
+	checkEqual(verticesIndices[3],  5);
+	checkEqual(verticesIndices[4], 10); 	
 } 
 
 TestCase(North) {
@@ -143,7 +170,7 @@ TestCase(North) {
 
 	check(north.name == std::string("North"));
 
-	std::vector<std::vector<int>> triangles = north.triangleConnectivity;
+	auto triangles = north.triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0],  3); checkEqual(triangles[0][1], 11); checkEqual(triangles[0][2], 2); 
 	checkEqual(triangles[1][0], 11); checkEqual(triangles[1][1],  6); checkEqual(triangles[1][2], 2); 
@@ -152,6 +179,14 @@ TestCase(North) {
 	cg_section_read(this->cgnsFile, 1, 1, 5, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 37);
 	checkEqual(this->elementEnd  , 40);
+
+	auto verticesIndices = north.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 5);
+	checkEqual(verticesIndices[0],  2);
+	checkEqual(verticesIndices[1],  3); 
+	checkEqual(verticesIndices[2],  6);
+	checkEqual(verticesIndices[3],  7);
+	checkEqual(verticesIndices[4], 11); 
 }
 
 TestCase(Bottom) {
@@ -159,7 +194,7 @@ TestCase(Bottom) {
 
 	check(bottom.name == std::string("Bottom"));
 
-	std::vector<std::vector<int>> triangles = bottom.triangleConnectivity;
+	auto triangles = bottom.triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0], 0); checkEqual(triangles[0][1], 12); checkEqual(triangles[0][2],  1); 
 	checkEqual(triangles[1][0], 0); checkEqual(triangles[1][1],  3); checkEqual(triangles[1][2], 12); 
@@ -168,6 +203,14 @@ TestCase(Bottom) {
 	cg_section_read(this->cgnsFile, 1, 1, 6, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 41);
 	checkEqual(this->elementEnd  , 44);
+
+	auto verticesIndices = bottom.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 5);
+	checkEqual(verticesIndices[0],  0);
+	checkEqual(verticesIndices[1],  1); 
+	checkEqual(verticesIndices[2],  2);
+	checkEqual(verticesIndices[3],  3);
+	checkEqual(verticesIndices[4], 12); 
 }
 
 TestCase(Top) {
@@ -175,7 +218,7 @@ TestCase(Top) {
 
 	check(top.name == std::string("Top"));
 
-	std::vector<std::vector<int>> triangles = top.triangleConnectivity;
+	auto triangles = top.triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0],  5); checkEqual(triangles[0][1], 13); checkEqual(triangles[0][2], 4);
 	checkEqual(triangles[1][0], 13); checkEqual(triangles[1][1],  7); checkEqual(triangles[1][2], 4);
@@ -184,6 +227,14 @@ TestCase(Top) {
 	cg_section_read(this->cgnsFile, 1, 1, 7, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 45);
 	checkEqual(this->elementEnd  , 48);
+
+	auto verticesIndices = top.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 5);
+	checkEqual(verticesIndices[0],  4);
+	checkEqual(verticesIndices[1],  5); 
+	checkEqual(verticesIndices[2],  6);
+	checkEqual(verticesIndices[3],  7);
+	checkEqual(verticesIndices[4], 13); 
 }
 
 TestSuiteEnd()
