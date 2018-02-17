@@ -1,12 +1,7 @@
 #ifndef MSH_READER_3D_HPP
 #define MSH_READER_3D_HPP
 
-#include <Grid/GridData.hpp>
-#include <Utilities/Vector.hpp>
 #include <IO/MshReader.hpp>
-
-#include <string>
-#include <fstream>
 
 class MshReader3D : public MshReader {
 	public:
@@ -16,6 +11,7 @@ class MshReader3D : public MshReader {
 	private:
 		void readPhysicalEntities() override;
 		void addElements() override;
-};
+		void defineBoundaryVerticesIndices() override;
+	};
 
 #endif

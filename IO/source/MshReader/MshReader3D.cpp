@@ -7,6 +7,7 @@ MshReader3D::MshReader3D(const std::string& filePath) :
 	this->readPhysicalEntities();
 	this->readElements();
 	this->addElements();
+	this->defineBoundaryVerticesIndices();
 }
 
 void MshReader3D::readPhysicalEntities() {
@@ -73,6 +74,28 @@ void MshReader3D::addElements() {
 				default: 
 					throw std::runtime_error("Non supported element found");
 			}
+		}
+	}
+}
+
+void MshReader3D::defineBoundaryVerticesIndices() {
+	for (auto boundary = this->gridData.boundaries.begin(); boundary < this->gridData.boundaries.end(); boundary++) {
+		std::set<int> verticesIndices;
+		if (boundary->triangleConnectivity.size() > 0) {
+			for (auto j = boundary->triangleConnectivity.cbegin(); j != boundary->triangleConnectivity.cend(); j++) {
+				for (auto k = j->cbegin(); k != j->cend(); k++) {
+					verticesIndices.insert(*k);
+				}
+			}
+			boundary->verticesIndices = std::vector<int>(verticesIndices.begin(), verticesIndices.end());
+		}
+		else {
+			for (auto j = boundary->quadrangleConnectivity.cbegin(); j != boundary->quadrangleConnectivity.cend(); j++) {
+				for (auto k = j->cbegin(); k != j->cend(); k++) {
+					verticesIndices.insert(*k);
+				}
+			}
+			boundary->verticesIndices = std::vector<int>(verticesIndices.begin(), verticesIndices.end());
 		}
 	}
 }

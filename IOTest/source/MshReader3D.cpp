@@ -18,7 +18,7 @@ struct Msh3D {
 FixtureTestSuite(ReadMsh3D, Msh3D)
 
 TestCase(Coordinates) {
-	std::vector<std::vector<double>> coordinates = this->gridData.coordinates;
+	auto coordinates = this->gridData.coordinates;
 
 	checkEqual(static_cast<int>(coordinates.size()), 14);
 	checkClose(coordinates[ 0][0], 0.0, TOLERANCE); checkClose(coordinates[ 0][1], 0.0, TOLERANCE); checkClose(coordinates[ 0][2], 0.0, TOLERANCE);
@@ -38,7 +38,7 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-	std::vector<std::vector<int>> tetrahedra = this->gridData.tetrahedronConnectivity;
+	auto tetrahedra = this->gridData.tetrahedronConnectivity;
 
 	checkEqual(static_cast<int>(tetrahedra.size()), 24);
 	checkEqual(tetrahedra[ 0][0], 13); checkEqual(tetrahedra[ 0][1],  9); checkEqual(tetrahedra[ 0][2], 10); checkEqual(tetrahedra[ 0][3], 12); 
@@ -68,7 +68,7 @@ TestCase(Elements) {
 }
 
 TestCase(Boundaries) {
-	std::vector<BoundaryData> boundaries = this->gridData.boundaries;
+	auto boundaries = this->gridData.boundaries;
 
 	checkEqual(static_cast<int>(boundaries.size()), 6);
 }
@@ -78,12 +78,20 @@ TestCase(West) {
 
 	check(west.name == std::string("West"));
 
-	std::vector<std::vector<int>> triangles = west.triangleConnectivity;
+	auto triangles = west.triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0], 0); checkEqual(triangles[0][1], 8); checkEqual(triangles[0][2], 3);
 	checkEqual(triangles[1][0], 0); checkEqual(triangles[1][1], 4); checkEqual(triangles[1][2], 8);
 	checkEqual(triangles[2][0], 3); checkEqual(triangles[2][1], 8); checkEqual(triangles[2][2], 7);
 	checkEqual(triangles[3][0], 4); checkEqual(triangles[3][1], 7); checkEqual(triangles[3][2], 8);
+
+	auto verticesIndices = west.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 5);
+	checkEqual(verticesIndices[0], 0);
+	checkEqual(verticesIndices[1], 3); 
+	checkEqual(verticesIndices[2], 4);
+	checkEqual(verticesIndices[3], 7);
+	checkEqual(verticesIndices[4], 8); 
 }
 
 TestCase(East) {
@@ -91,12 +99,20 @@ TestCase(East) {
 
 	check(east.name == std::string("East"));
 
-	std::vector<std::vector<int>> triangles = east.triangleConnectivity;
+	auto triangles = east.triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0], 2); checkEqual(triangles[0][1], 9); checkEqual(triangles[0][2], 1);
 	checkEqual(triangles[1][0], 9); checkEqual(triangles[1][1], 5); checkEqual(triangles[1][2], 1);
 	checkEqual(triangles[2][0], 6); checkEqual(triangles[2][1], 9); checkEqual(triangles[2][2], 2);
 	checkEqual(triangles[3][0], 9); checkEqual(triangles[3][1], 6); checkEqual(triangles[3][2], 5);
+	
+	auto verticesIndices = east.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 5);
+	checkEqual(verticesIndices[0], 1);
+	checkEqual(verticesIndices[1], 2); 
+	checkEqual(verticesIndices[2], 5);
+	checkEqual(verticesIndices[3], 6);
+	checkEqual(verticesIndices[4], 9); 
 }
 
 TestCase(South) {
@@ -104,12 +120,20 @@ TestCase(South) {
 
 	check(south.name == std::string("South"));
 
-	std::vector<std::vector<int>> triangles = south.triangleConnectivity;
+	auto triangles = south.triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 4);	
 	checkEqual(triangles[0][0],  1); checkEqual(triangles[0][1], 10); checkEqual(triangles[0][2], 0);
 	checkEqual(triangles[1][0], 10); checkEqual(triangles[1][1],  4); checkEqual(triangles[1][2], 0);
 	checkEqual(triangles[2][0],  5); checkEqual(triangles[2][1], 10); checkEqual(triangles[2][2], 1);
 	checkEqual(triangles[3][0], 10); checkEqual(triangles[3][1],  5); checkEqual(triangles[3][2], 4);
+
+	auto verticesIndices = south.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 5);
+	checkEqual(verticesIndices[0], 0);
+	checkEqual(verticesIndices[1], 1); 
+	checkEqual(verticesIndices[2], 4);
+	checkEqual(verticesIndices[3], 5);
+	checkEqual(verticesIndices[4], 10); 
 }
 
 TestCase(North) {
@@ -117,12 +141,20 @@ TestCase(North) {
 
 	check(north.name == std::string("North"));
 
-	std::vector<std::vector<int>> triangles = north.triangleConnectivity;
+	auto triangles = north.triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0],  3); checkEqual(triangles[0][1], 11); checkEqual(triangles[0][2], 2);
 	checkEqual(triangles[1][0], 11); checkEqual(triangles[1][1],  6); checkEqual(triangles[1][2], 2);
 	checkEqual(triangles[2][0],  7); checkEqual(triangles[2][1], 11); checkEqual(triangles[2][2], 3);
 	checkEqual(triangles[3][0], 11); checkEqual(triangles[3][1],  7); checkEqual(triangles[3][2], 6);
+
+	auto verticesIndices = north.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 5);
+	checkEqual(verticesIndices[0],  2);
+	checkEqual(verticesIndices[1],  3); 
+	checkEqual(verticesIndices[2],  6);
+	checkEqual(verticesIndices[3],  7);
+	checkEqual(verticesIndices[4], 11); 
 }
 
 TestCase(Bottom) {
@@ -130,12 +162,20 @@ TestCase(Bottom) {
 
 	check(bottom.name == std::string("Bottom"));
 
-	std::vector<std::vector<int>> triangles = bottom.triangleConnectivity;
+	auto triangles = bottom.triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0],  0); checkEqual(triangles[0][1], 12); checkEqual(triangles[0][2],  1);
 	checkEqual(triangles[1][0],  0); checkEqual(triangles[1][1],  3); checkEqual(triangles[1][2], 12);
 	checkEqual(triangles[2][0],  1); checkEqual(triangles[2][1], 12); checkEqual(triangles[2][2],  2);
 	checkEqual(triangles[3][0],  2); checkEqual(triangles[3][1], 12); checkEqual(triangles[3][2],  3);
+
+	auto verticesIndices = bottom.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 5);
+	checkEqual(verticesIndices[0],  0);
+	checkEqual(verticesIndices[1],  1); 
+	checkEqual(verticesIndices[2],  2);
+	checkEqual(verticesIndices[3],  3);
+	checkEqual(verticesIndices[4], 12); 
 }
 
 TestCase(Top) {
@@ -143,12 +183,20 @@ TestCase(Top) {
 
 	check(top.name == std::string("Top"));
 
-	std::vector<std::vector<int>> triangles = top.triangleConnectivity;
+	auto triangles = top.triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0],  5); checkEqual(triangles[0][1], 13); checkEqual(triangles[0][2], 4);
 	checkEqual(triangles[1][0], 13); checkEqual(triangles[1][1],  7); checkEqual(triangles[1][2], 4);
 	checkEqual(triangles[2][0],  6); checkEqual(triangles[2][1], 13); checkEqual(triangles[2][2], 5);
 	checkEqual(triangles[3][0],  7); checkEqual(triangles[3][1], 13); checkEqual(triangles[3][2], 6);
+
+	auto verticesIndices = top.verticesIndices;
+	checkEqual(static_cast<int>(verticesIndices.size()), 5);
+	checkEqual(verticesIndices[0],  4);
+	checkEqual(verticesIndices[1],  5); 
+	checkEqual(verticesIndices[2],  6);
+	checkEqual(verticesIndices[3],  7);
+	checkEqual(verticesIndices[4], 13); 
 }
 
 TestSuiteEnd()

@@ -4,6 +4,7 @@
 #include <BoostInterface/Filesystem.hpp>
 #include <Grid/GridData.hpp>
 #include <Utilities/Vector.hpp>
+#include <Utilities/Set.hpp>
 
 #include <string>
 #include <fstream>
@@ -24,6 +25,7 @@ class MshReader {
 		void readElements();
 		virtual void readPhysicalEntities() = 0;
 		virtual void addElements() = 0;
+		virtual void defineBoundaryVerticesIndices() = 0;
 
 		std::string filePath;
 		std::ifstream file;
