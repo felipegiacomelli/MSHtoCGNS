@@ -76,8 +76,8 @@ void CgnsFile2D::writeSections() {
 
 void CgnsFile2D::writeBoundaryConditions() {
 	for (unsigned i = 0; i < this->gridData.boundaries.size(); i++) {
-		int numberOfVertices = this->gridData.boundaries[i].verticesIndices.size();
-		cgsize_t* indices = determine_array_1d<cgsize_t>(this->gridData.boundaries[i].verticesIndices); 
+		int numberOfVertices = this->gridData.boundaries[i].vertices.size();
+		cgsize_t* indices = determine_array_1d<cgsize_t>(this->gridData.boundaries[i].vertices); 
 		std::transform(&indices[0], &indices[numberOfVertices], &indices[0], [](const cgsize_t& x){return x + 1;});
 		cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData.boundaries[i].name.c_str(), BCWall, PointList, numberOfVertices, indices, &this->boundaryIndices[i]);
 		delete indices;

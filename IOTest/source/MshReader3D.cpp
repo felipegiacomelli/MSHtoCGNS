@@ -85,13 +85,13 @@ TestCase(West) {
 	checkEqual(triangles[2][0], 3); checkEqual(triangles[2][1], 8); checkEqual(triangles[2][2], 7);
 	checkEqual(triangles[3][0], 4); checkEqual(triangles[3][1], 7); checkEqual(triangles[3][2], 8);
 
-	auto verticesIndices = west.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 5);
-	checkEqual(verticesIndices[0], 0);
-	checkEqual(verticesIndices[1], 3); 
-	checkEqual(verticesIndices[2], 4);
-	checkEqual(verticesIndices[3], 7);
-	checkEqual(verticesIndices[4], 8); 
+	auto vertices = west.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 5);
+	checkEqual(vertices[0], 0);
+	checkEqual(vertices[1], 3); 
+	checkEqual(vertices[2], 4);
+	checkEqual(vertices[3], 7);
+	checkEqual(vertices[4], 8); 
 }
 
 TestCase(East) {
@@ -106,13 +106,13 @@ TestCase(East) {
 	checkEqual(triangles[2][0], 6); checkEqual(triangles[2][1], 9); checkEqual(triangles[2][2], 2);
 	checkEqual(triangles[3][0], 9); checkEqual(triangles[3][1], 6); checkEqual(triangles[3][2], 5);
 	
-	auto verticesIndices = east.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 5);
-	checkEqual(verticesIndices[0], 1);
-	checkEqual(verticesIndices[1], 2); 
-	checkEqual(verticesIndices[2], 5);
-	checkEqual(verticesIndices[3], 6);
-	checkEqual(verticesIndices[4], 9); 
+	auto vertices = east.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 5);
+	checkEqual(vertices[0], 1);
+	checkEqual(vertices[1], 2); 
+	checkEqual(vertices[2], 5);
+	checkEqual(vertices[3], 6);
+	checkEqual(vertices[4], 9); 
 }
 
 TestCase(South) {
@@ -127,13 +127,13 @@ TestCase(South) {
 	checkEqual(triangles[2][0],  5); checkEqual(triangles[2][1], 10); checkEqual(triangles[2][2], 1);
 	checkEqual(triangles[3][0], 10); checkEqual(triangles[3][1],  5); checkEqual(triangles[3][2], 4);
 
-	auto verticesIndices = south.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 5);
-	checkEqual(verticesIndices[0], 0);
-	checkEqual(verticesIndices[1], 1); 
-	checkEqual(verticesIndices[2], 4);
-	checkEqual(verticesIndices[3], 5);
-	checkEqual(verticesIndices[4], 10); 
+	auto vertices = south.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 5);
+	checkEqual(vertices[0], 0);
+	checkEqual(vertices[1], 1); 
+	checkEqual(vertices[2], 4);
+	checkEqual(vertices[3], 5);
+	checkEqual(vertices[4], 10); 
 }
 
 TestCase(North) {
@@ -148,13 +148,13 @@ TestCase(North) {
 	checkEqual(triangles[2][0],  7); checkEqual(triangles[2][1], 11); checkEqual(triangles[2][2], 3);
 	checkEqual(triangles[3][0], 11); checkEqual(triangles[3][1],  7); checkEqual(triangles[3][2], 6);
 
-	auto verticesIndices = north.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 5);
-	checkEqual(verticesIndices[0],  2);
-	checkEqual(verticesIndices[1],  3); 
-	checkEqual(verticesIndices[2],  6);
-	checkEqual(verticesIndices[3],  7);
-	checkEqual(verticesIndices[4], 11); 
+	auto vertices = north.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 5);
+	checkEqual(vertices[0],  2);
+	checkEqual(vertices[1],  3); 
+	checkEqual(vertices[2],  6);
+	checkEqual(vertices[3],  7);
+	checkEqual(vertices[4], 11); 
 }
 
 TestCase(Bottom) {
@@ -169,13 +169,13 @@ TestCase(Bottom) {
 	checkEqual(triangles[2][0],  1); checkEqual(triangles[2][1], 12); checkEqual(triangles[2][2],  2);
 	checkEqual(triangles[3][0],  2); checkEqual(triangles[3][1], 12); checkEqual(triangles[3][2],  3);
 
-	auto verticesIndices = bottom.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 5);
-	checkEqual(verticesIndices[0],  0);
-	checkEqual(verticesIndices[1],  1); 
-	checkEqual(verticesIndices[2],  2);
-	checkEqual(verticesIndices[3],  3);
-	checkEqual(verticesIndices[4], 12); 
+	auto vertices = bottom.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 5);
+	checkEqual(vertices[0],  0);
+	checkEqual(vertices[1],  1); 
+	checkEqual(vertices[2],  2);
+	checkEqual(vertices[3],  3);
+	checkEqual(vertices[4], 12); 
 }
 
 TestCase(Top) {
@@ -190,13 +190,13 @@ TestCase(Top) {
 	checkEqual(triangles[2][0],  6); checkEqual(triangles[2][1], 13); checkEqual(triangles[2][2], 5);
 	checkEqual(triangles[3][0],  7); checkEqual(triangles[3][1], 13); checkEqual(triangles[3][2], 6);
 
-	auto verticesIndices = top.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 5);
-	checkEqual(verticesIndices[0],  4);
-	checkEqual(verticesIndices[1],  5); 
-	checkEqual(verticesIndices[2],  6);
-	checkEqual(verticesIndices[3],  7);
-	checkEqual(verticesIndices[4], 13); 
+	auto vertices = top.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 5);
+	checkEqual(vertices[0],  4);
+	checkEqual(vertices[1],  5); 
+	checkEqual(vertices[2],  6);
+	checkEqual(vertices[3],  7);
+	checkEqual(vertices[4], 13); 
 }
 
 TestSuiteEnd()

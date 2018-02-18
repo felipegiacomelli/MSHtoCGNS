@@ -77,10 +77,10 @@ TestCase(West) {
 	checkEqual(this->elementStart, 5);
 	checkEqual(this->elementEnd  , 5);
 
-	auto verticesIndices = west.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 2);
-	checkEqual(verticesIndices[0], 0);
-	checkEqual(verticesIndices[1], 3); 
+	auto vertices = west.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 2);
+	checkEqual(vertices[0], 0);
+	checkEqual(vertices[1], 3); 
 }
 
 TestCase(East) {
@@ -95,10 +95,10 @@ TestCase(East) {
 	checkEqual(this->elementStart, 6);
 	checkEqual(this->elementEnd  , 6);
 
-	auto verticesIndices = east.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 2);
-	checkEqual(verticesIndices[0], 1);
-	checkEqual(verticesIndices[1], 2); 
+	auto vertices = east.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 2);
+	checkEqual(vertices[0], 1);
+	checkEqual(vertices[1], 2); 
 }
 
 TestCase(South) {
@@ -113,10 +113,10 @@ TestCase(South) {
 	checkEqual(this->elementStart, 7);
 	checkEqual(this->elementEnd  , 7);
 
-	auto verticesIndices = south.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 2);
-	checkEqual(verticesIndices[0], 0);
-	checkEqual(verticesIndices[1], 1); 
+	auto vertices = south.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 2);
+	checkEqual(vertices[0], 0);
+	checkEqual(vertices[1], 1); 
 }
 
 TestCase(North) {
@@ -131,10 +131,10 @@ TestCase(North) {
 	checkEqual(this->elementStart, 8);
 	checkEqual(this->elementEnd  , 8);
 
-	auto verticesIndices = north.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 2);
-	checkEqual(verticesIndices[0], 2);
-	checkEqual(verticesIndices[1], 3); 	
+	auto vertices = north.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 2);
+	checkEqual(vertices[0], 2);
+	checkEqual(vertices[1], 3); 	
 }
 
 TestSuiteEnd()

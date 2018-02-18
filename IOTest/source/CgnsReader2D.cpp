@@ -58,11 +58,11 @@ TestCase(West) {
 	checkEqual(lines[0][0], 6); checkEqual(lines[0][1], 3);
 	checkEqual(lines[1][0], 3); checkEqual(lines[1][1], 0);
 
-	auto verticesIndices = west.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 3);
-	checkEqual(verticesIndices[0], 0);
-	checkEqual(verticesIndices[1], 3); 
-	checkEqual(verticesIndices[2], 6);
+	auto vertices = west.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 3);
+	checkEqual(vertices[0], 0);
+	checkEqual(vertices[1], 3); 
+	checkEqual(vertices[2], 6);
 }
 
 TestCase(East) {
@@ -75,11 +75,11 @@ TestCase(East) {
 	checkEqual(lines[0][0], 2); checkEqual(lines[0][1], 5);
 	checkEqual(lines[1][0], 5); checkEqual(lines[1][1], 8);
 	
-	auto verticesIndices = east.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 3);
-	checkEqual(verticesIndices[0], 2);
-	checkEqual(verticesIndices[1], 5); 
-	checkEqual(verticesIndices[2], 8);
+	auto vertices = east.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 3);
+	checkEqual(vertices[0], 2);
+	checkEqual(vertices[1], 5); 
+	checkEqual(vertices[2], 8);
 }
 
 TestCase(South) {
@@ -92,11 +92,11 @@ TestCase(South) {
 	checkEqual(lines[0][0], 0); checkEqual(lines[0][1], 1);
 	checkEqual(lines[1][0], 1); checkEqual(lines[1][1], 2);
 	
-	auto verticesIndices = south.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 3);
-	checkEqual(verticesIndices[0], 0);
-	checkEqual(verticesIndices[1], 1); 
-	checkEqual(verticesIndices[2], 2);
+	auto vertices = south.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 3);
+	checkEqual(vertices[0], 0);
+	checkEqual(vertices[1], 1); 
+	checkEqual(vertices[2], 2);
 }
 
 TestCase(North) {
@@ -109,11 +109,11 @@ TestCase(North) {
 	checkEqual(lines[0][0], 8); checkEqual(lines[0][1], 7);
 	checkEqual(lines[1][0], 7); checkEqual(lines[1][1], 6);
 
-	auto verticesIndices = north.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 3);
-	checkEqual(verticesIndices[0], 6);
-	checkEqual(verticesIndices[1], 7); 
-	checkEqual(verticesIndices[2], 8);
+	auto vertices = north.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 3);
+	checkEqual(vertices[0], 6);
+	checkEqual(vertices[1], 7); 
+	checkEqual(vertices[2], 8);
 }
 
 TestSuiteEnd()

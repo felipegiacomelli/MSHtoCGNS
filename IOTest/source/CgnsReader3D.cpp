@@ -82,17 +82,17 @@ TestCase(West) {
 	checkEqual(quadrangles[2][0],  9); checkEqual(quadrangles[2][1], 18); checkEqual(quadrangles[2][2], 21); checkEqual(quadrangles[2][3], 12);
 	checkEqual(quadrangles[3][0], 12); checkEqual(quadrangles[3][1], 21); checkEqual(quadrangles[3][2], 24); checkEqual(quadrangles[3][3], 15);
 
-	auto verticesIndices = west.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 9);
-	checkEqual(verticesIndices[0],  0);
-	checkEqual(verticesIndices[1],  3); 
-	checkEqual(verticesIndices[2],  6);
-	checkEqual(verticesIndices[3],  9);
-	checkEqual(verticesIndices[4], 12); 
-	checkEqual(verticesIndices[5], 15);
-	checkEqual(verticesIndices[6], 18);
-	checkEqual(verticesIndices[7], 21); 
-	checkEqual(verticesIndices[8], 24);
+	auto vertices = west.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 9);
+	checkEqual(vertices[0],  0);
+	checkEqual(vertices[1],  3); 
+	checkEqual(vertices[2],  6);
+	checkEqual(vertices[3],  9);
+	checkEqual(vertices[4], 12); 
+	checkEqual(vertices[5], 15);
+	checkEqual(vertices[6], 18);
+	checkEqual(vertices[7], 21); 
+	checkEqual(vertices[8], 24);
 }
 
 TestCase(East) {
@@ -107,17 +107,17 @@ TestCase(East) {
 	checkEqual(quadrangles[2][0], 11); checkEqual(quadrangles[2][1], 14); checkEqual(quadrangles[2][2], 23); checkEqual(quadrangles[2][3], 20);
 	checkEqual(quadrangles[3][0], 14); checkEqual(quadrangles[3][1], 17); checkEqual(quadrangles[3][2], 26); checkEqual(quadrangles[3][3], 23);
 
-	auto verticesIndices = east.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 9);
-	checkEqual(verticesIndices[0],  2);
-	checkEqual(verticesIndices[1],  5); 
-	checkEqual(verticesIndices[2],  8);
-	checkEqual(verticesIndices[3], 11);
-	checkEqual(verticesIndices[4], 14); 
-	checkEqual(verticesIndices[5], 17);
-	checkEqual(verticesIndices[6], 20);
-	checkEqual(verticesIndices[7], 23); 
-	checkEqual(verticesIndices[8], 26);
+	auto vertices = east.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 9);
+	checkEqual(vertices[0],  2);
+	checkEqual(vertices[1],  5); 
+	checkEqual(vertices[2],  8);
+	checkEqual(vertices[3], 11);
+	checkEqual(vertices[4], 14); 
+	checkEqual(vertices[5], 17);
+	checkEqual(vertices[6], 20);
+	checkEqual(vertices[7], 23); 
+	checkEqual(vertices[8], 26);
 }
 
 TestCase(South) {
@@ -132,17 +132,17 @@ TestCase(South) {
 	checkEqual(quadrangles[2][0],  9); checkEqual(quadrangles[2][1], 10); checkEqual(quadrangles[2][2], 19); checkEqual(quadrangles[2][3], 18);
 	checkEqual(quadrangles[3][0], 10); checkEqual(quadrangles[3][1], 11); checkEqual(quadrangles[3][2], 20); checkEqual(quadrangles[3][3], 19);
 	
-	auto verticesIndices = south.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 9);
-	checkEqual(verticesIndices[0],  0);
-	checkEqual(verticesIndices[1],  1); 
-	checkEqual(verticesIndices[2],  2);
-	checkEqual(verticesIndices[3],  9);
-	checkEqual(verticesIndices[4], 10); 
-	checkEqual(verticesIndices[5], 11);
-	checkEqual(verticesIndices[6], 18);
-	checkEqual(verticesIndices[7], 19); 
-	checkEqual(verticesIndices[8], 20);
+	auto vertices = south.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 9);
+	checkEqual(vertices[0],  0);
+	checkEqual(vertices[1],  1); 
+	checkEqual(vertices[2],  2);
+	checkEqual(vertices[3],  9);
+	checkEqual(vertices[4], 10); 
+	checkEqual(vertices[5], 11);
+	checkEqual(vertices[6], 18);
+	checkEqual(vertices[7], 19); 
+	checkEqual(vertices[8], 20);
 } 
 
 TestCase(North) {
@@ -157,17 +157,17 @@ TestCase(North) {
 	checkEqual(quadrangles[2][0], 16); checkEqual(quadrangles[2][1], 15); checkEqual(quadrangles[2][2], 24); checkEqual(quadrangles[2][3], 25);
 	checkEqual(quadrangles[3][0], 17); checkEqual(quadrangles[3][1], 16); checkEqual(quadrangles[3][2], 25); checkEqual(quadrangles[3][3], 26);
 
-	auto verticesIndices = north.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 9);
-	checkEqual(verticesIndices[0],  6);
-	checkEqual(verticesIndices[1],  7); 
-	checkEqual(verticesIndices[2],  8);
-	checkEqual(verticesIndices[3], 15);
-	checkEqual(verticesIndices[4], 16); 
-	checkEqual(verticesIndices[5], 17);
-	checkEqual(verticesIndices[6], 24);
-	checkEqual(verticesIndices[7], 25); 
-	checkEqual(verticesIndices[8], 26);
+	auto vertices = north.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 9);
+	checkEqual(vertices[0],  6);
+	checkEqual(vertices[1],  7); 
+	checkEqual(vertices[2],  8);
+	checkEqual(vertices[3], 15);
+	checkEqual(vertices[4], 16); 
+	checkEqual(vertices[5], 17);
+	checkEqual(vertices[6], 24);
+	checkEqual(vertices[7], 25); 
+	checkEqual(vertices[8], 26);
 }
 
 TestCase(Bottom) {
@@ -182,17 +182,17 @@ TestCase(Bottom) {
 	checkEqual(quadrangles[2][0], 4); checkEqual(quadrangles[2][1], 3); checkEqual(quadrangles[2][2], 6); checkEqual(quadrangles[2][3], 7);
 	checkEqual(quadrangles[3][0], 5); checkEqual(quadrangles[3][1], 4); checkEqual(quadrangles[3][2], 7); checkEqual(quadrangles[3][3], 8);
 	
-	auto verticesIndices = bottom.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 9);
-	checkEqual(verticesIndices[0], 0);
-	checkEqual(verticesIndices[1], 1); 
-	checkEqual(verticesIndices[2], 2);
-	checkEqual(verticesIndices[3], 3);
-	checkEqual(verticesIndices[4], 4); 
-	checkEqual(verticesIndices[5], 5);
-	checkEqual(verticesIndices[6], 6);
-	checkEqual(verticesIndices[7], 7); 
-	checkEqual(verticesIndices[8], 8);
+	auto vertices = bottom.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 9);
+	checkEqual(vertices[0], 0);
+	checkEqual(vertices[1], 1); 
+	checkEqual(vertices[2], 2);
+	checkEqual(vertices[3], 3);
+	checkEqual(vertices[4], 4); 
+	checkEqual(vertices[5], 5);
+	checkEqual(vertices[6], 6);
+	checkEqual(vertices[7], 7); 
+	checkEqual(vertices[8], 8);
 }
 
 TestCase(Top) {
@@ -207,17 +207,17 @@ TestCase(Top) {
 	checkEqual(quadrangles[2][0], 21); checkEqual(quadrangles[2][1], 22); checkEqual(quadrangles[2][2], 25); checkEqual(quadrangles[2][3], 24);
 	checkEqual(quadrangles[3][0], 22); checkEqual(quadrangles[3][1], 23); checkEqual(quadrangles[3][2], 26); checkEqual(quadrangles[3][3], 25);
 
-	auto verticesIndices = top.verticesIndices;
-	checkEqual(static_cast<int>(verticesIndices.size()), 9);
-	checkEqual(verticesIndices[0], 18);
-	checkEqual(verticesIndices[1], 19); 
-	checkEqual(verticesIndices[2], 20);
-	checkEqual(verticesIndices[3], 21);
-	checkEqual(verticesIndices[4], 22); 
-	checkEqual(verticesIndices[5], 23);
-	checkEqual(verticesIndices[6], 24);
-	checkEqual(verticesIndices[7], 25); 
-	checkEqual(verticesIndices[8], 26);
+	auto vertices = top.vertices;
+	checkEqual(static_cast<int>(vertices.size()), 9);
+	checkEqual(vertices[0], 18);
+	checkEqual(vertices[1], 19); 
+	checkEqual(vertices[2], 20);
+	checkEqual(vertices[3], 21);
+	checkEqual(vertices[4], 22); 
+	checkEqual(vertices[5], 23);
+	checkEqual(vertices[6], 24);
+	checkEqual(vertices[7], 25); 
+	checkEqual(vertices[8], 26);
 }
 
 TestSuiteEnd()
