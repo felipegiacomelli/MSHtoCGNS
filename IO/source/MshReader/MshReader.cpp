@@ -1,6 +1,7 @@
 #include <IO/MshReader.hpp>
 
-MshReader::MshReader(const std::string& filePath): filePath(filePath), buffer(new char[800]), gridData(MakeShared<GridData>()) {
+MshReader::MshReader(const std::string& filePath) :  
+	filePath(filePath), buffer(new char[800]), gridData(MakeShared<GridData>()) {
 	this->checkFile();
 }
 

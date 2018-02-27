@@ -1,6 +1,7 @@
 #include <CgnsInterface/CgnsFile.hpp>
 
-CgnsFile::CgnsFile(GridDataShared gridData, const std::string& folderPath) : gridData(gridData), folderPath(folderPath), baseName("Base"), zoneName("Zone"), physicalDimension(3) {
+CgnsFile::CgnsFile(GridDataShared gridData, const std::string& folderPath) : 
+	gridData(gridData), folderPath(folderPath), baseName("Base"), zoneName("Zone"), physicalDimension(3) {
 	this->numberOfNodes = this->gridData->coordinates.size();
 	this->cellDimension = this->gridData->dimension;
 }
