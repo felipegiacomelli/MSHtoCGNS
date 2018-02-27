@@ -22,7 +22,7 @@ struct Cgns2D {
 	};
 
 	std::string filePath;
-	GridData gridData;
+	GridDataShared gridData;
 	int cgnsFile;
 	char elementSectionName[100];
 	ElementType_t type;
@@ -35,7 +35,7 @@ struct Cgns2D {
 FixtureTestSuite(ReadCgns2D, Cgns2D)
 
 TestCase(Coordinates) {
-	auto coordinates = this->gridData.coordinates;
+	auto coordinates = this->gridData->coordinates;
 
 	checkEqual(static_cast<int>(coordinates.size()), 5);
 	checkClose(coordinates[0][0], 0.0, TOLERANCE); checkClose(coordinates[0][1], 0.0, TOLERANCE); checkClose(coordinates[0][2], 0.0, TOLERANCE);
@@ -46,7 +46,7 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-	auto triangles = this->gridData.triangleConnectivity;
+	auto triangles = this->gridData->triangleConnectivity;
 
 	checkEqual(static_cast<int>(triangles.size()), 4);
 	checkEqual(triangles[0][0], 0); checkEqual(triangles[0][1], 1); checkEqual(triangles[0][2], 4);
@@ -59,13 +59,13 @@ TestCase(Elements) {
 }
 
 TestCase(Boundaries) {
-	auto boundaries = this->gridData.boundaries;
+	auto boundaries = this->gridData->boundaries;
 
 	checkEqual(static_cast<int>(boundaries.size()), 4);
 }
 
 TestCase(West) {
-	BoundaryData west = this->gridData.boundaries[0];
+	BoundaryData west = this->gridData->boundaries[0];
 
 	check(west.name == std::string("West"));
 
@@ -84,7 +84,7 @@ TestCase(West) {
 }
 
 TestCase(East) {
-	BoundaryData east = this->gridData.boundaries[1];
+	BoundaryData east = this->gridData->boundaries[1];
 
 	check(east.name == std::string("East"));
 
@@ -102,7 +102,7 @@ TestCase(East) {
 }
 
 TestCase(South) {
-	BoundaryData south = this->gridData.boundaries[2];
+	BoundaryData south = this->gridData->boundaries[2];
 
 	check(south.name == std::string("South"));
 
@@ -120,7 +120,7 @@ TestCase(South) {
 }
 
 TestCase(North) {
-	BoundaryData north = this->gridData.boundaries[3];
+	BoundaryData north = this->gridData->boundaries[3];
 
 	check(north.name == std::string("North"));
 

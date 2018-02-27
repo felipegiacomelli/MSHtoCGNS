@@ -11,7 +11,7 @@
 class CgnsFile3D : public CgnsFile {
 	public:
 		CgnsFile3D() = default;
-		CgnsFile3D(const GridData&, const std::string&);
+		CgnsFile3D(GridDataShared, const std::string&);
 
 		~CgnsFile3D() = default;
 

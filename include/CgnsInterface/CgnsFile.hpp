@@ -11,7 +11,7 @@
 class CgnsFile {
 	public:
 		CgnsFile() = default;
-		CgnsFile(const GridData&, const std::string&);
+		CgnsFile(GridDataShared, const std::string&);
 
 		std::string getFileName() const;
 
@@ -28,7 +28,7 @@ class CgnsFile {
 		virtual void writeSections() = 0;
 		virtual void writeBoundaryConditions() = 0;
 
-		GridData gridData;
+		GridDataShared gridData;
 		std::string folderPath, baseName, zoneName, fileName;
 		cgsize_t cellDimension, physicalDimension, numberOfNodes, numberOfElements, numberOfTimeSteps;
 		std::vector<cgsize_t> zoneSizes;
