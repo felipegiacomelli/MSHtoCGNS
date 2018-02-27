@@ -1,6 +1,6 @@
 #include <IO/CgnsReader.hpp>
 
-CgnsReader::CgnsReader(const std::string& filePath) : filePath(filePath), buffer(new char[800]), zoneSizes(std::vector<cgsize_t>(3)) {
+CgnsReader::CgnsReader(const std::string& filePath) : filePath(filePath), buffer(new char[800]), zoneSizes(std::vector<cgsize_t>(3)), gridData(MakeShared<GridData>()) {
 	this->checkFile();
 	this->readBase();
 	this->readZone();
@@ -66,7 +66,7 @@ void CgnsReader::readNumberOfSections() {
 	std::iota(this->sectionIndices.begin(), this->sectionIndices.end(), 1);
 }
 
-GridData CgnsReader::getGridData() const {
+GridDataShared CgnsReader::getGridData() const {
 	return this->gridData;
 }
 

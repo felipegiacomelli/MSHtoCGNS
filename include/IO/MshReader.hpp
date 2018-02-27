@@ -14,7 +14,7 @@ class MshReader {
 		MshReader() = default;
 		MshReader(const std::string&);
 
-		GridData getGridData() const;
+		GridDataShared getGridData() const;
 
 		~MshReader();
 
@@ -31,7 +31,7 @@ class MshReader {
 		char* buffer;
 		int numberOfPhysicalEntities;
 		std::vector<std::vector<int>> elements, physicalEntitiesElementIndices;
-		GridData gridData;
+		GridDataShared gridData;
 };
 
 #endif

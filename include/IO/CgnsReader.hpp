@@ -2,6 +2,7 @@
 #define CGNS_READER_HPP
 
 #include <BoostInterface/Filesystem.hpp>
+#include <BoostInterface/SharedPointer.hpp>
 #include <Grid/GridData.hpp>
 #include <Utilities/Vector.hpp>
 #include <Utilities/Set.hpp>
@@ -17,7 +18,7 @@ class CgnsReader {
 		CgnsReader() = default;
 		CgnsReader(const std::string&);
 
-		GridData getGridData() const;
+		GridDataShared getGridData() const;
 
 		~CgnsReader();
 
@@ -38,7 +39,7 @@ class CgnsReader {
 		std::vector<cgsize_t> zoneSizes;
 		cgsize_t numberOfNodes;
 		std::vector<std::vector<int>> elements, physicalEntitiesElementIndices;
-		GridData gridData;
+		GridDataShared gridData;
 };
 
 #endif

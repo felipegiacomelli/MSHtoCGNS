@@ -1,6 +1,6 @@
 #include <IO/MshReader.hpp>
 
-MshReader::MshReader(const std::string& filePath): filePath(filePath), buffer(new char[800]) {
+MshReader::MshReader(const std::string& filePath): filePath(filePath), buffer(new char[800]), gridData(MakeShared<GridData>()) {
 	this->checkFile();
 }
 
@@ -18,9 +18,9 @@ void MshReader::readNodes() {
 	while (strcmp(this->buffer, "$Nodes") && !this->file.eof()) this->file >> this->buffer;
 	if (this->file.eof()) throw std::runtime_error("There is no Node data in the grid file");
 	this->file >> numberOfNodes;
-	this->gridData.coordinates.resize(numberOfNodes, std::vector<double>(3));
+	this->gridData->coordinates.resize(numberOfNodes, std::vector<double>(3));
 	for (int i = 0; i < numberOfNodes; i++) {
-		this->file >> temporary >> this->gridData.coordinates[i][0] >> this->gridData.coordinates[i][1] >> this->gridData.coordinates[i][2];
+		this->file >> temporary >> this->gridData->coordinates[i][0] >> this->gridData->coordinates[i][1] >> this->gridData->coordinates[i][2];
 	}
 }
 
@@ -63,7 +63,7 @@ void MshReader::readElements() {
 	//std::cout << std::endl;
 }
 
-GridData MshReader::getGridData() const {
+GridDataShared MshReader::getGridData() const {
 	return this->gridData;
 }
 

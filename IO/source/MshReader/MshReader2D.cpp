@@ -2,7 +2,7 @@
 
 MshReader2D::MshReader2D(const std::string& filePath) : 
 	MshReader(filePath) {
-	this->gridData.dimension = 2;
+	this->gridData->dimension = 2;
 	this->readNodes();
 	this->readPhysicalEntities();
 	this->readElements();
@@ -45,9 +45,9 @@ void MshReader2D::readPhysicalEntities() {
 	}
 	if (geometryNumbers.size() != 1) throw std::runtime_error("One and only one geometry supported");
 
-	this->gridData.boundaries.resize(boundaryNumbers.size());
+	this->gridData->boundaries.resize(boundaryNumbers.size());
 	for (unsigned i = 0; i < boundaryNumbers.size(); i++) {
-		this->gridData.boundaries[i].name = entitiesNames[boundaryNumbers[i]];
+		this->gridData->boundaries[i].name = entitiesNames[boundaryNumbers[i]];
 	}
 }
 
@@ -63,13 +63,13 @@ void MshReader2D::addElements() {
 			
 			switch (type) {
 				case 1: 
-					this->gridData.boundaries[i].lineConnectivity.emplace_back(std::move(element));
+					this->gridData->boundaries[i].lineConnectivity.emplace_back(std::move(element));
 					break;
 				case 2: 
-					this->gridData.triangleConnectivity.emplace_back(std::move(element));
+					this->gridData->triangleConnectivity.emplace_back(std::move(element));
 					break;
 				case 3: 
-					this->gridData.quadrangleConnectivity.emplace_back(std::move(element));
+					this->gridData->quadrangleConnectivity.emplace_back(std::move(element));
 					break;
 				default: 
 					throw std::runtime_error("Non supported element found");
@@ -79,7 +79,7 @@ void MshReader2D::addElements() {
 }
 
 void MshReader2D::defineBoundaryVerticesIndices() {
-	for (auto boundary = this->gridData.boundaries.begin(); boundary < this->gridData.boundaries.end(); boundary++) {
+	for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
 		for (auto j = boundary->lineConnectivity.cbegin(); j != boundary->lineConnectivity.cend(); j++) {
 			for (auto k = j->cbegin(); k != j->cend(); k++) {

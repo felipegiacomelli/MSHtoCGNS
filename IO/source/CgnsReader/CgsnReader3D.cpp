@@ -2,7 +2,7 @@
  
 CgnsReader3D::CgnsReader3D(const std::string& filePath) :
 	CgnsReader(filePath) {
-	this->gridData.dimension = this->cellDimension;
+	this->gridData->dimension = this->cellDimension;
 	this->readNodes();
 	this->readElements();
 	this->defineBoundaryVerticesIndices();
@@ -27,11 +27,11 @@ void CgnsReader3D::readNodes() {
 		cg_error_exit();
 	}
 
-	this->gridData.coordinates.resize(this->numberOfNodes, std::vector<double>(3));
+	this->gridData->coordinates.resize(this->numberOfNodes, std::vector<double>(3));
 	for (int i = 0; i < this->numberOfNodes; i++) {
-		this->gridData.coordinates[i][0] = coordinatesX[i]; 
-		this->gridData.coordinates[i][1] = coordinatesY[i]; 
-		this->gridData.coordinates[i][2] = coordinatesZ[i]; 
+		this->gridData->coordinates[i][0] = coordinatesX[i]; 
+		this->gridData->coordinates[i][1] = coordinatesY[i]; 
+		this->gridData->coordinates[i][2] = coordinatesZ[i]; 
 	}
 }
 
@@ -54,7 +54,7 @@ void CgnsReader3D::readElements() {
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> tetrahedron(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) tetrahedron[k] = connectivities[e*numberOfVertices+k] - 1;
-					this->gridData.tetrahedronConnectivity.emplace_back(std::move(tetrahedron));	
+					this->gridData->tetrahedronConnectivity.emplace_back(std::move(tetrahedron));	
 				}
 				break; 
 			}
@@ -65,7 +65,7 @@ void CgnsReader3D::readElements() {
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> hexahedron(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) hexahedron[k] = connectivities[e*numberOfVertices+k] - 1;
-					this->gridData.hexahedronConnectivity.emplace_back(std::move(hexahedron));	
+					this->gridData->hexahedronConnectivity.emplace_back(std::move(hexahedron));	
 				}
 				break; 
 			}
@@ -82,7 +82,7 @@ void CgnsReader3D::readElements() {
 				BoundaryData boundaryData;
 				boundaryData.name = buffer;
 				boundaryData.triangleConnectivity = std::move(triangleConnectivity);
-				this->gridData.boundaries.emplace_back(std::move(boundaryData));
+				this->gridData->boundaries.emplace_back(std::move(boundaryData));
 				break; 
 			}
 			case QUAD_4: {
@@ -98,7 +98,7 @@ void CgnsReader3D::readElements() {
 				BoundaryData boundaryData;
 				boundaryData.name = buffer;
 				boundaryData.quadrangleConnectivity = std::move(quadrangleConnectivity);
-				this->gridData.boundaries.emplace_back(std::move(boundaryData));
+				this->gridData->boundaries.emplace_back(std::move(boundaryData));
 				break; 
 			}
 			default:
@@ -110,7 +110,7 @@ void CgnsReader3D::readElements() {
 }
 
 void CgnsReader3D::defineBoundaryVerticesIndices() {
-	for (auto boundary = this->gridData.boundaries.begin(); boundary != this->gridData.boundaries.end(); boundary++) {
+	for (auto boundary = this->gridData->boundaries.begin(); boundary != this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
 		if (boundary->triangleConnectivity.size() > 0) {
 			for (auto j = boundary->triangleConnectivity.cbegin(); j != boundary->triangleConnectivity.cend(); j++) {

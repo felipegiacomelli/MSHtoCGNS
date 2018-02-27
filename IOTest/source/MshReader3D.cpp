@@ -12,13 +12,13 @@ struct Msh3D {
 
 	~Msh3D() = default;
 
-	GridData gridData;
+	GridDataShared gridData;
 };
 
 FixtureTestSuite(ReadMsh3D, Msh3D)
 
 TestCase(Coordinates) {
-	auto coordinates = this->gridData.coordinates;
+	auto coordinates = this->gridData->coordinates;
 
 	checkEqual(static_cast<int>(coordinates.size()), 14);
 	checkClose(coordinates[ 0][0], 0.0, TOLERANCE); checkClose(coordinates[ 0][1], 0.0, TOLERANCE); checkClose(coordinates[ 0][2], 0.0, TOLERANCE);
@@ -38,7 +38,7 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-	auto tetrahedra = this->gridData.tetrahedronConnectivity;
+	auto tetrahedra = this->gridData->tetrahedronConnectivity;
 
 	checkEqual(static_cast<int>(tetrahedra.size()), 24);
 	checkEqual(tetrahedra[ 0][0], 13); checkEqual(tetrahedra[ 0][1],  9); checkEqual(tetrahedra[ 0][2], 10); checkEqual(tetrahedra[ 0][3], 12); 
@@ -68,13 +68,13 @@ TestCase(Elements) {
 }
 
 TestCase(Boundaries) {
-	auto boundaries = this->gridData.boundaries;
+	auto boundaries = this->gridData->boundaries;
 
 	checkEqual(static_cast<int>(boundaries.size()), 6);
 }
 
 TestCase(West) {
-	BoundaryData west = this->gridData.boundaries[0];
+	BoundaryData west = this->gridData->boundaries[0];
 
 	check(west.name == std::string("West"));
 
@@ -95,7 +95,7 @@ TestCase(West) {
 }
 
 TestCase(East) {
-	BoundaryData east = this->gridData.boundaries[1];
+	BoundaryData east = this->gridData->boundaries[1];
 
 	check(east.name == std::string("East"));
 
@@ -116,7 +116,7 @@ TestCase(East) {
 }
 
 TestCase(South) {
-	BoundaryData south = this->gridData.boundaries[2];
+	BoundaryData south = this->gridData->boundaries[2];
 
 	check(south.name == std::string("South"));
 
@@ -137,7 +137,7 @@ TestCase(South) {
 }
 
 TestCase(North) {
-	BoundaryData north = this->gridData.boundaries[3];
+	BoundaryData north = this->gridData->boundaries[3];
 
 	check(north.name == std::string("North"));
 
@@ -158,7 +158,7 @@ TestCase(North) {
 }
 
 TestCase(Bottom) {
-	BoundaryData bottom = this->gridData.boundaries[4];
+	BoundaryData bottom = this->gridData->boundaries[4];
 
 	check(bottom.name == std::string("Bottom"));
 
@@ -179,7 +179,7 @@ TestCase(Bottom) {
 }
 
 TestCase(Top) {
-	BoundaryData top = this->gridData.boundaries[5];
+	BoundaryData top = this->gridData->boundaries[5];
 
 	check(top.name == std::string("Top"));
 

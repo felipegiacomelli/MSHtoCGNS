@@ -2,7 +2,7 @@
 
 MshReader3D::MshReader3D(const std::string& filePath) : 
 	MshReader(filePath) {
-	this->gridData.dimension = 3;
+	this->gridData->dimension = 3;
 	this->readNodes();
 	this->readPhysicalEntities();
 	this->readElements();
@@ -45,9 +45,9 @@ void MshReader3D::readPhysicalEntities() {
 	}
 	if (geometryNumbers.size() != 1) throw std::runtime_error("One and only one geometry supported");
 
-	this->gridData.boundaries.resize(boundaryNumbers.size());
+	this->gridData->boundaries.resize(boundaryNumbers.size());
 	for (unsigned i = 0; i < boundaryNumbers.size(); i++) {
-		this->gridData.boundaries[i].name = entitiesNames[boundaryNumbers[i]];
+		this->gridData->boundaries[i].name = entitiesNames[boundaryNumbers[i]];
 	}
 }
 
@@ -63,16 +63,16 @@ void MshReader3D::addElements() {
 			
 			switch (type) {
 				case 2: 
-					this->gridData.boundaries[i].triangleConnectivity.emplace_back(std::move(element));
+					this->gridData->boundaries[i].triangleConnectivity.emplace_back(std::move(element));
 					break;
 				case 3: 
-					this->gridData.boundaries[i].quadrangleConnectivity.emplace_back(std::move(element));
+					this->gridData->boundaries[i].quadrangleConnectivity.emplace_back(std::move(element));
 					break;
 				case 4: 
-					this->gridData.tetrahedronConnectivity.emplace_back(std::move(element));
+					this->gridData->tetrahedronConnectivity.emplace_back(std::move(element));
 					break;
 				case 5: 
-					this->gridData.hexahedronConnectivity.emplace_back(std::move(element));
+					this->gridData->hexahedronConnectivity.emplace_back(std::move(element));
 					break;
 				default: 
 					throw std::runtime_error("Non supported element found");
@@ -82,7 +82,7 @@ void MshReader3D::addElements() {
 }
 
 void MshReader3D::defineBoundaryVerticesIndices() {
-	for (auto boundary = this->gridData.boundaries.begin(); boundary != this->gridData.boundaries.end(); boundary++) {
+	for (auto boundary = this->gridData->boundaries.begin(); boundary != this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
 		if (boundary->triangleConnectivity.size() > 0) {
 			for (auto j = boundary->triangleConnectivity.cbegin(); j != boundary->triangleConnectivity.cend(); j++) {
