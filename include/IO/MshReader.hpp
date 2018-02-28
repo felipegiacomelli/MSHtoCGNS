@@ -21,16 +21,17 @@ class MshReader {
 	protected:
 		void checkFile();
 		void readNodes();
-		void readElements();
+		void readConnectivities();
 		virtual void readPhysicalEntities() = 0;
 		virtual void addElements() = 0;
-		virtual void defineBoundaryVerticesIndices() = 0;
+		// virtual void addFacets() = 0;
+		virtual void defineBoundaryVertices() = 0;
 
 		std::string filePath;
 		std::ifstream file;
 		char* buffer;
 		int numberOfPhysicalEntities;
-		std::vector<std::vector<int>> elements, physicalEntitiesElementIndices;
+		std::vector<std::vector<int>> connectivities, elements, facets, physicalEntitiesElementIndices;
 		GridDataShared gridData;
 };
 

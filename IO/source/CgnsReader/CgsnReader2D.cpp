@@ -6,7 +6,7 @@ CgnsReader2D::CgnsReader2D(const std::string& filePath) :
 	this->gridData->thickness = 1.0;
 	this->readNodes();
 	this->readElements();
-	this->defineBoundaryVerticesIndices();
+	this->defineBoundaryVertices();
 }
 
 void CgnsReader2D::readNodes() {
@@ -88,7 +88,7 @@ void CgnsReader2D::readElements() {
 	}
 }
 
-void CgnsReader2D::defineBoundaryVerticesIndices() {
+void CgnsReader2D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary != this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
 		for (auto j = boundary->lineConnectivity.cbegin(); j != boundary->lineConnectivity.cend(); j++) {

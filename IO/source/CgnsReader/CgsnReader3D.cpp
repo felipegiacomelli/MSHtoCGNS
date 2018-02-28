@@ -5,7 +5,7 @@ CgnsReader3D::CgnsReader3D(const std::string& filePath) :
 	this->gridData->dimension = this->cellDimension;
 	this->readNodes();
 	this->readElements();
-	this->defineBoundaryVerticesIndices();
+	this->defineBoundaryVertices();
 }
 
 void CgnsReader3D::readNodes() {
@@ -108,7 +108,7 @@ void CgnsReader3D::readElements() {
 	}
 }
 
-void CgnsReader3D::defineBoundaryVerticesIndices() {
+void CgnsReader3D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary != this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
 		if (boundary->triangleConnectivity.size() > 0) {

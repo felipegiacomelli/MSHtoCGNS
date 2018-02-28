@@ -25,39 +25,47 @@ void MshReader::readNodes() {
 	}
 }
 
-void MshReader::readElements() {
+void MshReader::readConnectivities() {
 	int numberOfElements;
 	this->file.seekg(0, std::ios::beg);
 	while (strcmp(this->buffer, "$Elements") && !this->file.eof()) this->file >> this->buffer;
-	if (this->file.eof()) { 
-		this->file.clear(); 
-	}
+	if (this->file.eof()) this->file.clear(); 
 	else {
 		this->file >> numberOfElements;
 		for (int i = 0; i < numberOfElements+1; i++) {
 			std::string line;
 			std::getline(this->file, line);
 			std::istringstream stream(line);
-			std::vector<int> element;
+			std::vector<int> connectivity;
 			int value;
-			while (stream >> value) element.push_back(value);
-			this->elements.emplace_back(std::move(element));
+			while (stream >> value) connectivity.push_back(value);
+			this->connectivities.emplace_back(std::move(connectivity));
 		}
 	}
-	this->elements.erase(this->elements.begin());
+	this->connectivities.erase(this->connectivities.begin());
 	
-	if (elements[0][2] != 2) throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
+	if (connectivities[0][2] != 2) throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
 
-	for (auto i = this->elements.begin(); i < this->elements.end(); i++) {
+	for (auto i = this->connectivities.begin(); i < this->connectivities.end(); i++) {
 		i->erase(i->begin());
 		i->erase(i->begin()+1);
 		i->erase(i->begin()+2);
 	}
 
-	this->physicalEntitiesElementIndices.resize(this->numberOfPhysicalEntities, std::vector<int>());
-	for (unsigned i = 0; i < this->elements.size(); i++) {
-		this->physicalEntitiesElementIndices[this->elements[i][1]-1].push_back(i);
+	int numberOfFacets = 0;
+	for (unsigned i = 0; i < connectivities.size(); i++) {
+		if (connectivities[i][0] != 1) break;
+		else numberOfFacets++;
 	}
+	this->facets   = std::vector<std::vector<int>>(connectivities.begin()                 , connectivities.begin() + numberOfFacets);
+	this->elements = std::vector<std::vector<int>>(connectivities.begin() + numberOfFacets, connectivities.end());
+
+	this->physicalEntitiesElementIndices.resize(this->numberOfPhysicalEntities, std::vector<int>());
+	for (unsigned i = 0; i < this->connectivities.size(); i++) {
+		this->physicalEntitiesElementIndices[this->connectivities[i][1]-1].push_back(i);
+	}
+
+	print(physicalEntitiesElementIndices, "physicalEntitiesElementIndices");
 }
 
 GridDataShared MshReader::getGridData() const {
