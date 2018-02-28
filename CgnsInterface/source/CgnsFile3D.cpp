@@ -15,7 +15,7 @@ void CgnsFile3D::defineGeometryType() {
 		this->geometry = HEXA_8;
 		this->numberOfElements = this->gridData->hexahedronConnectivity.size();
 	}
-	else throw std::runtime_error("Geometry type not supported");
+	else throw std::runtime_error("CgnsFile3D: Geometry type not supported");
 }
 
 void CgnsFile3D::defineBoundaryType() {
@@ -24,9 +24,9 @@ void CgnsFile3D::defineBoundaryType() {
 		if (i->lineConnectivity.size() == 0) {
 			if      (i->triangleConnectivity.size()  > 0 && i->quadrangleConnectivity.size() == 0) boundaryTypes.emplace_back(true);
 			else if (i->triangleConnectivity.size() == 0 && i->quadrangleConnectivity.size() >  0) boundaryTypes.emplace_back(false);
-			else std::runtime_error("Boundary is empty");
+			else std::runtime_error("CgnsFile3D: Boundary is empty");
 		}
-		else throw std::runtime_error("Line boundary is not supported");
+		else throw std::runtime_error("CgnsFile3D: Line boundary is not supported");
 	}
 		
 	if (std::all_of(boundaryTypes.cbegin(), boundaryTypes.cend(), [](const bool& i){return i == true;})) this->boundary = TRI_3;
@@ -73,7 +73,7 @@ void CgnsFile3D::writeSections() {
 			break;
 		}
 		default: 
-			throw std::runtime_error("Geometry type not supported");
+			throw std::runtime_error("CgnsFile3D: Geometry type not supported");
 			cg_error_exit();
 			break;
 	}
@@ -106,7 +106,7 @@ void CgnsFile3D::writeSections() {
 			break;
 		}
 		default: 
-			throw std::runtime_error("Boundary type not supported");
+			throw std::runtime_error("CgnsFile3D: Boundary type not supported");
 			break;
 	}
 }

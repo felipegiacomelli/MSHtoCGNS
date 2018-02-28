@@ -15,11 +15,11 @@ void CgnsReader2D::readNodes() {
 	double coordinatesX[this->numberOfNodes];
 	double coordinatesY[this->numberOfNodes];
 	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateX", RealDouble, &one, &this->numberOfNodes, coordinatesX)) {
-		throw std::runtime_error("Could not read CoordinateX");
+		throw std::runtime_error("CgnsReader2D: Could not read CoordinateX");
 		cg_error_exit();
 	}
 	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateY", RealDouble, &one, &this->numberOfNodes, coordinatesY)) {
-		throw std::runtime_error("Could not read CoordinateY");
+		throw std::runtime_error("CgnsReader2D: Could not read CoordinateY");
 		cg_error_exit();
 	}
 
@@ -37,7 +37,7 @@ void CgnsReader2D::readElements() {
 		cgsize_t elementStart, elementEnd; 
 		int nBdry, parentFlag;
 		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag)) {
-			throw std::runtime_error("Could not read section");
+			throw std::runtime_error("CgnsReader2D: Could not read section");
 			cg_error_exit();
 		}
 		int numberOfElements = elementEnd - elementStart + 1;
@@ -82,7 +82,7 @@ void CgnsReader2D::readElements() {
 				break; 
 			}
 			default:
-				throw std::runtime_error("Could not read section");
+				throw std::runtime_error("CgnsReader2D: Could not read section");
 				cg_error_exit();
 				break;
 		}

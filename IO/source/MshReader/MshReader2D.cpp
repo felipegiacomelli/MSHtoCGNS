@@ -13,7 +13,7 @@ MshReader2D::MshReader2D(const std::string& filePath) :
 void MshReader2D::readPhysicalEntities() {
 	this->file.seekg(0, std::ios::beg); 
 	while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof()) this->file >> this->buffer;
-	if (this->file.eof()) throw std::runtime_error("There is no Physical Entities data in the grid file");
+	if (this->file.eof()) throw std::runtime_error("MshReader2D: There is no Physical Entities data in the grid file");
 	this->file >> this->numberOfPhysicalEntities;
 	std::vector<int> entitiesTypes;			int type;
 	std::vector<int> entitiesNumbers;		int number;
@@ -39,11 +39,11 @@ void MshReader2D::readPhysicalEntities() {
 				break;
 			}
 			default: 
-				throw std::runtime_error("Non supported physical entity found");
+				throw std::runtime_error("MshReader2D: Non supported physical entity found");
 				break;
 		}
 	}
-	if (geometryNumbers.size() != 1) throw std::runtime_error("One and only one geometry supported");
+	if (geometryNumbers.size() != 1) throw std::runtime_error("MshReader2D: One and only one geometry supported");
 
 	this->gridData->boundaries.resize(boundaryNumbers.size());
 	for (unsigned i = 0; i < boundaryNumbers.size(); i++) {
@@ -72,7 +72,7 @@ void MshReader2D::addElements() {
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(element));
 					break;
 				default: 
-					throw std::runtime_error("Non supported element found");
+					throw std::runtime_error("MshReader2D: Non supported element found");
 			}
 		}
 	}

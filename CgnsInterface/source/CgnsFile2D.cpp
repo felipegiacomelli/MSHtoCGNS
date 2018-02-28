@@ -15,7 +15,7 @@ void CgnsFile2D::defineGeometryType() {
 		this->geometry = QUAD_4;
 		this->numberOfElements = this->gridData->quadrangleConnectivity.size();
 	}
-	else throw std::runtime_error("Geometry type not supported");
+	else throw std::runtime_error("CgnsFile2D: Geometry type not supported");
 }
 
 void CgnsFile2D::setupFile() {
@@ -57,7 +57,7 @@ void CgnsFile2D::writeSections() {
 			break;
 		}
 		default:
-			throw std::runtime_error("Geometry type not supported");
+			throw std::runtime_error("CgnsFile2D: Geometry type not supported");
 			cg_error_exit();
 			break;
 	}

@@ -15,15 +15,15 @@ void CgnsReader3D::readNodes() {
 	double coordinatesY[this->numberOfNodes];
 	double coordinatesZ[this->numberOfNodes];
 	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateX", RealDouble, &one, &this->numberOfNodes, coordinatesX)) {
-		throw std::runtime_error("Could not read CoordinateX");
+		throw std::runtime_error("CgnsReader3D: Could not read CoordinateX");
 		cg_error_exit();
 	}
 	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateY", RealDouble, &one, &this->numberOfNodes, coordinatesY)) {
-		throw std::runtime_error("Could not read CoordinateY");
+		throw std::runtime_error("CgnsReader3D: Could not read CoordinateY");
 		cg_error_exit();
 	}
 	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateZ", RealDouble, &one, &this->numberOfNodes, coordinatesZ)) {
-		throw std::runtime_error("Could not read CoordinateZ");
+		throw std::runtime_error("CgnsReader3D: Could not read CoordinateZ");
 		cg_error_exit();
 	}
 
@@ -41,7 +41,7 @@ void CgnsReader3D::readElements() {
 		cgsize_t elementStart, elementEnd; 
 		int nBdry, parentFlag;
 		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag) != CG_OK) {
-			throw std::runtime_error("Could not read section");
+			throw std::runtime_error("CgnsReader3D: Could not read section");
 			cg_error_exit();
 		}
 		int numberOfElements = elementEnd - elementStart + 1;
@@ -102,7 +102,7 @@ void CgnsReader3D::readElements() {
 				break; 
 			}
 			default:
-				throw std::runtime_error("Non supported element found");
+				throw std::runtime_error("CgnsReader3D: Non supported element found");
 				cg_error_exit();
 				break;
 		}

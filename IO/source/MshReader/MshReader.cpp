@@ -17,7 +17,7 @@ void MshReader::readNodes() {
 	int numberOfNodes, temporary;
 	this->file.seekg(0, std::ios::beg); 
 	while (strcmp(this->buffer, "$Nodes") && !this->file.eof()) this->file >> this->buffer;
-	if (this->file.eof()) throw std::runtime_error("There is no Node data in the grid file");
+	if (this->file.eof()) throw std::runtime_error("MshReader: There is no Node data in the grid file");
 	this->file >> numberOfNodes;
 	this->gridData->coordinates.resize(numberOfNodes, std::vector<double>(3));
 	for (int i = 0; i < numberOfNodes; i++) {
@@ -46,7 +46,7 @@ void MshReader::readElements() {
 	}
 	this->elements.erase(this->elements.begin());
 	
-	if (elements[0][2] != 2) throw std::runtime_error("Elements must have exactly 2 tags");
+	if (elements[0][2] != 2) throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
 
 	for (auto i = this->elements.begin(); i < this->elements.end(); i++) {
 		i->erase(i->begin());
@@ -58,10 +58,6 @@ void MshReader::readElements() {
 	for (unsigned i = 0; i < this->elements.size(); i++) {
 		this->physicalEntitiesElementIndices[this->elements[i][1]-1].push_back(i);
 	}
-
-	//std::cout << std::endl;
-	//print(elements, "elements");
-	//std::cout << std::endl;
 }
 
 GridDataShared MshReader::getGridData() const {
