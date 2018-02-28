@@ -40,7 +40,6 @@ void MshReader3D::readPhysicalEntities() {
 			}
 			default: 
 				throw std::runtime_error("MshReader3D: Non supported physical entity found");
-				break;
 		}
 	}
 	if (geometryNumbers.size() != 1) throw std::runtime_error("MshReader3D: One and only one geometry supported");

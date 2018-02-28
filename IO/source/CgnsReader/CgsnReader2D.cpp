@@ -84,7 +84,6 @@ void CgnsReader2D::readElements() {
 			default:
 				throw std::runtime_error("CgnsReader2D: Could not read section");
 				cg_error_exit();
-				break;
 		}
 	}
 }

@@ -104,7 +104,6 @@ void CgnsReader3D::readElements() {
 			default:
 				throw std::runtime_error("CgnsReader3D: Non supported element found");
 				cg_error_exit();
-				break;
 		}
 	}
 }
