@@ -44,7 +44,7 @@ void MshReader::readConnectivities() {
 	}
 	this->connectivities.erase(this->connectivities.begin());
 	
-	if (connectivities[0][2] != 2) throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
+	// if (connectivities[0][2] != 2) throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
 
 	for (auto i = this->connectivities.begin(); i < this->connectivities.end(); i++) {
 		i->erase(i->begin());
@@ -59,6 +59,8 @@ void MshReader::readConnectivities() {
 	}
 	this->facets   = std::vector<std::vector<int>>(connectivities.begin()                 , connectivities.begin() + numberOfFacets);
 	this->elements = std::vector<std::vector<int>>(connectivities.begin() + numberOfFacets, connectivities.end());
+
+	// create facetsOnBoundary and elementsOnRegion
 
 	this->physicalEntitiesElementIndices.resize(this->numberOfPhysicalEntities, std::vector<int>());
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {

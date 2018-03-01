@@ -35,7 +35,7 @@ void MshReader2D::readPhysicalEntities() {
 				break;
 			}
 			case 2: {
-				regionsIndices.push_back(entitiesIndices[i]);;
+				regionsIndices.push_back(entitiesIndices[i]);
 				break;
 			}
 			default: 
@@ -43,14 +43,16 @@ void MshReader2D::readPhysicalEntities() {
 		}
 	}
 
-	this->gridData->regions.resize(regionsIndices.size());
-	for (unsigned i = 0; i < regionsIndices.size(); i++) {
-		this->gridData->regions[i].name = entitiesNames[regionsIndices[i]];
-	}
-	
+	this->numberOfFacets = boundaryIndices.size();
 	this->gridData->boundaries.resize(boundaryIndices.size());
 	for (unsigned i = 0; i < boundaryIndices.size(); i++) {
 		this->gridData->boundaries[i].name = entitiesNames[boundaryIndices[i]];
+	}
+
+	this->numberOfRegions = regionsIndices.size();
+	this->gridData->regions.resize(regionsIndices.size());
+	for (unsigned i = 0; i < regionsIndices.size(); i++) {
+		this->gridData->regions[i].name = entitiesNames[regionsIndices[i]];
 	}
 }
 
