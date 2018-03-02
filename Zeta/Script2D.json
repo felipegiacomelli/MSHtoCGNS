@@ -2,7 +2,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/gmsh/hybrid/square/hybrid_square.msh",
+        "input"  : "/home/felipe/Felipe/gmsh/square/unstructured/13n_28e/square.msh",
         "output" : "./"
     }
 }

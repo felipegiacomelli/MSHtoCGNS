@@ -38,11 +38,16 @@ void MshReader::readConnectivities() {
 			std::istringstream stream(line);
 			std::vector<int> connectivity;
 			int value;
-			while (stream >> value) connectivity.push_back(value);
+			while (stream >> value) {
+				value--;
+				connectivity.push_back(value);
+			}
 			this->connectivities.emplace_back(std::move(connectivity));
 		}
 	}
 	this->connectivities.erase(this->connectivities.begin());
+	
+	print(connectivities, "connectivities");
 	
 	// if (connectivities[0][2] != 2) throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
 
@@ -64,7 +69,7 @@ void MshReader::readConnectivities() {
 
 	this->physicalEntitiesElementIndices.resize(this->numberOfPhysicalEntities, std::vector<int>());
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {
-		this->physicalEntitiesElementIndices[this->connectivities[i][1]-1].push_back(i);
+		this->physicalEntitiesElementIndices[this->connectivities[i][1]].push_back(i);
 	}
 
 	print(physicalEntitiesElementIndices, "physicalEntitiesElementIndices");

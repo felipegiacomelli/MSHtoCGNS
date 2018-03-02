@@ -20,6 +20,7 @@ void MshReader3D::readPhysicalEntities() {
 	std::vector<std::string> entitiesNames; std::string name;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
 		file >> type >> number >> name;
+		type--;
 		number--;
 		name.erase(name.begin()); name.erase(name.end()-1);
  		entitiesTypes.push_back(type);
@@ -30,11 +31,11 @@ void MshReader3D::readPhysicalEntities() {
 	std::vector<int> geometryNumbers, boundaryNumbers;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
 		switch(entitiesTypes[i]) {
-			case 2: {
+			case 1: {
 				boundaryNumbers.push_back(entitiesNumbers[i]);
 				break;
 			}
-			case 3: {
+			case 2: {
 				geometryNumbers.push_back(entitiesTypes[i]);;
 				break;
 			}
@@ -58,18 +59,18 @@ void MshReader3D::addElements() {
 			auto first = this->connectivities[index].cbegin() + 2;
 			auto last  = this->connectivities[index].cend();
 			std::vector<int> connectivity(first, last);
-			std::transform(std::begin(connectivity), std::end(connectivity), std::begin(connectivity), [](const int& x){return x - 1;});
+			// std::transform(std::begin(connectivity), std::end(connectivity), std::begin(connectivity), [](const int& x){return x - 1;});
 			switch (type) {
-				case 2: 
+				case 1: 
 					this->gridData->boundaries[i].triangleConnectivity.emplace_back(std::move(connectivity));
 					break;
-				case 3: 
+				case 2: 
 					this->gridData->boundaries[i].quadrangleConnectivity.emplace_back(std::move(connectivity));
 					break;
-				case 4: 
+				case 3: 
 					this->gridData->tetrahedronConnectivity.emplace_back(std::move(connectivity));
 					break;
-				case 5: 
+				case 4: 
 					this->gridData->hexahedronConnectivity.emplace_back(std::move(connectivity));
 					break;
 				default: 

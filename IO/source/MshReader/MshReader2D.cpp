@@ -20,6 +20,7 @@ void MshReader2D::readPhysicalEntities() {
 	std::vector<std::string> entitiesNames; std::string name;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
 		file >> type >> index >> name;
+		type--;
 		index--;
 		name.erase(name.begin()); name.erase(name.end()-1);
  		entitiesTypes.push_back(type);
@@ -30,11 +31,11 @@ void MshReader2D::readPhysicalEntities() {
 	std::vector<int> regionsIndices, boundaryIndices;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
 		switch(entitiesTypes[i]) {
-			case 1: {
+			case 0: {
 				boundaryIndices.push_back(entitiesIndices[i]);
 				break;
 			}
-			case 2: {
+			case 1: {
 				regionsIndices.push_back(entitiesIndices[i]);
 				break;
 			}
@@ -64,15 +65,15 @@ void MshReader2D::addElements() {
 			auto first = this->connectivities[index].cbegin() + 2;
 			auto last  = this->connectivities[index].cend();
 			std::vector<int> connectivity(first, last); 
-			std::transform(std::begin(connectivity), std::end(connectivity), std::begin(connectivity), [](const int& x){return x - 1;});
+			// std::transform(std::begin(connectivity), std::end(connectivity), std::begin(connectivity), [](const int& x){return x - 1;});
 			switch (type) {
-				case 1: 
+				case 0: 
 					this->gridData->boundaries[i].lineConnectivity.emplace_back(std::move(connectivity));
 					break;
-				case 2: 
+				case 1: 
 					this->gridData->triangleConnectivity.emplace_back(std::move(connectivity));
 					break;
-				case 3: 
+				case 2: 
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(connectivity));
 					break;
 				default: 
