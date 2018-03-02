@@ -47,8 +47,6 @@ void MshReader::readConnectivities() {
 	}
 	this->connectivities.erase(this->connectivities.begin());
 	
-	print(connectivities, "connectivities");
-	
 	// if (connectivities[0][2] != 2) throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
 
 	for (auto i = this->connectivities.begin(); i < this->connectivities.end(); i++) {

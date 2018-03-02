@@ -8,6 +8,7 @@
 
 #include <string>
 #include <fstream>
+#include <numeric>
 
 class MshReader {
 	public:
@@ -24,7 +25,7 @@ class MshReader {
 		void readConnectivities();
 		virtual void readPhysicalEntities() = 0;
 		virtual void addElements() = 0;
-		// virtual void addFacets() = 0;
+		virtual void addFacets() = 0;
 		virtual void defineBoundaryVertices() = 0;
 
 		std::string filePath;

@@ -51,6 +51,9 @@ void MshReader3D::readPhysicalEntities() {
 	}
 }
 
+void MshReader3D::addFacets() {
+}
+
 void MshReader3D::addElements() {
 	for (unsigned i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
 		for (unsigned j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {

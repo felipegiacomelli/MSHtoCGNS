@@ -15,11 +15,13 @@ void MshReader2D::readPhysicalEntities() {
 	while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof()) this->file >> this->buffer;
 	if (this->file.eof()) throw std::runtime_error("MshReader2D: There is no Physical Entities data in the grid file");
 	this->file >> this->numberOfPhysicalEntities;
-	std::vector<int> entitiesTypes;			int type;
-	std::vector<int> entitiesIndices;		int index;
-	std::vector<std::string> entitiesNames; std::string name;
+	std::vector<int> entitiesTypes;			
+	std::vector<int> entitiesIndices;
+	std::vector<std::string> entitiesNames; 
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
-		file >> type >> index >> name;
+		int type, index;
+		std::string name;
+		this->file >> type >> index >> name;
 		type--;
 		index--;
 		name.erase(name.begin()); name.erase(name.end()-1);
@@ -43,6 +45,11 @@ void MshReader2D::readPhysicalEntities() {
 				throw std::runtime_error("MshReader2D: Non supported physical entity found");
 		}
 	}
+	std::iota(boundaryIndices.begin(), boundaryIndices.end(), 0);
+	std::iota(regionsIndices.begin(), regionsIndices.end(), 0);
+
+	print(boundaryIndices, "boundaryIndices");
+	print(regionsIndices, "regionsIndices");
 
 	this->numberOfFacets = boundaryIndices.size();
 	this->gridData->boundaries.resize(boundaryIndices.size());
@@ -57,6 +64,32 @@ void MshReader2D::readPhysicalEntities() {
 	}
 }
 
+void MshReader2D::addFacets() {
+	// for (unsigned i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
+	// 	for (unsigned j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
+	// 		int index = this->physicalEntitiesElementIndices[i][j];
+	// 		int type  = this->connectivities[index][0];
+	// 		auto first = this->connectivities[index].cbegin() + 2;
+	// 		auto last  = this->connectivities[index].cend();
+	// 		std::vector<int> connectivity(first, last); 
+	// 		// std::transform(std::begin(connectivity), std::end(connectivity), std::begin(connectivity), [](const int& x){return x - 1;});
+	// 		switch (type) {
+	// 			case 0: 
+	// 				this->gridData->boundaries[i].lineConnectivity.emplace_back(std::move(connectivity));
+	// 				break;
+	// 			case 1: 
+	// 				this->gridData->triangleConnectivity.emplace_back(std::move(connectivity));
+	// 				break;
+	// 			case 2: 
+	// 				this->gridData->quadrangleConnectivity.emplace_back(std::move(connectivity));
+	// 				break;
+	// 			default: 
+	// 				throw std::runtime_error("MshReader2D: Non supported element found");
+	// 		}
+	// 	}
+	// }
+}
+
 void MshReader2D::addElements() {
 	for (unsigned i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
 		for (unsigned j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
@@ -65,7 +98,6 @@ void MshReader2D::addElements() {
 			auto first = this->connectivities[index].cbegin() + 2;
 			auto last  = this->connectivities[index].cend();
 			std::vector<int> connectivity(first, last); 
-			// std::transform(std::begin(connectivity), std::end(connectivity), std::begin(connectivity), [](const int& x){return x - 1;});
 			switch (type) {
 				case 0: 
 					this->gridData->boundaries[i].lineConnectivity.emplace_back(std::move(connectivity));
