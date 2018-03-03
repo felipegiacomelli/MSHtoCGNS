@@ -39,9 +39,7 @@ TestCase(Elements) {
 }
 
 TestCase(Boundaries) {
-	auto boundaries = this->gridData->boundaries;
-
-	checkEqual(static_cast<int>(boundaries.size()), 4);
+	checkEqual(static_cast<int>(this->gridData->boundaries.size()), 4);
 }
 
 TestCase(West) {
@@ -102,6 +100,17 @@ TestCase(North) {
 	checkEqual(static_cast<int>(vertices.size()), 2);
 	checkEqual(vertices[0], 2);
 	checkEqual(vertices[1], 3); 
+}
+
+TestCase(Regions) {
+	checkEqual(static_cast<int>(this->gridData->regions.size()), 1);
+
+	auto elementsOnRegion = this->gridData->regions[0].elementsOnRegion;
+	checkEqual(static_cast<int>(elementsOnRegion.size()), 4);
+	checkEqual(elementsOnRegion[0], 0);
+	checkEqual(elementsOnRegion[1], 1);
+	checkEqual(elementsOnRegion[2], 2);
+	checkEqual(elementsOnRegion[3], 3);
 }
 
 TestSuiteEnd()

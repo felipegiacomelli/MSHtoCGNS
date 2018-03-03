@@ -15,39 +15,48 @@ void MshReader3D::readPhysicalEntities() {
 	while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof()) this->file >> this->buffer;
 	if (this->file.eof()) throw std::runtime_error("MshReader3D: There is no Physical Entities data in the grid file");
 	this->file >> this->numberOfPhysicalEntities;
-	std::vector<int> entitiesTypes;			int type;
-	std::vector<int> entitiesNumbers;		int number;
-	std::vector<std::string> entitiesNames; std::string name;
+	std::vector<int> entitiesTypes;			
+	std::vector<int> entitiesIndices;		
+	std::vector<std::string> entitiesNames; 
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
-		file >> type >> number >> name;
+		int type, index;
+		std::string name;
+		this->file >> type >> index >> name;
 		type--;
-		number--;
+		index--;
 		name.erase(name.begin()); name.erase(name.end()-1);
  		entitiesTypes.push_back(type);
-		entitiesNumbers.push_back(number);
+		entitiesIndices.push_back(index);
 		entitiesNames.push_back(name);
 	}
 
-	std::vector<int> geometryNumbers, boundaryNumbers;
+	std::vector<int> regionsIndices, boundaryIndices;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
 		switch(entitiesTypes[i]) {
 			case 1: {
-				boundaryNumbers.push_back(entitiesNumbers[i]);
+				boundaryIndices.push_back(entitiesIndices[i]);
 				break;
 			}
 			case 2: {
-				geometryNumbers.push_back(entitiesTypes[i]);;
+				regionsIndices.push_back(entitiesIndices[i]);;
 				break;
 			}
 			default: 
 				throw std::runtime_error("MshReader3D: Non supported physical entity found");
 		}
 	}
-	if (geometryNumbers.size() != 1) throw std::runtime_error("MshReader3D: One and only one geometry supported");
+	if (regionsIndices.size() != 1) throw std::runtime_error("MshReader3D: One and only one geometry supported");
+	
+	this->numberOfBoundaries = boundaryIndices.size();
+	this->gridData->boundaries.resize(boundaryIndices.size());
+	for (unsigned i = 0; i < boundaryIndices.size(); i++) {
+		this->gridData->boundaries[i].name = entitiesNames[boundaryIndices[i]];
+	}
 
-	this->gridData->boundaries.resize(boundaryNumbers.size());
-	for (unsigned i = 0; i < boundaryNumbers.size(); i++) {
-		this->gridData->boundaries[i].name = entitiesNames[boundaryNumbers[i]];
+	this->numberOfRegions = regionsIndices.size();
+	this->gridData->regions.resize(regionsIndices.size());
+	for (unsigned i = 0; i < regionsIndices.size(); i++) {
+		this->gridData->regions[i].name = entitiesNames[regionsIndices[i]];
 	}
 }
 

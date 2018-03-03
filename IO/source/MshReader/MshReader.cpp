@@ -47,8 +47,7 @@ void MshReader::readConnectivities() {
 	}
 	this->connectivities.erase(this->connectivities.begin());
 	
-
-	// if (connectivities[0][2] != 2) throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
+	if (connectivities[0][2] != 1) throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
 
 	for (auto i = this->connectivities.begin(); i < this->connectivities.end(); i++) {
 		i->erase(i->begin());
@@ -56,36 +55,54 @@ void MshReader::readConnectivities() {
 		i->erase(i->begin()+2);
 	}
 
-	// print(connectivities, "connectivities");
+	if (this->gridData->dimension == 2) {
+		int facetQuantity = 0;
+		for (unsigned i = 0; i < connectivities.size(); i++) {
+			if (connectivities[i][0] != 0) break;
+			else facetQuantity++;
+		}
+		this->facets   = std::vector<std::vector<int>>(connectivities.begin()                 , connectivities.begin() + facetQuantity);
+		this->elements = std::vector<std::vector<int>>(connectivities.begin() + facetQuantity, connectivities.end());
+		
+		print(elements, "elements");
 
+		int counter = 0;
+		std::vector<unsigned> regionStart;
+		regionStart.emplace_back(0);
+		for (unsigned i = 0; i < elements.size()-1; i++) {
+			if (elements[i][1] == elements[i+1][1]) counter++;
+			else {
+				counter++;
+				regionStart.push_back(counter);
+			}
+		}
+		regionStart.push_back(elements.size());
+		for (unsigned i = 0; i < regionStart.size()-1; i++) {
+			for (unsigned j = regionStart[i]; j < regionStart[i+1]; j++) {
+				elements[j][1] = i;
+			}
+		}
 
-	int numberOfFacets = 0;
-	for (unsigned i = 0; i < connectivities.size(); i++) {
-		if (connectivities[i][0] != 0) break;
-		else numberOfFacets++;
+		print(regionStart, "regionStart");
+		print(elements, "elements");
+
+		this->facetsOnBoundary.resize(this->numberOfBoundaries, std::vector<int>());
+		for (unsigned i = 0; i < this->facets.size(); i++) {
+			facetsOnBoundary[facets[i][1]].push_back(i);
+		}
+		print(facetsOnBoundary, "facetsOnBoundary");
+		
+		this->elementsOnRegion.resize(this->numberOfRegions, std::vector<int>());
+		for (unsigned i = 0; i < this->elements.size(); i++) {
+			elementsOnRegion[elements[i][1]].push_back(i);
+		}
+		print(elementsOnRegion, "elementsOnRegion");
 	}
-	this->facets   = std::vector<std::vector<int>>(connectivities.begin()                 , connectivities.begin() + numberOfFacets);
-	this->elements = std::vector<std::vector<int>>(connectivities.begin() + numberOfFacets, connectivities.end());
-
-	print(elements, "elements");
-
-	int col = 1;
-    std::sort(this->elements.begin(), this->elements.end(), [col](const std::vector<int>& lhs, const std::vector<int>& rhs) {return lhs[col] < rhs[col];});
-	
-	print(elements, "elements");
-	
-	// create facetsOnBoundary and elementsOnRegion
-	// this->elementsOnRegion.resize(this->numberOfRegions, std::vector<int>());
-	// for (unsigned i = 0; i < this->elementsOnRegion.size(); i++) {
-	// 	elementsOnRegion[]
-	// }
 
 	this->physicalEntitiesElementIndices.resize(this->numberOfPhysicalEntities, std::vector<int>());
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {
 		this->physicalEntitiesElementIndices[this->connectivities[i][1]].push_back(i);
 	}
-
-	print(physicalEntitiesElementIndices, "physicalEntitiesElementIndices");
 }
 
 GridDataShared MshReader::getGridData() const {

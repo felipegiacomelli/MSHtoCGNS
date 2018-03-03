@@ -6,6 +6,7 @@ MshReader2D::MshReader2D(const std::string& filePath) :
 	this->readNodes();
 	this->readPhysicalEntities();
 	this->readConnectivities();
+	this->addFacets();
 	this->addElements();
 	this->defineBoundaryVertices();
 }
@@ -51,7 +52,7 @@ void MshReader2D::readPhysicalEntities() {
 	print(boundaryIndices, "boundaryIndices");
 	print(regionsIndices, "regionsIndices");
 
-	this->numberOfFacets = boundaryIndices.size();
+	this->numberOfBoundaries = boundaryIndices.size();
 	this->gridData->boundaries.resize(boundaryIndices.size());
 	for (unsigned i = 0; i < boundaryIndices.size(); i++) {
 		this->gridData->boundaries[i].name = entitiesNames[boundaryIndices[i]];
@@ -65,48 +66,40 @@ void MshReader2D::readPhysicalEntities() {
 }
 
 void MshReader2D::addFacets() {
-	// for (unsigned i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
-	// 	for (unsigned j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
-	// 		int index = this->physicalEntitiesElementIndices[i][j];
-	// 		int type  = this->connectivities[index][0];
-	// 		auto first = this->connectivities[index].cbegin() + 2;
-	// 		auto last  = this->connectivities[index].cend();
-	// 		std::vector<int> connectivity(first, last); 
-	// 		// std::transform(std::begin(connectivity), std::end(connectivity), std::begin(connectivity), [](const int& x){return x - 1;});
-	// 		switch (type) {
-	// 			case 0: 
-	// 				this->gridData->boundaries[i].lineConnectivity.emplace_back(std::move(connectivity));
-	// 				break;
-	// 			case 1: 
-	// 				this->gridData->triangleConnectivity.emplace_back(std::move(connectivity));
-	// 				break;
-	// 			case 2: 
-	// 				this->gridData->quadrangleConnectivity.emplace_back(std::move(connectivity));
-	// 				break;
-	// 			default: 
-	// 				throw std::runtime_error("MshReader2D: Non supported element found");
-	// 		}
-	// 	}
-	// }
-}
-
-void MshReader2D::addElements() {
-	for (unsigned i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
-		for (unsigned j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
-			int index = this->physicalEntitiesElementIndices[i][j];
-			int type  = this->connectivities[index][0];
-			auto first = this->connectivities[index].cbegin() + 2;
-			auto last  = this->connectivities[index].cend();
+	for (unsigned i = 0; i < this->facetsOnBoundary.size(); i++) {
+		for (unsigned j = 0; j < this->facetsOnBoundary[i].size(); j++) {
+			int index = this->facetsOnBoundary[i][j];
+			int type  = this->facets[index][0];
+			auto first = this->facets[index].cbegin() + 2;
+			auto last  = this->facets[index].cend();
 			std::vector<int> connectivity(first, last); 
 			switch (type) {
 				case 0: 
 					this->gridData->boundaries[i].lineConnectivity.emplace_back(std::move(connectivity));
 					break;
+				default: 
+					throw std::runtime_error("MshReader2D: Non supported facet found");
+			}
+		}
+	}
+}
+
+void MshReader2D::addElements() {
+	for (unsigned i = 0; i < this->elementsOnRegion.size(); i++) {
+		for (unsigned j = 0; j < this->elementsOnRegion[i].size(); j++) {
+			int index = this->elementsOnRegion[i][j];
+			int type  = this->elements[index][0];
+			auto first = this->elements[index].cbegin() + 2;
+			auto last  = this->elements[index].cend();
+			std::vector<int> connectivity(first, last); 
+			switch (type) {
 				case 1: 
 					this->gridData->triangleConnectivity.emplace_back(std::move(connectivity));
+					this->gridData->regions[i].elementsOnRegion = this->elementsOnRegion[i];
 					break;
 				case 2: 
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(connectivity));
+					this->gridData->regions[i].elementsOnRegion = this->elementsOnRegion[i];
 					break;
 				default: 
 					throw std::runtime_error("MshReader2D: Non supported element found");

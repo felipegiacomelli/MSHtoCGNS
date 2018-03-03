@@ -11,21 +11,15 @@
         {
         	"IOTest":
             {
-        		"sublimegdb_workingdir": "/home/felipe/SINMEC/EFVLib/IOTest/source",
-                "workingdir": "/home/felipe/SINMEC_BUILD/EFVLib/build_sublime/bin/Debug",
+        		"sublimegdb_workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/IOTest/source",
+                "workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/build_sublime/bin/Debug",
             	"commandline": "gdb --interpreter=mi ./IOTest"
             },
-            "ScriptSystemTest":
+            "MSHtoCGNS":
             {
-        		"sublimegdb_workingdir": "/home/felipe/SINMEC/EFVLib/ScriptSystemTest/source",
-                "workingdir": "/home/felipe/SINMEC_BUILD/EFVLib/build_sublime/bin/Debug",
-            	"commandline": "gdb --interpreter=mi ./ScriptSystemTest"
-            },
-            "BoostInterfaceTest":
-            {
-                "sublimegdb_workingdir": "/home/felipe/SINMEC/EFVLib/BoostInterfaceTest/source",
-                "workingdir": "/home/felipe/SINMEC_BUILD/EFVLib/build_sublime/bin/Debug",
-                "commandline": "gdb --interpreter=mi ./BoostInterfaceTest"
+        		"sublimegdb_workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/MSHtoCGNS/source",
+                "workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/build_sublime/bin/Debug",
+            	"commandline": "gdb --interpreter=mi ./MSHtoCGNS 2"
             }
         }
     }

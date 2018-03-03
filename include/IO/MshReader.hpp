@@ -31,9 +31,8 @@ class MshReader {
 		std::string filePath;
 		std::ifstream file;
 		char* buffer;
-		int numberOfPhysicalEntities, numberOfFacets, numberOfRegions;
-		std::vector<std::vector<int>> connectivities, elements, facets, physicalEntitiesElementIndices;
-		std::vector<int> elementsOnRegion, facetsOnBoundary;
+		int numberOfPhysicalEntities, numberOfBoundaries, numberOfRegions;
+		std::vector<std::vector<int>> connectivities, elements, facets, physicalEntitiesElementIndices, elementsOnRegion, facetsOnBoundary;
 		GridDataShared gridData;
 };
 
