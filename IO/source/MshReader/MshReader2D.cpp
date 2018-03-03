@@ -47,12 +47,7 @@ void MshReader2D::readPhysicalEntities() {
 				throw std::runtime_error("MshReader2D: Non supported physical entity found");
 		}
 	}
-	std::iota(boundaryIndices.begin(), boundaryIndices.end(), 0);
-	std::iota(regionsIndices.begin(), regionsIndices.end(), 0);
-
-	print(boundaryIndices, "boundaryIndices");
-	print(regionsIndices, "regionsIndices");
-
+	
 	this->numberOfBoundaries = boundaryIndices.size();
 	this->gridData->boundaries.resize(boundaryIndices.size());
 	for (unsigned i = 0; i < boundaryIndices.size(); i++) {
@@ -64,6 +59,9 @@ void MshReader2D::readPhysicalEntities() {
 	for (unsigned i = 0; i < regionsIndices.size(); i++) {
 		this->gridData->regions[i].name = entitiesNames[regionsIndices[i]];
 	}
+
+	std::iota(boundaryIndices.begin(), boundaryIndices.end(), 0);
+	std::iota(regionsIndices.begin(), regionsIndices.end(), 0);
 }
 
 void MshReader2D::processConnectivities() {
@@ -92,25 +90,16 @@ void MshReader2D::processConnectivities() {
 		}
 	}
 
-	print(regionStart, "regionStart");
-	print(elements, "elements");
 
 	this->facetsOnBoundary.resize(this->numberOfBoundaries, std::vector<int>());
 	for (unsigned i = 0; i < this->facets.size(); i++) {
 		facetsOnBoundary[facets[i][1]].push_back(i);
 	}
-	print(facetsOnBoundary, "facetsOnBoundary");
 	
 	this->elementsOnRegion.resize(this->numberOfRegions, std::vector<int>());
 	for (unsigned i = 0; i < this->elements.size(); i++) {
 		elementsOnRegion[elements[i][1]].push_back(i);
 	}
-	print(elementsOnRegion, "elementsOnRegion");
-
-	// this->physicalEntitiesElementIndices.resize(this->numberOfPhysicalEntities, std::vector<int>());
-	// for (unsigned i = 0; i < this->connectivities.size(); i++) {
-	// 	this->physicalEntitiesElementIndices[this->connectivities[i][1]].push_back(i);
-	// }
 }
 
 void MshReader2D::addFacets() {

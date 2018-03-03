@@ -68,9 +68,7 @@ TestCase(Elements) {
 }
 
 TestCase(Boundaries) {
-	auto boundaries = this->gridData->boundaries;
-
-	checkEqual(static_cast<int>(boundaries.size()), 6);
+	checkEqual(static_cast<int>(this->gridData->boundaries.size()), 6);
 }
 
 TestCase(West) {
@@ -197,6 +195,37 @@ TestCase(Top) {
 	checkEqual(vertices[2],  6);
 	checkEqual(vertices[3],  7);
 	checkEqual(vertices[4], 13); 
+}
+
+TestCase(Regions) {
+	checkEqual(static_cast<int>(this->gridData->regions.size()), 1);
+
+	auto elementsOnRegion = this->gridData->regions[0].elementsOnRegion;
+	checkEqual(static_cast<int>(elementsOnRegion.size()), 24);
+	checkEqual(elementsOnRegion[ 0], 0);
+	checkEqual(elementsOnRegion[ 1], 1);
+	checkEqual(elementsOnRegion[ 2], 2);
+	checkEqual(elementsOnRegion[ 3], 3);
+	checkEqual(elementsOnRegion[ 4], 4);
+	checkEqual(elementsOnRegion[ 5], 5);
+	checkEqual(elementsOnRegion[ 6], 6);
+	checkEqual(elementsOnRegion[ 7], 7);
+	checkEqual(elementsOnRegion[ 8], 8);
+	checkEqual(elementsOnRegion[ 9], 9);
+	checkEqual(elementsOnRegion[10], 10);
+	checkEqual(elementsOnRegion[11], 11);
+	checkEqual(elementsOnRegion[12], 12);
+	checkEqual(elementsOnRegion[13], 13);
+	checkEqual(elementsOnRegion[14], 14);
+	checkEqual(elementsOnRegion[15], 15);
+	checkEqual(elementsOnRegion[16], 16);
+	checkEqual(elementsOnRegion[17], 17);
+	checkEqual(elementsOnRegion[18], 18);
+	checkEqual(elementsOnRegion[19], 19);
+	checkEqual(elementsOnRegion[20], 20);
+	checkEqual(elementsOnRegion[21], 21);
+	checkEqual(elementsOnRegion[22], 22);
+	checkEqual(elementsOnRegion[23], 23);
 }
 
 TestSuiteEnd()

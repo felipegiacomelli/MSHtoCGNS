@@ -90,20 +90,15 @@ void MshReader3D::processConnectivities() {
 		}
 	}
 
-	print(regionStart, "regionStart");
-	print(elements, "elements");
-
 	this->facetsOnBoundary.resize(this->numberOfBoundaries, std::vector<int>());
 	for (unsigned i = 0; i < this->facets.size(); i++) {
 		facetsOnBoundary[facets[i][1]].push_back(i);
 	}
-	print(facetsOnBoundary, "facetsOnBoundary");
 	
 	this->elementsOnRegion.resize(this->numberOfRegions, std::vector<int>());
 	for (unsigned i = 0; i < this->elements.size(); i++) {
 		elementsOnRegion[elements[i][1]].push_back(i);
 	}
-	print(elementsOnRegion, "elementsOnRegion");
 }
 
 void MshReader3D::addFacets() {
