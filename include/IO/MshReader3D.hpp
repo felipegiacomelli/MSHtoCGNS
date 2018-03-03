@@ -10,6 +10,7 @@ class MshReader3D : public MshReader {
 
 	private:
 		void readPhysicalEntities() override;
+		void processConnectivities() override;
 		void addFacets() override;
 		void addElements() override;
 		void defineBoundaryVertices() override;

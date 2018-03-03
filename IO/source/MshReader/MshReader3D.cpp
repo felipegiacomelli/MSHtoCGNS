@@ -6,6 +6,8 @@ MshReader3D::MshReader3D(const std::string& filePath) :
 	this->readNodes();
 	this->readPhysicalEntities();
 	this->readConnectivities();
+	this->processConnectivities();
+	this->addFacets();
 	this->addElements();
 	this->defineBoundaryVertices();
 }
@@ -47,6 +49,8 @@ void MshReader3D::readPhysicalEntities() {
 	}
 	if (regionsIndices.size() != 1) throw std::runtime_error("MshReader3D: One and only one geometry supported");
 	
+	std::iota(boundaryIndices.begin(), boundaryIndices.end(), 0);
+	
 	this->numberOfBoundaries = boundaryIndices.size();
 	this->gridData->boundaries.resize(boundaryIndices.size());
 	for (unsigned i = 0; i < boundaryIndices.size(); i++) {
@@ -60,18 +64,56 @@ void MshReader3D::readPhysicalEntities() {
 	}
 }
 
-void MshReader3D::addFacets() {
+void MshReader3D::processConnectivities() {
+	int facetQuantity = 0;
+	for (unsigned i = 0; i < this->connectivities.size(); i++) {
+		if (this->connectivities[i][0] != 1 && this->connectivities[i][0] != 2) break;
+		else facetQuantity++;
+	}
+	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin()                 , this->connectivities.begin() + facetQuantity);
+	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + facetQuantity, this->connectivities.end());
+	
+	int counter = 0;
+	std::vector<unsigned> regionStart;
+	regionStart.emplace_back(0);
+	for (unsigned i = 0; i < elements.size()-1; i++) {
+		if (elements[i][1] == elements[i+1][1]) counter++;
+		else {
+			counter++;
+			regionStart.push_back(counter);
+		}
+	}
+	regionStart.push_back(elements.size());
+	for (unsigned i = 0; i < regionStart.size()-1; i++) {
+		for (unsigned j = regionStart[i]; j < regionStart[i+1]; j++) {
+			elements[j][1] = i;
+		}
+	}
+
+	print(regionStart, "regionStart");
+	print(elements, "elements");
+
+	this->facetsOnBoundary.resize(this->numberOfBoundaries, std::vector<int>());
+	for (unsigned i = 0; i < this->facets.size(); i++) {
+		facetsOnBoundary[facets[i][1]].push_back(i);
+	}
+	print(facetsOnBoundary, "facetsOnBoundary");
+	
+	this->elementsOnRegion.resize(this->numberOfRegions, std::vector<int>());
+	for (unsigned i = 0; i < this->elements.size(); i++) {
+		elementsOnRegion[elements[i][1]].push_back(i);
+	}
+	print(elementsOnRegion, "elementsOnRegion");
 }
 
-void MshReader3D::addElements() {
-	for (unsigned i = 0; i < this->physicalEntitiesElementIndices.size(); i++) {
-		for (unsigned j = 0; j < this->physicalEntitiesElementIndices[i].size(); j++) {
-			int index = this->physicalEntitiesElementIndices[i][j];
-			int type  = this->connectivities[index][0];
-			auto first = this->connectivities[index].cbegin() + 2;
-			auto last  = this->connectivities[index].cend();
-			std::vector<int> connectivity(first, last);
-			// std::transform(std::begin(connectivity), std::end(connectivity), std::begin(connectivity), [](const int& x){return x - 1;});
+void MshReader3D::addFacets() {
+	for (unsigned i = 0; i < this->facetsOnBoundary.size(); i++) {
+		for (unsigned j = 0; j < this->facetsOnBoundary[i].size(); j++) {
+			int index = this->facetsOnBoundary[i][j];
+			int type  = this->facets[index][0];
+			auto first = this->facets[index].cbegin() + 2;
+			auto last  = this->facets[index].cend();
+			std::vector<int> connectivity(first, last); 
 			switch (type) {
 				case 1: 
 					this->gridData->boundaries[i].triangleConnectivity.emplace_back(std::move(connectivity));
@@ -79,11 +121,29 @@ void MshReader3D::addElements() {
 				case 2: 
 					this->gridData->boundaries[i].quadrangleConnectivity.emplace_back(std::move(connectivity));
 					break;
+				default: 
+					throw std::runtime_error("MshReader3D: Non supported element found");
+			}
+		}
+	}
+}
+
+void MshReader3D::addElements() {
+	for (unsigned i = 0; i < this->elementsOnRegion.size(); i++) {
+		for (unsigned j = 0; j < this->elementsOnRegion[i].size(); j++) {
+			int index = this->elementsOnRegion[i][j];
+			int type  = this->elements[index][0];
+			auto first = this->elements[index].cbegin() + 2;
+			auto last  = this->elements[index].cend();
+			std::vector<int> connectivity(first, last);
+			switch (type) {
 				case 3: 
 					this->gridData->tetrahedronConnectivity.emplace_back(std::move(connectivity));
+					this->gridData->regions[i].elementsOnRegion = this->elementsOnRegion[i];
 					break;
 				case 4: 
 					this->gridData->hexahedronConnectivity.emplace_back(std::move(connectivity));
+					this->gridData->regions[i].elementsOnRegion = this->elementsOnRegion[i];
 					break;
 				default: 
 					throw std::runtime_error("MshReader3D: Non supported element found");
