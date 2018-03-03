@@ -33,6 +33,7 @@ class MshReader {
 		char* buffer;
 		int numberOfPhysicalEntities, numberOfFacets, numberOfRegions;
 		std::vector<std::vector<int>> connectivities, elements, facets, physicalEntitiesElementIndices;
+		std::vector<int> elementsOnRegion, facetsOnBoundary;
 		GridDataShared gridData;
 };
 

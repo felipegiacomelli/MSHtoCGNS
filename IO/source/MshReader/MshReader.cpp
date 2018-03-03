@@ -47,6 +47,7 @@ void MshReader::readConnectivities() {
 	}
 	this->connectivities.erase(this->connectivities.begin());
 	
+
 	// if (connectivities[0][2] != 2) throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
 
 	for (auto i = this->connectivities.begin(); i < this->connectivities.end(); i++) {
@@ -55,15 +56,29 @@ void MshReader::readConnectivities() {
 		i->erase(i->begin()+2);
 	}
 
+	// print(connectivities, "connectivities");
+
+
 	int numberOfFacets = 0;
 	for (unsigned i = 0; i < connectivities.size(); i++) {
-		if (connectivities[i][0] != 1) break;
+		if (connectivities[i][0] != 0) break;
 		else numberOfFacets++;
 	}
 	this->facets   = std::vector<std::vector<int>>(connectivities.begin()                 , connectivities.begin() + numberOfFacets);
 	this->elements = std::vector<std::vector<int>>(connectivities.begin() + numberOfFacets, connectivities.end());
 
+	print(elements, "elements");
+
+	int col = 1;
+    std::sort(this->elements.begin(), this->elements.end(), [col](const std::vector<int>& lhs, const std::vector<int>& rhs) {return lhs[col] < rhs[col];});
+	
+	print(elements, "elements");
+	
 	// create facetsOnBoundary and elementsOnRegion
+	// this->elementsOnRegion.resize(this->numberOfRegions, std::vector<int>());
+	// for (unsigned i = 0; i < this->elementsOnRegion.size(); i++) {
+	// 	elementsOnRegion[]
+	// }
 
 	this->physicalEntitiesElementIndices.resize(this->numberOfPhysicalEntities, std::vector<int>());
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {
