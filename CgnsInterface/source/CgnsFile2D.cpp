@@ -54,7 +54,6 @@ void CgnsFile2D::writeSections() {
 	for (unsigned i = 0; i < this->gridData->regions.size(); i++) {
 		std::vector<std::vector<int>> a(conn.cbegin() + this->gridData->regions[i].elementsOnRegion.front(), conn.cbegin() + this->gridData->regions[i].elementsOnRegion.back() + 1);
 	 	elementEnd += a.size();
-		print(a, "a");
 		switch (this->gridData->regions[i].elementType) {
 			case 1:  {
 				cgsize_t* connectivities = determine_array_1d<cgsize_t>(a);

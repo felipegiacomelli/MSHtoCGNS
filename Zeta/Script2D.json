@@ -2,7 +2,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/11n_10e.msh",
+        "input"  : "/home/felipe/Felipe/gmsh/hybrid/square/3993n_5711e/hybrid_square.msh",
         "output" : "./"
     }
 }
