@@ -133,10 +133,12 @@ void MshReader2D::addElements() {
 				case 1: 
 					this->gridData->triangleConnectivity.emplace_back(std::move(connectivity));
 					this->gridData->regions[i].elementsOnRegion = this->elementsOnRegion[i];
+					this->gridData->regions[i].elementType = 1;
 					break;
 				case 2: 
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(connectivity));
 					this->gridData->regions[i].elementsOnRegion = this->elementsOnRegion[i];
+					this->gridData->regions[i].elementType = 2;
 					break;
 				default: 
 					throw std::runtime_error("MshReader2D: Non supported element found");

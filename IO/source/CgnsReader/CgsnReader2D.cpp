@@ -44,6 +44,11 @@ void CgnsReader2D::readElements() {
 		
 		switch (type) {
 			case TRI_3: {
+				RegionData region;
+				region.name = std::string(buffer);
+				region.elementType = 1;
+				region.elementsOnRegion.reserve(numberOfElements);
+				this->gridData->regions.emplace_back(std::move(region));
 				int numberOfVertices = 3;	
 				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
 				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
@@ -51,10 +56,16 @@ void CgnsReader2D::readElements() {
 					std::vector<int> triangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) triangle[k] = connectivities[e*numberOfVertices+k] - 1;
 					this->gridData->triangleConnectivity.emplace_back(std::move(triangle));	
+					this->gridData->regions[0].elementsOnRegion.push_back(e);
 				}
 				break; 
 			}
 			case QUAD_4: {
+				RegionData region;
+				region.name = std::string(buffer);
+				region.elementType = 2;
+				region.elementsOnRegion.reserve(numberOfElements);
+				this->gridData->regions.emplace_back(std::move(region));
 				int numberOfVertices = 4;	
 				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
 				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
@@ -62,6 +73,7 @@ void CgnsReader2D::readElements() {
 					std::vector<int> quadrangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) quadrangle[k] = connectivities[e*numberOfVertices+k]-1;
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));	
+					this->gridData->regions[0].elementsOnRegion.push_back(e);
 				}
 				break; 
 			}

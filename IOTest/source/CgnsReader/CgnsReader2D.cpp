@@ -116,4 +116,17 @@ TestCase(North) {
 	checkEqual(vertices[2], 8);
 }
 
+TestCase(Regions) {
+	checkEqual(static_cast<int>(this->gridData->regions.size()), 1);
+
+	check(this->gridData->regions[0].name == std::string("Geometry"));
+
+	auto elementsOnRegion = this->gridData->regions[0].elementsOnRegion;
+	checkEqual(static_cast<int>(elementsOnRegion.size()), 4);
+	checkEqual(elementsOnRegion[0], 0);
+	checkEqual(elementsOnRegion[1], 1);
+	checkEqual(elementsOnRegion[2], 2);
+	checkEqual(elementsOnRegion[3], 3);
+}
+
 TestSuiteEnd()
