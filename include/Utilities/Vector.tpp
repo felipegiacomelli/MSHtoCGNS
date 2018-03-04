@@ -6,13 +6,6 @@ T* determine_array_1d(const std::vector<U>& a) {
 }
 
 template<typename T, typename U>
-T* determine_array_1d(typename std::vector<U>::const_iterator begin, typename std::vector<U>::const_iterator end) {
-	T* b = new T[end - begin];
-	for (typename std::vector<U>::const_iterator i = begin; i < begin; i++) b[i - begin] = static_cast<T>(*i);
-	return b;
-}
-
-template<typename T, typename U>
 T* determine_array_1d(const std::vector<std::vector<U>>& a) {
 	T* b = new T[a.size()*a[0].size()];
 	for (typename std::vector<std::vector<U>>::const_iterator i = a.cbegin(); i < a.cend(); i++) {
@@ -23,16 +16,17 @@ T* determine_array_1d(const std::vector<std::vector<U>>& a) {
 	return b;
 }
 
-// template<typename T, typename U>
-// T* determine_array_1d(typename std::vector<std::vector<U>>::const_iterator begin, typename std::vector<std::vector<U>>::const_iterator end) {
-// 	T* b = new T[(end - begin) * (begin->cend() - begin->cbegin())];
-// 	for (typename std::vector<std::vector<U>>::const_iterator i = begin; i < end; i++) {
-// 		for (typename std::vector<U>::const_iterator j = i->cbegin(); j < i->cend(); j++) {
-// 			b[(i-begin)*i->size() + (j-i->cbegin())] = static_cast<T>(*j);
-// 		}
-// 	}
-// 	return b;
-// }
+template<typename T, class InputIt>
+T* determine_array_1d(InputIt begin, InputIt end) {
+	T* b = new T[(end - begin) * (begin->cend() - begin->cbegin())];
+	for (auto i = begin; i < end; i++) {
+		for (auto j = i->cbegin(); j < i->cend(); j++) {
+			b[(i-begin)*i->size() + (j-i->cbegin())] = static_cast<T>(*j);
+		}
+	}
+	return b;
+}
+
 
 template<typename T>
 void print(const std::vector<T>& a, std::string&& message) {

@@ -113,6 +113,7 @@ add_subdirectory (IOTest)
 add_subdirectory (CgnsInterface)
 add_subdirectory (CgnsInterfaceTest)
 add_subdirectory (MSHtoCGNS) 
+add_subdirectory (UtilitiesTest) 
 
 #################################################################
 # TESTING
@@ -121,6 +122,7 @@ enable_testing()
 add_test(NAME BoostInterfaceTest COMMAND BoostInterfaceTest)
 add_test(NAME IOTest COMMAND IOTest)
 add_test(NAME CgnsInterfaceTest COMMAND CgnsInterfaceTest)
+add_test(NAME UtilitiesTest COMMAND UtilitiesTest)
 
 ##################################################################
 # DISPLAY INFORMATION

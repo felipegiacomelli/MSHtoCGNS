@@ -10,8 +10,8 @@
 template<typename T, typename U>
 T* determine_array_1d(const std::vector<U>&);
 
-template<typename T, typename U>
-T* determine_array_1d(typename std::vector<U>::const_iterator, typename std::vector<U>::const_iterator);
+template<typename T, class InputIt>
+T* determine_array_1d(InputIt, InputIt);
 
 template<typename T, typename U>
 T* determine_array_1d(const std::vector<std::vector<U>>&);
