@@ -1,22 +1,38 @@
 template<typename T, typename U>
 T* determine_array_1d(const std::vector<U>& a) {
 	T* b = new T[a.size()];
-	for (unsigned i = 0; i < a.size(); i++) b[i] = static_cast<T>(a[i]);
+	for (typename std::vector<U>::const_iterator i = a.cbegin(); i < a.cend(); i++) b[i - a.cbegin()] = static_cast<T>(*i);
+	return b;
+}
+
+template<typename T, typename U>
+T* determine_array_1d(typename std::vector<U>::const_iterator begin, typename std::vector<U>::const_iterator end) {
+	T* b = new T[end - begin];
+	for (typename std::vector<U>::const_iterator i = begin; i < begin; i++) b[i - begin] = static_cast<T>(*i);
 	return b;
 }
 
 template<typename T, typename U>
 T* determine_array_1d(const std::vector<std::vector<U>>& a) {
-	unsigned rows = a.size();
-	unsigned columns = a[0].size();
-	T* b = new T[rows*columns];
-	for (unsigned i = 0; i < rows; i++) {
-		for (unsigned j = 0; j < columns; j++) {
-			b[i*columns + j] = static_cast<T>(a[i][j]);
+	T* b = new T[a.size()*a[0].size()];
+	for (typename std::vector<std::vector<U>>::const_iterator i = a.cbegin(); i < a.cend(); i++) {
+		for (typename std::vector<U>::const_iterator j = i->cbegin(); j < i->cend(); j++) {
+			b[(i-a.cbegin())*i->size() + (j-i->cbegin())] = static_cast<T>(*j);
 		}
 	}
 	return b;
 }
+
+// template<typename T, typename U>
+// T* determine_array_1d(typename std::vector<std::vector<U>>::const_iterator begin, typename std::vector<std::vector<U>>::const_iterator end) {
+// 	T* b = new T[(end - begin) * (begin->cend() - begin->cbegin())];
+// 	for (typename std::vector<std::vector<U>>::const_iterator i = begin; i < end; i++) {
+// 		for (typename std::vector<U>::const_iterator j = i->cbegin(); j < i->cend(); j++) {
+// 			b[(i-begin)*i->size() + (j-i->cbegin())] = static_cast<T>(*j);
+// 		}
+// 	}
+// 	return b;
+// }
 
 template<typename T>
 void print(const std::vector<T>& a, std::string&& message) {

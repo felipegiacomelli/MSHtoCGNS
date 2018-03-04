@@ -15,6 +15,10 @@ void CgnsFile2D::defineGeometryType() {
 		this->geometry = QUAD_4;
 		this->numberOfElements = this->gridData->quadrangleConnectivity.size();
 	}
+	else if (this->gridData->triangleConnectivity.size() > 0 && this->gridData->quadrangleConnectivity.size() > 0) {
+		this->geometry = MIXED;
+		this->numberOfElements = this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
+	}
 	else throw std::runtime_error("CgnsFile2D: Geometry type not supported");
 }
 
@@ -41,6 +45,11 @@ void CgnsFile2D::writeCoordinates() {
 }
 
 void CgnsFile2D::writeSections() {
+	// for (unsigned i = 0; i < this->gridData.regions.size(); i++) {
+	// 		std::vector<std::vector<int>> conn;
+	// 		conn.insert(conn.end(), this->gridData->triangleConnectivity.begin(), this->gridData->triangleConnectivity.end());
+	// 		conn.insert(conn.end(), this->gridData->quadrangleConnectivity.begin(), this->gridData->quadrangleConnectivity.end());
+	// }
 	switch (this->geometry) {
 		case TRI_3:  {
 			cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData->triangleConnectivity);
@@ -51,11 +60,22 @@ void CgnsFile2D::writeSections() {
 		}
 		case QUAD_4: {
 			cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData->quadrangleConnectivity);
+			// cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData->quadrangleConnectivity.cbegin(), this->gridData->quadrangleConnectivity.cend());
 			std::transform(&connectivities[0], &connectivities[gridData->quadrangleConnectivity.size()*4], &connectivities[0], [](const cgsize_t& x){return x + 1;});
 			cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", QUAD_4, 1, this->numberOfElements, zoneSizes[2], connectivities, &sectionIndices[0]);
 			delete connectivities;
 			break;
 		}
+	// 	case MIXED: {
+	// 		std::vector<std::vector<int>> conn;
+	// 		conn.insert(conn.end(), this->gridData->triangleConnectivity.begin(), this->gridData->triangleConnectivity.end());
+	// 		conn.insert(conn.end(), this->gridData->quadrangleConnectivity.begin(), this->gridData->quadrangleConnectivity.end());
+	// 		cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData->quadrangleConnectivity);
+	// 		std::transform(&connectivities[0], &connectivities[gridData->quadrangleConnectivity.size()*4], &connectivities[0], [](const cgsize_t& x){return x + 1;});
+	// 		cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", QUAD_4, 1, this->numberOfElements, zoneSizes[2], connectivities, &sectionIndices[0]);
+	// 		delete connectivities;
+	// 		break;
+	// 	}
 		default:
 			throw std::runtime_error("CgnsFile2D: Geometry type not supported");
 			cg_error_exit();
