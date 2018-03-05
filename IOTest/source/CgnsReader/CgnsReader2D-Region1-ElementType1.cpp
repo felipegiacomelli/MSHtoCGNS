@@ -4,18 +4,18 @@
 
 #define TOLERANCE 1e-12
 
-struct Cgns2D {
-	Cgns2D() {
+struct Region1_ElementType1_2D_Cgns {
+	Region1_ElementType1_2D_Cgns() {
 		CgnsReader2D cgnsReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/9n_4e.cgns");
 		this->gridData = cgnsReader2D.getGridData();
 	}
 
-	~Cgns2D() = default;
+	~Region1_ElementType1_2D_Cgns() = default;
 
 	GridDataShared gridData;
 };
 
-FixtureTestSuite(ReadCgns2D, Cgns2D)
+FixtureTestSuite(ReadCgns_Region1_ElementType1_2D, Region1_ElementType1_2D_Cgns)
 
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;

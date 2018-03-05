@@ -56,8 +56,9 @@ void CgnsReader2D::readElements() {
 					std::vector<int> triangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) triangle[k] = connectivities[e*numberOfVertices+k] - 1;
 					this->gridData->triangleConnectivity.emplace_back(std::move(triangle));	
-					this->gridData->regions[0].elementsOnRegion.push_back(e);
 				}
+				this->gridData->regions.back().elementsOnRegion.resize(numberOfElements);
+				std::iota(this->gridData->regions.back().elementsOnRegion.begin(), this->gridData->regions.back().elementsOnRegion.end(), elementStart - 1);
 				break; 
 			}
 			case QUAD_4: {
@@ -73,8 +74,9 @@ void CgnsReader2D::readElements() {
 					std::vector<int> quadrangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) quadrangle[k] = connectivities[e*numberOfVertices+k]-1;
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));	
-					this->gridData->regions[0].elementsOnRegion.push_back(e);
 				}
+				this->gridData->regions.back().elementsOnRegion.resize(numberOfElements);
+				std::iota(this->gridData->regions.back().elementsOnRegion.begin(), this->gridData->regions.back().elementsOnRegion.end(), elementStart - 1);
 				break; 
 			}
 			case BAR_2: {

@@ -1,21 +1,21 @@
 #include <BoostInterface/Test.hpp>
 #include <Grid/GridData.hpp>
-#include <IO/MshReader2D.hpp>
+#include <IO/CgnsReader2D.hpp>
 
 #define TOLERANCE 1e-12
 
-struct Region4_ElementType1_2D_Msh {
-	Region4_ElementType1_2D_Msh() {
-		MshReader2D mshReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/11n_10e.msh");
-		this->gridData = mshReader2D.getGridData();
+struct Region4_ElementType1_2D_Cgns {
+	Region4_ElementType1_2D_Cgns() {
+		CgnsReader2D cgnsReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/11n_10e.cgns");
+		this->gridData = cgnsReader2D.getGridData();
 	}
 
-	~Region4_ElementType1_2D_Msh() = default;
+	~Region4_ElementType1_2D_Cgns() = default;
 
 	GridDataShared gridData;
 };
 
-FixtureTestSuite(ReadMsh_Region4_ElementType1_2D, Region4_ElementType1_2D_Msh)
+FixtureTestSuite(ReadCgns_Region4_ElementType1_2D, Region4_ElementType1_2D_Cgns)
 
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;
@@ -55,7 +55,6 @@ TestCase(Elements) {
 TestCase(Boundaries) {
 	checkEqual(static_cast<int>(this->gridData->boundaries.size()), 4);
 }
-
 TestCase(West) {
 	BoundaryData west = this->gridData->boundaries[0];
 
