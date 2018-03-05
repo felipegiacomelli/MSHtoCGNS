@@ -27,9 +27,10 @@ class CgnsReader {
 		void readBase();
 		void readZone();
 		void readNumberOfSections();
-		virtual void readNodes() = 0;
-		virtual void readElements() = 0;
-		virtual void defineBoundaryVertices() = 0;
+		void readNumberOfBoundaries();
+		virtual void readCoordinates() = 0;
+		virtual void readSections() = 0;
+		virtual void readBoundaries() = 0;
 
 		std::string filePath;
 		char* buffer;
@@ -38,7 +39,6 @@ class CgnsReader {
 		ZoneType_t zoneType;
 		std::vector<cgsize_t> zoneSizes;
 		cgsize_t numberOfNodes;
-		std::vector<std::vector<int>> elements, physicalEntitiesElementIndices;
 		GridDataShared gridData;
 };
 

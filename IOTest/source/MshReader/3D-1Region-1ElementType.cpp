@@ -4,18 +4,18 @@
 
 #define TOLERANCE 1e-12
 
-struct Msh3D {
-	Msh3D() {
+struct Region1_ElementType1_3D_Msh {
+	Region1_ElementType1_3D_Msh() {
 		MshReader3D mshReader3D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.msh");
 		this->gridData = mshReader3D.getGridData();
 	}
 
-	~Msh3D() = default;
+	~Region1_ElementType1_3D_Msh() = default;
 
 	GridDataShared gridData;
 };
 
-FixtureTestSuite(ReadMsh3D, Msh3D)
+FixtureTestSuite(ReadMsh_Region1_ElementType1_3D, Region1_ElementType1_3D_Msh)
 
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;

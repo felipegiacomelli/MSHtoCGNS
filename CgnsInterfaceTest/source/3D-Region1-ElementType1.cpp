@@ -6,8 +6,8 @@
 
 #define TOLERANCE 1e-12
 
-struct Cgns3D {
-	Cgns3D() {
+struct Region1_ElementType1_3D {
+	Region1_ElementType1_3D() {
 		CgnsReader3D a("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.cgns");
 		CgnsFile3D cgnsFile3D(a.getGridData(), "./");
 		this->filePath = cgnsFile3D.getFileName();
@@ -16,7 +16,7 @@ struct Cgns3D {
 		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->cgnsFile);
 	}
 	
-	~Cgns3D() {
+	~Region1_ElementType1_3D() {
 		cg_close(this->cgnsFile);
 		deleteDirectory("./14n_24e/");
 	};
@@ -32,7 +32,7 @@ struct Cgns3D {
 	int parent_flag;
 };
 
-FixtureTestSuite(ReadCgns3D, Cgns3D)
+FixtureTestSuite(Generate_Region1_ElementType1_3D, Region1_ElementType1_3D)
 
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;

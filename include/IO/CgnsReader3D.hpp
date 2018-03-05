@@ -9,9 +9,9 @@ class CgnsReader3D : public CgnsReader {
 		CgnsReader3D(const std::string&);
 
 	private:
-		void readNodes() override;
-		void readElements() override;
-		void defineBoundaryVertices() override;
+		void readCoordinates() override;
+		void readSections() override;
+		void readBoundaries() override;
 };
 
 #endif

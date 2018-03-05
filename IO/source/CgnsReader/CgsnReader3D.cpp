@@ -3,29 +3,20 @@
 CgnsReader3D::CgnsReader3D(const std::string& filePath) :
 	CgnsReader(filePath) {
 	this->gridData->dimension = this->cellDimension;
-	this->readNodes();
-	this->readElements();
-	this->defineBoundaryVertices();
+	this->readCoordinates();
+	this->readSections();
+	this->readBoundaries();
 }
 
-void CgnsReader3D::readNodes() {
+void CgnsReader3D::readCoordinates() {
 	this->numberOfNodes = this->zoneSizes[0];
 	cgsize_t one = 1;
 	double coordinatesX[this->numberOfNodes];
 	double coordinatesY[this->numberOfNodes];
 	double coordinatesZ[this->numberOfNodes];
-	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateX", RealDouble, &one, &this->numberOfNodes, coordinatesX)) {
-		throw std::runtime_error("CgnsReader3D: Could not read CoordinateX");
-		cg_error_exit();
-	}
-	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateY", RealDouble, &one, &this->numberOfNodes, coordinatesY)) {
-		throw std::runtime_error("CgnsReader3D: Could not read CoordinateY");
-		cg_error_exit();
-	}
-	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateZ", RealDouble, &one, &this->numberOfNodes, coordinatesZ)) {
-		throw std::runtime_error("CgnsReader3D: Could not read CoordinateZ");
-		cg_error_exit();
-	}
+	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateX", RealDouble, &one, &this->numberOfNodes, coordinatesX)) throw std::runtime_error("CgnsReader3D: Could not read CoordinateX");
+	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateY", RealDouble, &one, &this->numberOfNodes, coordinatesY)) throw std::runtime_error("CgnsReader3D: Could not read CoordinateY");
+	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateZ", RealDouble, &one, &this->numberOfNodes, coordinatesZ)) throw std::runtime_error("CgnsReader3D: Could not read CoordinateZ");
 
 	this->gridData->coordinates.resize(this->numberOfNodes, std::vector<double>(3));
 	for (int i = 0; i < this->numberOfNodes; i++) {
@@ -35,15 +26,12 @@ void CgnsReader3D::readNodes() {
 	}
 }
 
-void CgnsReader3D::readElements() {
+void CgnsReader3D::readSections() {
 	for (auto section = this->sectionIndices.cbegin(); section != this->sectionIndices.cend(); section++) {
 		ElementType_t type;
 		cgsize_t elementStart, elementEnd; 
 		int nBdry, parentFlag;
-		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag) != CG_OK) {
-			throw std::runtime_error("CgnsReader3D: Could not read section");
-			cg_error_exit();
-		}
+		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag)) throw std::runtime_error("CgnsReader3D: Could not read section");
 		int numberOfElements = elementEnd - elementStart + 1;
 		
 		switch (type) {
@@ -103,12 +91,11 @@ void CgnsReader3D::readElements() {
 			}
 			default:
 				throw std::runtime_error("CgnsReader3D: Non supported element found");
-				cg_error_exit();
 		}
 	}
 }
 
-void CgnsReader3D::defineBoundaryVertices() {
+void CgnsReader3D::readBoundaries() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary != this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
 		if (boundary->triangleConnectivity.size() > 0) {

@@ -4,25 +4,19 @@ CgnsReader2D::CgnsReader2D(const std::string& filePath) :
 	CgnsReader(filePath) {
 	this->gridData->dimension = this->cellDimension;
 	this->gridData->thickness = 1.0;
-	this->readNodes();
-	this->readElements();
-	this->defineBoundaryVertices();
+	this->readCoordinates();
+	this->readSections();
+	this->readBoundaries();
 }
 
-void CgnsReader2D::readNodes() {
+void CgnsReader2D::readCoordinates() {
 	this->numberOfNodes = this->zoneSizes[0];
 	cgsize_t one = 1;
 	double coordinatesX[this->numberOfNodes];
 	double coordinatesY[this->numberOfNodes];
-	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateX", RealDouble, &one, &this->numberOfNodes, coordinatesX)) {
-		throw std::runtime_error("CgnsReader2D: Could not read CoordinateX");
-		cg_error_exit();
-	}
-	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateY", RealDouble, &one, &this->numberOfNodes, coordinatesY)) {
-		throw std::runtime_error("CgnsReader2D: Could not read CoordinateY");
-		cg_error_exit();
-	}
-
+	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateX", RealDouble, &one, &this->numberOfNodes, coordinatesX)) throw std::runtime_error("CgnsReader2D: Could not read CoordinateX");
+	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateY", RealDouble, &one, &this->numberOfNodes, coordinatesY)) throw std::runtime_error("CgnsReader2D: Could not read CoordinateY");
+		
 	this->gridData->coordinates.resize(this->numberOfNodes, std::vector<double>(3));
 	for (int i = 0; i < this->numberOfNodes; i++) {
 		this->gridData->coordinates[i][0] = coordinatesX[i]; 
@@ -31,58 +25,53 @@ void CgnsReader2D::readNodes() {
 	}
 }
 
-void CgnsReader2D::readElements() {
+void CgnsReader2D::readSections() {
 	for (auto section = this->sectionIndices.cbegin(); section != this->sectionIndices.cend(); section++) {
 		ElementType_t type;
 		cgsize_t elementStart, elementEnd; 
 		int nBdry, parentFlag;
-		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag)) {
-			throw std::runtime_error("CgnsReader2D: Could not read section");
-			cg_error_exit();
-		}
+		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, this->buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag)) throw std::runtime_error("CgnsReader2D: Could not read section");
 		int numberOfElements = elementEnd - elementStart + 1;
 		
 		switch (type) {
 			case TRI_3: {
-				RegionData region;
-				region.name = std::string(buffer);
-				region.elementType = 1;
-				region.elementsOnRegion.reserve(numberOfElements);
-				this->gridData->regions.emplace_back(std::move(region));
 				int numberOfVertices = 3;	
-				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
-				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
+				cgsize_t connectivities[numberOfVertices*numberOfElements];
+				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) throw std::runtime_error("CgnsReader2D: Could not read section elements");
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> triangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) triangle[k] = connectivities[e*numberOfVertices+k] - 1;
 					this->gridData->triangleConnectivity.emplace_back(std::move(triangle));	
 				}
-				this->gridData->regions.back().elementsOnRegion.resize(numberOfElements);
-				std::iota(this->gridData->regions.back().elementsOnRegion.begin(), this->gridData->regions.back().elementsOnRegion.end(), elementStart - 1);
+				RegionData region;
+				region.name = std::string(this->buffer);
+				region.elementType = 1;
+				region.elementsOnRegion.resize(numberOfElements);
+				std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), elementStart - 1);
+				this->gridData->regions.emplace_back(std::move(region));
 				break; 
 			}
 			case QUAD_4: {
-				RegionData region;
-				region.name = std::string(buffer);
-				region.elementType = 2;
-				region.elementsOnRegion.reserve(numberOfElements);
-				this->gridData->regions.emplace_back(std::move(region));
 				int numberOfVertices = 4;	
-				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
-				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
+				cgsize_t connectivities[numberOfVertices*numberOfElements];
+				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) throw std::runtime_error("CgnsReader2D: Could not read section elements");
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> quadrangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) quadrangle[k] = connectivities[e*numberOfVertices+k]-1;
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));	
 				}
-				this->gridData->regions.back().elementsOnRegion.resize(numberOfElements);
-				std::iota(this->gridData->regions.back().elementsOnRegion.begin(), this->gridData->regions.back().elementsOnRegion.end(), elementStart - 1);
+				RegionData region;
+				region.name = std::string(this->buffer);
+				region.elementType = 2;
+				region.elementsOnRegion.resize(numberOfElements);
+				std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), elementStart - 1);
+				this->gridData->regions.emplace_back(std::move(region));
 				break; 
 			}
 			case BAR_2: {
 				int numberOfVertices = 2;	
-				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
-				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
+				cgsize_t connectivities[numberOfVertices*numberOfElements];
+				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) throw std::runtime_error("CgnsReader2D: Could not read section elements");
 				std::vector<std::vector<int>> lineConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> line(numberOfVertices);
@@ -90,26 +79,28 @@ void CgnsReader2D::readElements() {
 					lineConnectivity.emplace_back(std::move(line));
 				}
 				BoundaryData boundaryData;
-				boundaryData.name = buffer;
+				boundaryData.name = this->buffer;
 				boundaryData.lineConnectivity = std::move(lineConnectivity);
 				this->gridData->boundaries.emplace_back(std::move(boundaryData));
 				break; 
 			}
 			default:
 				throw std::runtime_error("CgnsReader2D: Could not read section");
-				cg_error_exit();
 		}
 	}
 }
 
-void CgnsReader2D::defineBoundaryVertices() {
-	for (auto boundary = this->gridData->boundaries.begin(); boundary != this->gridData->boundaries.end(); boundary++) {
-		std::set<int> vertices;
-		for (auto j = boundary->lineConnectivity.cbegin(); j != boundary->lineConnectivity.cend(); j++) {
-			for (auto k = j->cbegin(); k != j->cend(); k++) {
-				vertices.insert(*k);
-			}
-		}
-		boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
+void CgnsReader2D::readBoundaries() {
+	if (this->boundaryIndices.size() != this->gridData->boundaries.size()) throw std::runtime_error("CgnsReader2D: mismatch between number of boundary conditions and boundary connectivities");
+	for (auto boundary = this->boundaryIndices.cbegin(); boundary != this->boundaryIndices.cend(); boundary++) {
+		BCType_t bocotype;
+		PointSetType_t ptset_type;
+		cgsize_t npnts, NormalListSize;
+		int NormalIndex, ndataset;
+		DataType_t NormalDataType;
+		if (cg_boco_info(this->cgnsFile, this->cgnsBase, this->cgnsZone, *boundary, this->buffer, &bocotype, &ptset_type, &npnts, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset)) throw std::runtime_error("CgnsReader2D: Could not read boundary information");
+		std::vector<cgsize_t> pnts(npnts);
+		if (cg_boco_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *boundary, &pnts[0], nullptr)) throw std::runtime_error("CgnsReader2D: Could not read boundary");
+		this->gridData->boundaries[*boundary - 1].vertices = std::move(pnts);
 	}
 }
