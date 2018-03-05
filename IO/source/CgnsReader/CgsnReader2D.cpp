@@ -98,9 +98,11 @@ void CgnsReader2D::readBoundaries() {
 		cgsize_t npnts, NormalListSize;
 		int NormalIndex, ndataset;
 		DataType_t NormalDataType;
+		
 		if (cg_boco_info(this->cgnsFile, this->cgnsBase, this->cgnsZone, *boundary, this->buffer, &bocotype, &ptset_type, &npnts, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset)) throw std::runtime_error("CgnsReader2D: Could not read boundary information");
 		std::vector<cgsize_t> pnts(npnts);
 		if (cg_boco_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *boundary, &pnts[0], nullptr)) throw std::runtime_error("CgnsReader2D: Could not read boundary");
+		std::transform(pnts.begin(), pnts.end(), pnts.begin(), [](const cgsize_t& x){return x - 1;});
 		this->gridData->boundaries[*boundary - 1].vertices = std::move(pnts);
 	}
 }
