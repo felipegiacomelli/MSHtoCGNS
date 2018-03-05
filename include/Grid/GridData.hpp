@@ -11,7 +11,7 @@ struct BoundaryData {
 	std::vector<std::vector<int>> lineConnectivity;			
 	std::vector<std::vector<int>> triangleConnectivity;		
 	std::vector<std::vector<int>> quadrangleConnectivity;
-	std::vector<long int> vertices;		
+	std::vector<long> vertices;		
 	std::string	name;	
 
 	private:

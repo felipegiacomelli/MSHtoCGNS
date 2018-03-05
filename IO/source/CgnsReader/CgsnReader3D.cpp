@@ -97,22 +97,22 @@ void CgnsReader3D::readSections() {
 
 void CgnsReader3D::readBoundaries() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary != this->gridData->boundaries.end(); boundary++) {
-		std::set<long int> vertices;
+		std::set<long> vertices;
 		if (boundary->triangleConnectivity.size() > 0) {
 			for (auto j = boundary->triangleConnectivity.cbegin(); j != boundary->triangleConnectivity.cend(); j++) {
 				for (auto k = j->cbegin(); k != j->cend(); k++) {
-					vertices.insert(static_cast<long int>(*k));
+					vertices.insert(static_cast<long>(*k));
 				}
 			}
-			boundary->vertices = std::vector<long int>(vertices.begin(), vertices.end());
+			boundary->vertices = std::vector<long>(vertices.begin(), vertices.end());
 		}
 		else {
 			for (auto j = boundary->quadrangleConnectivity.cbegin(); j != boundary->quadrangleConnectivity.cend(); j++) {
 				for (auto k = j->cbegin(); k != j->cend(); k++) {
-					vertices.insert(static_cast<long int>(*k));
+					vertices.insert(static_cast<long>(*k));
 				}
 			}
-			boundary->vertices = std::vector<long int>(vertices.begin(), vertices.end());
+			boundary->vertices = std::vector<long>(vertices.begin(), vertices.end());
 		}
 	}
 }
