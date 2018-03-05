@@ -1,21 +1,38 @@
 #include <BoostInterface/Test.hpp>
 #include <Grid/GridData.hpp>
+#include <IO/MshReader2D.hpp>
 #include <IO/CgnsReader2D.hpp>
+#include <CgnsInterface/CgnsFile2D.hpp>
 
 #define TOLERANCE 1e-12
 
-struct Region4_ElementType1_2D_Cgns {
-	Region4_ElementType1_2D_Cgns() {
-		CgnsReader2D cgnsReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/11n_10e.cgns");
-		this->gridData = cgnsReader2D.getGridData();
+struct Region4_ElementType1_2D {
+	Region4_ElementType1_2D() {
+		CgnsReader2D a("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/11n_10e.cgns");
+		CgnsFile2D cgnsFile2D(a.getGridData(), "./");
+		this->filePath = cgnsFile2D.getFileName();
+		CgnsReader2D b(this->filePath);
+		this->gridData = b.getGridData();
+		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->cgnsFile);
 	}
 
-	~Region4_ElementType1_2D_Cgns() = default;
+	~Region4_ElementType1_2D() {
+		cg_close(this->cgnsFile);
+		// deleteDirectory("./11n_10e/");
+	};
 
+	std::string filePath;
 	GridDataShared gridData;
+	int cgnsFile;
+	char elementSectionName[100];
+	ElementType_t type;
+	cgsize_t elementStart;
+	cgsize_t elementEnd;
+	int nbndry;
+	int parent_flag;
 };
 
-FixtureTestSuite(ReadCgns_Region4_ElementType1_2D, Region4_ElementType1_2D_Cgns)
+FixtureTestSuite(Generate_Region4_ElementType1_2D, Region4_ElementType1_2D)
 
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;
@@ -70,7 +87,12 @@ TestCase(West) {
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 0);
 	checkEqual(vertices[1], 3); 
-	checkEqual(vertices[2], 6); 
+	checkEqual(vertices[2], 6);
+
+	cg_section_read(this->cgnsFile, 1, 1, 5, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 11);
+	checkEqual(this->elementEnd  , 12); 
+	check(this->type == BAR_2);
 }
 
 TestCase(East) {
@@ -88,6 +110,11 @@ TestCase(East) {
 	checkEqual(vertices[0], 2);
 	checkEqual(vertices[1], 5); 
 	checkEqual(vertices[2], 8); 
+
+	cg_section_read(this->cgnsFile, 1, 1, 6, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 13);
+	checkEqual(this->elementEnd  , 14);
+	check(this->type == BAR_2);
 }
 
 TestCase(South) {
@@ -105,6 +132,11 @@ TestCase(South) {
 	checkEqual(vertices[0], 0);
 	checkEqual(vertices[1], 1); 
 	checkEqual(vertices[2], 2); 
+
+	cg_section_read(this->cgnsFile, 1, 1, 7, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 15);
+	checkEqual(this->elementEnd  , 16);
+	check(this->type == BAR_2);
 }
 
 TestCase(North) {
@@ -121,7 +153,11 @@ TestCase(North) {
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 6);
 	checkEqual(vertices[1], 7); 
-	checkEqual(vertices[2], 8); 
+	
+	cg_section_read(this->cgnsFile, 1, 1, 8, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 17);
+	checkEqual(this->elementEnd  , 18);
+	check(this->type == BAR_2);
 }
 
 TestCase(Regions) {
@@ -140,6 +176,11 @@ TestCase(A) {
 	checkEqual(a.elementsOnRegion[3], 3);
 
 	checkEqual(a.elementType, 1);
+
+	cg_section_read(this->cgnsFile, 1, 1, 1, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 1);
+	checkEqual(this->elementEnd  , 4);
+	check(this->type == TRI_3);
 }
 
 TestCase(B) {
@@ -154,6 +195,11 @@ TestCase(B) {
 	checkEqual(b.elementsOnRegion[3], 7);
 
 	checkEqual(b.elementType, 1);
+
+	cg_section_read(this->cgnsFile, 1, 1, 2, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 5);
+	checkEqual(this->elementEnd  , 8);
+	check(this->type == TRI_3);
 }
 
 TestCase(C) {
@@ -165,6 +211,11 @@ TestCase(C) {
 	checkEqual(c.elementsOnRegion[0], 8);
 
 	checkEqual(c.elementType, 2);
+	
+	cg_section_read(this->cgnsFile, 1, 1, 3, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 9);
+	checkEqual(this->elementEnd  , 9);
+	check(this->type == QUAD_4);
 }
 
 TestCase(D) {
@@ -176,6 +227,11 @@ TestCase(D) {
 	checkEqual(d.elementsOnRegion[0], 9);
 
 	checkEqual(d.elementType, 2);
+
+	cg_section_read(this->cgnsFile, 1, 1, 4, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 10);
+	checkEqual(this->elementEnd  , 10);
+	check(this->type == QUAD_4);
 }
 
 TestSuiteEnd()

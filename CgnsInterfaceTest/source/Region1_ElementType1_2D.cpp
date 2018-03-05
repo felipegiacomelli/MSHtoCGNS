@@ -6,8 +6,8 @@
 
 #define TOLERANCE 1e-12
 
-struct Cgns2D {
-	Cgns2D() {
+struct Region1_ElementType1_2D {
+	Region1_ElementType1_2D() {
 		CgnsReader2D a("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5n_4e.cgns");
 		CgnsFile2D cgnsFile2D(a.getGridData(), "./");
 		this->filePath = cgnsFile2D.getFileName();
@@ -16,7 +16,7 @@ struct Cgns2D {
 		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->cgnsFile);
 	}
 
-	~Cgns2D() {
+	~Region1_ElementType1_2D() {
 		cg_close(this->cgnsFile);
 		deleteDirectory("./5n_4e/");
 	};
@@ -32,7 +32,7 @@ struct Cgns2D {
 	int parent_flag;
 };
 
-FixtureTestSuite(ReadCgns2D, Cgns2D)
+FixtureTestSuite(Generate_Region1_ElementType1_2D, Region1_ElementType1_2D)
 
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;
@@ -135,6 +135,29 @@ TestCase(North) {
 	checkEqual(static_cast<int>(vertices.size()), 2);
 	checkEqual(vertices[0], 2);
 	checkEqual(vertices[1], 3); 	
+}
+
+TestCase(Regions) {
+	checkEqual(static_cast<int>(this->gridData->regions.size()), 1);
+}
+
+TestCase(Geometry) {
+	auto a = this->gridData->regions[0];
+
+	check(a.name == std::string("Geometry"));
+	
+	checkEqual(static_cast<int>(a.elementsOnRegion.size()), 4);
+	checkEqual(a.elementsOnRegion[0], 0);
+	checkEqual(a.elementsOnRegion[1], 1);
+	checkEqual(a.elementsOnRegion[2], 2);
+	checkEqual(a.elementsOnRegion[3], 3);
+
+	checkEqual(a.elementType, 1);
+
+	cg_section_read(this->cgnsFile, 1, 1, 1, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 1);
+	checkEqual(this->elementEnd  , 4);
+	check(this->type == TRI_3);
 }
 
 TestSuiteEnd()
