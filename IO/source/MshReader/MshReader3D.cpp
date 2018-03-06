@@ -49,8 +49,6 @@ void MshReader3D::readPhysicalEntities() {
 	}
 	if (regionsIndices.size() != 1) throw std::runtime_error("MshReader3D: One and only one geometry supported");
 	
-	std::iota(boundaryIndices.begin(), boundaryIndices.end(), 0);
-	
 	this->numberOfBoundaries = boundaryIndices.size();
 	this->gridData->boundaries.resize(boundaryIndices.size());
 	for (unsigned i = 0; i < boundaryIndices.size(); i++) {
@@ -62,16 +60,18 @@ void MshReader3D::readPhysicalEntities() {
 	for (unsigned i = 0; i < regionsIndices.size(); i++) {
 		this->gridData->regions[i].name = entitiesNames[regionsIndices[i]];
 	}
+
+	std::iota(boundaryIndices.begin(), boundaryIndices.end(), 0);
 }
 
 void MshReader3D::processConnectivities() {
-	int facetQuantity = 0;
+	int numberOfFacets = 0;
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {
 		if (this->connectivities[i][0] != 1 && this->connectivities[i][0] != 2) break;
-		else facetQuantity++;
+		else numberOfFacets++;
 	}
-	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin()                 , this->connectivities.begin() + facetQuantity);
-	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + facetQuantity, this->connectivities.end());
+	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin()                 , this->connectivities.begin() + numberOfFacets);
+	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());
 	
 	int counter = 0;
 	std::vector<unsigned> regionStart;

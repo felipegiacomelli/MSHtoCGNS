@@ -65,13 +65,13 @@ void MshReader2D::readPhysicalEntities() {
 }
 
 void MshReader2D::processConnectivities() {
-	int facetQuantity = 0;
+	int numberOfFacets = 0;
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {
 		if (this->connectivities[i][0] != 0) break;
-		else facetQuantity++;
+		else numberOfFacets++;
 	}
-	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin()                 , this->connectivities.begin() + facetQuantity);
-	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + facetQuantity, this->connectivities.end());
+	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin()                 , this->connectivities.begin() + numberOfFacets);
+	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());
 	
 	int counter = 0;
 	std::vector<unsigned> regionStart;
@@ -89,7 +89,6 @@ void MshReader2D::processConnectivities() {
 			elements[j][1] = i;
 		}
 	}
-
 
 	this->facetsOnBoundary.resize(this->numberOfBoundaries, std::vector<int>());
 	for (unsigned i = 0; i < this->facets.size(); i++) {
