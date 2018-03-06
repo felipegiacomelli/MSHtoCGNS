@@ -21,7 +21,6 @@ class CgnsFile3D : public CgnsFile {
 		void setupFile() override;
 		void writeCoordinates() override;
 		void writeSections() override;
-		void writeBoundaryConditions() override;
 };
 
 #endif

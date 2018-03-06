@@ -20,7 +20,6 @@ class CgnsFile2D : public CgnsFile {
 		void setupFile() override;
 		void writeCoordinates() override;
 		void writeSections() override;
-		void writeBoundaryConditions() override;
 };
 
 #endif

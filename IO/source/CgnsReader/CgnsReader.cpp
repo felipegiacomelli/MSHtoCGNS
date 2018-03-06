@@ -90,7 +90,7 @@ void CgnsReader::readBoundaries() {
 		if (cg_boco_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *boundary, &vertices[0], nullptr)) {
 			throw std::runtime_error("CgnsReader: Could not read boundary");
 		}
-		std::transform(vertices.begin(), vertices.end(), vertices.begin(), [](const cgsize_t& x){return x - 1;});
+		for (unsigned i = 0; i < vertices.size(); i++) vertices[i]--;
 		this->gridData->boundaries[*boundary - 1].vertices = std::move(vertices);
 	}
 }

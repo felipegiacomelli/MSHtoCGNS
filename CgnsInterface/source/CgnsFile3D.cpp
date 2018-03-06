@@ -60,14 +60,14 @@ void CgnsFile3D::writeSections() {
 	switch (this->geometry) {
 		case TETRA_4: {
 			cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData->tetrahedronConnectivity);
-			std::transform(&connectivities[0], &connectivities[gridData->tetrahedronConnectivity.size()*4], &connectivities[0], [](const cgsize_t& x){return x + 1;});
+			for (unsigned j = 0; j < this->gridData->tetrahedronConnectivity.size()*4; j++) connectivities[j]++;
 			cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", TETRA_4, 1, this->numberOfElements, zoneSizes[2], connectivities, &sectionIndices[0]);
 			delete connectivities;
 			break;
 		}
 		case HEXA_8: {
 			cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData->hexahedronConnectivity);
-			std::transform(&connectivities[0], &connectivities[gridData->hexahedronConnectivity.size()*8], &connectivities[0], [](const cgsize_t& x){return x + 1;});
+			for (unsigned j = 0; j < this->gridData->hexahedronConnectivity.size()*8; j++) connectivities[j]++;
 			cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", HEXA_8, 1, this->numberOfElements, zoneSizes[2], connectivities, &sectionIndices[0]);
 			delete connectivities;
 			break;
@@ -84,7 +84,7 @@ void CgnsFile3D::writeSections() {
 			for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
 				elementEnd = elementStart + this->gridData->boundaries[i].triangleConnectivity.size() - 1;
 				cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData->boundaries[i].triangleConnectivity);
-				std::transform(&connectivities[0], &connectivities[gridData->boundaries[i].triangleConnectivity.size()*3], &connectivities[0], [](const cgsize_t& x){return x + 1;});
+				for (unsigned j = 0; j < this->gridData->boundaries[i].triangleConnectivity.size()*3; j++) connectivities[j]++;
 				cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), TRI_3, elementStart, elementEnd, this->zoneSizes[2], connectivities, &this->sectionIndices[i+1]);
 				delete connectivities;
 				elementStart = elementEnd + 1;
@@ -97,7 +97,7 @@ void CgnsFile3D::writeSections() {
 			for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
 				elementEnd = elementStart + this->gridData->boundaries[i].quadrangleConnectivity.size() - 1;
 				cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData->boundaries[i].quadrangleConnectivity);
-				std::transform(&connectivities[0], &connectivities[gridData->boundaries[i].quadrangleConnectivity.size()*4], &connectivities[0], [](const cgsize_t& x){return x + 1;});
+				for (unsigned j = 0; j < this->gridData->boundaries[i].quadrangleConnectivity.size()*4; j++) connectivities[j]++;
 				cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), QUAD_4, elementStart, elementEnd, this->zoneSizes[2], connectivities, &this->sectionIndices[i+1]);
 				delete connectivities;
 				elementStart = elementEnd + 1;
@@ -106,15 +106,5 @@ void CgnsFile3D::writeSections() {
 		}
 		default: 
 			throw std::runtime_error("CgnsFile3D: Boundary type not supported");
-	}
-}
-
-void CgnsFile3D::writeBoundaryConditions() {
-	for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
-		int numberOfVertices = this->gridData->boundaries[i].vertices.size();
-		cgsize_t* indices = determine_array_1d<cgsize_t>(this->gridData->boundaries[i].vertices); 
-		std::transform(&indices[0], &indices[numberOfVertices], &indices[0], [](const cgsize_t& x){return x + 1;});
-		cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BCWall, PointList, numberOfVertices, indices, &this->boundaryIndices[i]);
-		delete indices;
 	}
 }

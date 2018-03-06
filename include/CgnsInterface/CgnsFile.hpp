@@ -26,7 +26,7 @@ class CgnsFile {
 		virtual void writeZone();
 		virtual void writeCoordinates() = 0;
 		virtual void writeSections() = 0;
-		virtual void writeBoundaryConditions() = 0;
+		void writeBoundaryConditions();
 
 		GridDataShared gridData;
 		std::string folderPath, baseName, zoneName, fileName;
