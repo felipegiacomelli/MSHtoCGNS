@@ -14,8 +14,12 @@ void CgnsReader2D::readCoordinates() {
 	cgsize_t one = 1;
 	double coordinatesX[this->numberOfNodes];
 	double coordinatesY[this->numberOfNodes];
-	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateX", RealDouble, &one, &this->numberOfNodes, coordinatesX)) throw std::runtime_error("CgnsReader2D: Could not read CoordinateX");
-	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateY", RealDouble, &one, &this->numberOfNodes, coordinatesY)) throw std::runtime_error("CgnsReader2D: Could not read CoordinateY");
+	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateX", RealDouble, &one, &this->numberOfNodes, coordinatesX)) {
+		throw std::runtime_error("CgnsReader2D: Could not read CoordinateX");
+	}
+	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateY", RealDouble, &one, &this->numberOfNodes, coordinatesY)) {
+		throw std::runtime_error("CgnsReader2D: Could not read CoordinateY");
+	}
 		
 	this->gridData->coordinates.resize(this->numberOfNodes, std::vector<double>(3));
 	for (int i = 0; i < this->numberOfNodes; i++) {
@@ -30,14 +34,18 @@ void CgnsReader2D::readSections() {
 		ElementType_t type;
 		cgsize_t elementStart, elementEnd; 
 		int nBdry, parentFlag;
-		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, this->buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag)) throw std::runtime_error("CgnsReader2D: Could not read section");
+		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, this->buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag)) {
+			throw std::runtime_error("CgnsReader2D: Could not read section");
+		}
 		int numberOfElements = elementEnd - elementStart + 1;
 		
 		switch (type) {
 			case TRI_3: {
 				int numberOfVertices = 3;	
 				cgsize_t connectivities[numberOfVertices*numberOfElements];
-				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) throw std::runtime_error("CgnsReader2D: Could not read section elements");
+				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) {
+					throw std::runtime_error("CgnsReader2D: Could not read section elements");
+				}
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> triangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) triangle[k] = connectivities[e*numberOfVertices+k] - 1;
@@ -54,7 +62,9 @@ void CgnsReader2D::readSections() {
 			case QUAD_4: {
 				int numberOfVertices = 4;	
 				cgsize_t connectivities[numberOfVertices*numberOfElements];
-				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) throw std::runtime_error("CgnsReader2D: Could not read section elements");
+				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) {
+					throw std::runtime_error("CgnsReader2D: Could not read section elements");
+				}
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> quadrangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) quadrangle[k] = connectivities[e*numberOfVertices+k]-1;
@@ -71,7 +81,9 @@ void CgnsReader2D::readSections() {
 			case BAR_2: {
 				int numberOfVertices = 2;	
 				cgsize_t connectivities[numberOfVertices*numberOfElements];
-				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) throw std::runtime_error("CgnsReader2D: Could not read section elements");
+				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) {
+					throw std::runtime_error("CgnsReader2D: Could not read section elements");
+				}
 				std::vector<std::vector<int>> lineConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> line(numberOfVertices);
@@ -91,7 +103,9 @@ void CgnsReader2D::readSections() {
 }
 
 void CgnsReader2D::readBoundaries() {
-	if (this->boundaryIndices.size() != this->gridData->boundaries.size()) throw std::runtime_error("CgnsReader2D: mismatch between number of boundary conditions and boundary connectivities");
+	if (this->boundaryIndices.size() != this->gridData->boundaries.size()) {
+		throw std::runtime_error("CgnsReader2D: mismatch between number of boundary conditions and boundary connectivities");
+	}
 	for (auto boundary = this->boundaryIndices.cbegin(); boundary != this->boundaryIndices.cend(); boundary++) {
 		BCType_t bocotype;
 		PointSetType_t ptset_type;
@@ -99,9 +113,13 @@ void CgnsReader2D::readBoundaries() {
 		int NormalIndex, ndataset;
 		DataType_t NormalDataType;
 		
-		if (cg_boco_info(this->cgnsFile, this->cgnsBase, this->cgnsZone, *boundary, this->buffer, &bocotype, &ptset_type, &npnts, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset)) throw std::runtime_error("CgnsReader2D: Could not read boundary information");
+		if (cg_boco_info(this->cgnsFile, this->cgnsBase, this->cgnsZone, *boundary, this->buffer, &bocotype, &ptset_type, &npnts, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset)) {
+			throw std::runtime_error("CgnsReader2D: Could not read boundary information");
+		}
 		std::vector<cgsize_t> pnts(npnts);
-		if (cg_boco_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *boundary, &pnts[0], nullptr)) throw std::runtime_error("CgnsReader2D: Could not read boundary");
+		if (cg_boco_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *boundary, &pnts[0], nullptr)) {
+			throw std::runtime_error("CgnsReader2D: Could not read boundary");
+		}
 		std::transform(pnts.begin(), pnts.end(), pnts.begin(), [](const cgsize_t& x){return x - 1;});
 		this->gridData->boundaries[*boundary - 1].vertices = std::move(pnts);
 	}

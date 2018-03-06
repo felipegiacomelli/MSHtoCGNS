@@ -14,9 +14,15 @@ void CgnsReader3D::readCoordinates() {
 	double coordinatesX[this->numberOfNodes];
 	double coordinatesY[this->numberOfNodes];
 	double coordinatesZ[this->numberOfNodes];
-	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateX", RealDouble, &one, &this->numberOfNodes, coordinatesX)) throw std::runtime_error("CgnsReader3D: Could not read CoordinateX");
-	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateY", RealDouble, &one, &this->numberOfNodes, coordinatesY)) throw std::runtime_error("CgnsReader3D: Could not read CoordinateY");
-	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateZ", RealDouble, &one, &this->numberOfNodes, coordinatesZ)) throw std::runtime_error("CgnsReader3D: Could not read CoordinateZ");
+	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateX", RealDouble, &one, &this->numberOfNodes, coordinatesX)) { 
+		throw std::runtime_error("CgnsReader3D: Could not read CoordinateX");
+	}
+	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateY", RealDouble, &one, &this->numberOfNodes, coordinatesY)) { 
+		throw std::runtime_error("CgnsReader3D: Could not read CoordinateY");
+	}
+	if (cg_coord_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, "CoordinateZ", RealDouble, &one, &this->numberOfNodes, coordinatesZ)) { 
+		throw std::runtime_error("CgnsReader3D: Could not read CoordinateZ");
+	}
 
 	this->gridData->coordinates.resize(this->numberOfNodes, std::vector<double>(3));
 	for (int i = 0; i < this->numberOfNodes; i++) {
@@ -31,7 +37,9 @@ void CgnsReader3D::readSections() {
 		ElementType_t type;
 		cgsize_t elementStart, elementEnd; 
 		int nBdry, parentFlag;
-		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag)) throw std::runtime_error("CgnsReader3D: Could not read section");
+		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag)) { 
+			throw std::runtime_error("CgnsReader3D: Could not read section");
+		}
 		int numberOfElements = elementEnd - elementStart + 1;
 		
 		switch (type) {
