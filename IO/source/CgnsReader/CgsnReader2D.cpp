@@ -112,7 +112,6 @@ void CgnsReader2D::readBoundaries() {
 		cgsize_t npnts, NormalListSize;
 		int NormalIndex, ndataset;
 		DataType_t NormalDataType;
-		
 		if (cg_boco_info(this->cgnsFile, this->cgnsBase, this->cgnsZone, *boundary, this->buffer, &bocotype, &ptset_type, &npnts, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset)) {
 			throw std::runtime_error("CgnsReader2D: Could not read boundary information");
 		}

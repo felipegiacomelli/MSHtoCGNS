@@ -37,7 +37,7 @@ void CgnsReader3D::readSections() {
 		ElementType_t type;
 		cgsize_t elementStart, elementEnd; 
 		int nBdry, parentFlag;
-		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag)) { 
+		if (cg_section_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, this->buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag)) { 
 			throw std::runtime_error("CgnsReader3D: Could not read section");
 		}
 		int numberOfElements = elementEnd - elementStart + 1;
@@ -45,8 +45,10 @@ void CgnsReader3D::readSections() {
 		switch (type) {
 			case TETRA_4: {
 				int numberOfVertices = 4;	
-				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
-				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
+				cgsize_t connectivities[numberOfVertices*numberOfElements];
+				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) {
+					throw std::runtime_error("CgnsReader2D: Could not read section elements");
+				}
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> tetrahedron(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) tetrahedron[k] = connectivities[e*numberOfVertices+k] - 1;
@@ -56,8 +58,10 @@ void CgnsReader3D::readSections() {
 			}
 			case HEXA_8: {
 				int numberOfVertices = 8;	
-				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
-				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
+				cgsize_t connectivities[numberOfVertices*numberOfElements];
+				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) {
+					throw std::runtime_error("CgnsReader3D: Could not read section elements");
+				}
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> hexahedron(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) hexahedron[k] = connectivities[e*numberOfVertices+k] - 1;
@@ -67,8 +71,10 @@ void CgnsReader3D::readSections() {
 			}
 			case TRI_3: {
 				int numberOfVertices = 3;	
-				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
-				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
+				cgsize_t connectivities[numberOfVertices*numberOfElements];
+				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) {
+					throw std::runtime_error("CgnsReader2D: Could not read section elements");
+				}
 				std::vector<std::vector<int>> triangleConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> triangle(numberOfVertices);
@@ -76,15 +82,17 @@ void CgnsReader3D::readSections() {
 					triangleConnectivity.emplace_back(std::move(triangle));	
 				}
 				BoundaryData boundaryData;
-				boundaryData.name = buffer;
+				boundaryData.name = this->buffer;
 				boundaryData.triangleConnectivity = std::move(triangleConnectivity);
 				this->gridData->boundaries.emplace_back(std::move(boundaryData));
 				break; 
 			}
 			case QUAD_4: {
 				int numberOfVertices = 4;	
-				std::vector<cgsize_t> connectivities(numberOfVertices*numberOfElements);
-				cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, &connectivities[0], 0);
+				cgsize_t connectivities[numberOfVertices*numberOfElements];
+				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) {
+					throw std::runtime_error("CgnsReader2D: Could not read section elements");
+				}
 				std::vector<std::vector<int>> quadrangleConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> quadrangle(numberOfVertices);
@@ -92,7 +100,7 @@ void CgnsReader3D::readSections() {
 					quadrangleConnectivity.emplace_back(std::move(quadrangle));	
 				}				
 				BoundaryData boundaryData;
-				boundaryData.name = buffer;
+				boundaryData.name = this->buffer;
 				boundaryData.quadrangleConnectivity = std::move(quadrangleConnectivity);
 				this->gridData->boundaries.emplace_back(std::move(boundaryData));
 				break; 
