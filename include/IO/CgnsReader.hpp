@@ -30,7 +30,7 @@ class CgnsReader {
 		void readNumberOfBoundaries();
 		virtual void readCoordinates() = 0;
 		virtual void readSections() = 0;
-		virtual void readBoundaries() = 0;
+		void readBoundaries();
 
 		std::string filePath;
 		char* buffer;

@@ -47,7 +47,7 @@ void CgnsReader3D::readSections() {
 				int numberOfVertices = 4;	
 				cgsize_t connectivities[numberOfVertices*numberOfElements];
 				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) {
-					throw std::runtime_error("CgnsReader2D: Could not read section elements");
+					throw std::runtime_error("CgnsReader3D: Could not read section elements");
 				}
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> tetrahedron(numberOfVertices);
@@ -73,7 +73,7 @@ void CgnsReader3D::readSections() {
 				int numberOfVertices = 3;	
 				cgsize_t connectivities[numberOfVertices*numberOfElements];
 				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) {
-					throw std::runtime_error("CgnsReader2D: Could not read section elements");
+					throw std::runtime_error("CgnsReader3D: Could not read section elements");
 				}
 				std::vector<std::vector<int>> triangleConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
@@ -91,7 +91,7 @@ void CgnsReader3D::readSections() {
 				int numberOfVertices = 4;	
 				cgsize_t connectivities[numberOfVertices*numberOfElements];
 				if (cg_elements_read(this->cgnsFile, this->cgnsBase, this->cgnsZone, *section, connectivities, nullptr)) {
-					throw std::runtime_error("CgnsReader2D: Could not read section elements");
+					throw std::runtime_error("CgnsReader3D: Could not read section elements");
 				}
 				std::vector<std::vector<int>> quadrangleConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
@@ -107,28 +107,6 @@ void CgnsReader3D::readSections() {
 			}
 			default:
 				throw std::runtime_error("CgnsReader3D: Non supported element found");
-		}
-	}
-}
-
-void CgnsReader3D::readBoundaries() {
-	for (auto boundary = this->gridData->boundaries.begin(); boundary != this->gridData->boundaries.end(); boundary++) {
-		std::set<int> vertices;
-		if (boundary->triangleConnectivity.size() > 0) {
-			for (auto j = boundary->triangleConnectivity.cbegin(); j != boundary->triangleConnectivity.cend(); j++) {
-				for (auto k = j->cbegin(); k != j->cend(); k++) {
-					vertices.insert(static_cast<int>(*k));
-				}
-			}
-			boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
-		}
-		else {
-			for (auto j = boundary->quadrangleConnectivity.cbegin(); j != boundary->quadrangleConnectivity.cend(); j++) {
-				for (auto k = j->cbegin(); k != j->cend(); k++) {
-					vertices.insert(static_cast<int>(*k));
-				}
-			}
-			boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
 		}
 	}
 }

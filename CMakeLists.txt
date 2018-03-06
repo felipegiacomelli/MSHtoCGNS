@@ -26,10 +26,10 @@ if (UNIX)
 	endif ()
 
 	if (BUILD_SHARED_LIBS)
-		set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64 -std=c++14 -fPIC" CACHE STRING "Setting default compiler flags.")
+		set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64 -std=c++17 -fPIC" CACHE STRING "Setting default compiler flags.")
 		set (LIBRARY_TYPE_OUTPUT_DIRECTORY "Shared")
     else ()
-		set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64 -std=c++14" CACHE STRING "Setting default compiler flags.")
+		set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64 -std=c++17" CACHE STRING "Setting default compiler flags.")
 		set (LIBRARY_TYPE_OUTPUT_DIRECTORY "Static")
     endif ()
 
