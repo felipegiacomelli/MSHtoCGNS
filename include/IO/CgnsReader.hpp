@@ -34,7 +34,7 @@ class CgnsReader {
 
 		std::string filePath;
 		char* buffer;
-		int cgnsFile, cgnsBase, cgnsZone, cellDimension, physicalDimension;
+		int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
 		std::vector<int> sectionIndices, boundaryIndices;
 		ZoneType_t zoneType;
 		std::vector<cgsize_t> zoneSizes;

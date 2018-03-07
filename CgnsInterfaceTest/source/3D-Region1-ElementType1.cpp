@@ -9,21 +9,21 @@
 struct Region1_ElementType1_3D {
 	Region1_ElementType1_3D() {
 		CgnsReader3D inputReader("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.cgns");
-		CgnsFile3D cgnsFile3D(inputReader.getGridData(), "./");
-		this->filePath = cgnsFile3D.getFileName();
+		CgnsFile3D fileIndex3D(inputReader.getGridData(), "./");
+		this->filePath = fileIndex3D.getFileName();
 		CgnsReader3D outputReader(this->filePath);
 		this->gridData = outputReader.getGridData();
-		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->cgnsFile);
+		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex);
 	}
 	
 	~Region1_ElementType1_3D() {
-		cg_close(this->cgnsFile);
+		cg_close(this->fileIndex);
 		deleteDirectory("./14n_24e/");
 	};
 
 	std::string filePath;
 	GridDataShared gridData;
-	int cgnsFile;
+	int fileIndex;
 	char elementSectionName[100];
 	ElementType_t type;
 	cgsize_t elementStart;
@@ -82,7 +82,7 @@ TestCase(Elements) {
 	checkEqual(tetrahedra[21][0],  4); checkEqual(tetrahedra[21][1],  8); checkEqual(tetrahedra[21][2], 13); checkEqual(tetrahedra[21][3], 10); 
 	checkEqual(tetrahedra[22][0],  9); checkEqual(tetrahedra[22][1],  1); checkEqual(tetrahedra[22][2], 10); checkEqual(tetrahedra[22][3], 12); 
 	checkEqual(tetrahedra[23][0],  0); checkEqual(tetrahedra[23][1],  8); checkEqual(tetrahedra[23][2], 10); checkEqual(tetrahedra[23][3], 12); 
-	cg_section_read(this->cgnsFile, 1, 1, 1, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 1, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 1);
 	checkEqual(this->elementEnd  , 24);
 }
@@ -104,7 +104,7 @@ TestCase(West) {
 	checkEqual(triangles[1][0], 0); checkEqual(triangles[1][1], 4); checkEqual(triangles[1][2], 8); 
 	checkEqual(triangles[2][0], 3); checkEqual(triangles[2][1], 8); checkEqual(triangles[2][2], 7); 
 	checkEqual(triangles[3][0], 4); checkEqual(triangles[3][1], 7); checkEqual(triangles[3][2], 8); 
-	cg_section_read(this->cgnsFile, 1, 1, 2, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 2, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 25);
 	checkEqual(this->elementEnd  , 28);
 
@@ -128,7 +128,7 @@ TestCase(East) {
 	checkEqual(triangles[1][0], 9); checkEqual(triangles[1][1], 5); checkEqual(triangles[1][2], 1); 
 	checkEqual(triangles[2][0], 6); checkEqual(triangles[2][1], 9); checkEqual(triangles[2][2], 2); 
 	checkEqual(triangles[3][0], 9); checkEqual(triangles[3][1], 6); checkEqual(triangles[3][2], 5); 
-	cg_section_read(this->cgnsFile, 1, 1, 3, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 3, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 29);
 	checkEqual(this->elementEnd  , 32);
 
@@ -152,7 +152,7 @@ TestCase(South) {
 	checkEqual(triangles[1][0], 10); checkEqual(triangles[1][1],  4); checkEqual(triangles[1][2], 0);
 	checkEqual(triangles[2][0],  5); checkEqual(triangles[2][1], 10); checkEqual(triangles[2][2], 1);
 	checkEqual(triangles[3][0], 10); checkEqual(triangles[3][1],  5); checkEqual(triangles[3][2], 4);
-	cg_section_read(this->cgnsFile, 1, 1, 4, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 4, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 33);
 	checkEqual(this->elementEnd  , 36);
 
@@ -176,7 +176,7 @@ TestCase(North) {
 	checkEqual(triangles[1][0], 11); checkEqual(triangles[1][1],  6); checkEqual(triangles[1][2], 2); 
 	checkEqual(triangles[2][0],  7); checkEqual(triangles[2][1], 11); checkEqual(triangles[2][2], 3); 
 	checkEqual(triangles[3][0], 11); checkEqual(triangles[3][1],  7); checkEqual(triangles[3][2], 6); 
-	cg_section_read(this->cgnsFile, 1, 1, 5, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 5, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 37);
 	checkEqual(this->elementEnd  , 40);
 
@@ -200,7 +200,7 @@ TestCase(Bottom) {
 	checkEqual(triangles[1][0], 0); checkEqual(triangles[1][1],  3); checkEqual(triangles[1][2], 12); 
 	checkEqual(triangles[2][0], 1); checkEqual(triangles[2][1], 12); checkEqual(triangles[2][2],  2); 
 	checkEqual(triangles[3][0], 2); checkEqual(triangles[3][1], 12); checkEqual(triangles[3][2],  3); 
-	cg_section_read(this->cgnsFile, 1, 1, 6, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 6, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 41);
 	checkEqual(this->elementEnd  , 44);
 
@@ -224,7 +224,7 @@ TestCase(Top) {
 	checkEqual(triangles[1][0], 13); checkEqual(triangles[1][1],  7); checkEqual(triangles[1][2], 4);
 	checkEqual(triangles[2][0],  6); checkEqual(triangles[2][1], 13); checkEqual(triangles[2][2], 5);
 	checkEqual(triangles[3][0],  7); checkEqual(triangles[3][1], 13); checkEqual(triangles[3][2], 6);
-	cg_section_read(this->cgnsFile, 1, 1, 7, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 7, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 45);
 	checkEqual(this->elementEnd  , 48);
 
