@@ -8,11 +8,11 @@
 
 struct Region1_ElementType1_3D {
 	Region1_ElementType1_3D() {
-		CgnsReader3D a("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.cgns");
-		CgnsFile3D cgnsFile3D(a.getGridData(), "./");
+		CgnsReader3D inputReader("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.cgns");
+		CgnsFile3D cgnsFile3D(inputReader.getGridData(), "./");
 		this->filePath = cgnsFile3D.getFileName();
-		CgnsReader3D b(this->filePath);
-		this->gridData = b.getGridData();
+		CgnsReader3D outputReader(this->filePath);
+		this->gridData = outputReader.getGridData();
 		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->cgnsFile);
 	}
 	
