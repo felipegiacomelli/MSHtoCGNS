@@ -6,7 +6,7 @@
 
 struct Region4_ElementType1_2D_Cgns {
 	Region4_ElementType1_2D_Cgns() {
-		CgnsReader2D cgnsReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/11n_10e.cgns");
+		CgnsReader2D cgnsReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/11v_10e.cgns");
 		this->gridData = cgnsReader2D.getGridData();
 	}
 

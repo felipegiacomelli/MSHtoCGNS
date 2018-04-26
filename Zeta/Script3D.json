@@ -2,7 +2,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.msh",
+        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14v_24e.msh",
         "output" : "./"
     }
 }

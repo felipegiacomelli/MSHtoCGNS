@@ -8,7 +8,7 @@
 
 struct Region4_ElementType1_2D {
 	Region4_ElementType1_2D() {
-		CgnsReader2D inputReader("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/11n_10e.cgns");
+		CgnsReader2D inputReader("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/11v_10e.cgns");
 		CgnsFile2D fileIndex2D(inputReader.getGridData(), "./");
 		this->filePath = fileIndex2D.getFileName();
 		CgnsReader2D outputReader(this->filePath);
@@ -18,7 +18,7 @@ struct Region4_ElementType1_2D {
 
 	~Region4_ElementType1_2D() {
 		cg_close(this->fileIndex);
-		deleteDirectory("./11n_10e/");
+		deleteDirectory("./11v_10e/");
 	};
 
 	std::string filePath;

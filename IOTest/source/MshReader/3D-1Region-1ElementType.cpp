@@ -6,7 +6,7 @@
 
 struct Region1_ElementType1_3D_Msh {
 	Region1_ElementType1_3D_Msh() {
-		MshReader3D mshReader3D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.msh");
+		MshReader3D mshReader3D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14v_24e.msh");
 		this->gridData = mshReader3D.getGridData();
 	}
 

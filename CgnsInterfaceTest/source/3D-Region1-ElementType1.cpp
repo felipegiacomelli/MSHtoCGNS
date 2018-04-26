@@ -8,7 +8,7 @@
 
 struct Region1_ElementType1_3D {
 	Region1_ElementType1_3D() {
-		CgnsReader3D inputReader("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14n_24e.cgns");
+		CgnsReader3D inputReader("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14v_24e.cgns");
 		CgnsFile3D fileIndex3D(inputReader.getGridData(), "./");
 		this->filePath = fileIndex3D.getFileName();
 		CgnsReader3D outputReader(this->filePath);
@@ -18,7 +18,7 @@ struct Region1_ElementType1_3D {
 	
 	~Region1_ElementType1_3D() {
 		cg_close(this->fileIndex);
-		deleteDirectory("./14n_24e/");
+		deleteDirectory("./14v_24e/");
 	};
 
 	std::string filePath;

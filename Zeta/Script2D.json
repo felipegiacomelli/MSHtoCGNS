@@ -2,7 +2,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/gmsh/composite_wall/composite_wall.msh",
+        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/11v_10e.msh",
         "output" : "./"
     }
 }

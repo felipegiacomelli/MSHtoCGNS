@@ -6,7 +6,7 @@
 
 struct Region1_ElementType1_2D_Msh {
 	Region1_ElementType1_2D_Msh() {
-		MshReader2D mshReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5n_4e.msh");
+		MshReader2D mshReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5v_4e.msh");
 		this->gridData = mshReader2D.getGridData();
 	}
 
