@@ -59,7 +59,7 @@ endif ()
 # EXTERNAL LIBRARIES
 ##################################################################
 set (CMAKE_MODULE_PATH $ENV{CMAKE_MODULES})
-set (BOOST_VERSION "1.65.1")
+set (BOOST_VERSION "1.66.0")
 set (CGNS_VERSION  "3.3.0" )
 
 ##############
