@@ -74,7 +74,6 @@ void CgnsFile3D::writeSections() {
 		}
 		default: 
 			throw std::runtime_error("CgnsFile3D: Geometry type not supported");
-			cg_error_exit();
 	}
 
 	switch (this->boundary) {

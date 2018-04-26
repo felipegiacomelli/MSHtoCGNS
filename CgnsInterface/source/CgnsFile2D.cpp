@@ -68,7 +68,6 @@ void CgnsFile2D::writeSections() {
 			}
 			default:
 				throw std::runtime_error("CgnsFile2D: Geometry type not supported");
-				cg_error_exit();
 		}
 		elementStart = elementEnd + 1;
 	}
