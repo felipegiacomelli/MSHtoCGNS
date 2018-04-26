@@ -2,7 +2,7 @@
 
 CgnsFile::CgnsFile(GridDataShared gridData, const std::string& folderPath) : 
 	gridData(gridData), folderPath(folderPath), baseName("Base"), zoneName("Zone"), physicalDimension(3) {
-	this->numberOfNodes = this->gridData->coordinates.size();
+	this->numberOfVertices = this->gridData->coordinates.size();
 	this->cellDimension = this->gridData->dimension;
 }
 
@@ -27,7 +27,7 @@ void CgnsFile::writeBase() {
 }
 
 void CgnsFile::writeZone() {
-	this->zoneSizes[0] = this->numberOfNodes;
+	this->zoneSizes[0] = this->numberOfVertices;
 	this->zoneSizes[1] = this->numberOfElements;
 	this->zoneSizes[2] = 0;	
 	cg_zone_write(this->fileIndex, this->baseIndex, this->zoneName.c_str(), &this->zoneSizes[0], Unstructured, &this->zoneIndex);

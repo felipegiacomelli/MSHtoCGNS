@@ -10,19 +10,19 @@ CgnsReader2D::CgnsReader2D(const std::string& filePath) :
 }
 
 void CgnsReader2D::readCoordinates() {
-	this->numberOfNodes = this->zoneSizes[0];
+	this->numberOfVertices = this->zoneSizes[0];
 	cgsize_t one = 1;
-	double coordinatesX[this->numberOfNodes];
-	double coordinatesY[this->numberOfNodes];
-	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, &this->numberOfNodes, coordinatesX)) {
+	double coordinatesX[this->numberOfVertices];
+	double coordinatesY[this->numberOfVertices];
+	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, &this->numberOfVertices, coordinatesX)) {
 		throw std::runtime_error("CgnsReader2D: Could not read CoordinateX");
 	}
-	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, &this->numberOfNodes, coordinatesY)) {
+	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, &this->numberOfVertices, coordinatesY)) {
 		throw std::runtime_error("CgnsReader2D: Could not read CoordinateY");
 	}
 		
-	this->gridData->coordinates.resize(this->numberOfNodes, std::vector<double>(3));
-	for (int i = 0; i < this->numberOfNodes; i++) {
+	this->gridData->coordinates.resize(this->numberOfVertices, std::vector<double>(3));
+	for (int i = 0; i < this->numberOfVertices; i++) {
 		this->gridData->coordinates[i][0] = coordinatesX[i]; 
 		this->gridData->coordinates[i][1] = coordinatesY[i]; 
 		this->gridData->coordinates[i][2] = 0.0; 

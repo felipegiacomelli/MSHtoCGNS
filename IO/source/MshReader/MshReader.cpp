@@ -14,13 +14,13 @@ void MshReader::checkFile() {
 }
 
 void MshReader::readNodes() {
-	int numberOfNodes, temporary;
+	int numberOfVertices, temporary;
 	this->file.seekg(0, std::ios::beg); 
 	while (strcmp(this->buffer, "$Nodes") && !this->file.eof()) this->file >> this->buffer;
 	if (this->file.eof()) throw std::runtime_error("MshReader: There is no Node data in the grid file");
-	this->file >> numberOfNodes;
-	this->gridData->coordinates.resize(numberOfNodes, std::vector<double>(3));
-	for (int i = 0; i < numberOfNodes; i++) {
+	this->file >> numberOfVertices;
+	this->gridData->coordinates.resize(numberOfVertices, std::vector<double>(3));
+	for (int i = 0; i < numberOfVertices; i++) {
 		this->file >> temporary >> this->gridData->coordinates[i][0] >> this->gridData->coordinates[i][1] >> this->gridData->coordinates[i][2];
 	}
 }

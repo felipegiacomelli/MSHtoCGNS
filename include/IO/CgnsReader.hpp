@@ -38,7 +38,7 @@ class CgnsReader {
 		std::vector<int> sectionIndices, boundaryIndices;
 		ZoneType_t zoneType;
 		std::vector<cgsize_t> zoneSizes;
-		cgsize_t numberOfNodes;
+		cgsize_t numberOfVertices;
 		GridDataShared gridData;
 };
 

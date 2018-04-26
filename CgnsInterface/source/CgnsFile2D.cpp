@@ -21,17 +21,17 @@ void CgnsFile2D::defineGeometryType() {
 
 void CgnsFile2D::setupFile() {
 	this->defineGeometryType();
-	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->numberOfNodes) + std::string("n_") + std::to_string(this->numberOfElements) + "e/"; 
+	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->numberOfVertices) + std::string("v_") + std::to_string(this->numberOfElements) + "e/"; 
 	createDirectory(folderName);
 	this->fileName = folderName + std::string("Grid.cgns");
 	cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
 }
 
 void CgnsFile2D::writeCoordinates() {
-	double coordinatesX[this->numberOfNodes];
-	double coordinatesY[this->numberOfNodes];
-	double coordinatesZ[this->numberOfNodes];
-	for (cgsize_t i = 0; i < this->numberOfNodes; i++) {
+	double coordinatesX[this->numberOfVertices];
+	double coordinatesY[this->numberOfVertices];
+	double coordinatesZ[this->numberOfVertices];
+	for (cgsize_t i = 0; i < this->numberOfVertices; i++) {
 		coordinatesX[i] = this->gridData->coordinates[i][0];
 		coordinatesY[i] = this->gridData->coordinates[i][1];
 		coordinatesZ[i] = 0.0; 
