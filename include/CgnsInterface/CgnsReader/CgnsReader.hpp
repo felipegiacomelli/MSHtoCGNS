@@ -2,16 +2,10 @@
 #define CGNS_READER_HPP
 
 #include <BoostInterface/Filesystem.hpp>
-#include <BoostInterface/SharedPointer.hpp>
 #include <Grid/GridData.hpp>
-#include <Utilities/Vector.hpp>
-#include <Utilities/Set.hpp>
-
 #include <string>
 #include <fstream>
 #include <numeric>
-
-#include <cgnslib.h>
 
 class CgnsReader {
 	public:
@@ -33,12 +27,11 @@ class CgnsReader {
 		void readBoundaries();
 
 		std::string filePath;
-		char* buffer;
+		char buffer[800];
 		int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
 		std::vector<int> sectionIndices, boundaryIndices;
-		ZoneType_t zoneType;
-		std::vector<cgsize_t> zoneSizes;
-		cgsize_t numberOfVertices;
+		std::vector<int> zoneSizes;
+		int numberOfVertices;
 };
 
 #endif

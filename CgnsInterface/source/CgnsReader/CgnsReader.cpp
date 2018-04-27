@@ -1,12 +1,13 @@
 #include <CgnsInterface/CgnsReader/CgnsReader.hpp>
+#include <cgnslib.h>
 
-CgnsReader::CgnsReader(const std::string& filePath) : 
-	filePath(filePath), buffer(new char[800]), zoneSizes(std::vector<cgsize_t>(3)), gridData(MakeShared<GridData>()) {
+CgnsReader::CgnsReader(const std::string& filePath) : filePath(filePath), zoneSizes(std::vector<cgsize_t>(3)) {
 	this->checkFile();
 	this->readBase();
 	this->readZone();
 	this->readNumberOfSections();
 	this->readNumberOfBoundaries();
+	this->gridData = MakeShared<GridData>();
 }
 
 void CgnsReader::checkFile() {
@@ -44,10 +45,11 @@ void CgnsReader::readZone() {
 	if (this->zoneIndex != 1) {
 		throw std::runtime_error("CgnsReader: The CGNS file has more than one zone"); 
 	}
-	if (cg_zone_type(this->fileIndex, this->baseIndex, this->zoneIndex, &this->zoneType)) {
+	ZoneType_t zoneType;
+	if (cg_zone_type(this->fileIndex, this->baseIndex, this->zoneIndex, &zoneType)) {
 		throw std::runtime_error("CgnsReader: Could not read zone type");
 	}
-	if (this->zoneType != Unstructured) {
+	if (zoneType != Unstructured) {
 		throw std::runtime_error("CgnsReader: Only unstructured zones are supported"); 
 	}
 	if (cg_zone_read(this->fileIndex, this->baseIndex, this->zoneIndex, this->buffer, &this->zoneSizes[0])) {
@@ -97,5 +99,4 @@ void CgnsReader::readBoundaries() {
 
 CgnsReader::~CgnsReader() {
 	cg_close(this->fileIndex);
-	delete this->buffer;
 }
