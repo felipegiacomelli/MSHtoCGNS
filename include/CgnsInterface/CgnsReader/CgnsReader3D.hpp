@@ -1,7 +1,7 @@
 #ifndef CGNS_READER_3D_HPP
 #define CGNS_READER_3D_HPP
 
-#include <IO/CgnsReader.hpp>
+#include <CgnsInterface/CgnsReader/CgnsReader.hpp>
 
 class CgnsReader3D : public CgnsReader {
 	public:

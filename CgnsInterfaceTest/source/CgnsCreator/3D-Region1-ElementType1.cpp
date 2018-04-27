@@ -1,8 +1,8 @@
 #include <BoostInterface/Test.hpp>
 #include <Grid/GridData.hpp>
 #include <IO/MshReader3D.hpp>
-#include <IO/CgnsReader3D.hpp>
-#include <CgnsInterface/CgnsFile3D.hpp>
+#include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsFile3D.hpp>
 
 #define TOLERANCE 1e-12
 

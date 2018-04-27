@@ -3,8 +3,8 @@
 #include <Grid/GridData.hpp>
 #include <IO/MshReader2D.hpp>
 #include <IO/MshReader3D.hpp>
-#include <CgnsInterface/CgnsFile2D.hpp>
-#include <CgnsInterface/CgnsFile3D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsFile2D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsFile3D.hpp>
 
 #include <chrono>
 #include <fstream>

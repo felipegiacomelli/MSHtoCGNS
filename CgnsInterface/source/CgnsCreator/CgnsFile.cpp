@@ -1,4 +1,4 @@
-#include <CgnsInterface/CgnsFile.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsFile.hpp>
 
 CgnsFile::CgnsFile(GridDataShared gridData, const std::string& folderPath) : 
 	gridData(gridData), folderPath(folderPath), baseName("Base"), zoneName("Zone"), physicalDimension(3) {

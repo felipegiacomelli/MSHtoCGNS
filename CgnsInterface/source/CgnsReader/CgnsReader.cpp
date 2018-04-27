@@ -1,4 +1,4 @@
-#include <IO/CgnsReader.hpp>
+#include <CgnsInterface/CgnsReader/CgnsReader.hpp>
 
 CgnsReader::CgnsReader(const std::string& filePath) : 
 	filePath(filePath), buffer(new char[800]), zoneSizes(std::vector<cgsize_t>(3)), gridData(MakeShared<GridData>()) {

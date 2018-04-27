@@ -1,4 +1,4 @@
-#include <CgnsInterface/CgnsFile2D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsFile2D.hpp>
 
 CgnsFile2D::CgnsFile2D(GridDataShared gridData, const std::string& folderPath) : 
 	CgnsFile(gridData, folderPath) {

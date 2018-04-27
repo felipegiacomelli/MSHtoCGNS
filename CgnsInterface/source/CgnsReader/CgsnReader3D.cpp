@@ -1,4 +1,4 @@
-#include <IO/CgnsReader3D.hpp>
+#include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
  
 CgnsReader3D::CgnsReader3D(const std::string& filePath) :
 	CgnsReader(filePath) {

@@ -1,4 +1,4 @@
-#include <CgnsInterface/CgnsFile3D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsFile3D.hpp>
 
 CgnsFile3D::CgnsFile3D(GridDataShared gridData, const std::string& folderPath) : 
 	CgnsFile(gridData, folderPath) {
