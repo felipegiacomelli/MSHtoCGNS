@@ -46,7 +46,7 @@ void CgnsFile3D::writeCoordinates() {
 	double coordinatesX[this->numberOfVertices];
 	double coordinatesY[this->numberOfVertices];
 	double coordinatesZ[this->numberOfVertices];
-	for (cgsize_t i = 0; i < this->numberOfVertices; i++) {
+	for (int i = 0; i < this->numberOfVertices; i++) {
 		coordinatesX[i] = this->gridData->coordinates[i][0];
 		coordinatesY[i] = this->gridData->coordinates[i][1];
 		coordinatesZ[i] = this->gridData->coordinates[i][2]; 
@@ -59,14 +59,14 @@ void CgnsFile3D::writeCoordinates() {
 void CgnsFile3D::writeSections() {
 	switch (this->geometry) {
 		case TETRA_4: {
-			cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData->tetrahedronConnectivity);
+			int* connectivities = determine_array_1d<int>(this->gridData->tetrahedronConnectivity);
 			for (unsigned j = 0; j < this->gridData->tetrahedronConnectivity.size()*4; j++) connectivities[j]++;
 			cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", TETRA_4, 1, this->numberOfElements, zoneSizes[2], connectivities, &sectionIndices[0]);
 			delete connectivities;
 			break;
 		}
 		case HEXA_8: {
-			cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData->hexahedronConnectivity);
+			int* connectivities = determine_array_1d<int>(this->gridData->hexahedronConnectivity);
 			for (unsigned j = 0; j < this->gridData->hexahedronConnectivity.size()*8; j++) connectivities[j]++;
 			cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", HEXA_8, 1, this->numberOfElements, zoneSizes[2], connectivities, &sectionIndices[0]);
 			delete connectivities;
@@ -78,11 +78,11 @@ void CgnsFile3D::writeSections() {
 
 	switch (this->boundary) {
 		case TRI_3: {
-			cgsize_t elementStart = this->numberOfElements + 1;
-			cgsize_t elementEnd;
+			int elementStart = this->numberOfElements + 1;
+			int elementEnd;
 			for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
 				elementEnd = elementStart + this->gridData->boundaries[i].triangleConnectivity.size() - 1;
-				cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData->boundaries[i].triangleConnectivity);
+				int* connectivities = determine_array_1d<int>(this->gridData->boundaries[i].triangleConnectivity);
 				for (unsigned j = 0; j < this->gridData->boundaries[i].triangleConnectivity.size()*3; j++) connectivities[j]++;
 				cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), TRI_3, elementStart, elementEnd, this->zoneSizes[2], connectivities, &this->sectionIndices[i+1]);
 				delete connectivities;
@@ -91,11 +91,11 @@ void CgnsFile3D::writeSections() {
 			break;
 		}
 		case QUAD_4: {
-			cgsize_t elementStart = this->numberOfElements + 1;
-			cgsize_t elementEnd;
+			int elementStart = this->numberOfElements + 1;
+			int elementEnd;
 			for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
 				elementEnd = elementStart + this->gridData->boundaries[i].quadrangleConnectivity.size() - 1;
-				cgsize_t* connectivities = determine_array_1d<cgsize_t>(this->gridData->boundaries[i].quadrangleConnectivity);
+				int* connectivities = determine_array_1d<int>(this->gridData->boundaries[i].quadrangleConnectivity);
 				for (unsigned j = 0; j < this->gridData->boundaries[i].quadrangleConnectivity.size()*4; j++) connectivities[j]++;
 				cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), QUAD_4, elementStart, elementEnd, this->zoneSizes[2], connectivities, &this->sectionIndices[i+1]);
 				delete connectivities;

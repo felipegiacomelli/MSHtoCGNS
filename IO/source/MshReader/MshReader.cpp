@@ -1,15 +1,21 @@
 #include <IO/MshReader.hpp>
 
-MshReader::MshReader(const std::string& filePath) :  
-	filePath(filePath), buffer(new char[800]), gridData(MakeShared<GridData>()) {
+MshReader::MshReader(const std::string& filePath) : filePath(filePath) {
 	this->checkFile();
+	this->gridData = MakeShared<GridData>();
 }
 
 void MshReader::checkFile() {
     boost::filesystem::path input(this->filePath);
-	if (!boost::filesystem::exists(input.parent_path())) throw std::runtime_error("MshReader: The parent path does not exist");
-	if (!boost::filesystem::exists(this->filePath)) throw std::runtime_error("MshReader: There is no file in the given path");
-	if (input.extension() != ".msh") throw std::runtime_error("MshReader: The file extension is not .msh");
+	if (!boost::filesystem::exists(input.parent_path())) {
+		throw std::runtime_error("MshReader: The parent path does not exist");
+	}
+	if (!boost::filesystem::exists(this->filePath)) {
+		throw std::runtime_error("MshReader: There is no file in the given path");
+	}
+	if (input.extension() != ".msh") { 
+		throw std::runtime_error("MshReader: The file extension is not .msh");
+	}
 	this->file = std::ifstream(this->filePath.c_str());
 }
 
@@ -47,15 +53,13 @@ void MshReader::readConnectivities() {
 	}
 	this->connectivities.erase(this->connectivities.begin());
 	
-	if (connectivities[0][2] != 1) throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
+	if (connectivities[0][2] != 1) {
+		throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
+	}
 
 	for (auto i = this->connectivities.begin(); i < this->connectivities.end(); i++) {
 		i->erase(i->begin());
 		i->erase(i->begin()+1);
 		i->erase(i->begin()+2);
 	}
-}
-
-MshReader::~MshReader() {
-	delete this->buffer;
 }

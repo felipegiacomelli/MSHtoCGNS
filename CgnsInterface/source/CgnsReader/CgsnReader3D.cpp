@@ -9,7 +9,7 @@ CgnsReader3D::CgnsReader3D(const std::string& filePath) : CgnsReader(filePath) {
 }
 
 void CgnsReader3D::readCoordinates() {
-	cgsize_t one = 1;
+	int one = 1;
 	double coordinatesX[this->zoneSizes[0]];
 	double coordinatesY[this->zoneSizes[0]];
 	double coordinatesZ[this->zoneSizes[0]];
@@ -34,7 +34,7 @@ void CgnsReader3D::readCoordinates() {
 void CgnsReader3D::readSections() {
 	for (int sectionIndex = 1; sectionIndex <= this->numberOfSections; sectionIndex++) {
 		ElementType_t type;
-		cgsize_t elementStart, elementEnd; 
+		int elementStart, elementEnd; 
 		int lastBoundaryElement, parentFlag;
 		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &type, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag)) { 
 			throw std::runtime_error("CgnsReader3D: Could not read section");
@@ -44,7 +44,7 @@ void CgnsReader3D::readSections() {
 		switch (type) {
 			case TETRA_4: {
 				int numberOfVertices = 4;	
-				cgsize_t connectivities[numberOfVertices*numberOfElements];
+				int connectivities[numberOfVertices*numberOfElements];
 				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) {
 					throw std::runtime_error("CgnsReader3D: Could not read section elements");
 				}
@@ -57,7 +57,7 @@ void CgnsReader3D::readSections() {
 			}
 			case HEXA_8: {
 				int numberOfVertices = 8;	
-				cgsize_t connectivities[numberOfVertices*numberOfElements];
+				int connectivities[numberOfVertices*numberOfElements];
 				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) {
 					throw std::runtime_error("CgnsReader3D: Could not read section elements");
 				}
@@ -70,7 +70,7 @@ void CgnsReader3D::readSections() {
 			}
 			case TRI_3: {
 				int numberOfVertices = 3;	
-				cgsize_t connectivities[numberOfVertices*numberOfElements];
+				int connectivities[numberOfVertices*numberOfElements];
 				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) {
 					throw std::runtime_error("CgnsReader3D: Could not read section elements");
 				}
@@ -88,7 +88,7 @@ void CgnsReader3D::readSections() {
 			}
 			case QUAD_4: {
 				int numberOfVertices = 4;	
-				cgsize_t connectivities[numberOfVertices*numberOfElements];
+				int connectivities[numberOfVertices*numberOfElements];
 				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) {
 					throw std::runtime_error("CgnsReader3D: Could not read section elements");
 				}

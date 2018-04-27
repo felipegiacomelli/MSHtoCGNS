@@ -36,7 +36,7 @@ void CgnsFile::writeZone() {
 void CgnsFile::writeBoundaryConditions() {
 	for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
 		int numberOfVertices = this->gridData->boundaries[i].vertices.size();
-		cgsize_t* indices = determine_array_1d<cgsize_t>(this->gridData->boundaries[i].vertices); 
+		int* indices = determine_array_1d<int>(this->gridData->boundaries[i].vertices); 
 		for (unsigned j = 0; j < this->gridData->boundaries[i].vertices.size(); j++) indices[j]++;
 		cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BCWall, PointList, numberOfVertices, indices, &this->boundaryIndices[i]);
 		delete indices;

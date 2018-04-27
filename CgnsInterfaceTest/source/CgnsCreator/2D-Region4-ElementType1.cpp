@@ -26,8 +26,8 @@ struct Region4_ElementType1_2D {
 	int fileIndex;
 	char elementSectionName[100];
 	ElementType_t type;
-	cgsize_t elementStart;
-	cgsize_t elementEnd;
+	int elementStart;
+	int elementEnd;
 	int nbndry;
 	int parent_flag;
 };

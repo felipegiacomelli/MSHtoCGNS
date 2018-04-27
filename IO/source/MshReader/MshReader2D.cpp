@@ -1,7 +1,6 @@
 #include <IO/MshReader2D.hpp>
 
-MshReader2D::MshReader2D(const std::string& filePath) : 
-	MshReader(filePath) {
+MshReader2D::MshReader2D(const std::string& filePath) : MshReader(filePath) {
 	this->gridData->dimension = 2;
 	this->readNodes();
 	this->readPhysicalEntities();

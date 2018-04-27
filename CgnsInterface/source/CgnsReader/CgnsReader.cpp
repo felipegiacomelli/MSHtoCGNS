@@ -76,13 +76,13 @@ void CgnsReader::readBoundaries() {
 	for (int boundaryIndex = 1; boundaryIndex <= this->numberOfBoundaries; boundaryIndex++) {
 		BCType_t bocotype;
 		PointSetType_t ptset_type;
-		cgsize_t numberOfVertices, NormalListSize;
+		int numberOfVertices, NormalListSize;
 		int NormalIndex, ndataset;
 		DataType_t NormalDataType;
 		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &bocotype, &ptset_type, &numberOfVertices, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset)) {
 			throw std::runtime_error("CgnsReader: Could not read boundary information");
 		}
-		std::vector<cgsize_t> vertices(numberOfVertices);
+		std::vector<int> vertices(numberOfVertices);
 		if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, &vertices[0], nullptr)) {
 			throw std::runtime_error("CgnsReader: Could not read boundary");
 		}

@@ -26,8 +26,8 @@ struct Region1_ElementType1_3D {
 	int fileIndex;
 	char elementSectionName[100];
 	ElementType_t type;
-	cgsize_t elementStart;
-	cgsize_t elementEnd;
+	int elementStart;
+	int elementEnd;
 	int nbndry;
 	int parent_flag;
 };
