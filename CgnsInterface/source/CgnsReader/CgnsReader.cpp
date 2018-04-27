@@ -52,7 +52,7 @@ void CgnsReader::readZone() {
 	if (zoneType != Unstructured) {
 		throw std::runtime_error("CgnsReader: Only unstructured zones are supported"); 
 	}
-	if (cg_zone_read(this->fileIndex, this->baseIndex, this->zoneIndex, this->buffer, &this->zoneSizes[0])) {
+	if (cg_zone_read(this->fileIndex, this->baseIndex, this->zoneIndex, this->buffer, &this->sizes[0])) {
 		throw std::runtime_error("CgnsReader: Could not read zone");
 	}
 }

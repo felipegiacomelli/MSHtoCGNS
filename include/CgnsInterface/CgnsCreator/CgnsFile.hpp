@@ -1,8 +1,6 @@
 #ifndef CGNS_FILE_HPP	
 #define CGNS_FILE_HPP
 
-#include <cgnslib.h>
-
 #include <BoostInterface/Filesystem.hpp>
 #include <Utilities/Vector.hpp>
 #include <Utilities/Set.hpp>
@@ -30,11 +28,10 @@ class CgnsFile {
 
 		GridDataShared gridData;
 		std::string folderPath, baseName, zoneName, fileName;
-		int cellDimension, physicalDimension, numberOfVertices, numberOfElements, numberOfTimeSteps;
-		std::vector<int> zoneSizes;
+		int cellDimension, physicalDimension, numberOfVertices, numberOfElements;
+		std::array<int, 3> sizes;
 		std::vector<int> coordinateIndices, sectionIndices, boundaryIndices, solutionIndices, fieldsIndices;
 		int fileIndex, baseIndex, zoneIndex, solutionIndex, fieldIndex;
-		ElementType_t geometry, boundary;
 };
 
 #endif

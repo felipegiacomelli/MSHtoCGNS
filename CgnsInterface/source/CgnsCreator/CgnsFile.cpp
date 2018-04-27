@@ -1,9 +1,13 @@
 #include <CgnsInterface/CgnsCreator/CgnsFile.hpp>
+#include <cgnslib.h>
 
-CgnsFile::CgnsFile(GridDataShared gridData, const std::string& folderPath) : 
-	gridData(gridData), folderPath(folderPath), baseName("Base"), zoneName("Zone"), physicalDimension(3) {
-	this->numberOfVertices = this->gridData->coordinates.size();
+CgnsFile::CgnsFile(GridDataShared gridData, const std::string& folderPath) : gridData(gridData), folderPath(folderPath) {
+	this->baseName = "Base";
+	this->zoneName = "Zone";
+	this->physicalDimension = this->gridData->dimension;
 	this->cellDimension = this->gridData->dimension;
+
+	this->numberOfVertices = this->gridData->coordinates.size();
 }
 
 void CgnsFile::initialize() {
@@ -16,21 +20,24 @@ void CgnsFile::initialize() {
 }
 
 void CgnsFile::resizeVectors() {
-	this->zoneSizes.resize(3);
 	this->coordinateIndices.resize(3);
 	this->sectionIndices.resize(this->gridData->boundaries.size() + 1);
 	this->boundaryIndices.resize(this->gridData->boundaries.size());
 }
 
 void CgnsFile::writeBase() {
-	cg_base_write(this->fileIndex, this->baseName.c_str(), this->cellDimension, this->physicalDimension, &this->baseIndex);
+	if (cg_base_write(this->fileIndex, this->baseName.c_str(), this->cellDimension, this->physicalDimension, &this->baseIndex)) {
+		throw std::runtime_error("CgnsFile: Could not write base");
+	}
 }
 
 void CgnsFile::writeZone() {
-	this->zoneSizes[0] = this->numberOfVertices;
-	this->zoneSizes[1] = this->numberOfElements;
-	this->zoneSizes[2] = 0;	
-	cg_zone_write(this->fileIndex, this->baseIndex, this->zoneName.c_str(), &this->zoneSizes[0], Unstructured, &this->zoneIndex);
+	this->sizes[0] = this->numberOfVertices;
+	this->sizes[1] = this->numberOfElements;
+	this->sizes[2] = 0;	
+	if (cg_zone_write(this->fileIndex, this->baseIndex, this->zoneName.c_str(), &this->sizes[0], Unstructured, &this->zoneIndex)) {
+		throw std::runtime_error("CgnsFile: Could not write zone");
+	}
 }
 
 void CgnsFile::writeBoundaryConditions() {
@@ -38,7 +45,9 @@ void CgnsFile::writeBoundaryConditions() {
 		int numberOfVertices = this->gridData->boundaries[i].vertices.size();
 		int* indices = determine_array_1d<int>(this->gridData->boundaries[i].vertices); 
 		for (unsigned j = 0; j < this->gridData->boundaries[i].vertices.size(); j++) indices[j]++;
-		cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BCWall, PointList, numberOfVertices, indices, &this->boundaryIndices[i]);
+		if (cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BCWall, PointList, numberOfVertices, indices, &this->boundaryIndices[i])) {
+			throw std::runtime_error("CgnsFile: Could not write boundary condition");
+		}
 		delete indices;
 	}
 }

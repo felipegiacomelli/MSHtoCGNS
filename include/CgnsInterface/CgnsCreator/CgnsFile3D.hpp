@@ -1,11 +1,6 @@
 #ifndef CGNS_FILE_3D_HPP	
 #define CGNS_FILE_3D_HPP
 
-#include <cgnslib.h>
-
-#include <BoostInterface/Filesystem.hpp>
-#include <Utilities/Vector.hpp>
-#include <Grid/GridData.hpp>
 #include <CgnsInterface/CgnsCreator/CgnsFile.hpp>
 
 class CgnsFile3D : public CgnsFile {
@@ -21,6 +16,8 @@ class CgnsFile3D : public CgnsFile {
 		void setupFile() override;
 		void writeCoordinates() override;
 		void writeSections() override;
+
+		int geometry, boundary;
 };
 
 #endif

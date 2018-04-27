@@ -1,7 +1,7 @@
 #include <CgnsInterface/CgnsCreator/CgnsFile2D.hpp>
+#include <cgnslib.h>
 
-CgnsFile2D::CgnsFile2D(GridDataShared gridData, const std::string& folderPath) : 
-	CgnsFile(gridData, folderPath) {
+CgnsFile2D::CgnsFile2D(GridDataShared gridData, const std::string& folderPath) : CgnsFile(gridData, folderPath) {
 	this->setupFile();
 	this->initialize();
 }
@@ -55,14 +55,14 @@ void CgnsFile2D::writeSections() {
 			case 1:  {
 				int* connectivities = determine_array_1d<int>(a);
 				for (unsigned j = 0; j < a.size()*3; j++) connectivities[j]++;
-				cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), TRI_3, elementStart, elementEnd, zoneSizes[2], connectivities, &sectionIndices.back());
+				cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), TRI_3, elementStart, elementEnd, sizes[2], connectivities, &sectionIndices.back());
 				delete connectivities;
 				break;
 			}
 			case 2: {
 				int* connectivities = determine_array_1d<int>(a);
 				for (unsigned j = 0; j < a.size()*4; j++) connectivities[j]++;
-				cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), QUAD_4, elementStart, elementEnd, zoneSizes[2], connectivities, &sectionIndices.back());
+				cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), QUAD_4, elementStart, elementEnd, sizes[2], connectivities, &sectionIndices.back());
 				delete connectivities;
 				break;
 			}
@@ -77,7 +77,7 @@ void CgnsFile2D::writeSections() {
 		elementEnd = elementStart + this->gridData->boundaries[i].lineConnectivity.size() - 1;
 		int* connectivities = determine_array_1d<int>(this->gridData->boundaries[i].lineConnectivity);
 		for (unsigned j = 0; j < this->gridData->boundaries[i].lineConnectivity.size()*2; j++) connectivities[j]++;
-		cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BAR_2, elementStart, elementEnd, this->zoneSizes[2], connectivities, &this->sectionIndices[i+1]);
+		cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BAR_2, elementStart, elementEnd, this->sizes[2], connectivities, &this->sectionIndices[i+1]);
 		delete connectivities;
 		elementStart = elementEnd + 1;
 	}

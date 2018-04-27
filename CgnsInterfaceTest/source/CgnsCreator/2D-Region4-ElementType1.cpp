@@ -3,6 +3,7 @@
 #include <IO/MshReader2D.hpp>
 #include <CgnsInterface/CgnsReader/CgnsReader2D.hpp>
 #include <CgnsInterface/CgnsCreator/CgnsFile2D.hpp>
+#include <cgnslib.h>
 
 #define TOLERANCE 1e-12
 
