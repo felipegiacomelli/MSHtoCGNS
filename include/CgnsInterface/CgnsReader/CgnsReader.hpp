@@ -29,8 +29,8 @@ class CgnsReader {
 		std::string filePath;
 		char buffer[800];
 		int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
-		std::vector<int> sectionIndices, boundaryIndices;
 		std::array<int, 3> zoneSizes;
+		int numberOfSections, numberOfBoundaries;
 };
 
 #endif

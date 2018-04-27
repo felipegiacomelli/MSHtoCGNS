@@ -29,11 +29,11 @@ void CgnsReader2D::readCoordinates() {
 }
 
 void CgnsReader2D::readSections() {
-	for (auto sectionIndex = this->sectionIndices.cbegin(); sectionIndex != this->sectionIndices.cend(); sectionIndex++) {
+	for (int sectionIndex = 1; sectionIndex <= this->numberOfSections; sectionIndex++) {
 		ElementType_t type;
 		cgsize_t elementStart, elementEnd; 
 		int lastBoundaryElement, parentFlag;
-		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, *sectionIndex, this->buffer, &type, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag)) {
+		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &type, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag)) {
 			throw std::runtime_error("CgnsReader2D: Could not read section");
 		}
 		int numberOfElements = elementEnd - elementStart + 1;
@@ -42,7 +42,7 @@ void CgnsReader2D::readSections() {
 			case TRI_3: {
 				int numberOfVertices = 3;	
 				cgsize_t connectivities[numberOfVertices*numberOfElements];
-				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, *sectionIndex, connectivities, nullptr)) {
+				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) {
 					throw std::runtime_error("CgnsReader2D: Could not read section elements");
 				}
 				for (int e = 0; e < numberOfElements; e++) {
@@ -61,7 +61,7 @@ void CgnsReader2D::readSections() {
 			case QUAD_4: {
 				int numberOfVertices = 4;	
 				cgsize_t connectivities[numberOfVertices*numberOfElements];
-				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, *sectionIndex, connectivities, nullptr)) {
+				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) {
 					throw std::runtime_error("CgnsReader2D: Could not read section elements");
 				}
 				for (int e = 0; e < numberOfElements; e++) {
@@ -80,7 +80,7 @@ void CgnsReader2D::readSections() {
 			case BAR_2: {
 				int numberOfVertices = 2;	
 				cgsize_t connectivities[numberOfVertices*numberOfElements];
-				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, *sectionIndex, connectivities, nullptr)) {
+				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) {
 					throw std::runtime_error("CgnsReader2D: Could not read section elements");
 				}
 				std::vector<std::vector<int>> lineConnectivity;

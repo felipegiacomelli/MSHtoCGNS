@@ -58,42 +58,36 @@ void CgnsReader::readZone() {
 }
 
 void CgnsReader::readNumberOfSections() {
-	int numberOfSections;
-	if (cg_nsections(this->fileIndex, this->baseIndex, this->zoneIndex, &numberOfSections)) { 
+	if (cg_nsections(this->fileIndex, this->baseIndex, this->zoneIndex, &this->numberOfSections)) { 
 		throw std::runtime_error("CgnsReader: Could not read number of sections");
 	}
-	this->sectionIndices = std::vector<int>(numberOfSections);
-	std::iota(this->sectionIndices.begin(), this->sectionIndices.end(), 1);
 }
 
 void CgnsReader::readNumberOfBoundaries() {
-	int numberOfBoundaries;
-	if (cg_nbocos(this->fileIndex, this->baseIndex, this->zoneIndex, &numberOfBoundaries)) {
+	if (cg_nbocos(this->fileIndex, this->baseIndex, this->zoneIndex, &this->numberOfBoundaries)) {
 		throw std::runtime_error("CgnsReader: Could not read number of boundaries");
 	}
-	this->boundaryIndices = std::vector<int>(numberOfBoundaries);
-	std::iota(this->boundaryIndices.begin(), this->boundaryIndices.end(), 1);
 }
 
 void CgnsReader::readBoundaries() {
-	if (this->boundaryIndices.size() != this->gridData->boundaries.size()) {
+	if (static_cast<unsigned>(this->numberOfBoundaries) != this->gridData->boundaries.size()) {
 		throw std::runtime_error("CgnsReader: mismatch between number of boundary conditions and boundary connectivities");
 	}
-	for (auto boundaryIndex = this->boundaryIndices.cbegin(); boundaryIndex != this->boundaryIndices.cend(); boundaryIndex++) {
+	for (int boundaryIndex = 1; boundaryIndex <= this->numberOfBoundaries; boundaryIndex++) {
 		BCType_t bocotype;
 		PointSetType_t ptset_type;
 		cgsize_t numberOfVertices, NormalListSize;
 		int NormalIndex, ndataset;
 		DataType_t NormalDataType;
-		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, *boundaryIndex, this->buffer, &bocotype, &ptset_type, &numberOfVertices, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset)) {
+		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &bocotype, &ptset_type, &numberOfVertices, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset)) {
 			throw std::runtime_error("CgnsReader: Could not read boundary information");
 		}
 		std::vector<cgsize_t> vertices(numberOfVertices);
-		if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, *boundaryIndex, &vertices[0], nullptr)) {
+		if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, &vertices[0], nullptr)) {
 			throw std::runtime_error("CgnsReader: Could not read boundary");
 		}
 		for (unsigned i = 0; i < vertices.size(); i++) vertices[i]--;
-		this->gridData->boundaries[*boundaryIndex - 1].vertices = std::move(vertices);
+		this->gridData->boundaries[boundaryIndex - 1].vertices = std::move(vertices);
 	}
 }
 
