@@ -1,7 +1,7 @@
 #include <CgnsInterface/CgnsReader/CgnsReader.hpp>
 #include <cgnslib.h>
 
-CgnsReader::CgnsReader(const std::string& filePath) : filePath(filePath), zoneSizes(std::vector<cgsize_t>(3)) {
+CgnsReader::CgnsReader(const std::string& filePath) : filePath(filePath) {
 	this->checkFile();
 	this->readBase();
 	this->readZone();
