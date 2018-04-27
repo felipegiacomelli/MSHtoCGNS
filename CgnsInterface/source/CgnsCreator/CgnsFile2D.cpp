@@ -2,36 +2,25 @@
 #include <cgnslib.h>
 
 CgnsFile2D::CgnsFile2D(GridDataShared gridData, const std::string& folderPath) : CgnsFile(gridData, folderPath) {
+	this->sizes[0] = this->gridData->coordinates.size();
+	this->sizes[1] = this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
+	this->sizes[2] = 0;	
 	this->setupFile();
 	this->initialize();
 }
 
-void CgnsFile2D::defineGeometryType() {
-	if (this->gridData->triangleConnectivity.size() > 0 && this->gridData->quadrangleConnectivity.size() == 0) {
-		this->numberOfElements = this->gridData->triangleConnectivity.size();
-	}
-	else if (this->gridData->triangleConnectivity.size() == 0 && this->gridData->quadrangleConnectivity.size() > 0) {
-		this->numberOfElements = this->gridData->quadrangleConnectivity.size();
-	}
-	else if (this->gridData->triangleConnectivity.size() > 0 && this->gridData->quadrangleConnectivity.size() > 0) {
-		this->numberOfElements = this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
-	}
-	else throw std::runtime_error("CgnsFile2D: Geometry type not supported!!");
-}
-
 void CgnsFile2D::setupFile() {
-	this->defineGeometryType();
-	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->numberOfVertices) + std::string("v_") + std::to_string(this->numberOfElements) + "e/"; 
+	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/"; 
 	createDirectory(folderName);
 	this->fileName = folderName + std::string("Grid.cgns");
 	cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
 }
 
 void CgnsFile2D::writeCoordinates() {
-	double coordinatesX[this->numberOfVertices];
-	double coordinatesY[this->numberOfVertices];
-	double coordinatesZ[this->numberOfVertices];
-	for (int i = 0; i < this->numberOfVertices; i++) {
+	double coordinatesX[this->sizes[0]];
+	double coordinatesY[this->sizes[0]];
+	double coordinatesZ[this->sizes[0]];
+	for (int i = 0; i < this->sizes[0]; i++) {
 		coordinatesX[i] = this->gridData->coordinates[i][0];
 		coordinatesY[i] = this->gridData->coordinates[i][1];
 		coordinatesZ[i] = 0.0; 
@@ -72,7 +61,7 @@ void CgnsFile2D::writeSections() {
 		elementStart = elementEnd + 1;
 	}
 	
-	elementStart = this->numberOfElements + 1;
+	elementStart = this->sizes[1] + 1;
 	for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
 		elementEnd = elementStart + this->gridData->boundaries[i].lineConnectivity.size() - 1;
 		int* connectivities = determine_array_1d<int>(this->gridData->boundaries[i].lineConnectivity);

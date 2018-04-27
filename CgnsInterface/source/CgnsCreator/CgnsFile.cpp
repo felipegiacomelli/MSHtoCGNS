@@ -6,8 +6,6 @@ CgnsFile::CgnsFile(GridDataShared gridData, const std::string& folderPath) : gri
 	this->zoneName = "Zone";
 	this->physicalDimension = this->gridData->dimension;
 	this->cellDimension = this->gridData->dimension;
-
-	this->numberOfVertices = this->gridData->coordinates.size();
 }
 
 void CgnsFile::initialize() {
@@ -32,9 +30,6 @@ void CgnsFile::writeBase() {
 }
 
 void CgnsFile::writeZone() {
-	this->sizes[0] = this->numberOfVertices;
-	this->sizes[1] = this->numberOfElements;
-	this->sizes[2] = 0;	
 	if (cg_zone_write(this->fileIndex, this->baseIndex, this->zoneName.c_str(), &this->sizes[0], Unstructured, &this->zoneIndex)) {
 		throw std::runtime_error("CgnsFile: Could not write zone");
 	}

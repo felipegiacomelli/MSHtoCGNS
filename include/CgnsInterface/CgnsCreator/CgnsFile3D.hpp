@@ -11,8 +11,7 @@ class CgnsFile3D : public CgnsFile {
 		~CgnsFile3D() = default;
 
 	private:
-		void defineGeometryType() override; 
-		void defineBoundaryType(); 
+		void defineGeometryType(); 
 		void setupFile() override;
 		void writeCoordinates() override;
 		void writeSections() override;

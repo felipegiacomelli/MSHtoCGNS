@@ -19,7 +19,6 @@ class CgnsFile {
 		void initialize();
 		void resizeVectors();
 		virtual void setupFile() = 0;
-		virtual void defineGeometryType() = 0; 
 		virtual void writeBase();
 		virtual void writeZone();
 		virtual void writeCoordinates() = 0;
@@ -28,7 +27,7 @@ class CgnsFile {
 
 		GridDataShared gridData;
 		std::string folderPath, baseName, zoneName, fileName;
-		int cellDimension, physicalDimension, numberOfVertices, numberOfElements;
+		int cellDimension, physicalDimension;
 		std::array<int, 3> sizes;
 		std::vector<int> coordinateIndices, sectionIndices, boundaryIndices, solutionIndices, fieldsIndices;
 		int fileIndex, baseIndex, zoneIndex, solutionIndex, fieldIndex;
