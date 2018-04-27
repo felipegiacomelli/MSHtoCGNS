@@ -31,7 +31,6 @@ class CgnsReader {
 		int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
 		std::vector<int> sectionIndices, boundaryIndices;
 		std::array<int, 3> zoneSizes;
-		int numberOfVertices;
 };
 
 #endif

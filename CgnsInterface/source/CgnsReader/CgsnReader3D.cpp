@@ -9,23 +9,22 @@ CgnsReader3D::CgnsReader3D(const std::string& filePath) : CgnsReader(filePath) {
 }
 
 void CgnsReader3D::readCoordinates() {
-	this->numberOfVertices = this->zoneSizes[0];
 	cgsize_t one = 1;
-	double coordinatesX[this->numberOfVertices];
-	double coordinatesY[this->numberOfVertices];
-	double coordinatesZ[this->numberOfVertices];
-	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, &this->numberOfVertices, coordinatesX)) { 
+	double coordinatesX[this->zoneSizes[0]];
+	double coordinatesY[this->zoneSizes[0]];
+	double coordinatesZ[this->zoneSizes[0]];
+	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, &this->zoneSizes[0], coordinatesX)) { 
 		throw std::runtime_error("CgnsReader3D: Could not read CoordinateX");
 	}
-	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, &this->numberOfVertices, coordinatesY)) { 
+	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, &this->zoneSizes[0], coordinatesY)) { 
 		throw std::runtime_error("CgnsReader3D: Could not read CoordinateY");
 	}
-	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateZ", RealDouble, &one, &this->numberOfVertices, coordinatesZ)) { 
+	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateZ", RealDouble, &one, &this->zoneSizes[0], coordinatesZ)) { 
 		throw std::runtime_error("CgnsReader3D: Could not read CoordinateZ");
 	}
 
-	this->gridData->coordinates.resize(this->numberOfVertices, std::vector<double>(3));
-	for (int i = 0; i < this->numberOfVertices; i++) {
+	this->gridData->coordinates.resize(this->zoneSizes[0], std::vector<double>(3));
+	for (int i = 0; i < this->zoneSizes[0]; i++) {
 		this->gridData->coordinates[i][0] = coordinatesX[i]; 
 		this->gridData->coordinates[i][1] = coordinatesY[i]; 
 		this->gridData->coordinates[i][2] = coordinatesZ[i]; 
@@ -36,8 +35,8 @@ void CgnsReader3D::readSections() {
 	for (auto sectionIndex = this->sectionIndices.cbegin(); sectionIndex != this->sectionIndices.cend(); sectionIndex++) {
 		ElementType_t type;
 		cgsize_t elementStart, elementEnd; 
-		int nBdry, parentFlag;
-		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, *sectionIndex, this->buffer, &type, &elementStart, &elementEnd, &nBdry, &parentFlag)) { 
+		int lastBoundaryElement, parentFlag;
+		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, *sectionIndex, this->buffer, &type, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag)) { 
 			throw std::runtime_error("CgnsReader3D: Could not read section");
 		}
 		int numberOfElements = elementEnd - elementStart + 1;

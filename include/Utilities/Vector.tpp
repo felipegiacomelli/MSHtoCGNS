@@ -16,18 +16,6 @@ T* determine_array_1d(const std::vector<std::vector<U>>& a) {
 	return b;
 }
 
-template<typename T, class InputIt>
-T* determine_array_1d(InputIt begin, InputIt end) {
-	T* b = new T[(end - begin) * (begin->cend() - begin->cbegin())];
-	for (auto i = begin; i < end; i++) {
-		for (auto j = i->cbegin(); j < i->cend(); j++) {
-			b[(i-begin)*i->size() + (j-i->cbegin())] = static_cast<T>(*j);
-		}
-	}
-	return b;
-}
-
-
 template<typename T>
 void print(const std::vector<T>& a, std::string&& message) {
 	std::cout << std::fixed << std::setprecision(3);
