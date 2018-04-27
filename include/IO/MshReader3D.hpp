@@ -14,6 +14,6 @@ class MshReader3D : public MshReader {
 		void addFacets() override;
 		void addElements() override;
 		void defineBoundaryVertices() override;
-	};
+};
 
 #endif

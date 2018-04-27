@@ -9,10 +9,10 @@
 struct Region1_ElementType1_3D {
 	Region1_ElementType1_3D() {
 		CgnsReader3D inputReader("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/14v_24e.cgns");
-		CgnsFile3D fileIndex3D(inputReader.getGridData(), "./");
+		CgnsFile3D fileIndex3D(inputReader.gridData, "./");
 		this->filePath = fileIndex3D.getFileName();
 		CgnsReader3D outputReader(this->filePath);
-		this->gridData = outputReader.getGridData();
+		this->gridData = outputReader.gridData;
 		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex);
 	}
 	

@@ -9,10 +9,10 @@
 struct Region1_ElementType1_2D {
 	Region1_ElementType1_2D() {
 		CgnsReader2D inputReader("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5v_4e.cgns");
-		CgnsFile2D fileIndex2D(inputReader.getGridData(), "./");
+		CgnsFile2D fileIndex2D(inputReader.gridData, "./");
 		this->filePath = fileIndex2D.getFileName();
 		CgnsReader2D outputReader(this->filePath);
-		this->gridData = outputReader.getGridData();
+		this->gridData = outputReader.gridData;
 		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex);
 	}
 

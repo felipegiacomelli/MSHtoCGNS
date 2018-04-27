@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 		
 			auto start = std::chrono::steady_clock::now();
 			MshReader2D reader2D(inputPath);
-			GridDataShared  gridData = reader2D.getGridData();
+			GridDataShared  gridData = reader2D.gridData;
 			auto end = std::chrono::steady_clock::now();
 			std::chrono::duration<double> elapsedSeconds = end - start;
 			std::cout << std::endl << "\tGrid path: " << inputPath;			
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 	
 			auto start = std::chrono::steady_clock::now();
 			MshReader3D reader3D(inputPath);
-			GridDataShared  gridData = reader3D.getGridData();
+			GridDataShared  gridData = reader3D.gridData;
 			auto end = std::chrono::steady_clock::now();
 			std::chrono::duration<double> elapsedSeconds = end - start;
 			std::cout << std::endl << "\tGrid path: " << inputPath;			

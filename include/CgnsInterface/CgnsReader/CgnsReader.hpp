@@ -18,9 +18,9 @@ class CgnsReader {
 		CgnsReader() = default;
 		CgnsReader(const std::string&);
 
-		GridDataShared getGridData() const;
-
 		~CgnsReader();
+
+		GridDataShared gridData;
 
 	protected:
 		void checkFile();
@@ -39,7 +39,6 @@ class CgnsReader {
 		ZoneType_t zoneType;
 		std::vector<cgsize_t> zoneSizes;
 		cgsize_t numberOfVertices;
-		GridDataShared gridData;
 };
 
 #endif

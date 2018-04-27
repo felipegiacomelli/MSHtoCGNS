@@ -95,10 +95,6 @@ void CgnsReader::readBoundaries() {
 	}
 }
 
-GridDataShared CgnsReader::getGridData() const {
-	return this->gridData;
-}
-
 CgnsReader::~CgnsReader() {
 	cg_close(this->fileIndex);
 	delete this->buffer;

@@ -15,9 +15,9 @@ class MshReader {
 		MshReader() = default;
 		MshReader(const std::string&);
 
-		GridDataShared getGridData() const;
-
 		~MshReader();
+
+		GridDataShared gridData;
 
 	protected:
 		void checkFile();
@@ -34,7 +34,6 @@ class MshReader {
 		char* buffer;
 		int numberOfPhysicalEntities, numberOfBoundaries, numberOfRegions;
 		std::vector<std::vector<int>> connectivities, elements, facets, elementsOnRegion, facetsOnBoundary;
-		GridDataShared gridData;
 };
 
 #endif

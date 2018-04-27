@@ -56,10 +56,6 @@ void MshReader::readConnectivities() {
 	}
 }
 
-GridDataShared MshReader::getGridData() const {
-	return this->gridData;
-}
-
 MshReader::~MshReader() {
 	delete this->buffer;
 }

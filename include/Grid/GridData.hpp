@@ -16,7 +16,7 @@ struct BoundaryData {
 
 	private:
 		template<class Archive>
-		void serialize(Archive &archive, const unsigned version) {
+		void serialize(Archive& archive, const unsigned version) {
 			archive &this->lineConnectivity;
 			archive &this->triangleConnectivity;
 			archive &this->quadrangleConnectivity;
@@ -33,7 +33,7 @@ struct RegionData {
 
 	private:
 		template<class Archive>
-		void serialize(Archive &archive, const unsigned int version) {
+		void serialize(Archive& archive, const unsigned int version) {
 			archive &this->elementsOnRegion;
 			archive &this->name;
 		}
@@ -60,7 +60,7 @@ struct GridData {
 
 	private:
 		template<class Archive>
-		void serialize(Archive & archive, const unsigned version) {
+		void serialize(Archive& archive, const unsigned version) {
 			archive &this->thickness;
 			archive &this->dimension;
 			archive &this->numberOfLocalVertices;
