@@ -35,12 +35,16 @@ void CgnsFile::writeBoundaryConditions() {
 		int numberOfVertices = this->gridData->boundaries[i].vertices.size();
 		int* indices = determine_array_1d<int>(this->gridData->boundaries[i].vertices); 
 		for (unsigned j = 0; j < this->gridData->boundaries[i].vertices.size(); j++) indices[j]++;
-		if (cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BCWall, PointList, numberOfVertices, indices, &this->boundaryIndices[i])) {
-			throw std::runtime_error("CgnsFile: Could not write boundary condition");
+		
+		if (cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BCWall, 
+							PointList, numberOfVertices, indices, &this->boundaryIndices.back())) {
+			throw std::runtime_error("CgnsFile: Could not write boundary condition " + std::to_string(i+1));
 		}
-		cg_goto(this->fileIndex, this->baseIndex, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", i+1, nullptr);
+		if (cg_goto(this->fileIndex, this->baseIndex, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", i+1, nullptr)) {
+			throw std::runtime_error("CgnsFile: Could go to boundary condition " + std::to_string(i+1) + " location");
+		}
 		if (cg_famname_write(this->gridData->boundaries[i].name.c_str())) {
-			throw std::runtime_error("CgnsFile: Could not write boundary condition family name");
+			throw std::runtime_error("CgnsFile: Could not write boundary condition " + std::to_string(i+1) + " family name");
 		}
 		delete indices;
 	}
