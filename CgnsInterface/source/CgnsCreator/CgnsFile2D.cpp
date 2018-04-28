@@ -28,27 +28,28 @@ void CgnsFile2D::writeCoordinates() {
 }
 
 void CgnsFile2D::writeSections() {
-	std::vector<std::vector<int>> conn;
-	conn.insert(conn.end(), this->gridData->triangleConnectivity.begin(), this->gridData->triangleConnectivity.end());
-	conn.insert(conn.end(), this->gridData->quadrangleConnectivity.begin(), this->gridData->quadrangleConnectivity.end());
+	std::vector<std::vector<int>> elementConnectivities;
+	elementConnectivities.insert(elementConnectivities.end(), this->gridData->triangleConnectivity.begin(), this->gridData->triangleConnectivity.end());
+	elementConnectivities.insert(elementConnectivities.end(), this->gridData->quadrangleConnectivity.begin(), this->gridData->quadrangleConnectivity.end());
 	int elementStart = 1;
 	int elementEnd = 0;
 
 	for (unsigned i = 0; i < this->gridData->regions.size(); i++) {
 		this->sectionIndices.emplace_back(0);
-		std::vector<std::vector<int>> a(conn.cbegin() + this->gridData->regions[i].elementsOnRegion.front(), conn.cbegin() + this->gridData->regions[i].elementsOnRegion.back() + 1);
-	 	elementEnd += a.size();
+		std::vector<std::vector<int>> regionConnectivities(elementConnectivities.cbegin()+this->gridData->regions[i].elementsOnRegion.front(), 
+															elementConnectivities.cbegin()+this->gridData->regions[i].elementsOnRegion.back()+1);
+	 	elementEnd += regionConnectivities.size();
 		switch (this->gridData->regions[i].elementType) {
 			case 1:  {
-				int* connectivities = determine_array_1d<int>(a);
-				for (unsigned j = 0; j < a.size()*3; j++) connectivities[j]++;
+				int* connectivities = determine_array_1d<int>(regionConnectivities);
+				for (unsigned j = 0; j < regionConnectivities.size()*3; j++) connectivities[j]++;
 				cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), TRI_3, elementStart, elementEnd, sizes[2], connectivities, &this->sectionIndices.back());
 				delete connectivities;
 				break;
 			}
 			case 2: {
-				int* connectivities = determine_array_1d<int>(a);
-				for (unsigned j = 0; j < a.size()*4; j++) connectivities[j]++;
+				int* connectivities = determine_array_1d<int>(regionConnectivities);
+				for (unsigned j = 0; j < regionConnectivities.size()*4; j++) connectivities[j]++;
 				cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), QUAD_4, elementStart, elementEnd, sizes[2], connectivities, &this->sectionIndices.back());
 				delete connectivities;
 				break;

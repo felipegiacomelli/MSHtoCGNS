@@ -17,7 +17,6 @@ class CgnsFile {
 
 	protected:
 		void initialize();
-		void resizeVectors();
 		virtual void setupFile() = 0;
 		virtual void writeBase();
 		virtual void writeZone();

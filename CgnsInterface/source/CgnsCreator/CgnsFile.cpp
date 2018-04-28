@@ -6,19 +6,15 @@ CgnsFile::CgnsFile(GridDataShared gridData, const std::string& folderPath) : gri
 	this->zoneName = "Zone";
 	this->physicalDimension = this->gridData->dimension;
 	this->cellDimension = this->gridData->dimension;
+	this->coordinateIndices.resize(this->gridData->dimension);
 }
 
 void CgnsFile::initialize() {
-	this->resizeVectors();
 	this->writeBase();
 	this->writeZone();
 	this->writeCoordinates();
 	this->writeSections();
 	this->writeBoundaryConditions();
-}
-
-void CgnsFile::resizeVectors() {
-	this->coordinateIndices.resize(3);
 }
 
 void CgnsFile::writeBase() {
@@ -42,6 +38,8 @@ void CgnsFile::writeBoundaryConditions() {
 		if (cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BCWall, PointList, numberOfVertices, indices, &this->boundaryIndices[i])) {
 			throw std::runtime_error("CgnsFile: Could not write boundary condition");
 		}
+		cg_goto(this->fileIndex, this->baseIndex, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", i+1, nullptr);
+		cg_famname_write(this->gridData->boundaries[i].name.c_str());
 		delete indices;
 	}
 }
