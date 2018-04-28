@@ -25,7 +25,7 @@ struct Region1_ElementType1_2D {
 	std::string filePath;
 	GridDataShared gridData;
 	int fileIndex;
-	char elementSectionName[100];
+	char name[100];
 	ElementType_t type;
 	int elementStart;
 	int elementEnd;
@@ -54,14 +54,14 @@ TestCase(Elements) {
 	checkEqual(triangles[1][0], 0); checkEqual(triangles[1][1], 4); checkEqual(triangles[1][2], 3);
 	checkEqual(triangles[2][0], 1); checkEqual(triangles[2][1], 2); checkEqual(triangles[2][2], 4);
 	checkEqual(triangles[3][0], 2); checkEqual(triangles[3][1], 3); checkEqual(triangles[3][2], 4);
-	cg_section_read(this->fileIndex, 1, 1, 1, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	
+	cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 1);
 	checkEqual(this->elementEnd  , 4);
 }
 
 TestCase(Boundaries) {
 	auto boundaries = this->gridData->boundaries;
-
 	checkEqual(static_cast<int>(boundaries.size()), 4);
 }
 
@@ -73,15 +73,20 @@ TestCase(West) {
 	auto lines = west.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 3); checkEqual(lines[0][1], 0);
-	
-	cg_section_read(this->fileIndex, 1, 1, 2, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
-	checkEqual(this->elementStart, 5);
-	checkEqual(this->elementEnd  , 5);
 
 	auto vertices = west.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 2);
 	checkEqual(vertices[0], 0);
 	checkEqual(vertices[1], 3); 
+	
+	cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("West"));
+	checkEqual(this->elementStart, 5);
+	checkEqual(this->elementEnd  , 5);
+
+	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 1, nullptr);
+	cg_famname_read(this->name);
+	check(name == std::string("West"));
 }
 
 TestCase(East) {
@@ -92,14 +97,20 @@ TestCase(East) {
 	auto lines = east.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 1); checkEqual(lines[0][1], 2);
-	cg_section_read(this->fileIndex, 1, 1, 3, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
-	checkEqual(this->elementStart, 6);
-	checkEqual(this->elementEnd  , 6);
 
 	auto vertices = east.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 2);
 	checkEqual(vertices[0], 1);
 	checkEqual(vertices[1], 2); 
+
+	cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("East"));
+	checkEqual(this->elementStart, 6);
+	checkEqual(this->elementEnd  , 6);
+
+	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 2, nullptr);
+	cg_famname_read(this->name);
+	check(name == std::string("East"));
 }
 
 TestCase(South) {
@@ -110,14 +121,20 @@ TestCase(South) {
 	auto lines = south.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 0); checkEqual(lines[0][1], 1);
-	cg_section_read(this->fileIndex, 1, 1, 4, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
-	checkEqual(this->elementStart, 7);
-	checkEqual(this->elementEnd  , 7);
 
 	auto vertices = south.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 2);
 	checkEqual(vertices[0], 0);
 	checkEqual(vertices[1], 1); 
+
+	cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("South"));
+	checkEqual(this->elementStart, 7);
+	checkEqual(this->elementEnd  , 7);
+
+	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 3, nullptr);
+	cg_famname_read(this->name);
+	check(name == std::string("South"));
 }
 
 TestCase(North) {
@@ -128,14 +145,20 @@ TestCase(North) {
 	auto lines = north.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
 	checkEqual(lines[0][0], 2); checkEqual(lines[0][1], 3);
-	cg_section_read(this->fileIndex, 1, 1, 5, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
-	checkEqual(this->elementStart, 8);
-	checkEqual(this->elementEnd  , 8);
 
 	auto vertices = north.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 2);
 	checkEqual(vertices[0], 2);
-	checkEqual(vertices[1], 3); 	
+	checkEqual(vertices[1], 3); 
+
+	cg_section_read(this->fileIndex, 1, 1, 5, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("North"));
+	checkEqual(this->elementStart, 8);
+	checkEqual(this->elementEnd  , 8);	
+
+	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 4, nullptr);
+	cg_famname_read(this->name);
+	check(name == std::string("North"));
 }
 
 TestCase(Regions) {
@@ -155,7 +178,8 @@ TestCase(Geometry) {
 
 	checkEqual(a.elementType, 1);
 
-	cg_section_read(this->fileIndex, 1, 1, 1, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("Geometry"));
 	checkEqual(this->elementStart, 1);
 	checkEqual(this->elementEnd  , 4);
 	check(this->type == TRI_3);

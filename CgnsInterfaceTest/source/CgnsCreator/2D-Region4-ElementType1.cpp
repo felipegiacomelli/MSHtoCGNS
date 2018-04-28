@@ -25,7 +25,7 @@ struct Region4_ElementType1_2D {
 	std::string filePath;
 	GridDataShared gridData;
 	int fileIndex;
-	char elementSectionName[100];
+	char name[100];
 	ElementType_t type;
 	int elementStart;
 	int elementEnd;
@@ -90,7 +90,7 @@ TestCase(West) {
 	checkEqual(vertices[1], 3); 
 	checkEqual(vertices[2], 6);
 
-	cg_section_read(this->fileIndex, 1, 1, 5, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 5, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 11);
 	checkEqual(this->elementEnd  , 12); 
 	check(this->type == BAR_2);
@@ -112,7 +112,7 @@ TestCase(East) {
 	checkEqual(vertices[1], 5); 
 	checkEqual(vertices[2], 8); 
 
-	cg_section_read(this->fileIndex, 1, 1, 6, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 6, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 13);
 	checkEqual(this->elementEnd  , 14);
 	check(this->type == BAR_2);
@@ -134,7 +134,7 @@ TestCase(South) {
 	checkEqual(vertices[1], 1); 
 	checkEqual(vertices[2], 2); 
 
-	cg_section_read(this->fileIndex, 1, 1, 7, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 7, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 15);
 	checkEqual(this->elementEnd  , 16);
 	check(this->type == BAR_2);
@@ -155,7 +155,7 @@ TestCase(North) {
 	checkEqual(vertices[0], 6);
 	checkEqual(vertices[1], 7); 
 	
-	cg_section_read(this->fileIndex, 1, 1, 8, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 8, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 17);
 	checkEqual(this->elementEnd  , 18);
 	check(this->type == BAR_2);
@@ -178,7 +178,7 @@ TestCase(A) {
 
 	checkEqual(a.elementType, 1);
 
-	cg_section_read(this->fileIndex, 1, 1, 1, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 1);
 	checkEqual(this->elementEnd  , 4);
 	check(this->type == TRI_3);
@@ -197,7 +197,7 @@ TestCase(B) {
 
 	checkEqual(b.elementType, 1);
 
-	cg_section_read(this->fileIndex, 1, 1, 2, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 5);
 	checkEqual(this->elementEnd  , 8);
 	check(this->type == TRI_3);
@@ -213,7 +213,7 @@ TestCase(C) {
 
 	checkEqual(c.elementType, 2);
 	
-	cg_section_read(this->fileIndex, 1, 1, 3, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 9);
 	checkEqual(this->elementEnd  , 9);
 	check(this->type == QUAD_4);
@@ -229,7 +229,7 @@ TestCase(D) {
 
 	checkEqual(d.elementType, 2);
 
-	cg_section_read(this->fileIndex, 1, 1, 4, this->elementSectionName, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	checkEqual(this->elementStart, 10);
 	checkEqual(this->elementEnd  , 10);
 	check(this->type == QUAD_4);
