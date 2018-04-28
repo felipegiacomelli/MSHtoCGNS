@@ -2,7 +2,7 @@
 #include <Grid/GridData.hpp>
 #include <IO/MshReader2D.hpp>
 #include <CgnsInterface/CgnsReader/CgnsReader2D.hpp>
-#include <CgnsInterface/CgnsCreator/CgnsFile2D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsCreator2D.hpp>
 #include <cgnslib.h>
 
 #define TOLERANCE 1e-12
@@ -10,7 +10,7 @@
 struct Region1_ElementType1_2D {
 	Region1_ElementType1_2D() {
 		CgnsReader2D inputReader("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/5v_4e.cgns");
-		CgnsFile2D fileIndex2D(inputReader.gridData, "./");
+		CgnsCreator2D fileIndex2D(inputReader.gridData, "./");
 		this->filePath = fileIndex2D.getFileName();
 		CgnsReader2D outputReader(this->filePath);
 		this->gridData = outputReader.gridData;

@@ -6,14 +6,14 @@
 #include <Utilities/Set.hpp>
 #include <Grid/GridData.hpp>
 
-class CgnsFile {
+class CgnsCreator {
 	public:
-		CgnsFile() = default;
-		CgnsFile(GridDataShared, const std::string&);
+		CgnsCreator() = default;
+		CgnsCreator(GridDataShared, const std::string&);
 
 		std::string getFileName() const;
 
-		virtual ~CgnsFile();
+		virtual ~CgnsCreator();
 
 	protected:
 		void initialize();

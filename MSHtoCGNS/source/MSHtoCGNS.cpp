@@ -3,8 +3,8 @@
 #include <Grid/GridData.hpp>
 #include <IO/MshReader2D.hpp>
 #include <IO/MshReader3D.hpp>
-#include <CgnsInterface/CgnsCreator/CgnsFile2D.hpp>
-#include <CgnsInterface/CgnsCreator/CgnsFile3D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsCreator2D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
 
 #include <chrono>
 #include <fstream>
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 			std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;			
 			
 			start = std::chrono::steady_clock::now();
-			CgnsFile2D fileIndex2D(gridData, outputPath); 
+			CgnsCreator2D fileIndex2D(gridData, outputPath); 
 			end = std::chrono::steady_clock::now();
 			elapsedSeconds = end - start;
 			std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";			
@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
 			std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;	
 		
 			start = std::chrono::steady_clock::now();
-			CgnsFile3D fileIndex3D(gridData, outputPath); 
+			CgnsCreator3D fileIndex3D(gridData, outputPath); 
 			end = std::chrono::steady_clock::now();
 			elapsedSeconds = end - start;
 			std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";			

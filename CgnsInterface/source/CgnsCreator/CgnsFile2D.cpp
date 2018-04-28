@@ -1,7 +1,7 @@
-#include <CgnsInterface/CgnsCreator/CgnsFile2D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsCreator2D.hpp>
 #include <cgnslib.h>
 
-CgnsFile2D::CgnsFile2D(GridDataShared gridData, const std::string& folderPath) : CgnsFile(gridData, folderPath) {
+CgnsCreator2D::CgnsCreator2D(GridDataShared gridData, const std::string& folderPath) : CgnsCreator(gridData, folderPath) {
 	this->sizes[0] = this->gridData->coordinates.size();
 	this->sizes[1] = this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
 	this->sizes[2] = 0;	
@@ -9,14 +9,14 @@ CgnsFile2D::CgnsFile2D(GridDataShared gridData, const std::string& folderPath) :
 	this->initialize();
 }
 
-void CgnsFile2D::setupFile() {
+void CgnsCreator2D::setupFile() {
 	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/"; 
 	createDirectory(folderName);
 	this->fileName = folderName + std::string("Grid.cgns");
 	cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
 }
 
-void CgnsFile2D::writeCoordinates() {
+void CgnsCreator2D::writeCoordinates() {
 	double coordinatesX[this->sizes[0]];
 	double coordinatesY[this->sizes[0]];
 	for (int i = 0; i < this->sizes[0]; i++) {
@@ -24,14 +24,14 @@ void CgnsFile2D::writeCoordinates() {
 		coordinatesY[i] = this->gridData->coordinates[i][1];
 	}
 	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateX", coordinatesX, &this->coordinateIndices[0])) {
-		throw std::runtime_error("CgnsFile2D: Could not write CoordinateX");
+		throw std::runtime_error("CgnsCreator2D: Could not write CoordinateX");
 	}
 	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateY", coordinatesY, &this->coordinateIndices[1])) {
-		throw std::runtime_error("CgnsFile2D: Could not write CoordinateY");
+		throw std::runtime_error("CgnsCreator2D: Could not write CoordinateY");
 	}
 }
 
-void CgnsFile2D::writeSections() {
+void CgnsCreator2D::writeSections() {
 	std::vector<std::vector<int>> elementConnectivities;
 	elementConnectivities.insert(elementConnectivities.end(), this->gridData->triangleConnectivity.begin(), this->gridData->triangleConnectivity.end());
 	elementConnectivities.insert(elementConnectivities.end(), this->gridData->quadrangleConnectivity.begin(), this->gridData->quadrangleConnectivity.end());
@@ -49,7 +49,7 @@ void CgnsFile2D::writeSections() {
 				for (unsigned j = 0; j < regionConnectivities.size()*3; j++) connectivities[j]++;
 				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), TRI_3, 
 									elementStart, elementEnd, sizes[2], connectivities, &this->sectionIndices.back())) {
-					throw std::runtime_error("CgnsFile2D: Could not write element section " + std::to_string(i+1));
+					throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(i+1));
 				}
 				delete connectivities;
 				break;
@@ -59,13 +59,13 @@ void CgnsFile2D::writeSections() {
 				for (unsigned j = 0; j < regionConnectivities.size()*4; j++) connectivities[j]++;
 				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), QUAD_4, 
 									elementStart, elementEnd, sizes[2], connectivities, &this->sectionIndices.back())) {
-					throw std::runtime_error("CgnsFile2D: Could not write element section " + std::to_string(i+1));
+					throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(i+1));
 				}
 				delete connectivities;
 				break;
 			}
 			default:
-				throw std::runtime_error("CgnsFile2D: Geometry type not supported");
+				throw std::runtime_error("CgnsCreator2D: Geometry type not supported");
 		}
 		elementStart = elementEnd + 1;
 	}
@@ -78,7 +78,7 @@ void CgnsFile2D::writeSections() {
 		for (unsigned j = 0; j < this->gridData->boundaries[i].lineConnectivity.size()*2; j++) connectivities[j]++;
 		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BAR_2, 
 							elementStart, elementEnd, this->sizes[2], connectivities, &this->sectionIndices[i+1])) {
-			throw std::runtime_error("CgnsFile2D: Could not write boundary section " + std::to_string(i+1));
+			throw std::runtime_error("CgnsCreator2D: Could not write boundary section " + std::to_string(i+1));
 		}
 		delete connectivities;
 		elementStart = elementEnd + 1;

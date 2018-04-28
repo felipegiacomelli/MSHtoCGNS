@@ -1,14 +1,14 @@
 #ifndef CGNS_FILE_3D_HPP	
 #define CGNS_FILE_3D_HPP
 
-#include <CgnsInterface/CgnsCreator/CgnsFile.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsCreator.hpp>
 
-class CgnsFile3D : public CgnsFile {
+class CgnsCreator3D : public CgnsCreator {
 	public:
-		CgnsFile3D() = default;
-		CgnsFile3D(GridDataShared, const std::string&);
+		CgnsCreator3D() = default;
+		CgnsCreator3D(GridDataShared, const std::string&);
 
-		~CgnsFile3D() = default;
+		~CgnsCreator3D() = default;
 
 	private:
 		void defineGeometryType(); 
