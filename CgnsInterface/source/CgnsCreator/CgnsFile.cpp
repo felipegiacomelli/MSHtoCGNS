@@ -39,7 +39,9 @@ void CgnsFile::writeBoundaryConditions() {
 			throw std::runtime_error("CgnsFile: Could not write boundary condition");
 		}
 		cg_goto(this->fileIndex, this->baseIndex, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", i+1, nullptr);
-		cg_famname_write(this->gridData->boundaries[i].name.c_str());
+		if (cg_famname_write(this->gridData->boundaries[i].name.c_str())) {
+			throw std::runtime_error("CgnsFile: Could not write boundary condition family name");
+		}
 		delete indices;
 	}
 }

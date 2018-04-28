@@ -28,8 +28,8 @@ class CgnsFile {
 		std::string folderPath, baseName, zoneName, fileName;
 		int cellDimension, physicalDimension;
 		std::array<int, 3> sizes;
-		std::vector<int> coordinateIndices, sectionIndices, boundaryIndices, solutionIndices, fieldsIndices;
-		int fileIndex, baseIndex, zoneIndex, solutionIndex, fieldIndex;
+		int fileIndex, baseIndex, zoneIndex;
+		std::vector<int> coordinateIndices, sectionIndices, boundaryIndices;
 };
 
 #endif
