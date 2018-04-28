@@ -19,8 +19,6 @@ void CgnsFile::initialize() {
 
 void CgnsFile::resizeVectors() {
 	this->coordinateIndices.resize(3);
-	this->sectionIndices.resize(this->gridData->boundaries.size() + 1);
-	this->boundaryIndices.resize(this->gridData->boundaries.size());
 }
 
 void CgnsFile::writeBase() {
@@ -37,6 +35,7 @@ void CgnsFile::writeZone() {
 
 void CgnsFile::writeBoundaryConditions() {
 	for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
+		this->boundaryIndices.emplace_back(0);
 		int numberOfVertices = this->gridData->boundaries[i].vertices.size();
 		int* indices = determine_array_1d<int>(this->gridData->boundaries[i].vertices); 
 		for (unsigned j = 0; j < this->gridData->boundaries[i].vertices.size(); j++) indices[j]++;
