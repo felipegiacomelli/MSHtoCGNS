@@ -24,8 +24,8 @@ class MshReader {
 		virtual void readPhysicalEntities() = 0;
 		void readConnectivities();
 		virtual void divideConnectivities() = 0;
-		void assignFacetsToBoundaries();
 		void assignElementsToRegions();
+		void assignFacetsToBoundaries();
 		virtual void addRegions() = 0;
 		virtual void addBoundaries() = 0;
 		virtual void defineBoundaryVertices() = 0;

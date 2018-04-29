@@ -6,10 +6,10 @@ MshReader3D::MshReader3D(const std::string& filePath) : MshReader(filePath) {
 	this->readPhysicalEntities();
 	this->readConnectivities();
 	this->divideConnectivities();
-	this->assignFacetsToBoundaries();
 	this->assignElementsToRegions();
-	this->addBoundaries();
+	this->assignFacetsToBoundaries();
 	this->addRegions();
+	this->addBoundaries();
 	this->defineBoundaryVertices();
 }
 
@@ -78,30 +78,6 @@ void MshReader3D::divideConnectivities() {
 	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());
 }
 
-void MshReader3D::addBoundaries() {
-	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
-		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
-			int index = this->boundaryFacets[i][j];
-			int type  = this->facets[index][0];
-			auto first = this->facets[index].cbegin() + 2;
-			auto last  = this->facets[index].cend();
-			std::vector<int> connectivity(first, last); 
-			switch (type) {
-				case 1: {
-					this->gridData->boundaries[i].triangleConnectivity.emplace_back(std::move(connectivity));
-					break;
-				}
-				case 2: { 
-					this->gridData->boundaries[i].quadrangleConnectivity.emplace_back(std::move(connectivity));
-					break;
-				}
-				default: 
-					throw std::runtime_error("MshReader3D: Non supported element found");
-			}
-		}
-	}
-}
-
 void MshReader3D::addRegions() {
 	for (unsigned i = 0; i < this->regionElements.size(); i++) {
 		for (unsigned j = 0; j < this->regionElements[i].size(); j++) {
@@ -127,19 +103,43 @@ void MshReader3D::addRegions() {
 	}
 }
 
+void MshReader3D::addBoundaries() {
+	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
+		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
+			int index = this->boundaryFacets[i][j];
+			int type  = this->facets[index][0];
+			auto first = this->facets[index].cbegin() + 2;
+			auto last  = this->facets[index].cend();
+			std::vector<int> connectivity(first, last); 
+			switch (type) {
+				case 1: {
+					this->gridData->boundaries[i].triangleConnectivity.emplace_back(std::move(connectivity));
+					break;
+				}
+				case 2: { 
+					this->gridData->boundaries[i].quadrangleConnectivity.emplace_back(std::move(connectivity));
+					break;
+				}
+				default: 
+					throw std::runtime_error("MshReader3D: Non supported element found");
+			}
+		}
+	}
+}
+
 void MshReader3D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary != this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
 		if (boundary->triangleConnectivity.size() > 0) {
 			for (auto j = boundary->triangleConnectivity.cbegin(); j != boundary->triangleConnectivity.cend(); j++) 
 				for (auto k = j->cbegin(); k != j->cend(); k++) 
-					vertices.insert(static_cast<int>(*k));
+					vertices.insert(*k);
 			boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
 		}
 		else {
 			for (auto j = boundary->quadrangleConnectivity.cbegin(); j != boundary->quadrangleConnectivity.cend(); j++) 
 				for (auto k = j->cbegin(); k != j->cend(); k++) 
-					vertices.insert(static_cast<int>(*k));
+					vertices.insert(*k);
 			boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
 		}
 	}

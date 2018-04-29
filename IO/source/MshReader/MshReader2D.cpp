@@ -6,10 +6,10 @@ MshReader2D::MshReader2D(const std::string& filePath) : MshReader(filePath) {
 	this->readPhysicalEntities();
 	this->readConnectivities();
 	this->divideConnectivities();
-	this->assignFacetsToBoundaries();
 	this->assignElementsToRegions();
-	this->addBoundaries();
+	this->assignFacetsToBoundaries();
 	this->addRegions();
+	this->addBoundaries();
 	this->defineBoundaryVertices();
 }
 
@@ -74,28 +74,8 @@ void MshReader2D::divideConnectivities() {
 		else 
 			numberOfFacets++;
 	}
-	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin()                 , this->connectivities.begin() + numberOfFacets);
 	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());	
-}
-
-void MshReader2D::addBoundaries() {
-	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
-		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
-			int index = this->boundaryFacets[i][j];
-			int type  = this->facets[index][0];
-			auto first = this->facets[index].cbegin() + 2;
-			auto last  = this->facets[index].cend();
-			std::vector<int> connectivity(first, last); 
-			switch (type) {
-				case 0: {
-					this->gridData->boundaries[i].lineConnectivity.emplace_back(std::move(connectivity));
-					break;
-				}
-				default: 
-					throw std::runtime_error("MshReader2D: Non supported facet found");
-			}
-		}
-	}
+	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin()                 , this->connectivities.begin() + numberOfFacets);
 }
 
 void MshReader2D::addRegions() {
@@ -123,12 +103,32 @@ void MshReader2D::addRegions() {
 	}
 }
 
+void MshReader2D::addBoundaries() {
+	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
+		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
+			int index = this->boundaryFacets[i][j];
+			int type  = this->facets[index][0];
+			auto first = this->facets[index].cbegin() + 2;
+			auto last  = this->facets[index].cend();
+			std::vector<int> connectivity(first, last); 
+			switch (type) {
+				case 0: {
+					this->gridData->boundaries[i].lineConnectivity.emplace_back(std::move(connectivity));
+					break;
+				}
+				default: 
+					throw std::runtime_error("MshReader2D: Non supported facet found");
+			}
+		}
+	}
+}
+
 void MshReader2D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
 		for (auto j = boundary->lineConnectivity.cbegin(); j != boundary->lineConnectivity.cend(); j++) 
 			for (auto k = j->cbegin(); k != j->cend(); k++) 
-				vertices.insert(static_cast<int>(*k));
+				vertices.insert(*k);
 		boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
 	}
 }
