@@ -11,14 +11,14 @@ CgnsReader2D::CgnsReader2D(const std::string& filePath) : CgnsReader(filePath) {
 
 void CgnsReader2D::readCoordinates() {
 	int one = 1;
+	
 	double coordinatesX[this->sizes[0]];
-	double coordinatesY[this->sizes[0]];
-	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, &this->sizes[0], coordinatesX)) {
+	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, &this->sizes[0], coordinatesX)) 
 		throw std::runtime_error("CgnsReader2D: Could not read CoordinateX");
-	}
-	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, &this->sizes[0], coordinatesY)) {
+	
+	double coordinatesY[this->sizes[0]];
+	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, &this->sizes[0], coordinatesY)) 
 		throw std::runtime_error("CgnsReader2D: Could not read CoordinateY");
-	}
 
 	this->gridData->coordinates.resize(this->sizes[0], std::vector<double>(3));
 	for (int i = 0; i < this->sizes[0]; i++) {
@@ -33,21 +33,21 @@ void CgnsReader2D::readSections() {
 		ElementType_t type;
 		int elementStart, elementEnd; 
 		int lastBoundaryElement, parentFlag;
-		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &type, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag)) {
+		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &type, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag)) 
 			throw std::runtime_error("CgnsReader2D: Could not read section");
-		}
 		int numberOfElements = elementEnd - elementStart + 1;
 		
 		switch (type) {
 			case TRI_3: {
 				int numberOfVertices = 3;	
 				int connectivities[numberOfVertices*numberOfElements];
-				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) {
+				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) 
 					throw std::runtime_error("CgnsReader2D: Could not read section elements");
-				}
+				
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> triangle(numberOfVertices);
-					for (int k = 0; k < numberOfVertices; k++) triangle[k] = connectivities[e*numberOfVertices+k] - 1;
+					for (int k = 0; k < numberOfVertices; k++) 
+						triangle[k] = connectivities[e*numberOfVertices+k] - 1;
 					this->gridData->triangleConnectivity.emplace_back(std::move(triangle));	
 				}
 				RegionData region;
@@ -60,12 +60,13 @@ void CgnsReader2D::readSections() {
 			case QUAD_4: {
 				int numberOfVertices = 4;	
 				int connectivities[numberOfVertices*numberOfElements];
-				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) {
+				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) 
 					throw std::runtime_error("CgnsReader2D: Could not read section elements");
-				}
+
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> quadrangle(numberOfVertices);
-					for (int k = 0; k < numberOfVertices; k++) quadrangle[k] = connectivities[e*numberOfVertices+k]-1;
+					for (int k = 0; k < numberOfVertices; k++) 
+						quadrangle[k] = connectivities[e*numberOfVertices+k]-1;
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));	
 				}
 				RegionData region;
@@ -78,13 +79,14 @@ void CgnsReader2D::readSections() {
 			case BAR_2: {
 				int numberOfVertices = 2;	
 				int connectivities[numberOfVertices*numberOfElements];
-				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) {
+				if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr)) 
 					throw std::runtime_error("CgnsReader2D: Could not read section elements");
-				}
+
 				std::vector<std::vector<int>> lineConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> line(numberOfVertices);
-					for (int k = 0; k < numberOfVertices; k++) line[k] = connectivities[e*numberOfVertices+k] - 1;
+					for (int k = 0; k < numberOfVertices; k++)
+						line[k] = connectivities[e*numberOfVertices+k] - 1;
 					lineConnectivity.emplace_back(std::move(line));
 				}
 				BoundaryData boundaryData;
