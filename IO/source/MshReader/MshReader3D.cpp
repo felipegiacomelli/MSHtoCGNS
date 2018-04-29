@@ -5,6 +5,7 @@ MshReader3D::MshReader3D(const std::string& filePath) : MshReader(filePath) {
 	this->readNodes();
 	this->readPhysicalEntities();
 	this->readConnectivities();
+	this->determineNumberOfFacets();
 	this->divideConnectivities();
 	this->assignElementsToRegions();
 	this->assignFacetsToBoundaries();
@@ -66,23 +67,14 @@ void MshReader3D::readPhysicalEntities() {
 	std::iota(boundaryIndices.begin(), boundaryIndices.end(), 0);
 }
 
-void MshReader3D::divideConnectivities() {
-	int numberOfFacets = 0;
+void MshReader3D::determineNumberOfFacets() {
+	this->numberOfFacets = 0;
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {
-		if (this->connectivities[i][0] != 1 && this->connectivities[i][0] != 2) 
+		if (this->connectivities[i][0] != 1 && this->connectivities[i][0] != 2)  
 			break;
 		else 
-			numberOfFacets++;
+			this->numberOfFacets++;
 	}
-
-	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());	
-	for (unsigned i = 0; i < this->elements.size(); i++)
-		elements[i].push_back(i);
-	int numberOfElements = elements.size();
-
-	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin(), this->connectivities.begin() + numberOfFacets);
-	for (unsigned i = 0; i < this->facets.size(); i++)
-		facets[i].push_back(numberOfElements + i);
 }
 
 void MshReader3D::addRegions() {

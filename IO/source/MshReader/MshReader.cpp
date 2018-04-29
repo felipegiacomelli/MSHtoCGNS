@@ -67,6 +67,20 @@ void MshReader::readConnectivities() {
 	}
 }
 
+void MshReader::divideConnectivities() {
+	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + this->numberOfFacets, this->connectivities.end());	
+	for (unsigned i = 0; i < this->elements.size(); i++)
+		elements[i].push_back(i);
+	int numberOfElements = elements.size();
+
+	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin(), this->connectivities.begin() + this->numberOfFacets);
+	for (unsigned i = 0; i < this->facets.size(); i++)
+		facets[i].push_back(numberOfElements + i);
+	// printf("\n");
+	// print(this->facets, "facets");
+	// printf("\n");
+}
+
 void MshReader::assignElementsToRegions() {
 	int counter = 0;
 	std::vector<unsigned> regionStart;

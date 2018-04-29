@@ -5,6 +5,7 @@ MshReader2D::MshReader2D(const std::string& filePath) : MshReader(filePath) {
 	this->readNodes();
 	this->readPhysicalEntities();
 	this->readConnectivities();
+	this->determineNumberOfFacets();
 	this->divideConnectivities();
 	this->assignElementsToRegions();
 	this->assignFacetsToBoundaries();
@@ -66,23 +67,14 @@ void MshReader2D::readPhysicalEntities() {
 	std::iota(regionsIndices.begin(), regionsIndices.end(), 0);
 }
 
-void MshReader2D::divideConnectivities() {
-	int numberOfFacets = 0;
+void MshReader2D::determineNumberOfFacets() {
+	this->numberOfFacets = 0;
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {
 		if (this->connectivities[i][0] != 0) 
 			break;
 		else 
-			numberOfFacets++;
+			this->numberOfFacets++;
 	}
-
-	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());	
-	for (unsigned i = 0; i < this->elements.size(); i++)
-		elements[i].push_back(i);
-	int numberOfElements = elements.size();
-
-	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin(), this->connectivities.begin() + numberOfFacets);
-	for (unsigned i = 0; i < this->facets.size(); i++)
-		facets[i].push_back(numberOfElements + i);
 }
 
 void MshReader2D::addRegions() {
