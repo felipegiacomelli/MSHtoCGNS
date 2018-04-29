@@ -56,13 +56,13 @@ TestCase(Elements) {
 	checkEqual(triangles[3][0], 2); checkEqual(triangles[3][1], 3); checkEqual(triangles[3][2], 4);
 	
 	cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(this->type == TRI_3);
 	checkEqual(this->elementStart, 1);
 	checkEqual(this->elementEnd  , 4);
 }
 
 TestCase(Boundaries) {
-	auto boundaries = this->gridData->boundaries;
-	checkEqual(static_cast<int>(boundaries.size()), 4);
+	checkEqual(static_cast<int>(this->gridData->boundaries.size()), 4);
 }
 
 TestCase(West) {
@@ -81,6 +81,7 @@ TestCase(West) {
 	
 	cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("West"));
+	check(this->type == BAR_2);
 	checkEqual(this->elementStart, 5);
 	checkEqual(this->elementEnd  , 5);
 
@@ -105,6 +106,7 @@ TestCase(East) {
 
 	cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("East"));
+	check(this->type == BAR_2);
 	checkEqual(this->elementStart, 6);
 	checkEqual(this->elementEnd  , 6);
 
@@ -129,6 +131,7 @@ TestCase(South) {
 
 	cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("South"));
+	check(this->type == BAR_2);
 	checkEqual(this->elementStart, 7);
 	checkEqual(this->elementEnd  , 7);
 
@@ -153,6 +156,7 @@ TestCase(North) {
 
 	cg_section_read(this->fileIndex, 1, 1, 5, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("North"));
+	check(this->type == BAR_2);
 	checkEqual(this->elementStart, 8);
 	checkEqual(this->elementEnd  , 8);	
 
@@ -166,23 +170,23 @@ TestCase(Regions) {
 }
 
 TestCase(Geometry) {
-	auto a = this->gridData->regions[0];
+	auto region = this->gridData->regions[0];
 
-	check(a.name == std::string("Geometry"));
+	check(region.name == std::string("Geometry"));
 	
-	checkEqual(static_cast<int>(a.elementsOnRegion.size()), 4);
-	checkEqual(a.elementsOnRegion[0], 0);
-	checkEqual(a.elementsOnRegion[1], 1);
-	checkEqual(a.elementsOnRegion[2], 2);
-	checkEqual(a.elementsOnRegion[3], 3);
+	checkEqual(static_cast<int>(region.elementsOnRegion.size()), 4);
+	checkEqual(region.elementsOnRegion[0], 0);
+	checkEqual(region.elementsOnRegion[1], 1);
+	checkEqual(region.elementsOnRegion[2], 2);
+	checkEqual(region.elementsOnRegion[3], 3);
 
-	checkEqual(a.elementType, 1);
+	checkEqual(region.elementType, 1);
 
 	cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("Geometry"));
+	check(this->type == TRI_3);
 	checkEqual(this->elementStart, 1);
 	checkEqual(this->elementEnd  , 4);
-	check(this->type == TRI_3);
 }
 
 TestSuiteEnd()

@@ -91,9 +91,14 @@ TestCase(West) {
 	checkEqual(vertices[2], 6);
 
 	cg_section_read(this->fileIndex, 1, 1, 5, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("West"));
 	checkEqual(this->elementStart, 11);
 	checkEqual(this->elementEnd  , 12); 
 	check(this->type == BAR_2);
+
+	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 1, nullptr);
+	cg_famname_read(this->name);
+	check(name == std::string("West"));
 }
 
 TestCase(East) {
@@ -113,9 +118,14 @@ TestCase(East) {
 	checkEqual(vertices[2], 8); 
 
 	cg_section_read(this->fileIndex, 1, 1, 6, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("East"));
 	checkEqual(this->elementStart, 13);
 	checkEqual(this->elementEnd  , 14);
 	check(this->type == BAR_2);
+
+	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 2, nullptr);
+	cg_famname_read(this->name);
+	check(name == std::string("East"));
 }
 
 TestCase(South) {
@@ -135,9 +145,14 @@ TestCase(South) {
 	checkEqual(vertices[2], 2); 
 
 	cg_section_read(this->fileIndex, 1, 1, 7, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("South"));
 	checkEqual(this->elementStart, 15);
 	checkEqual(this->elementEnd  , 16);
 	check(this->type == BAR_2);
+
+	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 3, nullptr);
+	cg_famname_read(this->name);
+	check(name == std::string("South"));
 }
 
 TestCase(North) {
@@ -156,9 +171,14 @@ TestCase(North) {
 	checkEqual(vertices[1], 7); 
 	
 	cg_section_read(this->fileIndex, 1, 1, 8, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("North"));
 	checkEqual(this->elementStart, 17);
 	checkEqual(this->elementEnd  , 18);
 	check(this->type == BAR_2);
+
+	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 4, nullptr);
+	cg_famname_read(this->name);
+	check(name == std::string("North"));
 }
 
 TestCase(Regions) {
@@ -179,6 +199,7 @@ TestCase(A) {
 	checkEqual(a.elementType, 1);
 
 	cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("A"));
 	checkEqual(this->elementStart, 1);
 	checkEqual(this->elementEnd  , 4);
 	check(this->type == TRI_3);
@@ -198,6 +219,7 @@ TestCase(B) {
 	checkEqual(b.elementType, 1);
 
 	cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("B"));
 	checkEqual(this->elementStart, 5);
 	checkEqual(this->elementEnd  , 8);
 	check(this->type == TRI_3);
@@ -214,6 +236,7 @@ TestCase(C) {
 	checkEqual(c.elementType, 2);
 	
 	cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("C"));
 	checkEqual(this->elementStart, 9);
 	checkEqual(this->elementEnd  , 9);
 	check(this->type == QUAD_4);
@@ -230,6 +253,7 @@ TestCase(D) {
 	checkEqual(d.elementType, 2);
 
 	cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("D"));
 	checkEqual(this->elementStart, 10);
 	checkEqual(this->elementEnd  , 10);
 	check(this->type == QUAD_4);
