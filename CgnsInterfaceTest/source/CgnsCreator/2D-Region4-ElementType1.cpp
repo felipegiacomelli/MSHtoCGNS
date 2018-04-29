@@ -9,7 +9,7 @@
 
 struct Region4_ElementType1_2D {
 	Region4_ElementType1_2D() {
-		CgnsReader2D inputReader("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/11v_10e.cgns");
+		CgnsReader2D inputReader(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/2D-Region4-ElementType1/11v_10e.cgns");
 		CgnsCreator2D fileIndex2D(inputReader.gridData, "./");
 		this->filePath = fileIndex2D.getFileName();
 		CgnsReader2D outputReader(this->filePath);

@@ -43,6 +43,8 @@ else ()
 	message ("\n-- CMAKE HAS NOT BEEN CONFIGURED FOR THE CURRENT OPERATIONAL SYSTEM.\n")
 endif ()
 
+add_definitions("-DTEST_INPUT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/Test/\"")
+
 ##################################################################
 # ABOUT THE PROJECT
 ##################################################################

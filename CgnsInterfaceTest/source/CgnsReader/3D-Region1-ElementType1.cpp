@@ -5,7 +5,7 @@
 
 struct Region1_ElementType1_3D_Cgns {
 	Region1_ElementType1_3D_Cgns() {
-		CgnsReader3D cgnsReader3D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/3D/27v_8e.cgns");
+		CgnsReader3D cgnsReader3D(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/3D-Region1-ElementType1/27v_8e.cgns");
 		this->gridData = cgnsReader3D.gridData;
 	}
 

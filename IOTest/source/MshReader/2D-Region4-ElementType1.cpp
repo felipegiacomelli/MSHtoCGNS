@@ -6,7 +6,7 @@
 
 struct Region4_ElementType1_2D_Msh {
 	Region4_ElementType1_2D_Msh() {
-		MshReader2D mshReader2D("/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/TestFiles/2D/11v_10e.msh");
+		MshReader2D mshReader2D(std::string(TEST_INPUT_DIRECTORY) + "IO/2D-Region4-ElementType1/11v_10e.msh");
 		this->gridData = mshReader2D.gridData;
 	}
 
