@@ -98,7 +98,7 @@ void CgnsCreator2D::writeSections() {
 		for (unsigned j = 0; j < this->gridData->boundaries[i].lineConnectivity.size()*numberOfVertices; j++)
 			connectivities[j]++;
 		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BAR_2, 
-								elementStart, elementEnd, this->sizes[2], connectivities, &this->sectionIndices[i+1])) 
+								elementStart, elementEnd, this->sizes[2], connectivities, &this->sectionIndices.back())) 
 			throw std::runtime_error("CgnsCreator2D: Could not write boundary section " + std::to_string(i+1));
 		
 		delete connectivities;
