@@ -66,7 +66,7 @@ void CgnsReader2D::readSections() {
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> quadrangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) 
-						quadrangle[k] = connectivities[e*numberOfVertices+k]-1;
+						quadrangle[k] = connectivities[e*numberOfVertices+k] - 1;
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));	
 				}
 				RegionData region;
