@@ -1,10 +1,8 @@
 template<typename T, typename U>
 T* determine_array_1d(const std::set<U>& a) {
 	T* b = new T[a.size()];
-	unsigned j = 0;
 	for (auto i = a.cbegin(); i != a.cend(); i++) {
-		b[j] = static_cast<T>(*i);
-		j++;
+		b[std::distance(a.cbegin(), i)] = static_cast<T>(*i);
 	}
 	return b;
 }

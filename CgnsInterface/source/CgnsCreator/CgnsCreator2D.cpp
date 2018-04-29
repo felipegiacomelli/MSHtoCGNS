@@ -44,26 +44,28 @@ void CgnsCreator2D::writeSections() {
 															elementConnectivities.cbegin() + this->gridData->regions[i].elementsOnRegion.back() + 1);
 	 	elementEnd += regionConnectivities.size();
 	 	ElementType_t type;
-	 	if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](auto connectivity){return connectivity.size() == unsigned(3);})) type = TRI_3;
-	 	else if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](auto connectivity){return connectivity.size() == unsigned(4);})) type = QUAD_4;
+	 	if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);})) type = TRI_3;
+	 	else if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(4);})) type = QUAD_4;
 		else type = MIXED;
 		
 		switch (type) {
-			case TRI_3:  {
+			case TRI_3: {
+				int numberOfVertices = 3;
 				int* connectivities = determine_array_1d<int>(regionConnectivities);
-				for (unsigned j = 0; j < regionConnectivities.size()*3; j++) connectivities[j]++;
+				for (unsigned j = 0; j < regionConnectivities.size()*numberOfVertices; j++) connectivities[j]++;
 				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), TRI_3, 
-									elementStart, elementEnd, sizes[2], connectivities, &this->sectionIndices.back())) {
+										elementStart, elementEnd, sizes[2], connectivities, &this->sectionIndices.back())) {
 					throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(i+1));
 				}
 				delete connectivities;
 				break;
 			}
 			case QUAD_4: {
+				int numberOfVertices = 4;
 				int* connectivities = determine_array_1d<int>(regionConnectivities);
-				for (unsigned j = 0; j < regionConnectivities.size()*4; j++) connectivities[j]++;
+				for (unsigned j = 0; j < regionConnectivities.size()*numberOfVertices; j++) connectivities[j]++;
 				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), QUAD_4, 
-									elementStart, elementEnd, sizes[2], connectivities, &this->sectionIndices.back())) {
+										elementStart, elementEnd, sizes[2], connectivities, &this->sectionIndices.back())) {
 					throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(i+1));
 				}
 				delete connectivities;
@@ -82,7 +84,7 @@ void CgnsCreator2D::writeSections() {
 		int* connectivities = determine_array_1d<int>(this->gridData->boundaries[i].lineConnectivity);
 		for (unsigned j = 0; j < this->gridData->boundaries[i].lineConnectivity.size()*2; j++) connectivities[j]++;
 		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BAR_2, 
-							elementStart, elementEnd, this->sizes[2], connectivities, &this->sectionIndices[i+1])) {
+								elementStart, elementEnd, this->sizes[2], connectivities, &this->sectionIndices[i+1])) {
 			throw std::runtime_error("CgnsCreator2D: Could not write boundary section " + std::to_string(i+1));
 		}
 		delete connectivities;
