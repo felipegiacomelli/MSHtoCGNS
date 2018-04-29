@@ -51,6 +51,7 @@ void CgnsReader2D::readSections() {
 					triangle.emplace_back(elementStart - 1 + e);
 					this->gridData->triangleConnectivity.emplace_back(std::move(triangle));	
 				}
+
 				RegionData region;
 				region.name = std::string(this->buffer);
 				region.elementsOnRegion.resize(numberOfElements);
@@ -71,6 +72,7 @@ void CgnsReader2D::readSections() {
 					quadrangle.emplace_back(elementStart - 1 + e);
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));	
 				}
+
 				RegionData region;
 				region.name = std::string(this->buffer);
 				region.elementsOnRegion.resize(numberOfElements);
@@ -92,6 +94,7 @@ void CgnsReader2D::readSections() {
 					line.emplace_back(elementStart - 1 + e);
 					lineConnectivity.emplace_back(std::move(line));
 				}
+				
 				BoundaryData boundaryData;
 				boundaryData.name = this->buffer;
 				boundaryData.lineConnectivity = std::move(lineConnectivity);

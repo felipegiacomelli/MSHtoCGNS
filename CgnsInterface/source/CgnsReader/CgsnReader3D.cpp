@@ -84,6 +84,7 @@ void CgnsReader3D::readSections() {
 					triangle.emplace_back(elementStart - 1 + e);
 					triangleConnectivity.emplace_back(std::move(triangle));	
 				}
+
 				BoundaryData boundaryData;
 				boundaryData.name = this->buffer;
 				boundaryData.triangleConnectivity = std::move(triangleConnectivity);
@@ -103,7 +104,8 @@ void CgnsReader3D::readSections() {
 						quadrangle[k] = connectivities[e*numberOfVertices+k] - 1;
 					quadrangle.emplace_back(elementStart - 1 + e);
 					quadrangleConnectivity.emplace_back(std::move(quadrangle));	
-				}				
+				}
+								
 				BoundaryData boundaryData;
 				boundaryData.name = this->buffer;
 				boundaryData.quadrangleConnectivity = std::move(quadrangleConnectivity);

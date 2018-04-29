@@ -70,14 +70,14 @@ void MshReader::readConnectivities() {
 void MshReader::divideConnectivities() {
 	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + this->numberOfFacets, this->connectivities.end());	
 	for (unsigned i = 0; i < this->elements.size(); i++)
-		elements[i].push_back(i);
+		this->elements[i].push_back(i);
 	int numberOfElements = elements.size();
 
 	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin(), this->connectivities.begin() + this->numberOfFacets);
 	unsigned boundaryIndex = 1;
 	std::stable_sort(this->facets.begin(), this->facets.end(), [boundaryIndex](const auto& a, const auto& b) {return a[boundaryIndex] < b[boundaryIndex];});
 	for (unsigned i = 0; i < this->facets.size(); i++)
-		facets[i].push_back(numberOfElements + i);
+		this->facets[i].push_back(numberOfElements + i);
 }
 
 void MshReader::assignElementsToRegions() {
