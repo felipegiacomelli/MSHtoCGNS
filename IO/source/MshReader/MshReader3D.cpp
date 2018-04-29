@@ -78,34 +78,6 @@ void MshReader3D::divideConnectivities() {
 	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());
 }
 
-void MshReader3D::assignElementsToRegions() {
-	int counter = 0;
-	std::vector<unsigned> regionStart;
-	regionStart.emplace_back(0);
-	for (unsigned i = 0; i < elements.size()-1; i++) {
-		if (elements[i][1] == elements[i+1][1]) 
-			counter++;
-		else {
-			counter++;
-			regionStart.push_back(counter);
-		}
-	}
-	regionStart.push_back(elements.size());
-	for (unsigned i = 0; i < regionStart.size()-1; i++) 
-		for (unsigned j = regionStart[i]; j < regionStart[i+1]; j++) 
-			elements[j][1] = i;
-	
-	this->regionElements.resize(this->numberOfRegions, std::vector<int>());
-	for (unsigned i = 0; i < this->elements.size(); i++) 
-		regionElements[elements[i][1]].push_back(i);
-}
-
-void MshReader3D::assignFacetsToBoundaries() {
-	this->boundaryFacets.resize(this->numberOfBoundaries, std::vector<int>());
-	for (unsigned i = 0; i < this->facets.size(); i++) 
-		boundaryFacets[facets[i][1]].push_back(i);
-}
-
 void MshReader3D::addFacets() {
 	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
 		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
