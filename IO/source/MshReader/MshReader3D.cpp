@@ -94,19 +94,19 @@ void MshReader3D::processConnectivities() {
 		for (unsigned j = regionStart[i]; j < regionStart[i+1]; j++) 
 			elements[j][1] = i;
 
-	this->facetsOnBoundary.resize(this->numberOfBoundaries, std::vector<int>());
+	this->boundaryFacets.resize(this->numberOfBoundaries, std::vector<int>());
 	for (unsigned i = 0; i < this->facets.size(); i++) 
-		facetsOnBoundary[facets[i][1]].push_back(i);
+		boundaryFacets[facets[i][1]].push_back(i);
 	
-	this->elementsOnRegion.resize(this->numberOfRegions, std::vector<int>());
+	this->regionElements.resize(this->numberOfRegions, std::vector<int>());
 	for (unsigned i = 0; i < this->elements.size(); i++) 
-		elementsOnRegion[elements[i][1]].push_back(i);
+		regionElements[elements[i][1]].push_back(i);
 }
 
 void MshReader3D::addFacets() {
-	for (unsigned i = 0; i < this->facetsOnBoundary.size(); i++) {
-		for (unsigned j = 0; j < this->facetsOnBoundary[i].size(); j++) {
-			int index = this->facetsOnBoundary[i][j];
+	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
+		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
+			int index = this->boundaryFacets[i][j];
 			int type  = this->facets[index][0];
 			auto first = this->facets[index].cbegin() + 2;
 			auto last  = this->facets[index].cend();
@@ -128,9 +128,9 @@ void MshReader3D::addFacets() {
 }
 
 void MshReader3D::addElements() {
-	for (unsigned i = 0; i < this->elementsOnRegion.size(); i++) {
-		for (unsigned j = 0; j < this->elementsOnRegion[i].size(); j++) {
-			int index = this->elementsOnRegion[i][j];
+	for (unsigned i = 0; i < this->regionElements.size(); i++) {
+		for (unsigned j = 0; j < this->regionElements[i].size(); j++) {
+			int index = this->regionElements[i][j];
 			int type  = this->elements[index][0];
 			auto first = this->elements[index].cbegin() + 2;
 			auto last  = this->elements[index].cend();
@@ -138,12 +138,12 @@ void MshReader3D::addElements() {
 			switch (type) {
 				case 3: {
 					this->gridData->tetrahedronConnectivity.emplace_back(std::move(connectivity));
-					this->gridData->regions[i].elementsOnRegion = this->elementsOnRegion[i];
+					this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 					break;
 				}
 				case 4: { 
 					this->gridData->hexahedronConnectivity.emplace_back(std::move(connectivity));
-					this->gridData->regions[i].elementsOnRegion = this->elementsOnRegion[i];
+					this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 					break;
 				}
 				default: 

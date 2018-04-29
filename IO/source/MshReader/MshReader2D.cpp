@@ -95,35 +95,35 @@ void MshReader2D::processConnectivities() {
 		for (unsigned j = regionStart[i]; j < regionStart[i+1]; j++) 
 			this->elements[j][1] = i;
 
-	printf("\n");
-	print(facets, "facets");
-	printf("\n");
+	this->regionElements.resize(this->numberOfRegions, std::vector<int>());
+	for (unsigned i = 0; i < this->elements.size(); i++)
+		this->regionElements[this->elements[i][1]].push_back(i);
 
 	printf("\n");
 	print(elements, "elements");
 	printf("\n");
 
-	this->facetsOnBoundary.resize(this->numberOfBoundaries, std::vector<int>());
+	printf("\n");
+	print(regionElements, "regionElements");
+	printf("\n");
+
+	this->boundaryFacets.resize(this->numberOfBoundaries, std::vector<int>());
 	for (unsigned i = 0; i < this->facets.size(); i++)
-		this->facetsOnBoundary[this->facets[i][1]].push_back(i);
+		this->boundaryFacets[this->facets[i][1]].push_back(i);
 
 	printf("\n");
-	print(facetsOnBoundary, "facetsOnBoundary");
+	print(facets, "facets");
 	printf("\n");
-	
-	this->elementsOnRegion.resize(this->numberOfRegions, std::vector<int>());
-	for (unsigned i = 0; i < this->elements.size(); i++)
-		this->elementsOnRegion[this->elements[i][1]].push_back(i);
 
 	printf("\n");
-	print(elementsOnRegion, "elementsOnRegion");
+	print(boundaryFacets, "boundaryFacets");
 	printf("\n");
 }
 
 void MshReader2D::addFacets() {
-	for (unsigned i = 0; i < this->facetsOnBoundary.size(); i++) {
-		for (unsigned j = 0; j < this->facetsOnBoundary[i].size(); j++) {
-			int index = this->facetsOnBoundary[i][j];
+	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
+		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
+			int index = this->boundaryFacets[i][j];
 			int type  = this->facets[index][0];
 			auto first = this->facets[index].cbegin() + 2;
 			auto last  = this->facets[index].cend();
@@ -141,9 +141,9 @@ void MshReader2D::addFacets() {
 }
 
 void MshReader2D::addElements() {
-	for (unsigned i = 0; i < this->elementsOnRegion.size(); i++) {
-		for (unsigned j = 0; j < this->elementsOnRegion[i].size(); j++) {
-			int index = this->elementsOnRegion[i][j];
+	for (unsigned i = 0; i < this->regionElements.size(); i++) {
+		for (unsigned j = 0; j < this->regionElements[i].size(); j++) {
+			int index = this->regionElements[i][j];
 			int type  = this->elements[index][0];
 			auto first = this->elements[index].cbegin() + 2;
 			auto last  = this->elements[index].cend();
@@ -151,12 +151,12 @@ void MshReader2D::addElements() {
 			switch (type) {
 				case 1: {
 					this->gridData->triangleConnectivity.emplace_back(std::move(connectivity));
-					this->gridData->regions[i].elementsOnRegion = this->elementsOnRegion[i];
+					this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 					break;
 				}
 				case 2: {
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(connectivity));
-					this->gridData->regions[i].elementsOnRegion = this->elementsOnRegion[i];
+					this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 					break;
 				}
 				default: 
