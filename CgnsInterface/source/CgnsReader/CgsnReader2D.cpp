@@ -52,7 +52,6 @@ void CgnsReader2D::readSections() {
 				}
 				RegionData region;
 				region.name = std::string(this->buffer);
-				region.elementType = 1;
 				region.elementsOnRegion.resize(numberOfElements);
 				std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), elementStart - 1);
 				this->gridData->regions.emplace_back(std::move(region));
@@ -71,7 +70,6 @@ void CgnsReader2D::readSections() {
 				}
 				RegionData region;
 				region.name = std::string(this->buffer);
-				region.elementType = 2;
 				region.elementsOnRegion.resize(numberOfElements);
 				std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), elementStart - 1);
 				this->gridData->regions.emplace_back(std::move(region));

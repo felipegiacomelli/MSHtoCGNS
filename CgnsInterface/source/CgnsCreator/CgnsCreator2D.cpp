@@ -40,11 +40,16 @@ void CgnsCreator2D::writeSections() {
 
 	for (unsigned i = 0; i < this->gridData->regions.size(); i++) {
 		this->sectionIndices.emplace_back(0);
-		std::vector<std::vector<int>> regionConnectivities(elementConnectivities.cbegin()+this->gridData->regions[i].elementsOnRegion.front(), 
-															elementConnectivities.cbegin()+this->gridData->regions[i].elementsOnRegion.back()+1);
+		std::vector<std::vector<int>> regionConnectivities(elementConnectivities.cbegin() + this->gridData->regions[i].elementsOnRegion.front(), 
+															elementConnectivities.cbegin() + this->gridData->regions[i].elementsOnRegion.back() + 1);
 	 	elementEnd += regionConnectivities.size();
-		switch (this->gridData->regions[i].elementType) {
-			case 1:  {
+	 	ElementType_t type;
+	 	if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](auto connectivity){return connectivity.size() == unsigned(3);})) type = TRI_3;
+	 	else if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](auto connectivity){return connectivity.size() == unsigned(4);})) type = QUAD_4;
+		else type = MIXED;
+		
+		switch (type) {
+			case TRI_3:  {
 				int* connectivities = determine_array_1d<int>(regionConnectivities);
 				for (unsigned j = 0; j < regionConnectivities.size()*3; j++) connectivities[j]++;
 				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), TRI_3, 
@@ -54,7 +59,7 @@ void CgnsCreator2D::writeSections() {
 				delete connectivities;
 				break;
 			}
-			case 2: {
+			case QUAD_4: {
 				int* connectivities = determine_array_1d<int>(regionConnectivities);
 				for (unsigned j = 0; j < regionConnectivities.size()*4; j++) connectivities[j]++;
 				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), QUAD_4, 

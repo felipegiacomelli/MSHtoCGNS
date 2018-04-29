@@ -180,8 +180,6 @@ TestCase(Geometry) {
 	checkEqual(region.elementsOnRegion[2], 2);
 	checkEqual(region.elementsOnRegion[3], 3);
 
-	checkEqual(region.elementType, 1);
-
 	cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("Geometry"));
 	check(this->type == TRI_3);

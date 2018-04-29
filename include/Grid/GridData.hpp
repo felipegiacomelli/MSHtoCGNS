@@ -28,7 +28,6 @@ struct RegionData {
 	friend class boost::serialization::access;
 
 	std::vector<int> elementsOnRegion;	
-	int elementType;
 	std::string	name;			
 
 	private:

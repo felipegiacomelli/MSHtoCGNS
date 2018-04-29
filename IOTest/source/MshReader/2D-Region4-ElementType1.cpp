@@ -138,8 +138,6 @@ TestCase(A) {
 	checkEqual(a.elementsOnRegion[1], 1);
 	checkEqual(a.elementsOnRegion[2], 2);
 	checkEqual(a.elementsOnRegion[3], 3);
-
-	checkEqual(a.elementType, 1);
 }
 
 TestCase(B) {
@@ -152,8 +150,6 @@ TestCase(B) {
 	checkEqual(b.elementsOnRegion[1], 5);
 	checkEqual(b.elementsOnRegion[2], 6);
 	checkEqual(b.elementsOnRegion[3], 7);
-
-	checkEqual(b.elementType, 1);
 }
 
 TestCase(C) {
@@ -163,8 +159,6 @@ TestCase(C) {
 	
 	checkEqual(static_cast<int>(c.elementsOnRegion.size()), 1);
 	checkEqual(c.elementsOnRegion[0], 8);
-
-	checkEqual(c.elementType, 2);
 }
 
 TestCase(D) {
@@ -174,8 +168,6 @@ TestCase(D) {
 	
 	checkEqual(static_cast<int>(d.elementsOnRegion.size()), 1);
 	checkEqual(d.elementsOnRegion[0], 9);
-
-	checkEqual(d.elementType, 2);
 }
 
 TestSuiteEnd()

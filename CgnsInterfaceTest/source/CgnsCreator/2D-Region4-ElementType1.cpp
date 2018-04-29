@@ -196,8 +196,6 @@ TestCase(A) {
 	checkEqual(a.elementsOnRegion[2], 2);
 	checkEqual(a.elementsOnRegion[3], 3);
 
-	checkEqual(a.elementType, 1);
-
 	cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("A"));
 	checkEqual(this->elementStart, 1);
@@ -216,8 +214,6 @@ TestCase(B) {
 	checkEqual(b.elementsOnRegion[2], 6);
 	checkEqual(b.elementsOnRegion[3], 7);
 
-	checkEqual(b.elementType, 1);
-
 	cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("B"));
 	checkEqual(this->elementStart, 5);
@@ -233,8 +229,6 @@ TestCase(C) {
 	checkEqual(static_cast<int>(c.elementsOnRegion.size()), 1);
 	checkEqual(c.elementsOnRegion[0], 8);
 
-	checkEqual(c.elementType, 2);
-	
 	cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("C"));
 	checkEqual(this->elementStart, 9);
@@ -249,8 +243,6 @@ TestCase(D) {
 	
 	checkEqual(static_cast<int>(d.elementsOnRegion.size()), 1);
 	checkEqual(d.elementsOnRegion[0], 9);
-
-	checkEqual(d.elementType, 2);
 
 	cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("D"));
