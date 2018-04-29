@@ -49,7 +49,7 @@ TestCase(West) {
 
 	auto lines = west.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
-	checkEqual(lines[0][0], 3); checkEqual(lines[0][1], 0);// checkEqual(lines[0][2], 4);
+	checkEqual(lines[0][0], 3); checkEqual(lines[0][1], 0); checkEqual(lines[0][2], 4);
 
 	auto vertices = west.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 2);
@@ -64,7 +64,7 @@ TestCase(East) {
 
 	auto lines = east.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
-	checkEqual(lines[0][0], 1); checkEqual(lines[0][1], 2); //checkEqual(lines[0][2], 5);
+	checkEqual(lines[0][0], 1); checkEqual(lines[0][1], 2); checkEqual(lines[0][2], 5);
 
 	auto vertices = east.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 2);
@@ -79,7 +79,7 @@ TestCase(South) {
 
 	auto lines = south.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
-	checkEqual(lines[0][0], 0); checkEqual(lines[0][1], 1); //checkEqual(lines[0][2], 6);
+	checkEqual(lines[0][0], 0); checkEqual(lines[0][1], 1); checkEqual(lines[0][2], 6);
 
 	auto vertices = south.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 2);
@@ -94,7 +94,7 @@ TestCase(North) {
 
 	auto lines = north.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 1);
-	checkEqual(lines[0][0], 2); checkEqual(lines[0][1], 3); //checkEqual(lines[0][2], 7);
+	checkEqual(lines[0][0], 2); checkEqual(lines[0][1], 3); checkEqual(lines[0][2], 7);
 
 	auto vertices = north.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 2);
