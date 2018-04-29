@@ -74,8 +74,15 @@ void MshReader2D::divideConnectivities() {
 		else 
 			numberOfFacets++;
 	}
+
 	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());	
-	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin()                 , this->connectivities.begin() + numberOfFacets);
+	for (unsigned i = 0; i < this->elements.size(); i++)
+		elements[i].push_back(i);
+	int numberOfElements = elements.size();
+
+	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin(), this->connectivities.begin() + numberOfFacets);
+	for (unsigned i = 0; i < this->facets.size(); i++)
+		facets[i].push_back(numberOfElements + i);
 }
 
 void MshReader2D::addRegions() {
@@ -127,7 +134,7 @@ void MshReader2D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
 		for (auto j = boundary->lineConnectivity.cbegin(); j != boundary->lineConnectivity.cend(); j++) 
-			for (auto k = j->cbegin(); k != j->cend(); k++) 
+			for (auto k = j->cbegin(); k != j->cend()-1; k++) 
 				vertices.insert(*k);
 		boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
 	}
