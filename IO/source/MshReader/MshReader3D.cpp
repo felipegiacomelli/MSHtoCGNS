@@ -5,6 +5,7 @@ MshReader3D::MshReader3D(const std::string& filePath) : MshReader(filePath) {
 	this->readNodes();
 	this->readPhysicalEntities();
 	this->readConnectivities();
+	this->divideConnectivities();
 	this->processConnectivities();
 	this->addFacets();
 	this->addElements();
@@ -64,7 +65,7 @@ void MshReader3D::readPhysicalEntities() {
 	std::iota(boundaryIndices.begin(), boundaryIndices.end(), 0);
 }
 
-void MshReader3D::processConnectivities() {
+void MshReader3D::divideConnectivities() {
 	int numberOfFacets = 0;
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {
 		if (this->connectivities[i][0] != 1 && this->connectivities[i][0] != 2) 
@@ -74,7 +75,9 @@ void MshReader3D::processConnectivities() {
 	}
 	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin()                 , this->connectivities.begin() + numberOfFacets);
 	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());
-	
+}
+
+void MshReader3D::processConnectivities() {
 	int counter = 0;
 	std::vector<unsigned> regionStart;
 	regionStart.emplace_back(0);

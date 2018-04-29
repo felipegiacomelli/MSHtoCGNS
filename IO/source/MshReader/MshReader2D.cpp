@@ -5,6 +5,7 @@ MshReader2D::MshReader2D(const std::string& filePath) : MshReader(filePath) {
 	this->readNodes();
 	this->readPhysicalEntities();
 	this->readConnectivities();
+	this->divideConnectivities();
 	this->processConnectivities();
 	this->addFacets();
 	this->addElements();
@@ -64,7 +65,7 @@ void MshReader2D::readPhysicalEntities() {
 	std::iota(regionsIndices.begin(), regionsIndices.end(), 0);
 }
 
-void MshReader2D::processConnectivities() {
+void MshReader2D::divideConnectivities() {
 	int numberOfFacets = 0;
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {
 		if (this->connectivities[i][0] != 0) 
@@ -73,31 +74,50 @@ void MshReader2D::processConnectivities() {
 			numberOfFacets++;
 	}
 	this->facets   = std::vector<std::vector<int>>(this->connectivities.begin()                 , this->connectivities.begin() + numberOfFacets);
-	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());
-	
+	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());	
+}
+
+void MshReader2D::processConnectivities() {
 	int counter = 0;
 	std::vector<unsigned> regionStart;
 	regionStart.emplace_back(0);
-	for (unsigned i = 0; i < elements.size()-1; i++) {
-		if (elements[i][1] == elements[i+1][1]) 
+	for (unsigned i = 0; i < this->elements.size()-1; i++) {
+		if (this->elements[i][1] == this->elements[i+1][1]) 
 			counter++;
 		else {
 			counter++;
 			regionStart.push_back(counter);
 		}
 	}
-	regionStart.push_back(elements.size());
+	regionStart.push_back(this->elements.size());
+	
 	for (unsigned i = 0; i < regionStart.size()-1; i++) 
 		for (unsigned j = regionStart[i]; j < regionStart[i+1]; j++) 
-			elements[j][1] = i;
+			this->elements[j][1] = i;
+
+	printf("\n");
+	print(facets, "facets");
+	printf("\n");
+
+	printf("\n");
+	print(elements, "elements");
+	printf("\n");
 
 	this->facetsOnBoundary.resize(this->numberOfBoundaries, std::vector<int>());
 	for (unsigned i = 0; i < this->facets.size(); i++)
-		facetsOnBoundary[facets[i][1]].push_back(i);
+		this->facetsOnBoundary[this->facets[i][1]].push_back(i);
+
+	printf("\n");
+	print(facetsOnBoundary, "facetsOnBoundary");
+	printf("\n");
 	
 	this->elementsOnRegion.resize(this->numberOfRegions, std::vector<int>());
 	for (unsigned i = 0; i < this->elements.size(); i++)
-		elementsOnRegion[elements[i][1]].push_back(i);
+		this->elementsOnRegion[this->elements[i][1]].push_back(i);
+
+	printf("\n");
+	print(elementsOnRegion, "elementsOnRegion");
+	printf("\n");
 }
 
 void MshReader2D::addFacets() {

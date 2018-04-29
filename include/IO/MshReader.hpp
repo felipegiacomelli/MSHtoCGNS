@@ -23,6 +23,7 @@ class MshReader {
 		void checkFile();
 		void readNodes();
 		void readConnectivities();
+		virtual void divideConnectivities() = 0;
 		virtual void processConnectivities() = 0;
 		virtual void readPhysicalEntities() = 0;
 		virtual void addElements() = 0;
