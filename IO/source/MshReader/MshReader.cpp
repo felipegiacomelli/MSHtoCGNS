@@ -67,6 +67,20 @@ void MshReader::readConnectivities() {
 	}
 }
 
+void MshReader::assignFacetsToBoundaries() {
+	this->boundaryFacets.resize(this->numberOfBoundaries, std::vector<int>());
+	for (unsigned i = 0; i < this->facets.size(); i++)
+		this->boundaryFacets[this->facets[i][1]].push_back(i);
+
+	printf("\n");
+	print(facets, "facets");
+	printf("\n");
+
+	printf("\n");
+	print(boundaryFacets, "boundaryFacets");
+	printf("\n");
+}
+
 void MshReader::assignElementsToRegions() {
 	int counter = 0;
 	std::vector<unsigned> regionStart;
@@ -95,19 +109,5 @@ void MshReader::assignElementsToRegions() {
 
 	printf("\n");
 	print(regionElements, "regionElements");
-	printf("\n");
-}
-
-void MshReader::assignFacetsToBoundaries() {
-	this->boundaryFacets.resize(this->numberOfBoundaries, std::vector<int>());
-	for (unsigned i = 0; i < this->facets.size(); i++)
-		this->boundaryFacets[this->facets[i][1]].push_back(i);
-
-	printf("\n");
-	print(facets, "facets");
-	printf("\n");
-
-	printf("\n");
-	print(boundaryFacets, "boundaryFacets");
 	printf("\n");
 }

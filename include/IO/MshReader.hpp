@@ -21,13 +21,13 @@ class MshReader {
 	protected:
 		void checkFile();
 		void readNodes();
+		virtual void readPhysicalEntities() = 0;
 		void readConnectivities();
 		virtual void divideConnectivities() = 0;
-		void assignElementsToRegions();
 		void assignFacetsToBoundaries();
-		virtual void readPhysicalEntities() = 0;
-		virtual void addElements() = 0;
-		virtual void addFacets() = 0;
+		void assignElementsToRegions();
+		virtual void addRegions() = 0;
+		virtual void addBoundaries() = 0;
 		virtual void defineBoundaryVertices() = 0;
 
 		std::string filePath;
