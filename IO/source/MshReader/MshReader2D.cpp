@@ -106,15 +106,14 @@ void MshReader2D::addRegions() {
 			auto first = this->elements[index].cbegin() + 2;
 			auto last  = this->elements[index].cend();
 			std::vector<int> connectivity(first, last); 
+			this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 			switch (type) {
 				case 1: {
 					this->gridData->triangleConnectivity.emplace_back(std::move(connectivity));
-					this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 					break;
 				}
 				case 2: {
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(connectivity));
-					this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 					break;
 				}
 				default: 
