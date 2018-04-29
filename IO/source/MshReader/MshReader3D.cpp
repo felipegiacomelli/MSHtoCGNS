@@ -6,7 +6,8 @@ MshReader3D::MshReader3D(const std::string& filePath) : MshReader(filePath) {
 	this->readPhysicalEntities();
 	this->readConnectivities();
 	this->divideConnectivities();
-	this->processConnectivities();
+	this->assignElementsToRegions();
+	this->assignFacetsToBoundaries();
 	this->addFacets();
 	this->addElements();
 	this->defineBoundaryVertices();
@@ -77,7 +78,7 @@ void MshReader3D::divideConnectivities() {
 	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());
 }
 
-void MshReader3D::processConnectivities() {
+void MshReader3D::assignElementsToRegions() {
 	int counter = 0;
 	std::vector<unsigned> regionStart;
 	regionStart.emplace_back(0);
@@ -93,14 +94,16 @@ void MshReader3D::processConnectivities() {
 	for (unsigned i = 0; i < regionStart.size()-1; i++) 
 		for (unsigned j = regionStart[i]; j < regionStart[i+1]; j++) 
 			elements[j][1] = i;
-
-	this->boundaryFacets.resize(this->numberOfBoundaries, std::vector<int>());
-	for (unsigned i = 0; i < this->facets.size(); i++) 
-		boundaryFacets[facets[i][1]].push_back(i);
 	
 	this->regionElements.resize(this->numberOfRegions, std::vector<int>());
 	for (unsigned i = 0; i < this->elements.size(); i++) 
 		regionElements[elements[i][1]].push_back(i);
+}
+
+void MshReader3D::assignFacetsToBoundaries() {
+	this->boundaryFacets.resize(this->numberOfBoundaries, std::vector<int>());
+	for (unsigned i = 0; i < this->facets.size(); i++) 
+		boundaryFacets[facets[i][1]].push_back(i);
 }
 
 void MshReader3D::addFacets() {

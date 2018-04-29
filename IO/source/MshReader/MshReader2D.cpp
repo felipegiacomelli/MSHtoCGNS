@@ -6,7 +6,8 @@ MshReader2D::MshReader2D(const std::string& filePath) : MshReader(filePath) {
 	this->readPhysicalEntities();
 	this->readConnectivities();
 	this->divideConnectivities();
-	this->processConnectivities();
+	this->assignElementsToRegions();
+	this->assignFacetsToBoundaries();
 	this->addFacets();
 	this->addElements();
 	this->defineBoundaryVertices();
@@ -77,7 +78,7 @@ void MshReader2D::divideConnectivities() {
 	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + numberOfFacets, this->connectivities.end());	
 }
 
-void MshReader2D::processConnectivities() {
+void MshReader2D::assignElementsToRegions() {
 	int counter = 0;
 	std::vector<unsigned> regionStart;
 	regionStart.emplace_back(0);
@@ -106,7 +107,9 @@ void MshReader2D::processConnectivities() {
 	printf("\n");
 	print(regionElements, "regionElements");
 	printf("\n");
+}
 
+void MshReader2D::assignFacetsToBoundaries() {
 	this->boundaryFacets.resize(this->numberOfBoundaries, std::vector<int>());
 	for (unsigned i = 0; i < this->facets.size(); i++)
 		this->boundaryFacets[this->facets[i][1]].push_back(i);
