@@ -50,6 +50,7 @@ void CgnsReader3D::readSections() {
 					std::vector<int> tetrahedron(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) 
 						tetrahedron[k] = connectivities[e*numberOfVertices+k] - 1;
+					tetrahedron.emplace_back(elementStart - 1 + e);
 					this->gridData->tetrahedronConnectivity.emplace_back(std::move(tetrahedron));	
 				}
 				break; 
@@ -64,6 +65,7 @@ void CgnsReader3D::readSections() {
 					std::vector<int> hexahedron(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) 
 						hexahedron[k] = connectivities[e*numberOfVertices+k] - 1;
+					hexahedron.emplace_back(elementStart - 1 + e);
 					this->gridData->hexahedronConnectivity.emplace_back(std::move(hexahedron));	
 				}
 				break; 
@@ -79,6 +81,7 @@ void CgnsReader3D::readSections() {
 					std::vector<int> triangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) 
 						triangle[k] = connectivities[e*numberOfVertices+k] - 1;
+					triangle.emplace_back(elementStart - 1 + e);
 					triangleConnectivity.emplace_back(std::move(triangle));	
 				}
 				BoundaryData boundaryData;
@@ -98,6 +101,7 @@ void CgnsReader3D::readSections() {
 					std::vector<int> quadrangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) 
 						quadrangle[k] = connectivities[e*numberOfVertices+k] - 1;
+					quadrangle.emplace_back(elementStart - 1 + e);
 					quadrangleConnectivity.emplace_back(std::move(quadrangle));	
 				}				
 				BoundaryData boundaryData;

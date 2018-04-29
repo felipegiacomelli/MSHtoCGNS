@@ -52,9 +52,12 @@ void CgnsCreator3D::writeCoordinates() {
 void CgnsCreator3D::writeSections() {
 	switch (this->geometry) {
 		case 4: {
-			this->sectionIndices.emplace_back(0);
-			int* connectivities = determine_array_1d<int>(this->gridData->tetrahedronConnectivity);
+			std::vector<std::vector<int>> regionConnectivities = this->gridData->tetrahedronConnectivity;
+	 		for (unsigned j = 0; j < regionConnectivities.size(); j++) 
+				regionConnectivities[j].pop_back(); 	
+			int* connectivities = determine_array_1d<int>(regionConnectivities);
 			for (unsigned j = 0; j < this->gridData->tetrahedronConnectivity.size()*4; j++) connectivities[j]++;
+			this->sectionIndices.emplace_back(0);
 			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", TETRA_4, 
 									1, this->sizes[1], sizes[2], connectivities, &this->sectionIndices.back())) {
 				throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(1));
@@ -63,9 +66,12 @@ void CgnsCreator3D::writeSections() {
 			break;
 		}
 		case 8: {
-			this->sectionIndices.emplace_back(0);
-			int* connectivities = determine_array_1d<int>(this->gridData->hexahedronConnectivity);
+			std::vector<std::vector<int>> regionConnectivities = this->gridData->hexahedronConnectivity;
+		 	for (unsigned j = 0; j < regionConnectivities.size(); j++) 
+				regionConnectivities[j].pop_back(); 	
+			int* connectivities = determine_array_1d<int>(regionConnectivities);
 			for (unsigned j = 0; j < this->gridData->hexahedronConnectivity.size()*8; j++) connectivities[j]++;
+			this->sectionIndices.emplace_back(0);
 			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", HEXA_8, 
 									1, this->sizes[1], sizes[2], connectivities, &this->sectionIndices.back())) {
 				throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(1));
@@ -82,9 +88,12 @@ void CgnsCreator3D::writeSections() {
 			int elementStart = this->sizes[1] + 1;
 			int elementEnd;
 			for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
-				this->sectionIndices.emplace_back(0);
+				std::vector<std::vector<int>> boundaryConnectivities(this->gridData->boundaries[i].triangleConnectivity.cbegin(), this->gridData->boundaries[i].triangleConnectivity.cend());
+				for (unsigned j = 0; j < boundaryConnectivities.size(); j++) 
+					boundaryConnectivities[j].pop_back(); 
 				elementEnd = elementStart + this->gridData->boundaries[i].triangleConnectivity.size() - 1;
-				int* connectivities = determine_array_1d<int>(this->gridData->boundaries[i].triangleConnectivity);
+				int* connectivities = determine_array_1d<int>(boundaryConnectivities);
+				this->sectionIndices.emplace_back(0);
 				for (unsigned j = 0; j < this->gridData->boundaries[i].triangleConnectivity.size()*3; j++) connectivities[j]++;
 				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), TRI_3, 
 										elementStart, elementEnd, this->sizes[2], connectivities, &this->sectionIndices.back())) {
@@ -99,10 +108,13 @@ void CgnsCreator3D::writeSections() {
 			int elementStart = this->sizes[1] + 1;
 			int elementEnd;
 			for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
-				this->sectionIndices.emplace_back(0);
+				std::vector<std::vector<int>> boundaryConnectivities(this->gridData->boundaries[i].quadrangleConnectivity.cbegin(), this->gridData->boundaries[i].quadrangleConnectivity.cend());
+				for (unsigned j = 0; j < boundaryConnectivities.size(); j++) 
+					boundaryConnectivities[j].pop_back(); 
 				elementEnd = elementStart + this->gridData->boundaries[i].quadrangleConnectivity.size() - 1;
-				int* connectivities = determine_array_1d<int>(this->gridData->boundaries[i].quadrangleConnectivity);
+				int* connectivities = determine_array_1d<int>(boundaryConnectivities);
 				for (unsigned j = 0; j < this->gridData->boundaries[i].quadrangleConnectivity.size()*4; j++) connectivities[j]++;
+				this->sectionIndices.emplace_back(0);
 				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), QUAD_4, 
 										elementStart, elementEnd, this->sizes[2], connectivities, &this->sectionIndices.back())) {
 					throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(i+2));

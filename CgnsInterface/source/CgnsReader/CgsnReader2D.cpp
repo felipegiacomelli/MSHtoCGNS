@@ -48,6 +48,7 @@ void CgnsReader2D::readSections() {
 					std::vector<int> triangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) 
 						triangle[k] = connectivities[e*numberOfVertices+k] - 1;
+					triangle.emplace_back(elementStart - 1 + e);
 					this->gridData->triangleConnectivity.emplace_back(std::move(triangle));	
 				}
 				RegionData region;
@@ -67,6 +68,7 @@ void CgnsReader2D::readSections() {
 					std::vector<int> quadrangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) 
 						quadrangle[k] = connectivities[e*numberOfVertices+k] - 1;
+					quadrangle.emplace_back(elementStart - 1 + e);
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));	
 				}
 				RegionData region;
@@ -87,6 +89,7 @@ void CgnsReader2D::readSections() {
 					std::vector<int> line(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++)
 						line[k] = connectivities[e*numberOfVertices+k] - 1;
+					line.emplace_back(elementStart - 1 + e);
 					lineConnectivity.emplace_back(std::move(line));
 				}
 				BoundaryData boundaryData;
