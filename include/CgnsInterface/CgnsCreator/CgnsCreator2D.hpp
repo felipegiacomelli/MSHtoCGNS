@@ -13,7 +13,8 @@ class CgnsCreator2D : public CgnsCreator {
 	private:
 		void setupFile() override;
 		void writeCoordinates() override;
-		void writeSections() override;
+		void writeRegions() override;
+		void writeBoundaries() override;
 };
 
 #endif

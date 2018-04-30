@@ -22,7 +22,9 @@ class CgnsCreator {
 		virtual void writeBase();
 		virtual void writeZone();
 		virtual void writeCoordinates() = 0;
-		virtual void writeSections() = 0;
+		void writeSections();
+		virtual void writeRegions() = 0;
+		virtual void writeBoundaries() = 0;
 		void writeBoundaryConditions();
 
 		GridDataShared gridData;

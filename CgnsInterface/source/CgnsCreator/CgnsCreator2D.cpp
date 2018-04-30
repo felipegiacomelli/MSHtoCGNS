@@ -31,7 +31,7 @@ void CgnsCreator2D::writeCoordinates() {
 		throw std::runtime_error("CgnsCreator2D: Could not write CoordinateY");
 }
 
-void CgnsCreator2D::writeSections() {
+void CgnsCreator2D::writeRegions() {
 	std::vector<std::vector<int>> elementConnectivities;
 	elementConnectivities.insert(elementConnectivities.end(), this->gridData->triangleConnectivity.begin(), this->gridData->triangleConnectivity.end());
 	elementConnectivities.insert(elementConnectivities.end(), this->gridData->quadrangleConnectivity.begin(), this->gridData->quadrangleConnectivity.end());
@@ -83,13 +83,15 @@ void CgnsCreator2D::writeSections() {
 		}
 		elementStart = elementEnd + 1;
 	}
-	
-	elementStart = this->sizes[1] + 1;
+}
+
+void CgnsCreator2D::writeBoundaries() {
+	int elementStart = this->sizes[1] + 1;
 	for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
 		std::vector<std::vector<int>> boundaryConnectivities(this->gridData->boundaries[i].lineConnectivity.cbegin(), this->gridData->boundaries[i].lineConnectivity.cend());
 		for (unsigned j = 0; j < boundaryConnectivities.size(); j++) 
 			boundaryConnectivities[j].pop_back(); 
-		elementEnd = elementStart + this->gridData->boundaries[i].lineConnectivity.size() - 1;
+		int elementEnd = elementStart + this->gridData->boundaries[i].lineConnectivity.size() - 1;
 		
 		std::vector<int> connectivities = linearize(boundaryConnectivities);
 		for (unsigned j = 0; j < connectivities.size(); j++) 

@@ -27,6 +27,11 @@ void CgnsCreator::writeZone() {
 		throw std::runtime_error("CgnsCreator: Could not write zone");
 }
 
+void CgnsCreator::writeSections() {
+	this->writeRegions();
+	this->writeBoundaries();
+}
+
 void CgnsCreator::writeBoundaryConditions() {
 	for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
 		std::vector<int> indices(this->gridData->boundaries[i].vertices.cbegin(), this->gridData->boundaries[i].vertices.cend()); 
