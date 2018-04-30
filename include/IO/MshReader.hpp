@@ -1,13 +1,13 @@
 #ifndef MSH_READER_HPP
 #define MSH_READER_HPP
 
+#include <set>
 #include <string>
 #include <fstream>
 #include <numeric>
 #include <BoostInterface/Filesystem.hpp>
 #include <Grid/GridData.hpp>
 #include <Utilities/Vector.hpp>
-#include <Utilities/Set.hpp>
 
 class MshReader {
 	public:

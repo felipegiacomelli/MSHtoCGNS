@@ -2,29 +2,16 @@
 #define VECTOR_HPP
 
 #include <iostream>
-#include <iomanip>
-#include <string>
 #include <vector>
-#include <fstream>
-
-template<typename T, typename U>
-T* determine_array_1d(const std::vector<U>&);
-
-template<typename T, typename U>
-T* determine_array_1d(const std::vector<std::vector<U>>&);
 
 template<typename T>
-void print(const std::vector<T>&, std::string&&);
-
-template<typename T>
-void print(const std::vector<std::vector<T>>&, std::string&&);
-
-template<typename T>
-void output(const std::vector<T>&, std::ofstream&);
-
-template<typename T>
-void output(const std::vector<std::vector<T>>&, std::ofstream&);
-
-#include "Vector.tpp"
+std::vector<T> linearize(const std::vector<std::vector<T>>& a) {
+	std::vector<T> b;
+	b.reserve(a.size()*a[0].size());
+	for (unsigned i = 0; i < a.size(); i++) 
+		for (unsigned j = 0; j < a[i].size(); j++) 
+			b.push_back(a[i][j]);
+	return b; 
+}
 
 #endif

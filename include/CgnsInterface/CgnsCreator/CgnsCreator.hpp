@@ -1,10 +1,10 @@
 #ifndef CGNS_FILE_HPP	
 #define CGNS_FILE_HPP
 
+#include <set>
 #include <algorithm>
 #include <BoostInterface/Filesystem.hpp>
 #include <Utilities/Vector.hpp>
-#include <Utilities/Set.hpp>
 #include <Grid/GridData.hpp>
 
 class CgnsCreator {
