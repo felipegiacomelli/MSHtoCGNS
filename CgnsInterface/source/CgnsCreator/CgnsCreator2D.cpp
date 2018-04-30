@@ -78,6 +78,23 @@ void CgnsCreator2D::writeRegions() {
 
 				break;
 			}
+			// case MIXED: {
+			// 	if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), MIXED, 
+			// 							elementStart, elementEnd, sizes[2], &this->sectionIndices.back())) 
+			// 		throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(i+1));
+
+			// 	for (unsigned j = 0; j < regionConnectivities.size(); j++)
+			// 		for (unsigned k = 0; k < regionConnectivities[i].size(); k++)
+			// 			regionConnectivities[i][j]++;
+				
+			// 	for (unsigned j = 0; j < regionConnectivities.size(); j++) {
+			// 		if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(), MIXED, 
+			// 								elementStart, elementEnd, &connectivities[0])) 
+			// 			throw std::runtime_error("CgnsCreator2D: Could not write element " + std::to_string(elementStart) " in section " + std::to_string(i+1));
+			// 	}
+
+			// 	break;
+			// }
 			default:
 				throw std::runtime_error("CgnsCreator2D: Geometry type not supported");
 		}
