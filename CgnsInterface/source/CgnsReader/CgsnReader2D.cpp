@@ -38,6 +38,38 @@ void CgnsReader2D::readSections() {
 		int numberOfElements = elementEnd - elementStart + 1;
 		
 		switch (type) {
+			case MIXED : {
+				int connectivitiesSize; 
+				cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivitiesSize);
+				int connectivities[connectivitiesSize];
+				cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr);
+				int i = 0;
+				for (int e = 0; e < numberOfElements; e++) {
+					int npe;
+					cg_npe(ElementType_t(connectivities[i]), &npe);
+					std::vector<int> element(npe);
+					for (int k = 0; k < npe; ++k) 
+						element[k] = connectivities[i+1+k] - 1;
+					element.emplace_back(elementStart - 1 + e);
+					switch(connectivities[i]) {
+						case TRI_3: {
+							this->gridData->triangleConnectivity.emplace_back(std::move(element));	
+							break;
+						}
+						case QUAD_4: {
+							this->gridData->quadrangleConnectivity.emplace_back(std::move(element));	
+							break;
+						}
+					}
+					i += npe + 1;
+				}
+				RegionData region;
+				region.name = std::string(this->buffer);
+				region.elementsOnRegion.resize(numberOfElements);
+				std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), elementStart - 1);
+				this->gridData->regions.emplace_back(std::move(region));
+				break;
+			}
 			case TRI_3: {
 				int numberOfVertices = 3;	
 				int connectivities[numberOfVertices*numberOfElements];
@@ -102,7 +134,7 @@ void CgnsReader2D::readSections() {
 				break; 
 			}
 			default:
-				throw std::runtime_error("CgnsReader2D: Could not read section");
+				throw std::runtime_error("CgnsReader2D: Section element type not supported");
 		}
 	}
 }
