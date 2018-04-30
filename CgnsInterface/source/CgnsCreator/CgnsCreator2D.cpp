@@ -1,6 +1,8 @@
 #include <CgnsInterface/CgnsCreator/CgnsCreator2D.hpp>
 #include <cgnslib.h>
 
+#include <Utilities/Print.hpp>
+
 CgnsCreator2D::CgnsCreator2D(GridDataShared gridData, const std::string& folderPath) : CgnsCreator(gridData, folderPath) {
 	this->sizes[0] = this->gridData->coordinates.size();
 	this->sizes[1] = this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
@@ -43,62 +45,58 @@ void CgnsCreator2D::writeRegions() {
 
 		std::vector<std::vector<int>> regionConnectivities(elementConnectivities.cbegin() + this->gridData->regions[i].elementsOnRegion.front(), 
 															elementConnectivities.cbegin() + this->gridData->regions[i].elementsOnRegion.back() + 1);
-	 	for (unsigned j = 0; j < regionConnectivities.size(); j++) 
-			regionConnectivities[j].pop_back(); 		
+	 	for (unsigned j = 0; j < regionConnectivities.size(); j++) {
+			regionConnectivities[j].pop_back(); 
+			for (unsigned k = 0; k < regionConnectivities[j].size(); k++)
+				regionConnectivities[j][k]++;		
+	 	}
 	 	elementEnd += regionConnectivities.size();
 
-	 	ElementType_t type;
+	 	ElementType_t elementType;
 	 	if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);})) 
-	 		type = TRI_3;
+	 		elementType = TRI_3;
 	 	else if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(4);})) 
-	 		type = QUAD_4;
+	 		elementType = QUAD_4;
 		else 
-			type = MIXED;
-		
-		switch (type) {
-			case TRI_3: {
-				std::vector<int> connectivities = linearize(regionConnectivities);
-				for (unsigned j = 0; j < connectivities.size(); j++) 
-					connectivities[j]++;
+			elementType = MIXED;
 
-				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), TRI_3, 
-										elementStart, elementEnd, sizes[2], &connectivities[0], &this->sectionIndices.back())) 
-					throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(i+1));
-				
-				break;
-			}
-			case QUAD_4: {
-				std::vector<int> connectivities = linearize(regionConnectivities);
-				for (unsigned j = 0; j < connectivities.size(); j++) 
-					connectivities[j]++;
+		if (elementType != MIXED) {
+			std::vector<int> connectivities = linearize(regionConnectivities);
+			
+			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), elementType, 
+									elementStart, elementEnd, sizes[2], &connectivities[0], &this->sectionIndices.back())) 
+				throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(i+1));
 
-				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), QUAD_4, 
-										elementStart, elementEnd, sizes[2], &connectivities[0], &this->sectionIndices.back())) 
-					throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(i+1));
-
-				break;
-			}
-			// case MIXED: {
-			// 	if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), MIXED, 
-			// 							elementStart, elementEnd, sizes[2], &this->sectionIndices.back())) 
-			// 		throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(i+1));
-
-			// 	for (unsigned j = 0; j < regionConnectivities.size(); j++)
-			// 		for (unsigned k = 0; k < regionConnectivities[i].size(); k++)
-			// 			regionConnectivities[i][j]++;
-				
-			// 	for (unsigned j = 0; j < regionConnectivities.size(); j++) {
-			// 		if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(), MIXED, 
-			// 								elementStart, elementEnd, &connectivities[0])) 
-			// 			throw std::runtime_error("CgnsCreator2D: Could not write element " + std::to_string(elementStart) " in section " + std::to_string(i+1));
-			// 	}
-
-			// 	break;
-			// }
-			default:
-				throw std::runtime_error("CgnsCreator2D: Geometry type not supported");
+			elementStart = elementEnd + 1;
 		}
-		elementStart = elementEnd + 1;
+		else {
+			if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), elementType, 
+								elementStart, elementEnd, sizes[2], &this->sectionIndices.back())) 
+			throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(i+1));
+		
+			for (unsigned j = 0; j < regionConnectivities.size(); j++) {
+				std::vector<int> connectivities = regionConnectivities[j];
+				
+				switch (connectivities.size()) {
+					case 3: {
+						connectivities.insert(connectivities.begin(), TRI_3);
+						break;
+					}
+					case 4: {
+						connectivities.insert(connectivities.begin(), QUAD_4);
+						break;
+					}
+					default:
+						throw std::runtime_error("CgnsCreator2D: Element type not supported");
+				}
+				
+				if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(), 
+										elementStart, elementStart, &connectivities[0])) 
+					throw std::runtime_error("CgnsCreator2D: Could not write element " + std::to_string(elementStart) + " in section " + std::to_string(i+1));
+	
+				elementStart++;
+			}
+		}
 	}
 }
 

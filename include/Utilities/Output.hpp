@@ -25,3 +25,5 @@ void output(const std::vector<std::vector<T>>& a, std::ofstream& file) {
 		file << std::endl;
 	}
 }
+
+#endif

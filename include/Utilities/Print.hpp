@@ -27,3 +27,5 @@ void print(const std::vector<std::vector<T>>& a, std::string&& message) {
 	}
 	std::cout << std::endl;
 }
+
+#endif
