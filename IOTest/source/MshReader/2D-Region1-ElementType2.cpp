@@ -37,6 +37,7 @@ TestCase(Coordinates) {
 TestCase(Elements) {
 	auto triangles = this->gridData->triangleConnectivity;
 	checkEqual(static_cast<int>(triangles.size()), 8);
+	check(std::all_of(triangles.cbegin(), triangles.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(4);}));
 	checkEqual(triangles[0][0], 3); checkEqual(triangles[0][1],  4); checkEqual(triangles[0][2],  9); checkEqual(triangles[0][3], 0);
 	checkEqual(triangles[1][0], 3); checkEqual(triangles[1][1],  9); checkEqual(triangles[1][2],  6); checkEqual(triangles[1][3], 1);
 	checkEqual(triangles[2][0], 4); checkEqual(triangles[2][1],  7); checkEqual(triangles[2][2],  9); checkEqual(triangles[2][3], 2);
@@ -48,6 +49,7 @@ TestCase(Elements) {
 
 	auto quadrangles = this->gridData->quadrangleConnectivity;
 	checkEqual(static_cast<int>(quadrangles.size()), 2);
+	check(std::all_of(quadrangles.cbegin(), quadrangles.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(5);}));
 	checkEqual(quadrangles[0][0], 4); checkEqual(quadrangles[0][1], 5); checkEqual(quadrangles[0][2], 8); checkEqual(quadrangles[0][3], 7); checkEqual(quadrangles[0][4], 8);
 	checkEqual(quadrangles[1][0], 0); checkEqual(quadrangles[1][1], 1); checkEqual(quadrangles[1][2], 4); checkEqual(quadrangles[1][3], 3); checkEqual(quadrangles[1][4], 9);
 }
@@ -63,6 +65,7 @@ TestCase(West) {
 
 	auto lines = west.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 2);
+	check(std::all_of(lines.cbegin(), lines.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);}));
 	checkEqual(lines[0][0], 6); checkEqual(lines[0][1], 3); checkEqual(lines[0][2], 10);
 	checkEqual(lines[1][0], 3); checkEqual(lines[1][1], 0); checkEqual(lines[1][2], 11);
 
@@ -80,6 +83,7 @@ TestCase(East) {
 
 	auto lines = east.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 2);
+	check(std::all_of(lines.cbegin(), lines.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);}));
 	checkEqual(lines[0][0], 2); checkEqual(lines[0][1], 5); checkEqual(lines[0][2], 12);
 	checkEqual(lines[1][0], 5); checkEqual(lines[1][1], 8); checkEqual(lines[1][2], 13);
 
@@ -97,6 +101,7 @@ TestCase(South) {
 
 	auto lines = south.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 2);
+	check(std::all_of(lines.cbegin(), lines.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);}));
 	checkEqual(lines[0][0], 0); checkEqual(lines[0][1], 1); checkEqual(lines[0][2], 14);
 	checkEqual(lines[1][0], 1); checkEqual(lines[1][1], 2); checkEqual(lines[1][2], 15);
 
@@ -114,6 +119,7 @@ TestCase(North) {
 
 	auto lines = north.lineConnectivity;
 	checkEqual(static_cast<int>(lines.size()), 2);
+	check(std::all_of(lines.cbegin(), lines.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);}));
 	checkEqual(lines[0][0], 8); checkEqual(lines[0][1], 7); checkEqual(lines[0][2], 16);
 	checkEqual(lines[1][0], 7); checkEqual(lines[1][1], 6); checkEqual(lines[1][2], 17);
 
