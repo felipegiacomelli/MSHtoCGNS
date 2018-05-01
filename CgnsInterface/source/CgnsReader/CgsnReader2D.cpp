@@ -39,9 +39,9 @@ void CgnsReader2D::readSections() {
 		
 		switch (type) {
 			case MIXED : {
-				int connectivitiesSize; 
-				cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivitiesSize);
-				int connectivities[connectivitiesSize];
+				int size; 
+				cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size);
+				int connectivities[size];
 				cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr);
 				int i = 0;
 				for (int e = 0; e < numberOfElements; e++) {
