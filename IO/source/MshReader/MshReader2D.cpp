@@ -82,9 +82,7 @@ void MshReader2D::addRegions() {
 		for (unsigned j = 0; j < this->regionElements[i].size(); j++) {
 			int index = this->regionElements[i][j];
 			int type  = this->elements[index][0];
-			auto first = this->elements[index].cbegin() + 2;
-			auto last  = this->elements[index].cend();
-			std::vector<int> connectivity(first, last); 
+			std::vector<int> connectivity(this->elements[index].cbegin() + 2, this->elements[index].cend()); 
 			this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 			switch (type) {
 				case 1: {
@@ -107,9 +105,7 @@ void MshReader2D::addBoundaries() {
 		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
 			int index = this->boundaryFacets[i][j];
 			int type  = this->facets[index][0];
-			auto first = this->facets[index].cbegin() + 2;
-			auto last  = this->facets[index].cend();
-			std::vector<int> connectivity(first, last); 
+			std::vector<int> connectivity(this->facets[index].cbegin() + 2, this->facets[index].cend()); 
 			switch (type) {
 				case 0: {
 					this->gridData->boundaries[i].lineConnectivity.emplace_back(std::move(connectivity));

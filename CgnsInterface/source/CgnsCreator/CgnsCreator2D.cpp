@@ -71,8 +71,8 @@ void CgnsCreator2D::writeRegions() {
 		}
 		else {
 			if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), elementType, 
-								elementStart, elementEnd, sizes[2], &this->sectionIndices.back())) 
-			throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(i+1));
+											elementStart, elementEnd, sizes[2], &this->sectionIndices.back())) 
+			throw std::runtime_error("CgnsCreator2D: Could not partial write element section " + std::to_string(i+1));
 		
 			for (unsigned j = 0; j < regionConnectivities.size(); j++) {
 				std::vector<int> connectivities = regionConnectivities[j];
@@ -114,7 +114,7 @@ void CgnsCreator2D::writeBoundaries() {
 
 		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BAR_2, 
 								elementStart, elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back())) 
-			throw std::runtime_error("CgnsCreator2D: Could not write boundary section " + std::to_string(i+1));
+			throw std::runtime_error("CgnsCreator2D: Could not write facet section " + std::to_string(i+1));
 		
 		elementStart = elementEnd + 1;
 	}
