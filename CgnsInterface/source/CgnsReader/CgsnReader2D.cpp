@@ -43,15 +43,15 @@ void CgnsReader2D::readSections() {
 				cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size);
 				int connectivities[size];
 				cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr);
-				int i = 0;
+				int position = 0;
 				for (int e = 0; e < numberOfElements; e++) {
-					int npe;
-					cg_npe(ElementType_t(connectivities[i]), &npe);
-					std::vector<int> element(npe);
-					for (int k = 0; k < npe; ++k) 
-						element[k] = connectivities[i+1+k] - 1;
+					int numberOfVertices;
+					cg_npe(ElementType_t(connectivities[position]), &numberOfVertices);
+					std::vector<int> element(numberOfVertices);
+					for (int k = 0; k < numberOfVertices; ++k) 
+						element[k] = connectivities[position+1+k] - 1;
 					element.emplace_back(elementStart - 1 + e);
-					switch(connectivities[i]) {
+					switch(connectivities[position]) {
 						case TRI_3: {
 							this->gridData->triangleConnectivity.emplace_back(std::move(element));	
 							break;
@@ -61,7 +61,7 @@ void CgnsReader2D::readSections() {
 							break;
 						}
 					}
-					i += npe + 1;
+					position += numberOfVertices + 1;
 				}
 				RegionData region;
 				region.name = std::string(this->buffer);
