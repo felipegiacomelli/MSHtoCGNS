@@ -89,7 +89,6 @@ void CgnsReader3D::readSections() {
 				break; 
 			}
 			case TRI_3: {
-				std::vector<std::vector<int>> triangleConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> triangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) 
@@ -100,7 +99,6 @@ void CgnsReader3D::readSections() {
 				break; 
 			}
 			case QUAD_4: {
-				std::vector<std::vector<int>> quadrangleConnectivity;
 				for (int e = 0; e < numberOfElements; e++) {
 					std::vector<int> quadrangle(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; k++) 
