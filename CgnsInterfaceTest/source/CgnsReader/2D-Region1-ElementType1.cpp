@@ -62,7 +62,7 @@ TestCase(West) {
 	auto vertices = west.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 0);
-	checkEqual(vertices[1], 3); 
+	checkEqual(vertices[1], 3);
 	checkEqual(vertices[2], 6);
 }
 
@@ -76,11 +76,11 @@ TestCase(East) {
 	check(std::all_of(lines.cbegin(), lines.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);}));
 	checkEqual(lines[0][0], 2); checkEqual(lines[0][1], 5); checkEqual(lines[0][2], 6);
 	checkEqual(lines[1][0], 5); checkEqual(lines[1][1], 8); checkEqual(lines[1][2], 7);
-	
+
 	auto vertices = east.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 2);
-	checkEqual(vertices[1], 5); 
+	checkEqual(vertices[1], 5);
 	checkEqual(vertices[2], 8);
 }
 
@@ -94,11 +94,11 @@ TestCase(South) {
 	check(std::all_of(lines.cbegin(), lines.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);}));
 	checkEqual(lines[0][0], 0); checkEqual(lines[0][1], 1); checkEqual(lines[0][2], 8);
 	checkEqual(lines[1][0], 1); checkEqual(lines[1][1], 2); checkEqual(lines[1][2], 9);
-	
+
 	auto vertices = south.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 0);
-	checkEqual(vertices[1], 1); 
+	checkEqual(vertices[1], 1);
 	checkEqual(vertices[2], 2);
 }
 
@@ -116,7 +116,7 @@ TestCase(North) {
 	auto vertices = north.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 6);
-	checkEqual(vertices[1], 7); 
+	checkEqual(vertices[1], 7);
 	checkEqual(vertices[2], 8);
 }
 

@@ -55,14 +55,14 @@ TestCase(Elements) {
 	checkEqual(static_cast<int>(hexahedra.size()), 8);
 	check(std::all_of(hexahedra.cbegin(), hexahedra.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(9);}));
 
-	checkEqual(hexahedra[0][0],  0); checkEqual(hexahedra[0][1],  1); checkEqual(hexahedra[0][2],  4); checkEqual(hexahedra[0][3],  3); 
-	checkEqual(hexahedra[1][0],  1); checkEqual(hexahedra[1][1],  2); checkEqual(hexahedra[1][2],  5); checkEqual(hexahedra[1][3],  4); 
-	checkEqual(hexahedra[2][0],  3); checkEqual(hexahedra[2][1],  4); checkEqual(hexahedra[2][2],  7); checkEqual(hexahedra[2][3],  6); 
-	checkEqual(hexahedra[3][0],  4); checkEqual(hexahedra[3][1],  5); checkEqual(hexahedra[3][2],  8); checkEqual(hexahedra[3][3],  7); 
-	checkEqual(hexahedra[4][0],  9); checkEqual(hexahedra[4][1], 10); checkEqual(hexahedra[4][2], 13); checkEqual(hexahedra[4][3], 12); 
-	checkEqual(hexahedra[5][0], 10); checkEqual(hexahedra[5][1], 11); checkEqual(hexahedra[5][2], 14); checkEqual(hexahedra[5][3], 13); 
-	checkEqual(hexahedra[6][0], 12); checkEqual(hexahedra[6][1], 13); checkEqual(hexahedra[6][2], 16); checkEqual(hexahedra[6][3], 15); 
-	checkEqual(hexahedra[7][0], 13); checkEqual(hexahedra[7][1], 14); checkEqual(hexahedra[7][2], 17); checkEqual(hexahedra[7][3], 16); 
+	checkEqual(hexahedra[0][0],  0); checkEqual(hexahedra[0][1],  1); checkEqual(hexahedra[0][2],  4); checkEqual(hexahedra[0][3],  3);
+	checkEqual(hexahedra[1][0],  1); checkEqual(hexahedra[1][1],  2); checkEqual(hexahedra[1][2],  5); checkEqual(hexahedra[1][3],  4);
+	checkEqual(hexahedra[2][0],  3); checkEqual(hexahedra[2][1],  4); checkEqual(hexahedra[2][2],  7); checkEqual(hexahedra[2][3],  6);
+	checkEqual(hexahedra[3][0],  4); checkEqual(hexahedra[3][1],  5); checkEqual(hexahedra[3][2],  8); checkEqual(hexahedra[3][3],  7);
+	checkEqual(hexahedra[4][0],  9); checkEqual(hexahedra[4][1], 10); checkEqual(hexahedra[4][2], 13); checkEqual(hexahedra[4][3], 12);
+	checkEqual(hexahedra[5][0], 10); checkEqual(hexahedra[5][1], 11); checkEqual(hexahedra[5][2], 14); checkEqual(hexahedra[5][3], 13);
+	checkEqual(hexahedra[6][0], 12); checkEqual(hexahedra[6][1], 13); checkEqual(hexahedra[6][2], 16); checkEqual(hexahedra[6][3], 15);
+	checkEqual(hexahedra[7][0], 13); checkEqual(hexahedra[7][1], 14); checkEqual(hexahedra[7][2], 17); checkEqual(hexahedra[7][3], 16);
 
 	checkEqual(hexahedra[0][4],  9); checkEqual(hexahedra[0][5], 10); checkEqual(hexahedra[0][6], 13); checkEqual(hexahedra[0][7], 12);
 	checkEqual(hexahedra[1][4], 10); checkEqual(hexahedra[1][5], 11); checkEqual(hexahedra[1][6], 14); checkEqual(hexahedra[1][7], 13);
@@ -105,13 +105,13 @@ TestCase(West) {
 	auto vertices = west.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 9);
 	checkEqual(vertices[0],  0);
-	checkEqual(vertices[1],  3); 
+	checkEqual(vertices[1],  3);
 	checkEqual(vertices[2],  6);
 	checkEqual(vertices[3],  9);
-	checkEqual(vertices[4], 12); 
+	checkEqual(vertices[4], 12);
 	checkEqual(vertices[5], 15);
 	checkEqual(vertices[6], 18);
-	checkEqual(vertices[7], 21); 
+	checkEqual(vertices[7], 21);
 	checkEqual(vertices[8], 24);
 }
 
@@ -131,13 +131,13 @@ TestCase(East) {
 	auto vertices = east.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 9);
 	checkEqual(vertices[0],  2);
-	checkEqual(vertices[1],  5); 
+	checkEqual(vertices[1],  5);
 	checkEqual(vertices[2],  8);
 	checkEqual(vertices[3], 11);
-	checkEqual(vertices[4], 14); 
+	checkEqual(vertices[4], 14);
 	checkEqual(vertices[5], 17);
 	checkEqual(vertices[6], 20);
-	checkEqual(vertices[7], 23); 
+	checkEqual(vertices[7], 23);
 	checkEqual(vertices[8], 26);
 }
 
@@ -153,19 +153,19 @@ TestCase(South) {
 	checkEqual(quadrangles[1][0],  1); checkEqual(quadrangles[1][1],  2); checkEqual(quadrangles[1][2], 11); checkEqual(quadrangles[1][3], 10); checkEqual(quadrangles[1][4], 17);
 	checkEqual(quadrangles[2][0],  9); checkEqual(quadrangles[2][1], 10); checkEqual(quadrangles[2][2], 19); checkEqual(quadrangles[2][3], 18); checkEqual(quadrangles[2][4], 18);
 	checkEqual(quadrangles[3][0], 10); checkEqual(quadrangles[3][1], 11); checkEqual(quadrangles[3][2], 20); checkEqual(quadrangles[3][3], 19); checkEqual(quadrangles[3][4], 19);
-	
+
 	auto vertices = south.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 9);
 	checkEqual(vertices[0],  0);
-	checkEqual(vertices[1],  1); 
+	checkEqual(vertices[1],  1);
 	checkEqual(vertices[2],  2);
 	checkEqual(vertices[3],  9);
-	checkEqual(vertices[4], 10); 
+	checkEqual(vertices[4], 10);
 	checkEqual(vertices[5], 11);
 	checkEqual(vertices[6], 18);
-	checkEqual(vertices[7], 19); 
+	checkEqual(vertices[7], 19);
 	checkEqual(vertices[8], 20);
-} 
+}
 
 TestCase(North) {
 	BoundaryData north = this->gridData->boundaries[3];
@@ -183,13 +183,13 @@ TestCase(North) {
 	auto vertices = north.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 9);
 	checkEqual(vertices[0],  6);
-	checkEqual(vertices[1],  7); 
+	checkEqual(vertices[1],  7);
 	checkEqual(vertices[2],  8);
 	checkEqual(vertices[3], 15);
-	checkEqual(vertices[4], 16); 
+	checkEqual(vertices[4], 16);
 	checkEqual(vertices[5], 17);
 	checkEqual(vertices[6], 24);
-	checkEqual(vertices[7], 25); 
+	checkEqual(vertices[7], 25);
 	checkEqual(vertices[8], 26);
 }
 
@@ -205,17 +205,17 @@ TestCase(Bottom) {
 	checkEqual(quadrangles[1][0], 2); checkEqual(quadrangles[1][1], 1); checkEqual(quadrangles[1][2], 4); checkEqual(quadrangles[1][3], 5); checkEqual(quadrangles[1][4], 25);
 	checkEqual(quadrangles[2][0], 4); checkEqual(quadrangles[2][1], 3); checkEqual(quadrangles[2][2], 6); checkEqual(quadrangles[2][3], 7); checkEqual(quadrangles[2][4], 26);
 	checkEqual(quadrangles[3][0], 5); checkEqual(quadrangles[3][1], 4); checkEqual(quadrangles[3][2], 7); checkEqual(quadrangles[3][3], 8); checkEqual(quadrangles[3][4], 27);
-	
+
 	auto vertices = bottom.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 9);
 	checkEqual(vertices[0], 0);
-	checkEqual(vertices[1], 1); 
+	checkEqual(vertices[1], 1);
 	checkEqual(vertices[2], 2);
 	checkEqual(vertices[3], 3);
-	checkEqual(vertices[4], 4); 
+	checkEqual(vertices[4], 4);
 	checkEqual(vertices[5], 5);
 	checkEqual(vertices[6], 6);
-	checkEqual(vertices[7], 7); 
+	checkEqual(vertices[7], 7);
 	checkEqual(vertices[8], 8);
 }
 
@@ -235,13 +235,13 @@ TestCase(Top) {
 	auto vertices = top.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 9);
 	checkEqual(vertices[0], 18);
-	checkEqual(vertices[1], 19); 
+	checkEqual(vertices[1], 19);
 	checkEqual(vertices[2], 20);
 	checkEqual(vertices[3], 21);
-	checkEqual(vertices[4], 22); 
+	checkEqual(vertices[4], 22);
 	checkEqual(vertices[5], 23);
 	checkEqual(vertices[6], 24);
-	checkEqual(vertices[7], 25); 
+	checkEqual(vertices[7], 25);
 	checkEqual(vertices[8], 26);
 }
 
@@ -255,11 +255,11 @@ TestCase(Regions) {
 	checkEqual(elementsOnRegion[0], 0);
 	checkEqual(elementsOnRegion[1], 1);
 	checkEqual(elementsOnRegion[2], 2);
-	checkEqual(elementsOnRegion[3], 3);	
-	checkEqual(elementsOnRegion[4], 4);	
-	checkEqual(elementsOnRegion[5], 5);	
-	checkEqual(elementsOnRegion[6], 6);	
-	checkEqual(elementsOnRegion[7], 7);	
+	checkEqual(elementsOnRegion[3], 3);
+	checkEqual(elementsOnRegion[4], 4);
+	checkEqual(elementsOnRegion[5], 5);
+	checkEqual(elementsOnRegion[6], 6);
+	checkEqual(elementsOnRegion[7], 7);
 }
 
 TestSuiteEnd()

@@ -87,13 +87,13 @@ TestCase(West) {
 	auto vertices = west.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 0);
-	checkEqual(vertices[1], 3); 
+	checkEqual(vertices[1], 3);
 	checkEqual(vertices[2], 6);
 
 	cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("West"));
 	checkEqual(this->elementStart, 11);
-	checkEqual(this->elementEnd  , 12); 
+	checkEqual(this->elementEnd  , 12);
 	check(this->type == BAR_2);
 
 	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 1, nullptr);
@@ -114,8 +114,8 @@ TestCase(East) {
 	auto vertices = east.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 2);
-	checkEqual(vertices[1], 5); 
-	checkEqual(vertices[2], 8); 
+	checkEqual(vertices[1], 5);
+	checkEqual(vertices[2], 8);
 
 	cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("East"));
@@ -141,8 +141,8 @@ TestCase(South) {
 	auto vertices = south.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 0);
-	checkEqual(vertices[1], 1); 
-	checkEqual(vertices[2], 2); 
+	checkEqual(vertices[1], 1);
+	checkEqual(vertices[2], 2);
 
 	cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("South"));
@@ -168,8 +168,8 @@ TestCase(North) {
 	auto vertices = north.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 6);
-	checkEqual(vertices[1], 7); 
-	
+	checkEqual(vertices[1], 7);
+
 	cg_section_read(this->fileIndex, 1, 1, 5, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
 	check(name == std::string("North"));
 	checkEqual(this->elementStart, 17);
@@ -191,13 +191,13 @@ TestCase(Regions) {
 	checkEqual(elementsOnRegion[0], 0);
 	checkEqual(elementsOnRegion[1], 1);
 	checkEqual(elementsOnRegion[2], 2);
-	checkEqual(elementsOnRegion[3], 3);	
-	checkEqual(elementsOnRegion[4], 4);	
-	checkEqual(elementsOnRegion[5], 5);	
-	checkEqual(elementsOnRegion[6], 6);	
-	checkEqual(elementsOnRegion[7], 7);	
-	checkEqual(elementsOnRegion[8], 8);	
-	checkEqual(elementsOnRegion[9], 9);	
+	checkEqual(elementsOnRegion[3], 3);
+	checkEqual(elementsOnRegion[4], 4);
+	checkEqual(elementsOnRegion[5], 5);
+	checkEqual(elementsOnRegion[6], 6);
+	checkEqual(elementsOnRegion[7], 7);
+	checkEqual(elementsOnRegion[8], 8);
+	checkEqual(elementsOnRegion[9], 9);
 }
 
 TestSuiteEnd()

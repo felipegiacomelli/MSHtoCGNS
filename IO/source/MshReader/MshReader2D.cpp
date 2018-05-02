@@ -15,16 +15,16 @@ MshReader2D::MshReader2D(const std::string& filePath) : MshReader(filePath) {
 }
 
 void MshReader2D::readPhysicalEntities() {
-	this->file.seekg(0, std::ios::beg); 
-	while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof()) 
+	this->file.seekg(0, std::ios::beg);
+	while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof())
 		this->file >> this->buffer;
-	if (this->file.eof()) 
+	if (this->file.eof())
 		throw std::runtime_error("MshReader2D: There is no Physical Entities data in the grid file");
-	
+
 	this->file >> this->numberOfPhysicalEntities;
-	std::vector<int> entitiesTypes;			
+	std::vector<int> entitiesTypes;
 	std::vector<int> entitiesIndices;
-	std::vector<std::string> entitiesNames; 
+	std::vector<std::string> entitiesNames;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
 		int type, index;
 		std::string name;
@@ -48,19 +48,19 @@ void MshReader2D::readPhysicalEntities() {
 				regionsIndices.push_back(entitiesIndices[i]);
 				break;
 			}
-			default: 
+			default:
 				throw std::runtime_error("MshReader2D: Non supported physical entity found");
 		}
 	}
-	
+
 	this->numberOfBoundaries = boundaryIndices.size();
 	this->gridData->boundaries.resize(boundaryIndices.size());
-	for (unsigned i = 0; i < boundaryIndices.size(); i++) 
+	for (unsigned i = 0; i < boundaryIndices.size(); i++)
 		this->gridData->boundaries[i].name = entitiesNames[boundaryIndices[i]];
 
 	this->numberOfRegions = regionsIndices.size();
 	this->gridData->regions.resize(regionsIndices.size());
-	for (unsigned i = 0; i < regionsIndices.size(); i++) 
+	for (unsigned i = 0; i < regionsIndices.size(); i++)
 		this->gridData->regions[i].name = entitiesNames[regionsIndices[i]];
 
 	std::iota(boundaryIndices.begin(), boundaryIndices.end(), 0);
@@ -70,9 +70,9 @@ void MshReader2D::readPhysicalEntities() {
 void MshReader2D::determineNumberOfFacets() {
 	this->numberOfFacets = 0;
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {
-		if (this->connectivities[i][0] != 0) 
+		if (this->connectivities[i][0] != 0)
 			break;
-		else 
+		else
 			this->numberOfFacets++;
 	}
 }
@@ -82,7 +82,7 @@ void MshReader2D::addRegions() {
 		for (unsigned j = 0; j < this->regionElements[i].size(); j++) {
 			int index = this->regionElements[i][j];
 			int type  = this->elements[index][0];
-			std::vector<int> connectivity(this->elements[index].cbegin() + 2, this->elements[index].cend()); 
+			std::vector<int> connectivity(this->elements[index].cbegin() + 2, this->elements[index].cend());
 			this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 			switch (type) {
 				case 1: {
@@ -93,7 +93,7 @@ void MshReader2D::addRegions() {
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(connectivity));
 					break;
 				}
-				default: 
+				default:
 					throw std::runtime_error("MshReader2D: Non supported element found");
 			}
 		}
@@ -105,13 +105,13 @@ void MshReader2D::addBoundaries() {
 		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
 			int index = this->boundaryFacets[i][j];
 			int type  = this->facets[index][0];
-			std::vector<int> connectivity(this->facets[index].cbegin() + 2, this->facets[index].cend()); 
+			std::vector<int> connectivity(this->facets[index].cbegin() + 2, this->facets[index].cend());
 			switch (type) {
 				case 0: {
 					this->gridData->boundaries[i].lineConnectivity.emplace_back(std::move(connectivity));
 					break;
 				}
-				default: 
+				default:
 					throw std::runtime_error("MshReader2D: Non supported facet found");
 			}
 		}
@@ -121,8 +121,8 @@ void MshReader2D::addBoundaries() {
 void MshReader2D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
-		for (auto j = boundary->lineConnectivity.cbegin(); j != boundary->lineConnectivity.cend(); j++) 
-			for (auto k = j->cbegin(); k != j->cend()-1; k++) 
+		for (auto j = boundary->lineConnectivity.cbegin(); j != boundary->lineConnectivity.cend(); j++)
+			for (auto k = j->cbegin(); k != j->cend()-1; k++)
 				vertices.insert(*k);
 		boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
 	}

@@ -1,4 +1,4 @@
-#ifndef CGNS_FILE_2D_HPP	
+#ifndef CGNS_FILE_2D_HPP
 #define CGNS_FILE_2D_HPP
 
 #include <CgnsInterface/CgnsCreator/CgnsCreator.hpp>

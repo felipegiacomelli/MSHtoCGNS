@@ -89,7 +89,7 @@ endif ()
 ##############
 macro (add_executable _target)
     _add_executable (${_target} ${ARGN})
-    target_link_libraries (${_target} ${Boost_LIBRARIES}) 
+    target_link_libraries (${_target} ${Boost_LIBRARIES})
     target_link_libraries (${_target} ${CGNS_LIBRARIES})
 endmacro ()
 
@@ -97,7 +97,7 @@ set (Distribution "${PROJECT_NAME}Config")
 
 macro (add_library _target)
     _add_library (${_target} ${ARGN})
-    target_link_libraries (${_target} ${Boost_LIBRARIES}) 
+    target_link_libraries (${_target} ${Boost_LIBRARIES})
     target_link_libraries (${_target} ${CGNS_LIBRARIES})
     set_target_properties (${_target}  PROPERTIES PREFIX "" VERSION ${VERSION})
     install (TARGETS ${PROJECT_NAME} EXPORT ${Distribution} DESTINATION ${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY}/libs)
@@ -114,8 +114,8 @@ add_subdirectory (IO)
 add_subdirectory (IOTest)
 add_subdirectory (CgnsInterface)
 add_subdirectory (CgnsInterfaceTest)
-add_subdirectory (MSHtoCGNS) 
-add_subdirectory (UtilitiesTest) 
+add_subdirectory (MSHtoCGNS)
+add_subdirectory (UtilitiesTest)
 
 #################################################################
 # TESTING

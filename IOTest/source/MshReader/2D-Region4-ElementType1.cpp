@@ -70,8 +70,8 @@ TestCase(West) {
 	auto vertices = west.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 0);
-	checkEqual(vertices[1], 3); 
-	checkEqual(vertices[2], 6); 
+	checkEqual(vertices[1], 3);
+	checkEqual(vertices[2], 6);
 }
 
 TestCase(East) {
@@ -88,8 +88,8 @@ TestCase(East) {
 	auto vertices = east.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 2);
-	checkEqual(vertices[1], 5); 
-	checkEqual(vertices[2], 8); 
+	checkEqual(vertices[1], 5);
+	checkEqual(vertices[2], 8);
 }
 
 TestCase(South) {
@@ -106,8 +106,8 @@ TestCase(South) {
 	auto vertices = south.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 0);
-	checkEqual(vertices[1], 1); 
-	checkEqual(vertices[2], 2); 
+	checkEqual(vertices[1], 1);
+	checkEqual(vertices[2], 2);
 }
 
 TestCase(North) {
@@ -124,8 +124,8 @@ TestCase(North) {
 	auto vertices = north.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 3);
 	checkEqual(vertices[0], 6);
-	checkEqual(vertices[1], 7); 
-	checkEqual(vertices[2], 8); 
+	checkEqual(vertices[1], 7);
+	checkEqual(vertices[2], 8);
 }
 
 TestCase(Regions) {
@@ -136,7 +136,7 @@ TestCase(A) {
 	auto a = this->gridData->regions[0];
 
 	check(a.name == std::string("A"));
-	
+
 	checkEqual(static_cast<int>(a.elementsOnRegion.size()), 4);
 	checkEqual(a.elementsOnRegion[0], 0);
 	checkEqual(a.elementsOnRegion[1], 1);
@@ -148,7 +148,7 @@ TestCase(B) {
 	auto b = this->gridData->regions[1];
 
 	check(b.name == std::string("B"));
-	
+
 	checkEqual(static_cast<int>(b.elementsOnRegion.size()), 4);
 	checkEqual(b.elementsOnRegion[0], 4);
 	checkEqual(b.elementsOnRegion[1], 5);
@@ -160,7 +160,7 @@ TestCase(C) {
 	auto c = this->gridData->regions[2];
 
 	check(c.name == std::string("C"));
-	
+
 	checkEqual(static_cast<int>(c.elementsOnRegion.size()), 1);
 	checkEqual(c.elementsOnRegion[0], 8);
 }
@@ -169,7 +169,7 @@ TestCase(D) {
 	auto d = this->gridData->regions[3];
 
 	check(d.name == std::string("D"));
-	
+
 	checkEqual(static_cast<int>(d.elementsOnRegion.size()), 1);
 	checkEqual(d.elementsOnRegion[0], 9);
 }

@@ -7,13 +7,13 @@ MshReader::MshReader(const std::string& filePath) : filePath(filePath) {
 
 void MshReader::checkFile() {
     boost::filesystem::path input(this->filePath);
-	if (!boost::filesystem::exists(input.parent_path())) 
+	if (!boost::filesystem::exists(input.parent_path()))
 		throw std::runtime_error("MshReader: The parent path does not exist");
-	
-	if (!boost::filesystem::exists(this->filePath)) 
+
+	if (!boost::filesystem::exists(this->filePath))
 		throw std::runtime_error("MshReader: There is no file in the given path");
 
-	if (input.extension() != ".msh") 
+	if (input.extension() != ".msh")
 		throw std::runtime_error("MshReader: The file extension is not .msh");
 
 	this->file = std::ifstream(this->filePath.c_str());
@@ -21,25 +21,25 @@ void MshReader::checkFile() {
 
 void MshReader::readNodes() {
 	int numberOfVertices, temporary;
-	this->file.seekg(0, std::ios::beg); 
-	while (strcmp(this->buffer, "$Nodes") && !this->file.eof()) 
+	this->file.seekg(0, std::ios::beg);
+	while (strcmp(this->buffer, "$Nodes") && !this->file.eof())
 		this->file >> this->buffer;
-	if (this->file.eof()) 
+	if (this->file.eof())
 		throw std::runtime_error("MshReader: There is no Node data in the grid file");
-	
+
 	this->file >> numberOfVertices;
 	this->gridData->coordinates.resize(numberOfVertices, std::vector<double>(3));
-	for (int i = 0; i < numberOfVertices; i++) 
+	for (int i = 0; i < numberOfVertices; i++)
 		this->file >> temporary >> this->gridData->coordinates[i][0] >> this->gridData->coordinates[i][1] >> this->gridData->coordinates[i][2];
 }
 
 void MshReader::readConnectivities() {
 	int numberOfElements;
 	this->file.seekg(0, std::ios::beg);
-	while (strcmp(this->buffer, "$Elements") && !this->file.eof()) 
+	while (strcmp(this->buffer, "$Elements") && !this->file.eof())
 		this->file >> this->buffer;
-	if (this->file.eof()) 
-		this->file.clear(); 
+	if (this->file.eof())
+		this->file.clear();
 	else {
 		this->file >> numberOfElements;
 		for (int i = 0; i < numberOfElements+1; i++) {
@@ -56,8 +56,8 @@ void MshReader::readConnectivities() {
 		}
 	}
 	this->connectivities.erase(this->connectivities.begin());
-	
-	if (connectivities[0][2] != 1) 
+
+	if (connectivities[0][2] != 1)
 		throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
 
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {
@@ -68,7 +68,7 @@ void MshReader::readConnectivities() {
 }
 
 void MshReader::divideConnectivities() {
-	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + this->numberOfFacets, this->connectivities.end());	
+	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + this->numberOfFacets, this->connectivities.end());
 	for (unsigned i = 0; i < this->elements.size(); i++)
 		this->elements[i].push_back(i);
 	int numberOfElements = elements.size();
@@ -85,7 +85,7 @@ void MshReader::assignElementsToRegions() {
 	std::vector<unsigned> regionStart;
 	regionStart.emplace_back(0);
 	for (unsigned i = 0; i < this->elements.size()-1; i++) {
-		if (this->elements[i][1] == this->elements[i+1][1]) 
+		if (this->elements[i][1] == this->elements[i+1][1])
 			counter++;
 		else {
 			counter++;
@@ -93,9 +93,9 @@ void MshReader::assignElementsToRegions() {
 		}
 	}
 	regionStart.push_back(this->elements.size());
-	
-	for (unsigned i = 0; i < regionStart.size()-1; i++) 
-		for (unsigned j = regionStart[i]; j < regionStart[i+1]; j++) 
+
+	for (unsigned i = 0; i < regionStart.size()-1; i++)
+		for (unsigned j = regionStart[i]; j < regionStart[i+1]; j++)
 			this->elements[j][1] = i;
 
 	this->regionElements.resize(this->numberOfRegions, std::vector<int>());

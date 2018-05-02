@@ -56,7 +56,7 @@ TestCase(West) {
 	auto vertices = west.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 2);
 	checkEqual(vertices[0], 0);
-	checkEqual(vertices[1], 3); 
+	checkEqual(vertices[1], 3);
 }
 
 TestCase(East) {
@@ -72,7 +72,7 @@ TestCase(East) {
 	auto vertices = east.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 2);
 	checkEqual(vertices[0], 1);
-	checkEqual(vertices[1], 2); 
+	checkEqual(vertices[1], 2);
 }
 
 TestCase(South) {
@@ -88,7 +88,7 @@ TestCase(South) {
 	auto vertices = south.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 2);
 	checkEqual(vertices[0], 0);
-	checkEqual(vertices[1], 1); 
+	checkEqual(vertices[1], 1);
 }
 
 TestCase(North) {
@@ -104,7 +104,7 @@ TestCase(North) {
 	auto vertices = north.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 2);
 	checkEqual(vertices[0], 2);
-	checkEqual(vertices[1], 3); 
+	checkEqual(vertices[1], 3);
 }
 
 TestCase(Regions) {

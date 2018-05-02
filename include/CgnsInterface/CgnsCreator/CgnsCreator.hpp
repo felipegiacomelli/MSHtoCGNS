@@ -1,4 +1,4 @@
-#ifndef CGNS_FILE_HPP	
+#ifndef CGNS_FILE_HPP
 #define CGNS_FILE_HPP
 
 #include <set>
