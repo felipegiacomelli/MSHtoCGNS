@@ -3,6 +3,7 @@
 
 #include <set>
 #include <string>
+#include <sstream>
 #include <fstream>
 #include <numeric>
 #include <BoostInterface/Filesystem.hpp>
@@ -11,7 +12,6 @@
 
 class MshReader {
 	public:
-		MshReader() = default;
 		MshReader(const std::string&);
 
 		virtual ~MshReader() = default;

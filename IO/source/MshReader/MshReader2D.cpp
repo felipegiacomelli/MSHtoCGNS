@@ -79,11 +79,11 @@ void MshReader2D::determineNumberOfFacets() {
 
 void MshReader2D::addRegions() {
 	for (unsigned i = 0; i < this->regionElements.size(); i++) {
+		this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 		for (unsigned j = 0; j < this->regionElements[i].size(); j++) {
 			int index = this->regionElements[i][j];
 			int type  = this->elements[index][0];
 			std::vector<int> connectivity(this->elements[index].cbegin() + 2, this->elements[index].cend());
-			this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 			switch (type) {
 				case 1: {
 					this->gridData->triangleConnectivity.emplace_back(std::move(connectivity));
@@ -102,13 +102,14 @@ void MshReader2D::addRegions() {
 
 void MshReader2D::addBoundaries() {
 	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
+		this->gridData->boundaries[i].facetsOnBoundary = this->boundaryFacets[i];
 		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
 			int index = this->boundaryFacets[i][j];
 			int type  = this->facets[index][0];
 			std::vector<int> connectivity(this->facets[index].cbegin() + 2, this->facets[index].cend());
 			switch (type) {
 				case 0: {
-					this->gridData->boundaries[i].lineConnectivity.emplace_back(std::move(connectivity));
+					this->gridData->lineConnectivity.emplace_back(std::move(connectivity));
 					break;
 				}
 				default:
@@ -121,7 +122,9 @@ void MshReader2D::addBoundaries() {
 void MshReader2D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
-		for (auto j = boundary->lineConnectivity.cbegin(); j != boundary->lineConnectivity.cend(); j++)
+		std::vector<std::vector<int>> facets(this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.front(),
+												this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1);
+		for (auto j = facets.cbegin(); j != facets.cend(); j++)
 			for (auto k = j->cbegin(); k != j->cend()-1; k++)
 				vertices.insert(*k);
 		boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());

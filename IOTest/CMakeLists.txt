@@ -1,6 +1,6 @@
 project (IOTest) 
 
-set (Dependencies IO CgnsInterface) 
+set (Dependencies IO) 
 
 include_directories (${CMAKE_SOURCE_DIR}/include) 
 

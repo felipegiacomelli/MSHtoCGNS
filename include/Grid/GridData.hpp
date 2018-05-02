@@ -5,7 +5,7 @@
 #include <BoostInterface/SharedPointer.hpp>
 
 struct BoundaryData {
-	std::vector<int> elementsOnBoundary;
+	std::vector<int> facetsOnBoundary;
 	std::vector<int> vertices;
 	std::string	name;
 };

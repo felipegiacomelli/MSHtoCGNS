@@ -79,11 +79,11 @@ void MshReader3D::determineNumberOfFacets() {
 
 void MshReader3D::addRegions() {
 	for (unsigned i = 0; i < this->regionElements.size(); i++) {
+		this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 		for (unsigned j = 0; j < this->regionElements[i].size(); j++) {
 			int index = this->regionElements[i][j];
 			int type  = this->elements[index][0];
 			std::vector<int> connectivity(this->elements[index].cbegin() + 2, this->elements[index].cend());
-			this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
 			switch (type) {
 				case 3: {
 					this->gridData->tetrahedronConnectivity.emplace_back(std::move(connectivity));
@@ -102,17 +102,18 @@ void MshReader3D::addRegions() {
 
 void MshReader3D::addBoundaries() {
 	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
+		this->gridData->boundaries[i].facetsOnBoundary = this->boundaryFacets[i];
 		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
 			int index = this->boundaryFacets[i][j];
 			int type  = this->facets[index][0];
 			std::vector<int> connectivity(this->facets[index].cbegin() + 2, this->facets[index].cend());
 			switch (type) {
 				case 1: {
-					this->gridData->boundaries[i].triangleConnectivity.emplace_back(std::move(connectivity));
+					this->gridData->triangleConnectivity.emplace_back(std::move(connectivity));
 					break;
 				}
 				case 2: {
-					this->gridData->boundaries[i].quadrangleConnectivity.emplace_back(std::move(connectivity));
+					this->gridData->quadrangleConnectivity.emplace_back(std::move(connectivity));
 					break;
 				}
 				default:
@@ -125,14 +126,18 @@ void MshReader3D::addBoundaries() {
 void MshReader3D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary != this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
-		if (boundary->triangleConnectivity.size() > 0) {
-			for (auto j = boundary->triangleConnectivity.cbegin(); j != boundary->triangleConnectivity.cend(); j++)
+		if (this->gridData->triangleConnectivity.size() > 0) {
+			std::vector<std::vector<int>> facets(this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.front(),
+													this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1);
+			for (auto j = facets.cbegin(); j != facets.cend(); j++)
 				for (auto k = j->cbegin(); k != j->cend()-1; k++)
 					vertices.insert(*k);
 			boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
 		}
 		else {
-			for (auto j = boundary->quadrangleConnectivity.cbegin(); j != boundary->quadrangleConnectivity.cend(); j++)
+			std::vector<std::vector<int>> facets(this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.front(),
+													this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1);
+			for (auto j = facets.cbegin(); j != facets.cend(); j++)
 				for (auto k = j->cbegin(); k != j->cend()-1; k++)
 					vertices.insert(*k);
 			boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
