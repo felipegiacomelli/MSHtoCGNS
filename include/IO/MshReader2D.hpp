@@ -5,7 +5,6 @@
 
 class MshReader2D : public MshReader {
 	public:
-		MshReader2D() = default;
 		MshReader2D(const std::string&);
 
 		~MshReader2D() = default;

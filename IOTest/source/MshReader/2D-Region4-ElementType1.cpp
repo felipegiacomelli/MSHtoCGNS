@@ -1,5 +1,4 @@
 #include <BoostInterface/Test.hpp>
-#include <Grid/GridData.hpp>
 #include <IO/MshReader2D.hpp>
 
 #define TOLERANCE 1e-12
@@ -48,7 +47,7 @@ TestCase(Elements) {
 	checkEqual(triangles[7][0], 4); checkEqual(triangles[7][1], 10); checkEqual(triangles[7][2],  5); checkEqual(triangles[7][3], 7);
 
 	auto quadrangles = this->gridData->quadrangleConnectivity;
-	
+
 	checkEqual(quadrangles.size(), 2u);
 	checkEqual(quadrangles[0][0], 4); checkEqual(quadrangles[0][1], 5); checkEqual(quadrangles[0][2], 8); checkEqual(quadrangles[0][3], 7); checkEqual(quadrangles[0][4], 8);
 	checkEqual(quadrangles[1][0], 0); checkEqual(quadrangles[1][1], 1); checkEqual(quadrangles[1][2], 4); checkEqual(quadrangles[1][3], 3); checkEqual(quadrangles[1][4], 9);
@@ -57,7 +56,7 @@ TestCase(Elements) {
 TestCase(Facets) {
 	auto lines = this->gridData->lineConnectivity;
 
-	checkEqual(lines.size(), 4u);
+	checkEqual(lines.size(), 8u);
 	checkEqual(lines[0][0], 6); checkEqual(lines[0][1], 3); checkEqual(lines[0][2], 10);
 	checkEqual(lines[1][0], 3); checkEqual(lines[1][1], 0); checkEqual(lines[1][2], 11);
 	checkEqual(lines[2][0], 2); checkEqual(lines[2][1], 5); checkEqual(lines[2][2], 12);
@@ -129,7 +128,7 @@ TestCase(West) {
 	auto facetsOnBoundary = boundary.facetsOnBoundary;
 	checkEqual(facetsOnBoundary.size(), 2u);
 	checkEqual(facetsOnBoundary[0], 10);
-	checkEqual(facetsOnBoundary[0], 11);
+	checkEqual(facetsOnBoundary[1], 11);
 
 	auto vertices = boundary.vertices;
 	checkEqual(vertices.size(), 3u);
@@ -146,7 +145,7 @@ TestCase(East) {
 	auto facetsOnBoundary = boundary.facetsOnBoundary;
 	checkEqual(facetsOnBoundary.size(), 2u);
 	checkEqual(facetsOnBoundary[0], 12);
-	checkEqual(facetsOnBoundary[0], 13);
+	checkEqual(facetsOnBoundary[1], 13);
 
 	auto vertices = boundary.vertices;
 	checkEqual(vertices.size(), 3u);
@@ -163,7 +162,7 @@ TestCase(South) {
 	auto facetsOnBoundary = boundary.facetsOnBoundary;
 	checkEqual(facetsOnBoundary.size(), 2u);
 	checkEqual(facetsOnBoundary[0], 14);
-	checkEqual(facetsOnBoundary[0], 15);
+	checkEqual(facetsOnBoundary[1], 15);
 
 	auto vertices = boundary.vertices;
 	checkEqual(vertices.size(), 3u);
@@ -179,8 +178,8 @@ TestCase(North) {
 
 	auto facetsOnBoundary = boundary.facetsOnBoundary;
 	checkEqual(facetsOnBoundary.size(), 2u);
-	checkEqual(facetsOnBoundary[0], 15);
 	checkEqual(facetsOnBoundary[0], 16);
+	checkEqual(facetsOnBoundary[1], 17);
 
 	auto vertices = boundary.vertices;
 	checkEqual(vertices.size(), 3u);

@@ -102,10 +102,10 @@ void MshReader3D::addRegions() {
 
 void MshReader3D::addBoundaries() {
 	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
-		this->gridData->boundaries[i].facetsOnBoundary = this->boundaryFacets[i];
 		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
 			int index = this->boundaryFacets[i][j];
 			int type  = this->facets[index][0];
+			this->gridData->boundaries[i].facetsOnBoundary.emplace_back(this->facets[index].back());
 			std::vector<int> connectivity(this->facets[index].cbegin() + 2, this->facets[index].cend());
 			switch (type) {
 				case 1: {
@@ -127,16 +127,16 @@ void MshReader3D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary != this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
 		if (this->gridData->triangleConnectivity.size() > 0) {
-			std::vector<std::vector<int>> facets(this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.front(),
-													this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1);
+			std::vector<std::vector<int>> facets(this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
+													this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->elements.size());
 			for (auto j = facets.cbegin(); j != facets.cend(); j++)
 				for (auto k = j->cbegin(); k != j->cend()-1; k++)
 					vertices.insert(*k);
 			boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
 		}
 		else {
-			std::vector<std::vector<int>> facets(this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.front(),
-													this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1);
+			std::vector<std::vector<int>> facets(this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
+													this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->elements.size());
 			for (auto j = facets.cbegin(); j != facets.cend(); j++)
 				for (auto k = j->cbegin(); k != j->cend()-1; k++)
 					vertices.insert(*k);

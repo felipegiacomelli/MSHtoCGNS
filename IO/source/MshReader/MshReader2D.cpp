@@ -102,10 +102,10 @@ void MshReader2D::addRegions() {
 
 void MshReader2D::addBoundaries() {
 	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
-		this->gridData->boundaries[i].facetsOnBoundary = this->boundaryFacets[i];
 		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
 			int index = this->boundaryFacets[i][j];
 			int type  = this->facets[index][0];
+			this->gridData->boundaries[i].facetsOnBoundary.emplace_back(this->facets[index].back());
 			std::vector<int> connectivity(this->facets[index].cbegin() + 2, this->facets[index].cend());
 			switch (type) {
 				case 0: {
@@ -122,8 +122,8 @@ void MshReader2D::addBoundaries() {
 void MshReader2D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
-		std::vector<std::vector<int>> facets(this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.front(),
-												this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1);
+		std::vector<std::vector<int>> facets(this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
+												this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->elements.size());
 		for (auto j = facets.cbegin(); j != facets.cend(); j++)
 			for (auto k = j->cbegin(); k != j->cend()-1; k++)
 				vertices.insert(*k);

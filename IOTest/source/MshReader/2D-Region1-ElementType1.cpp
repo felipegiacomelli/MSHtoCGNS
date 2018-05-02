@@ -1,5 +1,4 @@
 #include <BoostInterface/Test.hpp>
-#include <Grid/GridData.hpp>
 #include <IO/MshReader2D.hpp>
 
 #define TOLERANCE 1e-12
@@ -54,7 +53,7 @@ TestCase(Regions) {
 
 TestCase(Geometry) {
 	auto region = this->gridData->regions[0];
-	
+
 	check(region.name == std::string("Geometry"));
 
 	auto elementsOnRegion = region.elementsOnRegion;
