@@ -19,7 +19,7 @@ FixtureTestSuite(ReadCgns_Region1_ElementType1_3D, Region1_ElementType1_3D_Cgns)
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;
 
-	checkEqual(static_cast<int>(coordinates.size()), 27);
+	checkEqual(coordinates.size(), 27u);
 	checkClose(coordinates[ 0][0], 0.0, TOLERANCE); checkClose(coordinates[ 0][1], 0.0, TOLERANCE); checkClose(coordinates[ 0][2], 0.0, TOLERANCE);
 	checkClose(coordinates[ 1][0], 0.5, TOLERANCE); checkClose(coordinates[ 1][1], 0.0, TOLERANCE); checkClose(coordinates[ 1][2], 0.0, TOLERANCE);
 	checkClose(coordinates[ 2][0], 1.0, TOLERANCE); checkClose(coordinates[ 2][1], 0.0, TOLERANCE); checkClose(coordinates[ 2][2], 0.0, TOLERANCE);
@@ -52,7 +52,7 @@ TestCase(Coordinates) {
 TestCase(Elements) {
 	auto hexahedra = this->gridData->hexahedronConnectivity;
 
-	checkEqual(static_cast<int>(hexahedra.size()), 8);
+	checkEqual(hexahedra.size(), 8u);
 	check(std::all_of(hexahedra.cbegin(), hexahedra.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(9);}));
 
 	checkEqual(hexahedra[0][0],  0); checkEqual(hexahedra[0][1],  1); checkEqual(hexahedra[0][2],  4); checkEqual(hexahedra[0][3],  3);
@@ -114,7 +114,7 @@ TestCase(Facets) {
 TestCase(Boundaries) {
 	auto boundaries = this->gridData->boundaries;
 
-	checkEqual(static_cast<int>(boundaries.size()), 6);
+	checkEqual(boundaries.size(), 6u);
 }
 
 TestCase(West) {
@@ -122,8 +122,15 @@ TestCase(West) {
 
 	check(boundary.name == std::string("West"));
 
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 4u);
+	checkEqual(facetsOnBoundary[0],  8);
+	checkEqual(facetsOnBoundary[1],  9);
+	checkEqual(facetsOnBoundary[2], 10);
+	checkEqual(facetsOnBoundary[3], 11);
+
 	auto vertices = boundary.vertices;
-	checkEqual(static_cast<int>(vertices.size()), 9);
+	checkEqual(vertices.size(), 9u);
 	checkEqual(vertices[0],  0);
 	checkEqual(vertices[1],  3);
 	checkEqual(vertices[2],  6);
@@ -140,8 +147,15 @@ TestCase(East) {
 
 	check(boundary.name == std::string("East"));
 
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 4u);
+	checkEqual(facetsOnBoundary[0], 12);
+	checkEqual(facetsOnBoundary[1], 13);
+	checkEqual(facetsOnBoundary[2], 14);
+	checkEqual(facetsOnBoundary[3], 15);
+
 	auto vertices = boundary.vertices;
-	checkEqual(static_cast<int>(vertices.size()), 9);
+	checkEqual(vertices.size(), 9u);
 	checkEqual(vertices[0],  2);
 	checkEqual(vertices[1],  5);
 	checkEqual(vertices[2],  8);
@@ -158,8 +172,15 @@ TestCase(South) {
 
 	check(boundary.name == std::string("South"));
 
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 4u);
+	checkEqual(facetsOnBoundary[0], 16);
+	checkEqual(facetsOnBoundary[1], 17);
+	checkEqual(facetsOnBoundary[2], 18);
+	checkEqual(facetsOnBoundary[3], 19);
+
 	auto vertices = boundary.vertices;
-	checkEqual(static_cast<int>(vertices.size()), 9);
+	checkEqual(vertices.size(), 9u);
 	checkEqual(vertices[0],  0);
 	checkEqual(vertices[1],  1);
 	checkEqual(vertices[2],  2);
@@ -176,8 +197,15 @@ TestCase(North) {
 
 	check(boundary.name == std::string("North"));
 
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 4u);
+	checkEqual(facetsOnBoundary[0], 20);
+	checkEqual(facetsOnBoundary[1], 21);
+	checkEqual(facetsOnBoundary[2], 22);
+	checkEqual(facetsOnBoundary[3], 23);
+
 	auto vertices = boundary.vertices;
-	checkEqual(static_cast<int>(vertices.size()), 9);
+	checkEqual(vertices.size(), 9u);
 	checkEqual(vertices[0],  6);
 	checkEqual(vertices[1],  7);
 	checkEqual(vertices[2],  8);
@@ -194,8 +222,15 @@ TestCase(Bottom) {
 
 	check(boundary.name == std::string("Bottom"));
 
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 4u);
+	checkEqual(facetsOnBoundary[0], 24);
+	checkEqual(facetsOnBoundary[1], 25);
+	checkEqual(facetsOnBoundary[2], 26);
+	checkEqual(facetsOnBoundary[3], 27);
+
 	auto vertices = boundary.vertices;
-	checkEqual(static_cast<int>(vertices.size()), 9);
+	checkEqual(vertices.size(), 9u);
 	checkEqual(vertices[0], 0);
 	checkEqual(vertices[1], 1);
 	checkEqual(vertices[2], 2);
@@ -212,8 +247,15 @@ TestCase(Top) {
 
 	check(boundary.name == std::string("Top"));
 
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 4u);
+	checkEqual(facetsOnBoundary[0], 28);
+	checkEqual(facetsOnBoundary[1], 29);
+	checkEqual(facetsOnBoundary[2], 30);
+	checkEqual(facetsOnBoundary[3], 31);
+
 	auto vertices = boundary.vertices;
-	checkEqual(static_cast<int>(vertices.size()), 9);
+	checkEqual(vertices.size(), 9u);
 	checkEqual(vertices[0], 18);
 	checkEqual(vertices[1], 19);
 	checkEqual(vertices[2], 20);
@@ -226,12 +268,16 @@ TestCase(Top) {
 }
 
 TestCase(Regions) {
-	checkEqual(static_cast<int>(this->gridData->regions.size()), 1);
+	checkEqual(this->gridData->regions.size(), 1u);
+}
 
-	check(this->gridData->regions[0].name == std::string("Geometry"));
+TestCase(Geometry) {
+	auto region = this->gridData->regions[0];
 
-	auto elementsOnRegion = this->gridData->regions[0].elementsOnRegion;
-	checkEqual(static_cast<int>(elementsOnRegion.size()), 8);
+	check(region.name == std::string("Geometry"));
+
+	auto elementsOnRegion = region.elementsOnRegion;
+	checkEqual(elementsOnRegion.size(), 8u);
 	checkEqual(elementsOnRegion[0], 0);
 	checkEqual(elementsOnRegion[1], 1);
 	checkEqual(elementsOnRegion[2], 2);
