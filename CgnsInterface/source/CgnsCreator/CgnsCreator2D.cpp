@@ -33,11 +33,11 @@ void CgnsCreator2D::writeRegions() {
 	int elementStart = 1;
 	int elementEnd = 0;
 
-	for (unsigned i = 0; i < this->gridData->regions.size(); i++) {
+	for (auto region = this->gridData->regions.begin(); region < this->gridData->regions.end(); region++) {
 		this->sectionIndices.emplace_back(0);
 
-		std::vector<std::vector<int>> regionConnectivities(elementConnectivities.cbegin() + this->gridData->regions[i].elementsOnRegion.front(),
-															elementConnectivities.cbegin() + this->gridData->regions[i].elementsOnRegion.back() + 1);
+		std::vector<std::vector<int>> regionConnectivities(elementConnectivities.cbegin() + region->elementsOnRegion.front(),
+															elementConnectivities.cbegin() + region->elementsOnRegion.back() + 1);
 	 	for (unsigned j = 0; j < regionConnectivities.size(); j++) {
 			regionConnectivities[j].pop_back();
 			for (unsigned k = 0; k < regionConnectivities[j].size(); k++)
@@ -48,7 +48,7 @@ void CgnsCreator2D::writeRegions() {
 	 	ElementType_t elementType;
 	 	if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == 3u;}))
 	 		elementType = TRI_3;
-	 	else if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(4);}))
+	 	else if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == 4u;}))
 	 		elementType = QUAD_4;
 		else
 			elementType = MIXED;
@@ -56,16 +56,16 @@ void CgnsCreator2D::writeRegions() {
 		if (elementType != MIXED) {
 			std::vector<int> connectivities = linearize(regionConnectivities);
 
-			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), elementType,
+			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, region->name.c_str(), elementType,
 									elementStart, elementEnd, sizes[2], &connectivities[0], &this->sectionIndices.back()))
-				throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(i+1));
+				throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(region - this->gridData->regions.begin()));
 
 			elementStart = elementEnd + 1;
 		}
 		else {
-			if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->regions[i].name.c_str(), elementType,
+			if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region->name.c_str(), elementType,
 											elementStart, elementEnd, sizes[2], &this->sectionIndices.back()))
-			throw std::runtime_error("CgnsCreator2D: Could not partial write element section " + std::to_string(i+1));
+			throw std::runtime_error("CgnsCreator2D: Could not partial write element section " + std::to_string(region - this->gridData->regions.begin()));
 
 			for (unsigned j = 0; j < regionConnectivities.size(); j++) {
 				std::vector<int> connectivities = regionConnectivities[j];
@@ -85,7 +85,8 @@ void CgnsCreator2D::writeRegions() {
 
 				if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(),
 										elementStart, elementStart, &connectivities[0]))
-					throw std::runtime_error("CgnsCreator2D: Could not write element " + std::to_string(elementStart) + " in section " + std::to_string(i+1));
+					throw std::runtime_error("CgnsCreator2D: Could not write element " + std::to_string(elementStart) + " in section " +
+												std::to_string(region - this->gridData->regions.begin()));
 
 				elementStart++;
 			}
@@ -96,15 +97,17 @@ void CgnsCreator2D::writeRegions() {
 void CgnsCreator2D::writeBoundaries() {
 	int elementStart = this->sizes[1] + 1;
 	for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
+		this->sectionIndices.emplace_back(0);
 		std::vector<std::vector<int>> boundaryConnectivities(this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
 																this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
-		for (unsigned j = 0; j < boundaryConnectivities.size(); j++)
+		for (unsigned j = 0; j < boundaryConnectivities.size(); j++) {
 			boundaryConnectivities[j].pop_back();
+			for (unsigned k = 0; k < boundaryConnectivities[j].size(); k++)
+				boundaryConnectivities[j][k]++;
+		}
 		int elementEnd = elementStart + boundaryConnectivities.size() - 1;
 
 		std::vector<int> connectivities = linearize(boundaryConnectivities);
-		for (unsigned j = 0; j < connectivities.size(); j++)
-			connectivities[j]++;
 
 		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), BAR_2,
 								elementStart, elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))

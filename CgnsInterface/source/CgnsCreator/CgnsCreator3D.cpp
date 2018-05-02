@@ -48,11 +48,13 @@ void CgnsCreator3D::writeRegions() {
 	switch (this->geometry) {
 		case 4: {
 			std::vector<std::vector<int>> regionConnectivities = this->gridData->tetrahedronConnectivity;
-	 		for (unsigned j = 0; j < regionConnectivities.size(); j++)
+	 		for (unsigned j = 0; j < regionConnectivities.size(); j++) {
 				regionConnectivities[j].pop_back();
+				for (unsigned k = 0; k < regionConnectivities[j].size(); k++)
+					regionConnectivities[j][k]++;
+	 		}
 			std::vector<int> connectivities = linearize(regionConnectivities);
-			for (unsigned j = 0; j < connectivities.size(); j++)
-				connectivities[j]++;
+
 			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", TETRA_4,
 									1, this->sizes[1], sizes[2], &connectivities[0], &this->sectionIndices.back()))
 				throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(1));
@@ -61,11 +63,12 @@ void CgnsCreator3D::writeRegions() {
 		}
 		case 8: {
 			std::vector<std::vector<int>> regionConnectivities = this->gridData->hexahedronConnectivity;
-		 	for (unsigned j = 0; j < regionConnectivities.size(); j++)
+	 		for (unsigned j = 0; j < regionConnectivities.size(); j++) {
 				regionConnectivities[j].pop_back();
+				for (unsigned k = 0; k < regionConnectivities[j].size(); k++)
+					regionConnectivities[j][k]++;
+	 		}
 			std::vector<int> connectivities = linearize(regionConnectivities);
-			for (unsigned j = 0; j < connectivities.size(); j++)
-				connectivities[j]++;
 			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", HEXA_8,
 									1, this->sizes[1], sizes[2], &connectivities[0], &this->sectionIndices.back()))
 				throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(1));
@@ -86,13 +89,15 @@ void CgnsCreator3D::writeBoundaries() {
 			for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
 			std::vector<std::vector<int>> boundaryConnectivities(this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
 																this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
-				for (unsigned j = 0; j < boundaryConnectivities.size(); j++)
+				for (unsigned j = 0; j < boundaryConnectivities.size(); j++) {
 					boundaryConnectivities[j].pop_back();
+					for (unsigned k = 0; k < boundaryConnectivities[j].size(); k++)
+						boundaryConnectivities[j][k]++;
+				}
 				elementEnd = elementStart + boundaryConnectivities.size() - 1;
 
 				std::vector<int> connectivities = linearize(boundaryConnectivities);
-				for (unsigned j = 0; j < connectivities.size(); j++)
-					connectivities[j]++;
+
 
 				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), TRI_3,
 										elementStart, elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
@@ -108,13 +113,14 @@ void CgnsCreator3D::writeBoundaries() {
 			for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
 			std::vector<std::vector<int>> boundaryConnectivities(this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
 																this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
-				for (unsigned j = 0; j < boundaryConnectivities.size(); j++)
+				for (unsigned j = 0; j < boundaryConnectivities.size(); j++) {
 					boundaryConnectivities[j].pop_back();
+					for (unsigned k = 0; k < boundaryConnectivities[j].size(); k++)
+						boundaryConnectivities[j][k]++;
+				}
 				elementEnd = elementStart + boundaryConnectivities.size() - 1;
 
 				std::vector<int> connectivities = linearize(boundaryConnectivities);
-				for (unsigned j = 0; j < connectivities.size(); j++)
-					connectivities[j]++;
 
 				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), QUAD_4,
 										elementStart, elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))

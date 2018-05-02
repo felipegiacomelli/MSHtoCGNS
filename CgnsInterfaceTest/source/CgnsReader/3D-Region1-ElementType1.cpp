@@ -53,7 +53,6 @@ TestCase(Elements) {
 	auto hexahedra = this->gridData->hexahedronConnectivity;
 
 	checkEqual(hexahedra.size(), 8u);
-	check(std::all_of(hexahedra.cbegin(), hexahedra.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(9);}));
 
 	checkEqual(hexahedra[0][0],  0); checkEqual(hexahedra[0][1],  1); checkEqual(hexahedra[0][2],  4); checkEqual(hexahedra[0][3],  3);
 	checkEqual(hexahedra[1][0],  1); checkEqual(hexahedra[1][1],  2); checkEqual(hexahedra[1][2],  5); checkEqual(hexahedra[1][3],  4);
@@ -85,6 +84,7 @@ TestCase(Elements) {
 
 TestCase(Facets) {
 	auto quadrangles = this->gridData->quadrangleConnectivity;
+
 	checkEqual(quadrangles[	0][0],  0); checkEqual(quadrangles[	0][1],  9); checkEqual(quadrangles[	0][2], 12); checkEqual(quadrangles[	0][3],  3); checkEqual(quadrangles[	0][4],  8);
 	checkEqual(quadrangles[	1][0],  3); checkEqual(quadrangles[	1][1], 12); checkEqual(quadrangles[	1][2], 15); checkEqual(quadrangles[	1][3],  6); checkEqual(quadrangles[	1][4],  9);
 	checkEqual(quadrangles[	2][0],  9); checkEqual(quadrangles[	2][1], 18); checkEqual(quadrangles[	2][2], 21); checkEqual(quadrangles[	2][3], 12); checkEqual(quadrangles[	2][4], 10);
@@ -118,7 +118,7 @@ TestCase(Boundaries) {
 }
 
 TestCase(West) {
-	BoundaryData boundary = this->gridData->boundaries[0];
+	auto boundary = this->gridData->boundaries[0];
 
 	check(boundary.name == std::string("West"));
 
@@ -143,7 +143,7 @@ TestCase(West) {
 }
 
 TestCase(East) {
-	BoundaryData boundary = this->gridData->boundaries[1];
+	auto boundary = this->gridData->boundaries[1];
 
 	check(boundary.name == std::string("East"));
 
@@ -168,7 +168,7 @@ TestCase(East) {
 }
 
 TestCase(South) {
-	BoundaryData boundary = this->gridData->boundaries[2];
+	auto boundary = this->gridData->boundaries[2];
 
 	check(boundary.name == std::string("South"));
 
@@ -193,7 +193,7 @@ TestCase(South) {
 }
 
 TestCase(North) {
-	BoundaryData boundary = this->gridData->boundaries[3];
+	auto boundary = this->gridData->boundaries[3];
 
 	check(boundary.name == std::string("North"));
 
@@ -218,7 +218,7 @@ TestCase(North) {
 }
 
 TestCase(Bottom) {
-	BoundaryData boundary = this->gridData->boundaries[4];
+	auto boundary = this->gridData->boundaries[4];
 
 	check(boundary.name == std::string("Bottom"));
 
@@ -243,7 +243,7 @@ TestCase(Bottom) {
 }
 
 TestCase(Top) {
-	BoundaryData boundary = this->gridData->boundaries[5];
+	auto boundary = this->gridData->boundaries[5];
 
 	check(boundary.name == std::string("Top"));
 
