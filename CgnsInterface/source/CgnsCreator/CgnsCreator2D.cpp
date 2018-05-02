@@ -11,13 +11,6 @@ CgnsCreator2D::CgnsCreator2D(GridDataShared gridData, const std::string& folderP
 	this->initialize();
 }
 
-void CgnsCreator2D::setupFile() {
-	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/"; 
-	createDirectory(folderName);
-	this->fileName = folderName + std::string("Grid.cgns");
-	cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
-}
-
 void CgnsCreator2D::writeCoordinates() {
 	double coordinatesX[this->sizes[0]];
 	double coordinatesY[this->sizes[0]];
@@ -51,9 +44,9 @@ void CgnsCreator2D::writeRegions() {
 				regionConnectivities[j][k]++;		
 	 	}
 	 	elementEnd += regionConnectivities.size();
-
+//////////////////////////////////////////////////////////
 	 	ElementType_t elementType;
-	 	if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);})) 
+	 	if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == 3u;})) 
 	 		elementType = TRI_3;
 	 	else if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(4);})) 
 	 		elementType = QUAD_4;

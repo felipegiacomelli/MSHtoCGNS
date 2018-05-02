@@ -12,7 +12,6 @@ class CgnsCreator3D : public CgnsCreator {
 
 	private:
 		void defineGeometryType(); 
-		void setupFile() override;
 		void writeCoordinates() override;
 		void writeRegions() override;
 		void writeBoundaries() override;

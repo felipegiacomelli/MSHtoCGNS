@@ -5,6 +5,7 @@ CgnsCreator3D::CgnsCreator3D(GridDataShared gridData, const std::string& folderP
 	this->sizes[0] = this->gridData->coordinates.size();
 	this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size();
 	this->sizes[2] = 0;	
+	this->defineGeometryType();
 	this->setupFile();
 	this->initialize();
 }
@@ -19,14 +20,6 @@ void CgnsCreator3D::defineGeometryType() {
 		this->boundary = 4;
 	} 
 	else throw std::runtime_error("CgnsCreator3D: Geometry type not supported");
-}
-
-void CgnsCreator3D::setupFile() {
-	this->defineGeometryType();
-	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/"; 
-	createDirectory(folderName);
-	this->fileName = folderName + std::string("Grid.cgns");
-	cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
 }
 
 void CgnsCreator3D::writeCoordinates() {

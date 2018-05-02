@@ -9,6 +9,13 @@ CgnsCreator::CgnsCreator(GridDataShared gridData, const std::string& folderPath)
 	this->coordinateIndices.resize(this->gridData->dimension);
 }
 
+void CgnsCreator::setupFile() {
+	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/"; 
+	createDirectory(folderName);
+	this->fileName = folderName + std::string("Grid.cgns");
+	cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
+}
+
 void CgnsCreator::initialize() {
 	this->writeBase();
 	this->writeZone();

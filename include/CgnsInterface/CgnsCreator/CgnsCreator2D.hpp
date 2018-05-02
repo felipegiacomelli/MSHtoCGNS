@@ -11,7 +11,6 @@ class CgnsCreator2D : public CgnsCreator {
 		~CgnsCreator2D() = default;
 
 	private:
-		void setupFile() override;
 		void writeCoordinates() override;
 		void writeRegions() override;
 		void writeBoundaries() override;
