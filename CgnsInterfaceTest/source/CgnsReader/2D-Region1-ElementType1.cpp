@@ -19,7 +19,7 @@ FixtureTestSuite(ReadCgns_Region1_ElementType1_2D, Region1_ElementType1_2D_Cgns)
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;
 
-	checkEqual(static_cast<int>(coordinates.size()), 9);
+	checkEqual(coordinates.size(), 9u);
 	checkClose(coordinates[0][0], 0.0, TOLERANCE); checkClose(coordinates[0][1], 0.0, TOLERANCE); checkClose(coordinates[0][2], 0.0, TOLERANCE);
 	checkClose(coordinates[1][0], 0.5, TOLERANCE); checkClose(coordinates[1][1], 0.0, TOLERANCE); checkClose(coordinates[1][2], 0.0, TOLERANCE);
 	checkClose(coordinates[2][0], 1.0, TOLERANCE); checkClose(coordinates[2][1], 0.0, TOLERANCE); checkClose(coordinates[2][2], 0.0, TOLERANCE);
@@ -34,103 +34,114 @@ TestCase(Coordinates) {
 TestCase(Elements) {
 	auto quadrangles = this->gridData->quadrangleConnectivity;
 
-	checkEqual(static_cast<int>(quadrangles.size()), 4);
-	check(std::all_of(quadrangles.cbegin(), quadrangles.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(5);}));
+	checkEqual(quadrangles.size(), 4u);
 	checkEqual(quadrangles[0][0], 0); checkEqual(quadrangles[0][1], 1); checkEqual(quadrangles[0][2], 4); checkEqual(quadrangles[0][3], 3); checkEqual(quadrangles[0][4], 0);
 	checkEqual(quadrangles[1][0], 1); checkEqual(quadrangles[1][1], 2); checkEqual(quadrangles[1][2], 5); checkEqual(quadrangles[1][3], 4); checkEqual(quadrangles[1][4], 1);
 	checkEqual(quadrangles[2][0], 3); checkEqual(quadrangles[2][1], 4); checkEqual(quadrangles[2][2], 7); checkEqual(quadrangles[2][3], 6); checkEqual(quadrangles[2][4], 2);
 	checkEqual(quadrangles[3][0], 4); checkEqual(quadrangles[3][1], 5); checkEqual(quadrangles[3][2], 8); checkEqual(quadrangles[3][3], 7); checkEqual(quadrangles[3][4], 3);
 }
 
-TestCase(Boundaries) {
-	auto boundaries = this->gridData->boundaries;
+TestCase(Facets) {
+	auto lines = this->gridData->lineConnectivity;
 
-	checkEqual(static_cast<int>(boundaries.size()), 4);
+	checkEqual(lines.size(), 8u);
+	checkEqual(lines[0][0], 6); checkEqual(lines[0][1], 3); checkEqual(lines[0][2],  4);
+	checkEqual(lines[1][0], 3); checkEqual(lines[1][1], 0); checkEqual(lines[1][2],  5);
+	checkEqual(lines[2][0], 2); checkEqual(lines[2][1], 5); checkEqual(lines[2][2],  6);
+	checkEqual(lines[3][0], 5); checkEqual(lines[3][1], 8); checkEqual(lines[3][2],  7);
+	checkEqual(lines[4][0], 0); checkEqual(lines[4][1], 1); checkEqual(lines[4][2],  8);
+	checkEqual(lines[5][0], 1); checkEqual(lines[5][1], 2); checkEqual(lines[5][2],  9);
+	checkEqual(lines[6][0], 8); checkEqual(lines[6][1], 7); checkEqual(lines[6][2], 10);
+	checkEqual(lines[7][0], 7); checkEqual(lines[7][1], 6); checkEqual(lines[7][2], 11);
+}
+
+TestCase(Regions) {
+	checkEqual(this->gridData->regions.size(), 1u);
+}
+
+TestCase(Geometry) {
+	auto region = this->gridData->regions[0];
+
+	check(region.name == std::string("Geometry"));
+
+	auto elementsOnRegion = region.elementsOnRegion;
+	checkEqual(elementsOnRegion.size(), 4u);
+	checkEqual(elementsOnRegion[0], 0);
+	checkEqual(elementsOnRegion[1], 1);
+	checkEqual(elementsOnRegion[2], 2);
+	checkEqual(elementsOnRegion[3], 3);
+}
+
+TestCase(Boundaries) {
+	checkEqual(this->gridData->boundaries.size(), 4u);
 }
 
 TestCase(West) {
-	BoundaryData west = this->gridData->boundaries[0];
+	BoundaryData boundary = this->gridData->boundaries[0];
 
-	check(west.name == std::string("West"));
+	check(boundary.name == std::string("West"));
 
-	auto lines = west.lineConnectivity;
-	checkEqual(static_cast<int>(lines.size()), 2);
-	check(std::all_of(lines.cbegin(), lines.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);}));
-	checkEqual(lines[0][0], 6); checkEqual(lines[0][1], 3); checkEqual(lines[0][2], 4);
-	checkEqual(lines[1][0], 3); checkEqual(lines[1][1], 0); checkEqual(lines[1][2], 5);
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 2u);
+	checkEqual(facetsOnBoundary[0], 4);
+	checkEqual(facetsOnBoundary[1], 5);
 
-	auto vertices = west.vertices;
-	checkEqual(static_cast<int>(vertices.size()), 3);
+	auto vertices = boundary.vertices;
+	checkEqual(vertices.size(), 3u);
 	checkEqual(vertices[0], 0);
 	checkEqual(vertices[1], 3);
 	checkEqual(vertices[2], 6);
 }
 
 TestCase(East) {
-	BoundaryData east = this->gridData->boundaries[1];
+	BoundaryData boundary = this->gridData->boundaries[1];
 
-	check(east.name == std::string("East"));
+	check(boundary.name == std::string("East"));
 
-	auto lines = east.lineConnectivity;
-	checkEqual(static_cast<int>(lines.size()), 2);
-	check(std::all_of(lines.cbegin(), lines.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);}));
-	checkEqual(lines[0][0], 2); checkEqual(lines[0][1], 5); checkEqual(lines[0][2], 6);
-	checkEqual(lines[1][0], 5); checkEqual(lines[1][1], 8); checkEqual(lines[1][2], 7);
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 2u);
+	checkEqual(facetsOnBoundary[0], 6);
+	checkEqual(facetsOnBoundary[1], 7);
 
-	auto vertices = east.vertices;
-	checkEqual(static_cast<int>(vertices.size()), 3);
+	auto vertices = boundary.vertices;
+	checkEqual(vertices.size(), 3u);
 	checkEqual(vertices[0], 2);
 	checkEqual(vertices[1], 5);
 	checkEqual(vertices[2], 8);
 }
 
 TestCase(South) {
-	BoundaryData south = this->gridData->boundaries[2];
+	BoundaryData boundary = this->gridData->boundaries[2];
 
-	check(south.name == std::string("South"));
+	check(boundary.name == std::string("South"));
 
-	auto lines = south.lineConnectivity;
-	checkEqual(static_cast<int>(lines.size()), 2);
-	check(std::all_of(lines.cbegin(), lines.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);}));
-	checkEqual(lines[0][0], 0); checkEqual(lines[0][1], 1); checkEqual(lines[0][2], 8);
-	checkEqual(lines[1][0], 1); checkEqual(lines[1][1], 2); checkEqual(lines[1][2], 9);
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 2u);
+	checkEqual(facetsOnBoundary[0], 8);
+	checkEqual(facetsOnBoundary[1], 9);
 
-	auto vertices = south.vertices;
-	checkEqual(static_cast<int>(vertices.size()), 3);
+	auto vertices = boundary.vertices;
+	checkEqual(vertices.size(), 3u);
 	checkEqual(vertices[0], 0);
 	checkEqual(vertices[1], 1);
 	checkEqual(vertices[2], 2);
 }
 
 TestCase(North) {
-	BoundaryData north = this->gridData->boundaries[3];
+	BoundaryData boundary = this->gridData->boundaries[3];
 
-	check(north.name == std::string("North"));
+	check(boundary.name == std::string("North"));
 
-	auto lines = north.lineConnectivity;
-	checkEqual(static_cast<int>(lines.size()), 2);
-	check(std::all_of(lines.cbegin(), lines.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(3);}));
-	checkEqual(lines[0][0], 8); checkEqual(lines[0][1], 7); checkEqual(lines[0][2], 10);
-	checkEqual(lines[1][0], 7); checkEqual(lines[1][1], 6); checkEqual(lines[1][2], 11);
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 2u);
+	checkEqual(facetsOnBoundary[0], 10);
+	checkEqual(facetsOnBoundary[1], 11);
 
-	auto vertices = north.vertices;
-	checkEqual(static_cast<int>(vertices.size()), 3);
+	auto vertices = boundary.vertices;
+	checkEqual(vertices.size(), 3u);
 	checkEqual(vertices[0], 6);
 	checkEqual(vertices[1], 7);
 	checkEqual(vertices[2], 8);
-}
-
-TestCase(Regions) {
-	checkEqual(static_cast<int>(this->gridData->regions.size()), 1);
-
-	check(this->gridData->regions[0].name == std::string("Geometry"));
-
-	auto elementsOnRegion = this->gridData->regions[0].elementsOnRegion;
-	checkEqual(static_cast<int>(elementsOnRegion.size()), 4);
-	checkEqual(elementsOnRegion[0], 0);
-	checkEqual(elementsOnRegion[1], 1);
-	checkEqual(elementsOnRegion[2], 2);
-	checkEqual(elementsOnRegion[3], 3);
 }
 
 TestSuiteEnd()

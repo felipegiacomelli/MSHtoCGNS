@@ -19,8 +19,9 @@ struct GridData {
 	GridData() = default;
 
 	int dimension;
+	int numberOfElements;
 
-	std::vector<std::vector<double>> coordinates;				// mudar para array
+	std::vector<std::vector<double>> coordinates;
 
 	std::vector<std::vector<int>> lineConnectivity;
 	std::vector<std::vector<int>> triangleConnectivity;

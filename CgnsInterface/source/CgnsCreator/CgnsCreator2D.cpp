@@ -44,7 +44,7 @@ void CgnsCreator2D::writeRegions() {
 				regionConnectivities[j][k]++;
 	 	}
 	 	elementEnd += regionConnectivities.size();
-//////////////////////////////////////////////////////////
+
 	 	ElementType_t elementType;
 	 	if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == 3u;}))
 	 		elementType = TRI_3;
@@ -95,20 +95,20 @@ void CgnsCreator2D::writeRegions() {
 
 void CgnsCreator2D::writeBoundaries() {
 	int elementStart = this->sizes[1] + 1;
-	for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
-		std::vector<std::vector<int>> boundaryConnectivities(this->gridData->boundaries[i].lineConnectivity.cbegin(),
-																this->gridData->boundaries[i].lineConnectivity.cend());
+	for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
+		std::vector<std::vector<int>> boundaryConnectivities(this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
+																this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
 		for (unsigned j = 0; j < boundaryConnectivities.size(); j++)
 			boundaryConnectivities[j].pop_back();
-		int elementEnd = elementStart + this->gridData->boundaries[i].lineConnectivity.size() - 1;
+		int elementEnd = elementStart + boundaryConnectivities.size() - 1;
 
 		std::vector<int> connectivities = linearize(boundaryConnectivities);
 		for (unsigned j = 0; j < connectivities.size(); j++)
 			connectivities[j]++;
 
-		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BAR_2,
+		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), BAR_2,
 								elementStart, elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
-			throw std::runtime_error("CgnsCreator2D: Could not write facet section " + std::to_string(i+1));
+			throw std::runtime_error("CgnsCreator2D: Could not write facet section " + std::to_string(boundary - this->gridData->boundaries.begin()));
 
 		elementStart = elementEnd + 1;
 	}

@@ -44,9 +44,11 @@ void CgnsReader2D::readSections() {
 			this->gridData->regions.emplace_back(std::move(region));
 		}
 		else if (elementType == BAR_2) {
-			BoundaryData boundaryData;
-			boundaryData.name = this->buffer;
-			this->gridData->boundaries.emplace_back(std::move(boundaryData));
+			BoundaryData boundary;
+			boundary.name = this->buffer;
+			boundary.facetsOnBoundary.resize(numberOfElements);
+			std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), elementStart - 1);
+			this->gridData->boundaries.emplace_back(std::move(boundary));
 		}
 		else {
 			throw std::runtime_error("CgnsReader2D: Section element type not supported");
@@ -115,7 +117,7 @@ void CgnsReader2D::readSections() {
 					for (int k = 0; k < numberOfVertices; k++)
 						line[k] = connectivities[e*numberOfVertices+k] - 1;
 					line.emplace_back(elementStart - 1 + e);
-					this->gridData->boundaries.back().lineConnectivity.emplace_back(std::move(line));
+					this->gridData->lineConnectivity.emplace_back(std::move(line));
 				}
 				break;
 			}

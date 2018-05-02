@@ -83,20 +83,20 @@ void CgnsCreator3D::writeBoundaries() {
 		case 3: {
 			int elementStart = this->sizes[1] + 1;
 			int elementEnd;
-			for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
-				std::vector<std::vector<int>> boundaryConnectivities(this->gridData->boundaries[i].triangleConnectivity.cbegin(),
-																		this->gridData->boundaries[i].triangleConnectivity.cend());
+			for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
+			std::vector<std::vector<int>> boundaryConnectivities(this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
+																this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
 				for (unsigned j = 0; j < boundaryConnectivities.size(); j++)
 					boundaryConnectivities[j].pop_back();
-				elementEnd = elementStart + this->gridData->boundaries[i].triangleConnectivity.size() - 1;
+				elementEnd = elementStart + boundaryConnectivities.size() - 1;
 
 				std::vector<int> connectivities = linearize(boundaryConnectivities);
 				for (unsigned j = 0; j < connectivities.size(); j++)
 					connectivities[j]++;
 
-				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), TRI_3,
+				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), TRI_3,
 										elementStart, elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
-					throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(i+2));
+					throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(boundary - this->gridData->boundaries.begin()));
 
 				elementStart = elementEnd + 1;
 			}
@@ -105,20 +105,20 @@ void CgnsCreator3D::writeBoundaries() {
 		case 4: {
 			int elementStart = this->sizes[1] + 1;
 			int elementEnd;
-			for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
-				std::vector<std::vector<int>> boundaryConnectivities(this->gridData->boundaries[i].quadrangleConnectivity.cbegin(),
-																		this->gridData->boundaries[i].quadrangleConnectivity.cend());
+			for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
+			std::vector<std::vector<int>> boundaryConnectivities(this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
+																this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
 				for (unsigned j = 0; j < boundaryConnectivities.size(); j++)
 					boundaryConnectivities[j].pop_back();
-				elementEnd = elementStart + this->gridData->boundaries[i].quadrangleConnectivity.size() - 1;
+				elementEnd = elementStart + boundaryConnectivities.size() - 1;
 
 				std::vector<int> connectivities = linearize(boundaryConnectivities);
 				for (unsigned j = 0; j < connectivities.size(); j++)
 					connectivities[j]++;
 
-				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), QUAD_4,
+				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), QUAD_4,
 										elementStart, elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
-					throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(i+2));
+					throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(boundary - this->gridData->boundaries.begin()));
 
 				elementStart = elementEnd + 1;
 			}

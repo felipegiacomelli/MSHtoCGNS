@@ -5,7 +5,6 @@
 
 class CgnsCreator2D : public CgnsCreator {
 	public:
-		CgnsCreator2D() = default;
 		CgnsCreator2D(GridDataShared, const std::string&);
 
 		~CgnsCreator2D() = default;

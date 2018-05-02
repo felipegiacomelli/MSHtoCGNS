@@ -5,7 +5,6 @@
 
 class CgnsReader3D : public CgnsReader {
 	public:
-		CgnsReader3D() = default;
 		CgnsReader3D(const std::string&);
 
 	private:

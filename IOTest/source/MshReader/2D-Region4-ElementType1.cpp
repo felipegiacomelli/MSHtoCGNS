@@ -70,6 +70,7 @@ TestCase(Facets) {
 TestCase(Regions) {
 	checkEqual(this->gridData->regions.size(), 4u);
 }
+
 TestCase(A) {
 	auto region = this->gridData->regions[0];
 

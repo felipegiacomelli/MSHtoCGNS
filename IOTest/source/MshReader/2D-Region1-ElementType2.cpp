@@ -74,6 +74,8 @@ TestCase(Regions) {
 TestCase(Geometry) {
 	auto region = this->gridData->regions[0];
 
+	check(region.name == std::string("Geometry"));
+
 	auto elementsOnRegion = region.elementsOnRegion;
 	checkEqual(elementsOnRegion.size(), 10u);
 	checkEqual(elementsOnRegion[0], 0);

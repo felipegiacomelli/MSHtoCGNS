@@ -83,6 +83,34 @@ TestCase(Elements) {
 	checkEqual(hexahedra[7][8], 7);
 }
 
+TestCase(Facets) {
+	auto quadrangles = this->gridData->quadrangleConnectivity;
+	checkEqual(quadrangles[	0][0],  0); checkEqual(quadrangles[	0][1],  9); checkEqual(quadrangles[	0][2], 12); checkEqual(quadrangles[	0][3],  3); checkEqual(quadrangles[	0][4],  8);
+	checkEqual(quadrangles[	1][0],  3); checkEqual(quadrangles[	1][1], 12); checkEqual(quadrangles[	1][2], 15); checkEqual(quadrangles[	1][3],  6); checkEqual(quadrangles[	1][4],  9);
+	checkEqual(quadrangles[	2][0],  9); checkEqual(quadrangles[	2][1], 18); checkEqual(quadrangles[	2][2], 21); checkEqual(quadrangles[	2][3], 12); checkEqual(quadrangles[	2][4], 10);
+	checkEqual(quadrangles[	3][0], 12); checkEqual(quadrangles[	3][1], 21); checkEqual(quadrangles[	3][2], 24); checkEqual(quadrangles[	3][3], 15); checkEqual(quadrangles[	3][4], 11);
+	checkEqual(quadrangles[	4][0],  2); checkEqual(quadrangles[	4][1],  5); checkEqual(quadrangles[	4][2], 14); checkEqual(quadrangles[	4][3], 11); checkEqual(quadrangles[	4][4], 12);
+	checkEqual(quadrangles[	5][0],  5); checkEqual(quadrangles[	5][1],  8); checkEqual(quadrangles[	5][2], 17); checkEqual(quadrangles[	5][3], 14); checkEqual(quadrangles[	5][4], 13);
+	checkEqual(quadrangles[	6][0], 11); checkEqual(quadrangles[	6][1], 14); checkEqual(quadrangles[	6][2], 23); checkEqual(quadrangles[	6][3], 20); checkEqual(quadrangles[	6][4], 14);
+	checkEqual(quadrangles[	7][0], 14); checkEqual(quadrangles[	7][1], 17); checkEqual(quadrangles[	7][2], 26); checkEqual(quadrangles[	7][3], 23); checkEqual(quadrangles[	7][4], 15);
+	checkEqual(quadrangles[	8][0],  0); checkEqual(quadrangles[	8][1],  1); checkEqual(quadrangles[	8][2], 10); checkEqual(quadrangles[	8][3],  9); checkEqual(quadrangles[	8][4], 16);
+	checkEqual(quadrangles[	9][0],  1); checkEqual(quadrangles[	9][1],  2); checkEqual(quadrangles[	9][2], 11); checkEqual(quadrangles[	9][3], 10); checkEqual(quadrangles[	9][4], 17);
+	checkEqual(quadrangles[10][0],  9); checkEqual(quadrangles[10][1], 10); checkEqual(quadrangles[10][2], 19); checkEqual(quadrangles[10][3], 18); checkEqual(quadrangles[10][4], 18);
+	checkEqual(quadrangles[11][0], 10); checkEqual(quadrangles[11][1], 11); checkEqual(quadrangles[11][2], 20); checkEqual(quadrangles[11][3], 19); checkEqual(quadrangles[11][4], 19);
+	checkEqual(quadrangles[12][0],  7); checkEqual(quadrangles[12][1],  6); checkEqual(quadrangles[12][2], 15); checkEqual(quadrangles[12][3], 16); checkEqual(quadrangles[12][4], 20);
+	checkEqual(quadrangles[13][0],  8); checkEqual(quadrangles[13][1],  7); checkEqual(quadrangles[13][2], 16); checkEqual(quadrangles[13][3], 17); checkEqual(quadrangles[13][4], 21);
+	checkEqual(quadrangles[14][0], 16); checkEqual(quadrangles[14][1], 15); checkEqual(quadrangles[14][2], 24); checkEqual(quadrangles[14][3], 25); checkEqual(quadrangles[14][4], 22);
+	checkEqual(quadrangles[15][0], 17); checkEqual(quadrangles[15][1], 16); checkEqual(quadrangles[15][2], 25); checkEqual(quadrangles[15][3], 26); checkEqual(quadrangles[15][4], 23);
+	checkEqual(quadrangles[16][0],  1); checkEqual(quadrangles[16][1],  0); checkEqual(quadrangles[16][2],  3); checkEqual(quadrangles[16][3],  4); checkEqual(quadrangles[16][4], 24);
+	checkEqual(quadrangles[17][0],  2); checkEqual(quadrangles[17][1],  1); checkEqual(quadrangles[17][2],  4); checkEqual(quadrangles[17][3],  5); checkEqual(quadrangles[17][4], 25);
+	checkEqual(quadrangles[18][0],  4); checkEqual(quadrangles[18][1],  3); checkEqual(quadrangles[18][2],  6); checkEqual(quadrangles[18][3],  7); checkEqual(quadrangles[18][4], 26);
+	checkEqual(quadrangles[19][0],  5); checkEqual(quadrangles[19][1],  4); checkEqual(quadrangles[19][2],  7); checkEqual(quadrangles[19][3],  8); checkEqual(quadrangles[19][4], 27);
+	checkEqual(quadrangles[20][0], 18); checkEqual(quadrangles[20][1], 19); checkEqual(quadrangles[20][2], 22); checkEqual(quadrangles[20][3], 21); checkEqual(quadrangles[20][4], 28);
+	checkEqual(quadrangles[21][0], 19); checkEqual(quadrangles[21][1], 20); checkEqual(quadrangles[21][2], 23); checkEqual(quadrangles[21][3], 22); checkEqual(quadrangles[21][4], 29);
+	checkEqual(quadrangles[22][0], 21); checkEqual(quadrangles[22][1], 22); checkEqual(quadrangles[22][2], 25); checkEqual(quadrangles[22][3], 24); checkEqual(quadrangles[22][4], 30);
+	checkEqual(quadrangles[23][0], 22); checkEqual(quadrangles[23][1], 23); checkEqual(quadrangles[23][2], 26); checkEqual(quadrangles[23][3], 25); checkEqual(quadrangles[23][4], 31);
+}
+
 TestCase(Boundaries) {
 	auto boundaries = this->gridData->boundaries;
 
@@ -90,19 +118,11 @@ TestCase(Boundaries) {
 }
 
 TestCase(West) {
-	BoundaryData west = this->gridData->boundaries[0];
+	BoundaryData boundary = this->gridData->boundaries[0];
 
-	check(west.name == std::string("West"));
+	check(boundary.name == std::string("West"));
 
-	auto quadrangles = west.quadrangleConnectivity;
-	checkEqual(static_cast<int>(quadrangles.size()), 4);
-	check(std::all_of(quadrangles.cbegin(), quadrangles.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(5);}));
-	checkEqual(quadrangles[0][0],  0); checkEqual(quadrangles[0][1],  9); checkEqual(quadrangles[0][2], 12); checkEqual(quadrangles[0][3],  3); checkEqual(quadrangles[0][4],  8);
-	checkEqual(quadrangles[1][0],  3); checkEqual(quadrangles[1][1], 12); checkEqual(quadrangles[1][2], 15); checkEqual(quadrangles[1][3],  6); checkEqual(quadrangles[1][4],  9);
-	checkEqual(quadrangles[2][0],  9); checkEqual(quadrangles[2][1], 18); checkEqual(quadrangles[2][2], 21); checkEqual(quadrangles[2][3], 12); checkEqual(quadrangles[2][4], 10);
-	checkEqual(quadrangles[3][0], 12); checkEqual(quadrangles[3][1], 21); checkEqual(quadrangles[3][2], 24); checkEqual(quadrangles[3][3], 15); checkEqual(quadrangles[3][4], 11);
-
-	auto vertices = west.vertices;
+	auto vertices = boundary.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 9);
 	checkEqual(vertices[0],  0);
 	checkEqual(vertices[1],  3);
@@ -116,19 +136,11 @@ TestCase(West) {
 }
 
 TestCase(East) {
-	BoundaryData east = this->gridData->boundaries[1];
+	BoundaryData boundary = this->gridData->boundaries[1];
 
-	check(east.name == std::string("East"));
+	check(boundary.name == std::string("East"));
 
-	auto quadrangles = east.quadrangleConnectivity;
-	checkEqual(static_cast<int>(quadrangles.size()), 4);
-	check(std::all_of(quadrangles.cbegin(), quadrangles.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(5);}));
-	checkEqual(quadrangles[0][0],  2); checkEqual(quadrangles[0][1],  5); checkEqual(quadrangles[0][2], 14); checkEqual(quadrangles[0][3], 11); checkEqual(quadrangles[0][4], 12);
-	checkEqual(quadrangles[1][0],  5); checkEqual(quadrangles[1][1],  8); checkEqual(quadrangles[1][2], 17); checkEqual(quadrangles[1][3], 14); checkEqual(quadrangles[1][4], 13);
-	checkEqual(quadrangles[2][0], 11); checkEqual(quadrangles[2][1], 14); checkEqual(quadrangles[2][2], 23); checkEqual(quadrangles[2][3], 20); checkEqual(quadrangles[2][4], 14);
-	checkEqual(quadrangles[3][0], 14); checkEqual(quadrangles[3][1], 17); checkEqual(quadrangles[3][2], 26); checkEqual(quadrangles[3][3], 23); checkEqual(quadrangles[3][4], 15);
-
-	auto vertices = east.vertices;
+	auto vertices = boundary.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 9);
 	checkEqual(vertices[0],  2);
 	checkEqual(vertices[1],  5);
@@ -142,19 +154,11 @@ TestCase(East) {
 }
 
 TestCase(South) {
-	BoundaryData south = this->gridData->boundaries[2];
+	BoundaryData boundary = this->gridData->boundaries[2];
 
-	check(south.name == std::string("South"));
+	check(boundary.name == std::string("South"));
 
-	auto quadrangles = south.quadrangleConnectivity;
-	checkEqual(static_cast<int>(quadrangles.size()), 4);
-	check(std::all_of(quadrangles.cbegin(), quadrangles.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(5);}));
-	checkEqual(quadrangles[0][0],  0); checkEqual(quadrangles[0][1],  1); checkEqual(quadrangles[0][2], 10); checkEqual(quadrangles[0][3],  9); checkEqual(quadrangles[0][4], 16);
-	checkEqual(quadrangles[1][0],  1); checkEqual(quadrangles[1][1],  2); checkEqual(quadrangles[1][2], 11); checkEqual(quadrangles[1][3], 10); checkEqual(quadrangles[1][4], 17);
-	checkEqual(quadrangles[2][0],  9); checkEqual(quadrangles[2][1], 10); checkEqual(quadrangles[2][2], 19); checkEqual(quadrangles[2][3], 18); checkEqual(quadrangles[2][4], 18);
-	checkEqual(quadrangles[3][0], 10); checkEqual(quadrangles[3][1], 11); checkEqual(quadrangles[3][2], 20); checkEqual(quadrangles[3][3], 19); checkEqual(quadrangles[3][4], 19);
-
-	auto vertices = south.vertices;
+	auto vertices = boundary.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 9);
 	checkEqual(vertices[0],  0);
 	checkEqual(vertices[1],  1);
@@ -168,19 +172,11 @@ TestCase(South) {
 }
 
 TestCase(North) {
-	BoundaryData north = this->gridData->boundaries[3];
+	BoundaryData boundary = this->gridData->boundaries[3];
 
-	check(north.name == std::string("North"));
+	check(boundary.name == std::string("North"));
 
-	auto quadrangles = north.quadrangleConnectivity;
-	checkEqual(static_cast<int>(quadrangles.size()), 4);
-	check(std::all_of(quadrangles.cbegin(), quadrangles.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(5);}));
-	checkEqual(quadrangles[0][0],  7); checkEqual(quadrangles[0][1],  6); checkEqual(quadrangles[0][2], 15); checkEqual(quadrangles[0][3], 16); checkEqual(quadrangles[0][4], 20);
-	checkEqual(quadrangles[1][0],  8); checkEqual(quadrangles[1][1],  7); checkEqual(quadrangles[1][2], 16); checkEqual(quadrangles[1][3], 17); checkEqual(quadrangles[1][4], 21);
-	checkEqual(quadrangles[2][0], 16); checkEqual(quadrangles[2][1], 15); checkEqual(quadrangles[2][2], 24); checkEqual(quadrangles[2][3], 25); checkEqual(quadrangles[2][4], 22);
-	checkEqual(quadrangles[3][0], 17); checkEqual(quadrangles[3][1], 16); checkEqual(quadrangles[3][2], 25); checkEqual(quadrangles[3][3], 26); checkEqual(quadrangles[3][4], 23);
-
-	auto vertices = north.vertices;
+	auto vertices = boundary.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 9);
 	checkEqual(vertices[0],  6);
 	checkEqual(vertices[1],  7);
@@ -194,19 +190,11 @@ TestCase(North) {
 }
 
 TestCase(Bottom) {
-	BoundaryData bottom = this->gridData->boundaries[4];
+	BoundaryData boundary = this->gridData->boundaries[4];
 
-	check(bottom.name == std::string("Bottom"));
+	check(boundary.name == std::string("Bottom"));
 
-	auto quadrangles = bottom.quadrangleConnectivity;
-	checkEqual(static_cast<int>(quadrangles.size()), 4);
-	check(std::all_of(quadrangles.cbegin(), quadrangles.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(5);}));
-	checkEqual(quadrangles[0][0], 1); checkEqual(quadrangles[0][1], 0); checkEqual(quadrangles[0][2], 3); checkEqual(quadrangles[0][3], 4); checkEqual(quadrangles[0][4], 24);
-	checkEqual(quadrangles[1][0], 2); checkEqual(quadrangles[1][1], 1); checkEqual(quadrangles[1][2], 4); checkEqual(quadrangles[1][3], 5); checkEqual(quadrangles[1][4], 25);
-	checkEqual(quadrangles[2][0], 4); checkEqual(quadrangles[2][1], 3); checkEqual(quadrangles[2][2], 6); checkEqual(quadrangles[2][3], 7); checkEqual(quadrangles[2][4], 26);
-	checkEqual(quadrangles[3][0], 5); checkEqual(quadrangles[3][1], 4); checkEqual(quadrangles[3][2], 7); checkEqual(quadrangles[3][3], 8); checkEqual(quadrangles[3][4], 27);
-
-	auto vertices = bottom.vertices;
+	auto vertices = boundary.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 9);
 	checkEqual(vertices[0], 0);
 	checkEqual(vertices[1], 1);
@@ -220,19 +208,11 @@ TestCase(Bottom) {
 }
 
 TestCase(Top) {
-	BoundaryData top = this->gridData->boundaries[5];
+	BoundaryData boundary = this->gridData->boundaries[5];
 
-	check(top.name == std::string("Top"));
+	check(boundary.name == std::string("Top"));
 
-	auto quadrangles = top.quadrangleConnectivity;
-	checkEqual(static_cast<int>(quadrangles.size()), 4);
-	check(std::all_of(quadrangles.cbegin(), quadrangles.cend(), [](const auto& connectivity){return connectivity.size() == unsigned(5);}));
-	checkEqual(quadrangles[0][0], 18); checkEqual(quadrangles[0][1], 19); checkEqual(quadrangles[0][2], 22); checkEqual(quadrangles[0][3], 21); checkEqual(quadrangles[0][4], 28);
-	checkEqual(quadrangles[1][0], 19); checkEqual(quadrangles[1][1], 20); checkEqual(quadrangles[1][2], 23); checkEqual(quadrangles[1][3], 22); checkEqual(quadrangles[1][4], 29);
-	checkEqual(quadrangles[2][0], 21); checkEqual(quadrangles[2][1], 22); checkEqual(quadrangles[2][2], 25); checkEqual(quadrangles[2][3], 24); checkEqual(quadrangles[2][4], 30);
-	checkEqual(quadrangles[3][0], 22); checkEqual(quadrangles[3][1], 23); checkEqual(quadrangles[3][2], 26); checkEqual(quadrangles[3][3], 25); checkEqual(quadrangles[3][4], 31);
-
-	auto vertices = top.vertices;
+	auto vertices = boundary.vertices;
 	checkEqual(static_cast<int>(vertices.size()), 9);
 	checkEqual(vertices[0], 18);
 	checkEqual(vertices[1], 19);

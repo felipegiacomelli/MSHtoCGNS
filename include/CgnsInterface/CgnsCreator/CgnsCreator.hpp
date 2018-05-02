@@ -9,7 +9,6 @@
 
 class CgnsCreator {
 	public:
-		CgnsCreator() = default;
 		CgnsCreator(GridDataShared, const std::string&);
 
 		std::string getFileName() const;

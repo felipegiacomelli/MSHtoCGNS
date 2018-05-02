@@ -47,9 +47,11 @@ void CgnsReader3D::readSections() {
 			this->gridData->regions.emplace_back(std::move(region));
 		}
 		else if (elementType == TRI_3 || elementType == QUAD_4) {
-			BoundaryData boundaryData;
-			boundaryData.name = this->buffer;
-			this->gridData->boundaries.emplace_back(std::move(boundaryData));
+			BoundaryData boundary;
+			boundary.name = this->buffer;
+			boundary.facetsOnBoundary.resize(numberOfElements);
+			std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), elementStart - 1);
+			this->gridData->boundaries.emplace_back(std::move(boundary));
 		}
 		else {
 			throw std::runtime_error("CgnsReader3D: Section element type not supported");
@@ -94,7 +96,7 @@ void CgnsReader3D::readSections() {
 					for (int k = 0; k < numberOfVertices; k++)
 						triangle[k] = connectivities[e*numberOfVertices+k] - 1;
 					triangle.emplace_back(elementStart - 1 + e);
-					this->gridData->boundaries.back().triangleConnectivity.emplace_back(std::move(triangle));
+					this->gridData->triangleConnectivity.emplace_back(std::move(triangle));
 				}
 				break;
 			}
@@ -104,7 +106,7 @@ void CgnsReader3D::readSections() {
 					for (int k = 0; k < numberOfVertices; k++)
 						quadrangle[k] = connectivities[e*numberOfVertices+k] - 1;
 					quadrangle.emplace_back(elementStart - 1 + e);
-					this->gridData->boundaries.back().quadrangleConnectivity.emplace_back(std::move(quadrangle));
+					this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));
 				}
 				break;
 			}
