@@ -8,7 +8,6 @@
 
 class CgnsReader {
 	public:
-		CgnsReader() = default;
 		CgnsReader(const std::string&);
 
 		~CgnsReader();

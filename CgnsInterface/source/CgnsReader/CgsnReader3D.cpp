@@ -2,7 +2,6 @@
 #include <cgnslib.h>
 
 CgnsReader3D::CgnsReader3D(const std::string& filePath) : CgnsReader(filePath) {
-	this->gridData->dimension = this->cellDimension;
 	this->readCoordinates();
 	this->readSections();
 	this->readBoundaries();

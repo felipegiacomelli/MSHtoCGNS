@@ -8,6 +8,7 @@ CgnsReader::CgnsReader(const std::string& filePath) : filePath(filePath) {
 	this->readNumberOfSections();
 	this->readNumberOfBoundaries();
 	this->gridData = MakeShared<GridData>();
+	this->gridData->dimension = this->cellDimension;
 }
 
 void CgnsReader::checkFile() {
