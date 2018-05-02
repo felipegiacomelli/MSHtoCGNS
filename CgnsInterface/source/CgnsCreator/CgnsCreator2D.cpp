@@ -103,7 +103,8 @@ void CgnsCreator2D::writeRegions() {
 void CgnsCreator2D::writeBoundaries() {
 	int elementStart = this->sizes[1] + 1;
 	for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
-		std::vector<std::vector<int>> boundaryConnectivities(this->gridData->boundaries[i].lineConnectivity.cbegin(), this->gridData->boundaries[i].lineConnectivity.cend());
+		std::vector<std::vector<int>> boundaryConnectivities(this->gridData->boundaries[i].lineConnectivity.cbegin(), 
+																this->gridData->boundaries[i].lineConnectivity.cend());
 		for (unsigned j = 0; j < boundaryConnectivities.size(); j++) 
 			boundaryConnectivities[j].pop_back(); 
 		int elementEnd = elementStart + this->gridData->boundaries[i].lineConnectivity.size() - 1;

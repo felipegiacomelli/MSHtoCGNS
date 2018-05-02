@@ -35,7 +35,8 @@ void CgnsReader3D::readSections() {
 		ElementType_t elementType;
 		int elementStart, elementEnd; 
 		int lastBoundaryElement, parentFlag;
-		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag)) 
+		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, 
+								&lastBoundaryElement, &parentFlag)) 
 			throw std::runtime_error("CgnsReader3D: Could not read section");
 		int numberOfElements = elementEnd - elementStart + 1;
 

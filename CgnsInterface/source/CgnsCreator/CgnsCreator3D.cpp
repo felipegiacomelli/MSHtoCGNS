@@ -91,7 +91,8 @@ void CgnsCreator3D::writeBoundaries() {
 			int elementStart = this->sizes[1] + 1;
 			int elementEnd;
 			for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
-				std::vector<std::vector<int>> boundaryConnectivities(this->gridData->boundaries[i].triangleConnectivity.cbegin(), this->gridData->boundaries[i].triangleConnectivity.cend());
+				std::vector<std::vector<int>> boundaryConnectivities(this->gridData->boundaries[i].triangleConnectivity.cbegin(), 
+																		this->gridData->boundaries[i].triangleConnectivity.cend());
 				for (unsigned j = 0; j < boundaryConnectivities.size(); j++) 
 					boundaryConnectivities[j].pop_back(); 
 				elementEnd = elementStart + this->gridData->boundaries[i].triangleConnectivity.size() - 1;
@@ -112,7 +113,8 @@ void CgnsCreator3D::writeBoundaries() {
 			int elementStart = this->sizes[1] + 1;
 			int elementEnd;
 			for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
-				std::vector<std::vector<int>> boundaryConnectivities(this->gridData->boundaries[i].quadrangleConnectivity.cbegin(), this->gridData->boundaries[i].quadrangleConnectivity.cend());
+				std::vector<std::vector<int>> boundaryConnectivities(this->gridData->boundaries[i].quadrangleConnectivity.cbegin(), 
+																		this->gridData->boundaries[i].quadrangleConnectivity.cend());
 				for (unsigned j = 0; j < boundaryConnectivities.size(); j++) 
 					boundaryConnectivities[j].pop_back(); 
 				elementEnd = elementStart + this->gridData->boundaries[i].quadrangleConnectivity.size() - 1;
