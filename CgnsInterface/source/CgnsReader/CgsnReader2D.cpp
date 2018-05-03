@@ -77,11 +77,15 @@ void CgnsReader2D::readSections() {
 					element.emplace_back(elementStart - 1 + e);
 					switch(connectivities[position]) {
 						case TRI_3: {
-							this->gridData->triangleConnectivity.emplace_back(std::move(element));
+							std::array<int, 4> triangle;
+							std::copy_n(std::begin(element), 4, std::begin(triangle));
+							this->gridData->triangleConnectivity.emplace_back(std::move(triangle));
 							break;
 						}
 						case QUAD_4: {
-							this->gridData->quadrangleConnectivity.emplace_back(std::move(element));
+							std::array<int, 5> quadrangle;
+							std::copy_n(std::begin(element), 5, std::begin(quadrangle));
+							this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));
 							break;
 						}
 						default:
@@ -93,30 +97,30 @@ void CgnsReader2D::readSections() {
 			}
 			case TRI_3: {
 				for (int e = 0; e < numberOfElements; e++) {
-					std::vector<int> triangle(numberOfVertices);
+					std::array<int, 4> triangle;
 					for (int k = 0; k < numberOfVertices; k++)
 						triangle[k] = connectivities[e*numberOfVertices+k] - 1;
-					triangle.emplace_back(elementStart - 1 + e);
+					triangle.back() = elementStart - 1 + e;
 					this->gridData->triangleConnectivity.emplace_back(std::move(triangle));
 				}
 				break;
 			}
 			case QUAD_4: {
 				for (int e = 0; e < numberOfElements; e++) {
-					std::vector<int> quadrangle(numberOfVertices);
+					std::array<int, 5> quadrangle;
 					for (int k = 0; k < numberOfVertices; k++)
 						quadrangle[k] = connectivities[e*numberOfVertices+k] - 1;
-					quadrangle.emplace_back(elementStart - 1 + e);
+					quadrangle.back() = (elementStart - 1 + e);
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));
 				}
 				break;
 			}
 			case BAR_2: {
 				for (int e = 0; e < numberOfElements; e++) {
-					std::vector<int> line(numberOfVertices);
+					std::array<int, 3> line;
 					for (int k = 0; k < numberOfVertices; k++)
 						line[k] = connectivities[e*numberOfVertices+k] - 1;
-					line.emplace_back(elementStart - 1 + e);
+					line.back() = (elementStart - 1 + e);
 					this->gridData->lineConnectivity.emplace_back(std::move(line));
 				}
 				break;

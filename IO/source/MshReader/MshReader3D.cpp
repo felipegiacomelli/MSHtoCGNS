@@ -135,7 +135,7 @@ void MshReader3D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary != this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
 		if (this->gridData->triangleConnectivity.size() > 0) {
-			std::vector<std::vector<int>> facets(this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
+			std::vector<std::array<int, 4>> facets(this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
 													this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->elements.size());
 			for (auto j = facets.cbegin(); j != facets.cend(); j++)
 				for (auto k = j->cbegin(); k != j->cend()-1; k++)
@@ -143,7 +143,7 @@ void MshReader3D::defineBoundaryVertices() {
 			boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
 		}
 		else {
-			std::vector<std::vector<int>> facets(this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
+			std::vector<std::array<int, 5>> facets(this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
 													this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->elements.size());
 			for (auto j = facets.cbegin(); j != facets.cend(); j++)
 				for (auto k = j->cbegin(); k != j->cend()-1; k++)

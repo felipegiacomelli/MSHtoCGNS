@@ -47,7 +47,11 @@ void CgnsCreator3D::writeRegions() {
 	this->sectionIndices.emplace_back(0);
 	switch (this->geometry) {
 		case 4: {
-			std::vector<std::vector<int>> regionConnectivities = this->gridData->tetrahedronConnectivity;
+			std::vector<std::vector<int>> regionConnectivities;
+			for (auto i = this->gridData->tetrahedronConnectivity.begin(); i < this->gridData->tetrahedronConnectivity.end(); i++) {
+				std::vector<int> tetrahedron(i->begin(), i->end());
+				regionConnectivities.emplace_back(std::move(tetrahedron));
+			}
 	 		for (unsigned j = 0; j < regionConnectivities.size(); j++) {
 				regionConnectivities[j].pop_back();
 				for (unsigned k = 0; k < regionConnectivities[j].size(); k++)
@@ -62,7 +66,11 @@ void CgnsCreator3D::writeRegions() {
 			break;
 		}
 		case 8: {
-			std::vector<std::vector<int>> regionConnectivities = this->gridData->hexahedronConnectivity;
+			std::vector<std::vector<int>> regionConnectivities;
+			for (auto i = this->gridData->hexahedronConnectivity.begin(); i < this->gridData->hexahedronConnectivity.end(); i++) {
+				std::vector<int> hexahedron(i->begin(), i->end());
+				regionConnectivities.emplace_back(std::move(hexahedron));
+			}
 	 		for (unsigned j = 0; j < regionConnectivities.size(); j++) {
 				regionConnectivities[j].pop_back();
 				for (unsigned k = 0; k < regionConnectivities[j].size(); k++)
@@ -84,11 +92,16 @@ void CgnsCreator3D::writeBoundaries() {
 	this->sectionIndices.emplace_back(0);
 	switch (this->boundary) {
 		case 3: {
+			std::vector<std::vector<int>> facetConnectivity;
+			for (auto i = this->gridData->triangleConnectivity.begin(); i < this->gridData->triangleConnectivity.end(); i++) {
+				std::vector<int> triangle(i->begin(), i->end());
+				facetConnectivity.emplace_back(std::move(triangle));
+			}
 			int elementStart = this->sizes[1] + 1;
 			int elementEnd;
 			for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
-			std::vector<std::vector<int>> boundaryConnectivities(this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
-																this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
+				std::vector<std::vector<int>> boundaryConnectivities(facetConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
+																facetConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
 				for (unsigned j = 0; j < boundaryConnectivities.size(); j++) {
 					boundaryConnectivities[j].pop_back();
 					for (unsigned k = 0; k < boundaryConnectivities[j].size(); k++)
@@ -108,11 +121,16 @@ void CgnsCreator3D::writeBoundaries() {
 			break;
 		}
 		case 4: {
+			std::vector<std::vector<int>> facetConnectivity;
+			for (auto i = this->gridData->quadrangleConnectivity.begin(); i < this->gridData->quadrangleConnectivity.end(); i++) {
+				std::vector<int> quadrangle(i->begin(), i->end());
+				facetConnectivity.emplace_back(std::move(quadrangle));
+			}
 			int elementStart = this->sizes[1] + 1;
 			int elementEnd;
 			for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
-			std::vector<std::vector<int>> boundaryConnectivities(this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
-																this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
+				std::vector<std::vector<int>> boundaryConnectivities(facetConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
+																facetConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
 				for (unsigned j = 0; j < boundaryConnectivities.size(); j++) {
 					boundaryConnectivities[j].pop_back();
 					for (unsigned k = 0; k < boundaryConnectivities[j].size(); k++)

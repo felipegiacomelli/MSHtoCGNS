@@ -28,8 +28,15 @@ void CgnsCreator2D::writeCoordinates() {
 
 void CgnsCreator2D::writeRegions() {
 	std::vector<std::vector<int>> elementConnectivities;
-	elementConnectivities.insert(elementConnectivities.end(), this->gridData->triangleConnectivity.begin(), this->gridData->triangleConnectivity.end());
-	elementConnectivities.insert(elementConnectivities.end(), this->gridData->quadrangleConnectivity.begin(), this->gridData->quadrangleConnectivity.end());
+	for (auto i = this->gridData->triangleConnectivity.begin(); i < this->gridData->triangleConnectivity.end(); i++) {
+		std::vector<int> triangle(i->begin(), i->end());
+		elementConnectivities.emplace_back(std::move(triangle));
+	}
+	for (auto i = this->gridData->quadrangleConnectivity.begin(); i < this->gridData->quadrangleConnectivity.end(); i++) {
+		std::vector<int> quadrangle(i->begin(), i->end());
+		elementConnectivities.emplace_back(std::move(quadrangle));
+	}
+
 	int elementStart = 1;
 	int elementEnd = 0;
 
@@ -96,10 +103,16 @@ void CgnsCreator2D::writeRegions() {
 
 void CgnsCreator2D::writeBoundaries() {
 	int elementStart = this->sizes[1] + 1;
+	std::vector<std::vector<int>> facetConnectivity;
+	for (auto i = this->gridData->lineConnectivity.begin(); i < this->gridData->lineConnectivity.end(); i++) {
+		std::vector<int> line(i->begin(), i->end());
+		facetConnectivity.emplace_back(std::move(line));
+	}
+
 	for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
 		this->sectionIndices.emplace_back(0);
-		std::vector<std::vector<int>> boundaryConnectivities(this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
-																this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
+		std::vector<std::vector<int>> boundaryConnectivities(facetConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
+																facetConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
 		for (unsigned j = 0; j < boundaryConnectivities.size(); j++) {
 			boundaryConnectivities[j].pop_back();
 			for (unsigned k = 0; k < boundaryConnectivities[j].size(); k++)
