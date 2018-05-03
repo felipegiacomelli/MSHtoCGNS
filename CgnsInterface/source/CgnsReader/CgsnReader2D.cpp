@@ -18,7 +18,7 @@ void CgnsReader2D::readCoordinates() {
 	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, &this->sizes[0], coordinatesY))
 		throw std::runtime_error("CgnsReader2D: Could not read CoordinateY");
 
-	this->gridData->coordinates.resize(this->sizes[0], std::vector<double>(3));
+	this->gridData->coordinates.resize(this->sizes[0], std::array<double, 3>());
 	for (int i = 0; i < this->sizes[0]; i++) {
 		this->gridData->coordinates[i][0] = coordinatesX[i];
 		this->gridData->coordinates[i][1] = coordinatesY[i];

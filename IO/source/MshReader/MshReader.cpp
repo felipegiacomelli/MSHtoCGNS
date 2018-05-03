@@ -28,7 +28,7 @@ void MshReader::readNodes() {
 		throw std::runtime_error("MshReader: There is no Node data in the grid file");
 
 	this->file >> numberOfVertices;
-	this->gridData->coordinates.resize(numberOfVertices, std::vector<double>(3));
+	this->gridData->coordinates.resize(numberOfVertices, std::array<double, 3>());
 	for (int i = 0; i < numberOfVertices; i++)
 		this->file >> temporary >> this->gridData->coordinates[i][0] >> this->gridData->coordinates[i][1] >> this->gridData->coordinates[i][2];
 }

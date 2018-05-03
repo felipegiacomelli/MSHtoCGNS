@@ -21,7 +21,7 @@ struct GridData {
 	int dimension;
 	int numberOfElements;
 
-	std::vector<std::vector<double>> coordinates;
+	std::vector<std::array<double, 3>> coordinates;
 
 	std::vector<std::array<int, 3>> lineConnectivity;
 	std::vector<std::array<int, 4>> triangleConnectivity;
