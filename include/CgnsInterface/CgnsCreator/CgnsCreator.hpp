@@ -9,7 +9,7 @@
 
 class CgnsCreator {
 	public:
-		CgnsCreator(GridDataShared, const std::string&);
+		CgnsCreator(GridDataShared gridData, const std::string& folderPath);
 
 		std::string getFileName() const;
 

@@ -70,12 +70,12 @@ void CgnsReader::readBoundaries() {
 		throw std::runtime_error("CgnsReader: mismatch between number of boundary conditions and boundary connectivities");
 
 	for (int boundaryIndex = 1; boundaryIndex <= this->numberOfBoundaries; boundaryIndex++) {
-		BCType_t bocotype;
-		PointSetType_t ptset_type;
+		BCType_t boundaryConditionType;
+		PointSetType_t pointSetType;
 		int numberOfVertices, NormalListSize;
 		int NormalIndex, ndataset;
 		DataType_t NormalDataType;
-		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &bocotype, &ptset_type, &numberOfVertices,
+		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &boundaryConditionType, &pointSetType, &numberOfVertices,
 							&NormalIndex, &NormalListSize, &NormalDataType, &ndataset))
 			throw std::runtime_error("CgnsReader: Could not read boundary information");
 		std::vector<int> vertices(numberOfVertices);
@@ -87,6 +87,27 @@ void CgnsReader::readBoundaries() {
 			vertices[i]--;
 		this->gridData->boundaries[boundaryIndex - 1].vertices = std::move(vertices);
 	}
+}
+
+std::vector<double> CgnsReader::readField(const int& solutionIndex, const std::string& fieldName) {
+	int dataDimension, solutionEnd;
+	if (cg_sol_size(this->fileIndex, this->baseIndex, this->zoneIndex, solutionIndex, &dataDimension, &solutionEnd))
+		throw std::runtime_error("CgnsReader: Could not read solution " + std::to_string(solutionIndex));
+
+	int solutionStart = 1;
+	std::vector<double> field(solutionEnd);
+	if (cg_field_read(this->fileIndex, this->baseIndex, this->zoneIndex, solutionIndex, fieldName.c_str(), RealDouble, &solutionStart, &solutionEnd, &field[0]))
+		throw std::runtime_error("CgnsReader: Could not read permanent field '" + fieldName + "'' in solution " + std::to_string(solutionIndex));
+
+	return field;
+}
+
+int CgnsReader::readNumberOfTimeSteps() {
+	int numberOfTimeSteps;
+	if (cg_biter_read(this->fileIndex, this->baseIndex, this->buffer, &numberOfTimeSteps))
+		throw std::runtime_error("CgnsReader: Could not base iterative data information");
+
+	return numberOfTimeSteps;
 }
 
 CgnsReader::~CgnsReader() {

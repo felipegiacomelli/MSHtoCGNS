@@ -8,9 +8,12 @@
 
 class CgnsReader {
 	public:
-		CgnsReader(const std::string&);
+		CgnsReader(const std::string& filePath);
 
 		~CgnsReader();
+
+		std::vector<double> readField(const int& solutionIndex, const std::string& fieldName);
+		int readNumberOfTimeSteps();
 
 		GridDataShared gridData;
 
