@@ -86,11 +86,15 @@ void MshReader3D::addRegions() {
 			std::vector<int> connectivity(this->elements[index].cbegin() + 2, this->elements[index].cend());
 			switch (type) {
 				case 3: {
-					this->gridData->tetrahedronConnectivity.emplace_back(std::move(connectivity));
+					std::array<int, 5> tetrahedron;
+					std::copy_n(std::begin(connectivity), 5, std::begin(tetrahedron));
+					this->gridData->tetrahedronConnectivity.emplace_back(std::move(tetrahedron));
 					break;
 				}
 				case 4: {
-					this->gridData->hexahedronConnectivity.emplace_back(std::move(connectivity));
+					std::array<int, 9> hexahedron;
+					std::copy_n(std::begin(connectivity), 9, std::begin(hexahedron));
+					this->gridData->hexahedronConnectivity.emplace_back(std::move(hexahedron));
 					break;
 				}
 				default:
@@ -109,11 +113,15 @@ void MshReader3D::addBoundaries() {
 			std::vector<int> connectivity(this->facets[index].cbegin() + 2, this->facets[index].cend());
 			switch (type) {
 				case 1: {
-					this->gridData->triangleConnectivity.emplace_back(std::move(connectivity));
+					std::array<int, 4> triangle;
+					std::copy_n(std::begin(connectivity), 4, std::begin(triangle));
+					this->gridData->triangleConnectivity.emplace_back(std::move(triangle));
 					break;
 				}
 				case 2: {
-					this->gridData->quadrangleConnectivity.emplace_back(std::move(connectivity));
+					std::array<int, 5> quadrangle;
+					std::copy_n(std::begin(connectivity), 5, std::begin(quadrangle));
+					this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));
 					break;
 				}
 				default:

@@ -86,11 +86,15 @@ void MshReader2D::addRegions() {
 			std::vector<int> connectivity(this->elements[index].cbegin() + 2, this->elements[index].cend());
 			switch (type) {
 				case 1: {
-					this->gridData->triangleConnectivity.emplace_back(std::move(connectivity));
+					std::array<int, 4> triangle;
+					std::copy_n(std::begin(connectivity), 4, std::begin(triangle));
+					this->gridData->triangleConnectivity.emplace_back(std::move(triangle));
 					break;
 				}
 				case 2: {
-					this->gridData->quadrangleConnectivity.emplace_back(std::move(connectivity));
+					std::array<int, 5> quadrangle;
+					std::copy_n(std::begin(connectivity), 5, std::begin(quadrangle));
+					this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));
 					break;
 				}
 				default:
@@ -109,7 +113,9 @@ void MshReader2D::addBoundaries() {
 			std::vector<int> connectivity(this->facets[index].cbegin() + 2, this->facets[index].cend());
 			switch (type) {
 				case 0: {
-					this->gridData->lineConnectivity.emplace_back(std::move(connectivity));
+					std::array<int, 3> line;
+					std::copy_n(std::begin(connectivity), 3, std::begin(line));
+					this->gridData->lineConnectivity.emplace_back(std::move(line));
 					break;
 				}
 				default:
@@ -122,7 +128,7 @@ void MshReader2D::addBoundaries() {
 void MshReader2D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
-		std::vector<std::vector<int>> facets(this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
+		std::vector<std::array<int, 3>> facets(this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
 												this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->elements.size());
 		for (auto j = facets.cbegin(); j != facets.cend(); j++)
 			for (auto k = j->cbegin(); k != j->cend()-1; k++)

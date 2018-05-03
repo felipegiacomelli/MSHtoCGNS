@@ -23,11 +23,11 @@ struct GridData {
 
 	std::vector<std::vector<double>> coordinates;
 
-	std::vector<std::vector<int>> lineConnectivity;
-	std::vector<std::vector<int>> triangleConnectivity;
-	std::vector<std::vector<int>> quadrangleConnectivity;
-	std::vector<std::vector<int>> tetrahedronConnectivity;
-	std::vector<std::vector<int>> hexahedronConnectivity;
+	std::vector<std::array<int, 3>> lineConnectivity;
+	std::vector<std::array<int, 4>> triangleConnectivity;
+	std::vector<std::array<int, 5>> quadrangleConnectivity;
+	std::vector<std::array<int, 5>> tetrahedronConnectivity;
+	std::vector<std::array<int, 9>> hexahedronConnectivity;
 
 	std::vector<BoundaryData> boundaries;
 	std::vector<RegionData> regions;
