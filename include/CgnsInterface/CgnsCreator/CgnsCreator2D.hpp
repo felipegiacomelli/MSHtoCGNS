@@ -1,7 +1,7 @@
 #ifndef CGNS_FILE_2D_HPP
 #define CGNS_FILE_2D_HPP
 
-#include <CgnsInterface/CgnsCreator/CgnsCreator.hpp>
+#include <CgnsInterface/CgnsCreator.hpp>
 
 class CgnsCreator2D : public CgnsCreator {
 	public:

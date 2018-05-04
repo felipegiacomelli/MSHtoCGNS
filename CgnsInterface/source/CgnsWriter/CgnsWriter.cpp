@@ -39,7 +39,8 @@ void CgnsWriter::readZone() {
 }
 
 void CgnsWriter::writePermanentSolution() {
-	cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Solution", Vertex, &this->solutionIndex);
+	GridLocation_t location = Vertex;
+	cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Solution", location, &this->solutionIndex);
 }
 
 void CgnsWriter::writePermanentField(const std::vector<double>& fieldValues, const std::string& fieldName) {
@@ -50,7 +51,8 @@ void CgnsWriter::writeTimeStep(const double& timeInstant) {
 	this->timeInstants.push_back(timeInstant);
 	this->solutionIndices.emplace_back(0);
 	std::string solutionName = std::string("TimeStep") + std::to_string(timeInstants.size());
-	cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), Vertex, &this->solutionIndices.back());
+	GridLocation_t location = Vertex;
+	cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), location, &this->solutionIndices.back());
 }
 
 void CgnsWriter::writeTransientField(const std::vector<double>& fieldValues, const std::string& fieldName) {

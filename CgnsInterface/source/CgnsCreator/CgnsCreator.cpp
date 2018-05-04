@@ -1,4 +1,4 @@
-#include <CgnsInterface/CgnsCreator/CgnsCreator.hpp>
+#include <CgnsInterface/CgnsCreator.hpp>
 #include <cgnslib.h>
 
 CgnsCreator::CgnsCreator(GridDataShared gridData, const std::string& folderPath) : gridData(gridData), folderPath(folderPath) {
