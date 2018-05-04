@@ -27,6 +27,9 @@
 *.out
 *.app
 
+# Compressed files
+*.tar.gz
+
 # Sublime files
 *.sublime-workspace
 
