@@ -137,17 +137,17 @@ void MshReader3D::defineBoundaryVertices() {
 		if (this->gridData->triangleConnectivity.size() > 0) {
 			std::vector<std::array<int, 4>> facets(this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
 													this->gridData->triangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->elements.size());
-			for (auto j = facets.cbegin(); j != facets.cend(); j++)
-				for (auto k = j->cbegin(); k != j->cend()-1; k++)
-					vertices.insert(*k);
+			for (unsigned j = 0; j < facets.size(); j++)
+				for (unsigned k = 0; k != 3u; k++)
+					vertices.insert(facets[j][k]);
 			boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
 		}
 		else {
 			std::vector<std::array<int, 5>> facets(this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
 													this->gridData->quadrangleConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->elements.size());
-			for (auto j = facets.cbegin(); j != facets.cend(); j++)
-				for (auto k = j->cbegin(); k != j->cend()-1; k++)
-					vertices.insert(*k);
+			for (unsigned j = 0; j < facets.size(); j++)
+				for (unsigned k = 0; k != 4u; k++)
+					vertices.insert(facets[j][k]);
 			boundary->vertices = std::vector<int>(vertices.begin(), vertices.end());
 		}
 	}
