@@ -25,17 +25,9 @@ class CgnsWriter {
 		void readZone();
 
 		std::string filePath;
-		char buffer[800];
-		int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
-		std::array<int, 3> sizes;
-		int numberOfSections, numberOfBoundaries;
-
-		int solutionIndex, fieldIndex;
-		std::vector<int> solutionIndices, fieldsIndices, dataSetIndices;
-
-		int timeStepNumber;
+		int fileIndex, baseIndex, zoneIndex, solutionIndex, fieldIndex;
+		std::vector<int> solutionIndices, fieldsIndices;
 		std::vector<double> timeInstants;
-
 		bool isFinalized;
 };
 

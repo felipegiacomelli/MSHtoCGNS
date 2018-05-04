@@ -28,9 +28,6 @@ void CgnsWriter::readBase() {
 
 	if (this->baseIndex != 1)
 		throw std::runtime_error("CgnsWriter: The CGNS file has more than one base");
-
-	if (cg_base_read(this->fileIndex, this->baseIndex, this->buffer, &this->cellDimension, &this->physicalDimension))
-		throw std::runtime_error("CgnsWriter: Could not read base");
 }
 
 void CgnsWriter::readZone() {
@@ -39,9 +36,6 @@ void CgnsWriter::readZone() {
 
 	if (this->zoneIndex != 1)
 		throw std::runtime_error("CgnsWriter: The CGNS file has more than one zone");
-
-	if (cg_zone_read(this->fileIndex, this->baseIndex, this->zoneIndex, this->buffer, &this->sizes[0]))
-		throw std::runtime_error("CgnsWriter: Could not read zone");
 }
 
 void CgnsWriter::writePermanentSolution() {

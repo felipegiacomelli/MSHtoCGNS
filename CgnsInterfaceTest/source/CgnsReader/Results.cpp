@@ -28,4 +28,8 @@ TestCase(ReadResults) {
 	field = cgnsReader2D.readField(solutionIndex, "pressure");
 	for (int j = 0; j < numberOfVertices; j++)
 		checkClose(field[j], double(j+3), TOLERANCE);
+
+	std::vector<double> timeInstants = cgnsReader2D.readTimeInstants();
+	checkClose(timeInstants[0], 0.0, TOLERANCE);
+	checkClose(timeInstants[1], 0.1, TOLERANCE);
 }

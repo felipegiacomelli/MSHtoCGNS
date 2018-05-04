@@ -110,6 +110,24 @@ int CgnsReader::readNumberOfTimeSteps() {
 	return numberOfTimeSteps;
 }
 
+std::vector<double> CgnsReader::readTimeInstants() {
+ 	if (cg_goto(this->fileIndex, this->baseIndex, "BaseIterativeData_t", 1, nullptr))
+		throw std::runtime_error("CgnsReader: Could go to base iterative data");
+
+ 	int arrayIndex = 1;
+ 	DataType_t dataType;
+ 	int dataDimension, dimensionVector;
+ 	if (cg_array_info(arrayIndex, this->buffer, &dataType, &dataDimension, &dimensionVector))
+		throw std::runtime_error("CgnsReader: Could read array information");
+
+ 	std::vector<double> timeInstants(dimensionVector);
+ 	if (cg_array_read(arrayIndex, &timeInstants[0]))
+		throw std::runtime_error("CgnsReader: Could read array");
+
+ 	return timeInstants;
+}
+
+
 CgnsReader::~CgnsReader() {
 	cg_close(this->fileIndex);
 }
