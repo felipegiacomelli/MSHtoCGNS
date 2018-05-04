@@ -1,0 +1,14 @@
+language: c++
+
+install:
+  - sudo apt-get update
+  - cd Zeta/Setup
+  - ./setup.sh
+
+script:
+  - |
+     mkdir build
+     cd build
+     cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=TRUE
+     make
+     make test

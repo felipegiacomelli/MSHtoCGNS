@@ -6,10 +6,10 @@ export LIBS="-Wl,--no-as-needed -ldl -lz"
 export CLIBS="-ldl"
 
 git clone -b master https://github.com/CGNS/CGNS.git
-
-cd CGNS
+mv CGNS $LIBRARY
+cd $LIBRARY
 cd src
 ./../src/configure --without-fortran --disable-cgnstools --enable-shared \
-                   --enable-debug --prefix=$PWD/../../Libraries/$LIBRARY
+                   --enable-debug --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY
 make
 make install
