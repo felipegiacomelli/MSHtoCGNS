@@ -16,6 +16,8 @@ if [ $? -eq 0 ]; then
     rm -rf $SETUP_DIRECTORY/cgns-3.3.1
 fi
 
+cd $SETUP_DIRECTORY
+
 . boost-1.66.0.sh
 if [ $? -eq 0 ]; then
 	rm -rf $SETUP_DIRECTORY/boost-1.66.0
