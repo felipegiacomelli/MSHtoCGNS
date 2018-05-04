@@ -12,8 +12,8 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 ##################################################################
 if (UNIX)
 	message ("\n-- UNIX has been detected.")
-	set (CMAKE_C_COMPILER $ENV{OPENMPI_DIR}/bin/mpicc)
-	set (CMAKE_CXX_COMPILER $ENV{OPENMPI_DIR}/bin/mpicxx)
+	set (CMAKE_C_COMPILER gcc)
+	set (CMAKE_CXX_COMPILER g++)
 
 	if (CMAKE_BUILD_TYPE MATCHES "Debug")
 		set (BUILD_TYPE_OUTPUT_DIRECTORY "Debug")
@@ -67,8 +67,9 @@ set (CGNS_VERSION  "3.3.0" )
 ##############
 # BOOST
 ##############
-set (BOOST_ROOT $ENV{BOOST_DIR}/${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
-set (Components_Boost system filesystem test_exec_monitor unit_test_framework)
+# set (BOOST_ROOT $ENV{BOOST_DIR}/${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
+set (BOOST_ROOT ${CMAKE_SOURCE_DIR}/Zeta/Libraries/boost-1.66.0)
+set (Components_Boost system filesystem unit_test_framework test_exec_monitor)
 set (Boost_USE_MULTITHREADED ON)
 find_package (Boost ${BOOST_VERSION} COMPONENTS ${Components_Boost} REQUIRED)
 if (Boost_FOUND)
@@ -78,7 +79,8 @@ endif ()
 ##############
 # CGNS
 ##############
-set (CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
+# set (CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
+set (CGNS_DIR ${CMAKE_SOURCE_DIR}/Zeta/Libraries/cgns-3.3.1)
 find_package (CGNS ${CGNS_VERSION} REQUIRED)
 if (CGNS_FOUND)
     include_directories (${CGNS_INCLUDE_DIR})
