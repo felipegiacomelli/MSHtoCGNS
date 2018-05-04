@@ -1,7 +1,7 @@
 #include <CgnsInterface/CgnsWriter.hpp>
 #include <cgnslib.h>
 
-CgnsWriter::CgnsWriter(const std::string& filePath) : filePath(filePath) {
+CgnsWriter::CgnsWriter(const std::string& filePath) : filePath(filePath), isFinalized(false) {
 	this->checkFile();
 	this->readBase();
 	this->readZone();
@@ -18,7 +18,7 @@ void CgnsWriter::checkFile() {
 	if (input.extension() != ".cgns")
 		throw std::runtime_error("CgnsWriter: The file extension is not .cgns");
 
-	if (cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex))
+	if (cg_open(this->filePath.c_str(), CG_MODE_MODIFY, &this->fileIndex))
 		throw std::runtime_error("CgnsWriter: Could not open the file " + this->filePath);
 }
 
@@ -40,13 +40,6 @@ void CgnsWriter::readZone() {
 	if (this->zoneIndex != 1)
 		throw std::runtime_error("CgnsWriter: The CGNS file has more than one zone");
 
-	ZoneType_t zoneType;
-	if (cg_zone_type(this->fileIndex, this->baseIndex, this->zoneIndex, &zoneType))
-		throw std::runtime_error("CgnsWriter: Could not read zone type");
-
-	if (zoneType != Unstructured)
-		throw std::runtime_error("CgnsWriter: Only unstructured zones are supported");
-
 	if (cg_zone_read(this->fileIndex, this->baseIndex, this->zoneIndex, this->buffer, &this->sizes[0]))
 		throw std::runtime_error("CgnsWriter: Could not read zone");
 }
@@ -60,28 +53,31 @@ void CgnsWriter::writePermanentField(const std::vector<double>& fieldValues, con
 }
 
 void CgnsWriter::writeTimeStep(const double& timeInstant) {
-	this->timeSteps.push_back(timeInstant);
+	this->timeInstants.push_back(timeInstant);
 	this->solutionIndices.emplace_back(0);
-	std::string solutionName = std::string("TimeStep") + std::to_string(timeSteps.size());
+	std::string solutionName = std::string("TimeStep") + std::to_string(timeInstants.size());
 	cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), Vertex, &this->solutionIndices.back());
 }
 
-void CgnsWriter::writeTransientField(const std::vector<double>& field, std::string&& fieldName) {
+void CgnsWriter::writeTransientField(const std::vector<double>& fieldValues, const std::string& fieldName) {
 	this->fieldsIndices.emplace_back(0);
-	cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->solutionIndices.back(), RealDouble, fieldName.c_str(), &field[0], &this->fieldsIndices.back());
+	cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->solutionIndices.back(), RealDouble, fieldName.c_str(), &fieldValues[0], &this->fieldsIndices.back());
 }
 
-void CgnsWriter::finalize() {
-	if (this->timeSteps.size() > 0) {
- 		int numberOfTimeSteps = this->timeSteps.size();
- 	    cg_biter_write(this->fileIndex, this->baseIndex, "TimeIterativeValues", this->timeSteps.size());
- 	    cg_goto(this->fileIndex, this->baseIndex, "BaseIterativeData_t", 1, nullptr);
-		cg_array_write("TimeValues", RealDouble, 1, &numberOfTimeSteps, &this->timeSteps[0]);
-    	cg_simulation_type_write(this->fileIndex, this->baseIndex, TimeAccurate);
+void CgnsWriter::finalizeTransient() {
+	if (!this->isFinalized) {
+		this->isFinalized = true;
+		if (this->timeInstants.size() > 0) {
+ 			int numberOfTimeSteps = this->timeInstants.size();
+ 		    cg_biter_write(this->fileIndex, this->baseIndex, "TimeIterativeValues", this->timeInstants.size());
+ 		    cg_goto(this->fileIndex, this->baseIndex, "BaseIterativeData_t", 1, nullptr);
+			cg_array_write("TimeValues", RealDouble, 1, &numberOfTimeSteps, &this->timeInstants[0]);
+   	 		cg_simulation_type_write(this->fileIndex, this->baseIndex, TimeAccurate);
+		}
+		cg_close(this->fileIndex);
 	}
 }
 
 CgnsWriter::~CgnsWriter() {
-	this->finalize();
-	cg_close(this->fileIndex);
+	this->finalizeTransient();
 }
