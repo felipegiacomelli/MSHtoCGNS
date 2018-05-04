@@ -10,9 +10,18 @@ CgnsCreator::CgnsCreator(GridDataShared gridData, const std::string& folderPath)
 }
 
 void CgnsCreator::setupFile() {
-	std::string folderName = this->folderPath + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/";
-	createDirectory(folderName);
-	this->fileName = folderName + std::string("Grid.cgns");
+	boost::filesystem::path input(this->folderPath);
+	if (input.extension() == std::string(".cgns")) {
+		if (boost::filesystem::exists(this->folderPath))
+			boost::filesystem::remove_all(this->folderPath);
+
+		this->fileName = this->folderPath;
+	}
+	else {
+		std::string folderName = this->folderPath + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/";
+		createDirectory(folderName);
+		this->fileName = folderName + std::string("Grid.cgns");
+	}
 	cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
 }
 

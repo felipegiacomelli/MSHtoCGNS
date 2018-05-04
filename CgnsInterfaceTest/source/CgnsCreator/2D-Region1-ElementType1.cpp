@@ -9,8 +9,9 @@
 struct Region1_ElementType1_2D {
 	Region1_ElementType1_2D() {
 		CgnsReader2D inputReader(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/2D-Region1-ElementType1/5v_4e.cgns");
-		CgnsCreator2D fileIndex2D(inputReader.gridData, "./");
-		this->filePath = fileIndex2D.getFileName();
+		CgnsCreator2D cgnsCreator2D(inputReader.gridData, "./TEST_FILE.cgns");
+		this->filePath = cgnsCreator2D.getFileName();
+		std::cout << std::endl << this->filePath << std::endl;
 		CgnsReader2D outputReader(this->filePath);
 		this->gridData = outputReader.gridData;
 		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex);
@@ -18,7 +19,7 @@ struct Region1_ElementType1_2D {
 
 	~Region1_ElementType1_2D() {
 		cg_close(this->fileIndex);
-		deleteDirectory("./5v_4e/");
+		boost::filesystem::remove_all(this->filePath);
 	};
 
 	std::string filePath;
