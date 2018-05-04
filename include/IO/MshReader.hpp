@@ -12,7 +12,7 @@
 
 class MshReader {
 	public:
-		MshReader(const std::string&);
+		MshReader(const std::string& filePath);
 
 		virtual ~MshReader() = default;
 

@@ -10,8 +10,8 @@
 template<typename T>
 void output(const std::vector<T>& a, std::ofstream& file) {
 	file << std::fixed << std::setprecision(3);
-	for (auto i = a.cbegin(); i != a.cend(); i ++) 
-		file << "\t" << std::setw(6) << std::right << *i;		
+	for (auto i = a.cbegin(); i != a.cend(); i ++)
+		file << "\t" << std::setw(6) << std::right << *i;
 	file << std::endl;
 }
 
