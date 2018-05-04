@@ -68,7 +68,7 @@ set (CGNS_VERSION  "3.3.0" )
 # BOOST
 ##############
 set (BOOST_ROOT $ENV{BOOST_DIR}/${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
-set (Components_Boost chrono context filesystem graph_parallel log mpi program_options regex serialization signals system thread timer wave date_time graph math_c99 random test_exec_monitor exception unit_test_framework serialization)
+set (Components_Boost system filesystem test_exec_monitor unit_test_framework)
 set (Boost_USE_MULTITHREADED ON)
 find_package (Boost ${BOOST_VERSION} COMPONENTS ${Components_Boost} REQUIRED)
 if (Boost_FOUND)
