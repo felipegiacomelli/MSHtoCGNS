@@ -78,8 +78,8 @@ void CgnsReader::readBoundaries() {
 		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &boundaryConditionType, &pointSetType, &numberOfVertices,
 							&NormalIndex, &NormalListSize, &NormalDataType, &ndataset))
 			throw std::runtime_error("CgnsReader: Could not read boundary information");
-		std::vector<int> vertices(numberOfVertices);
 
+		std::vector<int> vertices(numberOfVertices);
 		if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, &vertices[0], nullptr))
 			throw std::runtime_error("CgnsReader: Could not read boundary");
 

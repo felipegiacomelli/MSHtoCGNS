@@ -22,7 +22,6 @@ void CgnsReader2D::readCoordinates() {
 	for (int i = 0; i < this->sizes[0]; i++) {
 		this->gridData->coordinates[i][0] = coordinatesX[i];
 		this->gridData->coordinates[i][1] = coordinatesY[i];
-		this->gridData->coordinates[i][2] = 0.0;
 	}
 }
 

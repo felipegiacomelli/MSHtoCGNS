@@ -29,11 +29,15 @@ void CgnsCreator2D::writeCoordinates() {
 void CgnsCreator2D::writeRegions() {
 	std::vector<std::vector<int>> elementConnectivities;
 	for (auto i = this->gridData->triangleConnectivity.begin(); i < this->gridData->triangleConnectivity.end(); i++) {
-		std::vector<int> triangle(i->begin(), i->end());
+		std::vector<int> triangle(i->begin(), i->end()-1);
+		for (unsigned j = 0; j < triangle.size(); j++)
+			triangle[j]++;
 		elementConnectivities.emplace_back(std::move(triangle));
 	}
 	for (auto i = this->gridData->quadrangleConnectivity.begin(); i < this->gridData->quadrangleConnectivity.end(); i++) {
-		std::vector<int> quadrangle(i->begin(), i->end());
+		std::vector<int> quadrangle(i->begin(), i->end()-1);
+		for (unsigned j = 0; j < quadrangle.size(); j++)
+			quadrangle[j]++;
 		elementConnectivities.emplace_back(std::move(quadrangle));
 	}
 
@@ -45,11 +49,6 @@ void CgnsCreator2D::writeRegions() {
 
 		std::vector<std::vector<int>> regionConnectivities(elementConnectivities.cbegin() + region->elementsOnRegion.front(),
 															elementConnectivities.cbegin() + region->elementsOnRegion.back() + 1);
-	 	for (unsigned j = 0; j < regionConnectivities.size(); j++) {
-			regionConnectivities[j].pop_back();
-			for (unsigned k = 0; k < regionConnectivities[j].size(); k++)
-				regionConnectivities[j][k]++;
-	 	}
 	 	elementEnd += regionConnectivities.size();
 
 	 	ElementType_t elementType;

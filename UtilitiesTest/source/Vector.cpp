@@ -3,7 +3,7 @@
 
 #define TOLERANCE 1e-12
 
-TestCase(make_1d) {
+TestCase(linearize_matrix) {
 	std::vector<std::vector<double>> a = {{-10.0, 10.0, 20.0},
 							 			  { 30.0, 40.0, 50.0},
 	                         			  { 60.0, 70.0, 80.0}};

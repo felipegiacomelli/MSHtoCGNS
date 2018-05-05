@@ -45,7 +45,7 @@ $ make test
 
 ## Converting
 
-The file **Script\*.json** located in *Zeta/* specify the path to the .msh file (**input**) and the path where the directory containing the .cgns file will be created (**output**). Thus, once you have the paths set up, you can execute:
+The file **Script\*.json** located in *Zeta/* specify the path to the .msh file (**input**) and the path where the directory containing the .cgns file will be created (**output**). Thus, once you have the paths set up, you may execute:
 
 ```shell
 $ ./MSHtoCGNS -(dimension)
