@@ -64,12 +64,11 @@ endif ()
 ##################################################################
 set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Zeta/CMakeModules)
 set (BOOST_VERSION "1.66.0")
-set (CGNS_VERSION  "3.3.0" )
+set (CGNS_VERSION  "3.3.1" )
 
 ##############
 # BOOST
 ##############
-# set (BOOST_ROOT $ENV{BOOST_DIR}/${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
 set (BOOST_ROOT ${CMAKE_SOURCE_DIR}/Zeta/Libraries/boost-1.66.0)
 set (Components_Boost system filesystem unit_test_framework test_exec_monitor)
 set (Boost_USE_MULTITHREADED ON)
@@ -81,7 +80,6 @@ endif ()
 ##############
 # CGNS
 ##############
-# set (CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
 set (CGNS_DIR ${CMAKE_SOURCE_DIR}/Zeta/Libraries/cgns-3.3.1)
 find_package (CGNS ${CGNS_VERSION} REQUIRED)
 if (CGNS_FOUND)
