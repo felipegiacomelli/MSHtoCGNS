@@ -1,7 +1,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/IO/2D-Region1-ElementType2/11v_10e.msh",
-        "output" : "./"
+        "input"  : "/home/felipe/Felipe/gmsh/hybrid/square/hybrid_square.msh",
+        "output" : "/home/felipe/Felipe/grids/MSHtoCGNS/HybridSquare/"
     }
 }
