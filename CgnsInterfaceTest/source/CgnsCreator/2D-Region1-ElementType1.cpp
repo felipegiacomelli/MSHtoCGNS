@@ -11,7 +11,6 @@ struct Region1_ElementType1_2D {
 		CgnsReader2D inputReader(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/2D-Region1-ElementType1/5v_4e.cgns");
 		CgnsCreator2D cgnsCreator2D(inputReader.gridData, "./TEST_FILE.cgns");
 		this->filePath = cgnsCreator2D.getFileName();
-		std::cout << std::endl << this->filePath << std::endl;
 		CgnsReader2D outputReader(this->filePath);
 		this->gridData = outputReader.gridData;
 		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex);
@@ -37,6 +36,17 @@ FixtureTestSuite(Generate_Region1_ElementType1_2D, Region1_ElementType1_2D)
 
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;
+
+	float fileVersion;
+	cg_version(this->fileIndex, &fileVersion);
+	int fileType;
+	cg_is_cgns(this->filePath.c_str(), &fileType);
+	std::cout << std::endl << "fileVersion: " << fileVersion << std::endl;
+	std::cout << std::endl << "fileType: " << fileType << std::endl;
+
+	// GridLocation_t location
+	std::cout << std::endl << "Vertex: " << Vertex << std::endl;
+	std::cout << std::endl << "CellCenter: " << CellCenter << std::endl;
 
 	checkEqual(coordinates.size(), 5u);
 	checkClose(coordinates[0][0], 0.0, TOLERANCE); checkClose(coordinates[0][1], 0.0, TOLERANCE); checkClose(coordinates[0][2], 0.0, TOLERANCE);
