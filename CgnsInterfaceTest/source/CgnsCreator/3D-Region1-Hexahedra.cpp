@@ -1,20 +1,39 @@
 #include <BoostInterface/Test.hpp>
+#include <Grid/GridData.hpp>
+#include <IO/MshReader3D.hpp>
 #include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
+#include <cgnslib.h>
 
 #define TOLERANCE 1e-12
 
-struct Region1_ElementType1_3D_Cgns {
-	Region1_ElementType1_3D_Cgns() {
-		CgnsReader3D cgnsReader3D(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/3D-Region1-ElementType1/27v_8e.cgns");
-		this->gridData = cgnsReader3D.gridData;
+struct Region1_Hexahedra_3D {
+	Region1_Hexahedra_3D() {
+		CgnsReader3D inputReader(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/3D-Region1-Hexahedra/27v_8e.cgns");
+		CgnsCreator3D fileIndex3D(inputReader.gridData, "./");
+		this->filePath = fileIndex3D.getFileName();
+		CgnsReader3D outputReader(this->filePath);
+		this->gridData = outputReader.gridData;
+		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex);
 	}
 
-	~Region1_ElementType1_3D_Cgns() = default;
+	~Region1_Hexahedra_3D() {
+		cg_close(this->fileIndex);
+		deleteDirectory("./27v_8e/");
+	};
 
+	std::string filePath;
 	GridDataShared gridData;
+	int fileIndex;
+	char name[100];
+	ElementType_t type;
+	int elementStart;
+	int elementEnd;
+	int nbndry;
+	int parent_flag;
 };
 
-FixtureTestSuite(ReadCgns_Region1_ElementType1_3D, Region1_ElementType1_3D_Cgns)
+FixtureTestSuite(Generate_Region1_Hexahedra_3D, Region1_Hexahedra_3D)
 
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;
@@ -80,6 +99,12 @@ TestCase(Elements) {
 	checkEqual(hexahedra[5][8], 5);
 	checkEqual(hexahedra[6][8], 6);
 	checkEqual(hexahedra[7][8], 7);
+
+	cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(std::string(this->name) == std::string("Geometry"));
+	check(this->type == HEXA_8);
+	checkEqual(this->elementStart, 1);
+	checkEqual(this->elementEnd  , 8);
 }
 
 TestCase(Facets) {
@@ -111,10 +136,29 @@ TestCase(Facets) {
 	checkEqual(quadrangles[23][0], 22); checkEqual(quadrangles[23][1], 23); checkEqual(quadrangles[23][2], 26); checkEqual(quadrangles[23][3], 25); checkEqual(quadrangles[23][4], 31);
 }
 
-TestCase(Boundaries) {
-	auto boundaries = this->gridData->boundaries;
+TestCase(Regions) {
+	checkEqual(this->gridData->regions.size(), 1u);
+}
 
-	checkEqual(boundaries.size(), 6u);
+TestCase(Geometry) {
+	auto region = this->gridData->regions[0];
+
+	check(region.name == std::string("Geometry"));
+
+	auto elementsOnRegion = region.elementsOnRegion;
+	checkEqual(elementsOnRegion.size(), 8u);
+	checkEqual(elementsOnRegion[0], 0);
+	checkEqual(elementsOnRegion[1], 1);
+	checkEqual(elementsOnRegion[2], 2);
+	checkEqual(elementsOnRegion[3], 3);
+	checkEqual(elementsOnRegion[4], 4);
+	checkEqual(elementsOnRegion[5], 5);
+	checkEqual(elementsOnRegion[6], 6);
+	checkEqual(elementsOnRegion[7], 7);
+}
+
+TestCase(Boundaries) {
+	checkEqual(this->gridData->boundaries.size(), 6u);
 }
 
 TestCase(West) {
@@ -140,6 +184,10 @@ TestCase(West) {
 	checkEqual(vertices[6], 18);
 	checkEqual(vertices[7], 21);
 	checkEqual(vertices[8], 24);
+
+	cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart,  9);
+	checkEqual(this->elementEnd  , 12);
 }
 
 TestCase(East) {
@@ -165,6 +213,10 @@ TestCase(East) {
 	checkEqual(vertices[6], 20);
 	checkEqual(vertices[7], 23);
 	checkEqual(vertices[8], 26);
+
+	cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 13);
+	checkEqual(this->elementEnd  , 16);
 }
 
 TestCase(South) {
@@ -190,6 +242,10 @@ TestCase(South) {
 	checkEqual(vertices[6], 18);
 	checkEqual(vertices[7], 19);
 	checkEqual(vertices[8], 20);
+
+	cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 17);
+	checkEqual(this->elementEnd  , 20);
 }
 
 TestCase(North) {
@@ -215,6 +271,10 @@ TestCase(North) {
 	checkEqual(vertices[6], 24);
 	checkEqual(vertices[7], 25);
 	checkEqual(vertices[8], 26);
+
+	cg_section_read(this->fileIndex, 1, 1, 5, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 21);
+	checkEqual(this->elementEnd  , 24);
 }
 
 TestCase(Bottom) {
@@ -240,6 +300,10 @@ TestCase(Bottom) {
 	checkEqual(vertices[6], 6);
 	checkEqual(vertices[7], 7);
 	checkEqual(vertices[8], 8);
+
+	cg_section_read(this->fileIndex, 1, 1, 6, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 25);
+	checkEqual(this->elementEnd  , 28);
 }
 
 TestCase(Top) {
@@ -265,27 +329,10 @@ TestCase(Top) {
 	checkEqual(vertices[6], 24);
 	checkEqual(vertices[7], 25);
 	checkEqual(vertices[8], 26);
-}
 
-TestCase(Regions) {
-	checkEqual(this->gridData->regions.size(), 1u);
-}
-
-TestCase(Geometry) {
-	auto region = this->gridData->regions[0];
-
-	check(region.name == std::string("Geometry"));
-
-	auto elementsOnRegion = region.elementsOnRegion;
-	checkEqual(elementsOnRegion.size(), 8u);
-	checkEqual(elementsOnRegion[0], 0);
-	checkEqual(elementsOnRegion[1], 1);
-	checkEqual(elementsOnRegion[2], 2);
-	checkEqual(elementsOnRegion[3], 3);
-	checkEqual(elementsOnRegion[4], 4);
-	checkEqual(elementsOnRegion[5], 5);
-	checkEqual(elementsOnRegion[6], 6);
-	checkEqual(elementsOnRegion[7], 7);
+	cg_section_read(this->fileIndex, 1, 1, 7, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	checkEqual(this->elementStart, 29);
+	checkEqual(this->elementEnd  , 32);
 }
 
 TestSuiteEnd()

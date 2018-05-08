@@ -49,21 +49,22 @@ void CgnsCreator::writeSections() {
 }
 
 void CgnsCreator::writeBoundaryConditions() {
-	for (unsigned i = 0; i < this->gridData->boundaries.size(); i++) {
-		std::vector<int> indices(this->gridData->boundaries[i].vertices.cbegin(), this->gridData->boundaries[i].vertices.cend());
+	for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
+		this->boundaryIndices.emplace_back(0);
+
+		std::vector<int> indices(boundary->vertices.cbegin(), boundary->vertices.cend());
 		for (unsigned j = 0; j < indices.size(); j++)
 			indices[j]++;
 
-		this->boundaryIndices.emplace_back(0);
-		if (cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->gridData->boundaries[i].name.c_str(), BCWall,
+		if (cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), BCWall,
 							PointList, indices.size(), &indices[0], &this->boundaryIndices.back()))
-			throw std::runtime_error("CgnsCreator: Could not write boundary condition " + std::to_string(i+1));
+			throw std::runtime_error("CgnsCreator: Could not write boundary condition " + std::to_string(this->boundaryIndices.size()));
 
-		if (cg_goto(this->fileIndex, this->baseIndex, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", i+1, nullptr))
-			throw std::runtime_error("CgnsCreator: Could go to boundary condition " + std::to_string(i+1) + " location");
+		if (cg_goto(this->fileIndex, this->baseIndex, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", this->boundaryIndices.size(), nullptr))
+			throw std::runtime_error("CgnsCreator: Could go to boundary condition " + std::to_string(this->boundaryIndices.size()));
 
-		if (cg_famname_write(this->gridData->boundaries[i].name.c_str()))
-			throw std::runtime_error("CgnsCreator: Could not write boundary condition " + std::to_string(i+1) + " family name");
+		if (cg_famname_write(boundary->name.c_str()))
+			throw std::runtime_error("CgnsCreator: Could not write boundary condition " + std::to_string(this->boundaryIndices.size()) + " family name");
 	}
 }
 

@@ -7,9 +7,9 @@
 
 #define TOLERANCE 1e-12
 
-struct Region1_ElementType1_3D {
-	Region1_ElementType1_3D() {
-		CgnsReader3D inputReader(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/3D-Region1-ElementType1/14v_24e.cgns");
+struct Region1_Tetrahedra_3D {
+	Region1_Tetrahedra_3D() {
+		CgnsReader3D inputReader(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/3D-Region1-Tetrahedra/14v_24e.cgns");
 		CgnsCreator3D fileIndex3D(inputReader.gridData, "./");
 		this->filePath = fileIndex3D.getFileName();
 		CgnsReader3D outputReader(this->filePath);
@@ -17,7 +17,7 @@ struct Region1_ElementType1_3D {
 		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex);
 	}
 
-	~Region1_ElementType1_3D() {
+	~Region1_Tetrahedra_3D() {
 		cg_close(this->fileIndex);
 		deleteDirectory("./14v_24e/");
 	};
@@ -33,7 +33,7 @@ struct Region1_ElementType1_3D {
 	int parent_flag;
 };
 
-FixtureTestSuite(Generate_Region1_ElementType1_3D, Region1_ElementType1_3D)
+FixtureTestSuite(Generate_Region1_Tetrahedra_3D, Region1_Tetrahedra_3D)
 
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;
