@@ -35,7 +35,7 @@ if (UNIX)
 		set (LIBRARY_TYPE_OUTPUT_DIRECTORY "Static")
     endif ()
 
-	set (CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} "-g -DDEBUG -Wall" CACHE STRING "Setting default compiler flags.")
+	set (CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} "-g -DDEBUG -Wall -Wno-parentheses" CACHE STRING "Setting default compiler flags.")
 	set (CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3 -DNDEBUG -Wno-expansion-to-defined -Wno-deprecated-declarations" CACHE STRING "Setting default compiler flags")
 
 	set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${BUILD_TYPE_OUTPUT_DIRECTORY})
@@ -46,6 +46,7 @@ else ()
 endif ()
 
 add_definitions("-DTEST_INPUT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/Test/\"")
+add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 
 ##################################################################
 # ABOUT THE PROJECT

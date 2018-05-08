@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 	switch (dimension) {
 		case 2: {
    			boost::property_tree::ptree iroot;
-    		boost::property_tree::read_json("../../../Zeta/Script2D.json", iroot);
+    		boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "Script2D.json", iroot);
     		std::string inputPath  = iroot.get<std::string>("path.input");
     		std::string outputPath = iroot.get<std::string>("path.output");
 
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 		}
 		case 3: {
 			boost::property_tree::ptree iroot;
-			boost::property_tree::read_json("../../../Zeta/Script3D.json", iroot);
+			boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "Script3D.json", iroot);
 			std::string inputPath  = iroot.get<std::string>("path.input");
 			std::string outputPath = iroot.get<std::string>("path.output");
 

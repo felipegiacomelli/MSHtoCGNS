@@ -4,7 +4,7 @@
 #define TOLERANCE 1e-12
 
 TestCase(ReadResults) {
-	CgnsReader2D cgnsReader2D(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/Results/9v_6e.cgns");
+	CgnsReader2D cgnsReader2D(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/2D-Region2-ElementType1-Solution/9v_6e.cgns");
 
 	int numberOfVertices = cgnsReader2D.gridData->coordinates.size();
 	checkEqual(numberOfVertices, 9);
