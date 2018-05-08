@@ -1,7 +1,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/IO/3D-Region1-ElementType1/14v_24e.msh",
+        "input"  : "/home/felipe/Felipe/gmsh/MSHtoCGNS/27v_8e.msh",
         "output" : "./"
     }
 }

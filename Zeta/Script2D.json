@@ -1,7 +1,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/gmsh/MSHtoCGNS/9v_4e.msh",
-        "output" : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/CgnsInterface/2D-Region1-ElementType1/9v_4e.cgns"
+        "input"  : "/home/felipe/Felipe/gmsh/MSHtoCGNS/11n_10e_4r.msh",
+        "output" : "./"
     }
 }
