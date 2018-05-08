@@ -1,7 +1,7 @@
 #include <CgnsInterface/CgnsCreator.hpp>
 #include <cgnslib.h>
 
-CgnsCreator::CgnsCreator(GridDataShared gridData, const std::string& folderPath) : gridData(gridData), folderPath(folderPath) {
+CgnsCreator::CgnsCreator(GridDataShared gridData, const std::string& folderPath) : gridData(gridData), folderPath(folderPath)/*, elementStart(1), elementEnd(0)*/ {
 	this->baseName = "Base";
 	this->zoneName = "Zone";
 	this->physicalDimension = this->gridData->dimension;

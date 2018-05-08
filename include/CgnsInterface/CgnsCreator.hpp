@@ -32,6 +32,7 @@ class CgnsCreator {
 		std::array<int, 3> sizes;
 		int fileIndex, baseIndex, zoneIndex;
 		std::vector<int> coordinateIndices, sectionIndices, boundaryIndices;
+		// int elementStart, elementEnd;
 };
 
 #endif
