@@ -29,16 +29,12 @@ void CgnsCreator2D::writeCoordinates() {
 void CgnsCreator2D::writeRegions() {
 	std::vector<std::vector<int>> elementConnectivities;
 	for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++) {
-		std::vector<int> triangle(i->cbegin(), i->cend()-1);
-		for (unsigned j = 0; j < triangle.size(); j++)
-			triangle[j]++;
-		elementConnectivities.emplace_back(std::move(triangle));
+		elementConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend()-1, std::back_inserter(elementConnectivities.back()), [](auto x){return x + 1;});
 	}
 	for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++) {
-		std::vector<int> quadrangle(i->cbegin(), i->cend()-1);
-		for (unsigned j = 0; j < quadrangle.size(); j++)
-			quadrangle[j]++;
-		elementConnectivities.emplace_back(std::move(quadrangle));
+		elementConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend()-1, std::back_inserter(elementConnectivities.back()), [](auto x){return x + 1;});
 	}
 
 	for (auto region = this->gridData->regions.cbegin(); region != this->gridData->regions.cend(); region++) {
@@ -100,10 +96,8 @@ void CgnsCreator2D::writeRegions() {
 void CgnsCreator2D::writeBoundaries() {
 	std::vector<std::vector<int>> facetConnectivity;
 	for (auto i = this->gridData->lineConnectivity.cbegin(); i != this->gridData->lineConnectivity.cend(); i++) {
-		std::vector<int> line(i->begin(), i->end()-1);
-		for (unsigned j = 0; j < line.size(); j++)
-			line[j]++;
-		facetConnectivity.emplace_back(std::move(line));
+		facetConnectivity.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend()-1, std::back_inserter(facetConnectivity.back()), [](auto x){return x + 1;});
 	}
 
 	for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
