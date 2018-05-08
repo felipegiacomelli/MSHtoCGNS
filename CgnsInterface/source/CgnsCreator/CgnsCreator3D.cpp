@@ -88,6 +88,7 @@ void CgnsCreator3D::writeRegions() {
 
 void CgnsCreator3D::writeBoundaries() {
 	this->sectionIndices.emplace_back(0);
+	this->elementStart = this->sizes[1] + 1;
 
 	switch (this->boundary) {
 		case 3: {
@@ -98,21 +99,20 @@ void CgnsCreator3D::writeBoundaries() {
 					triangle[j]++;
 				facetConnectivity.emplace_back(std::move(triangle));
 			}
-			int elementStart = this->sizes[1] + 1;
-			int elementEnd;
+
 			for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
 				std::vector<std::vector<int>> boundaryConnectivities(facetConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
 																facetConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
 
-				elementEnd = elementStart + boundaryConnectivities.size() - 1;
+				this->elementEnd = this->elementStart + boundaryConnectivities.size() - 1;
 
 				std::vector<int> connectivities = linearize(boundaryConnectivities);
 
 				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), TRI_3,
-										elementStart, elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
+										this->elementStart, this->elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
 					throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(this->sectionIndices.size()));
 
-				elementStart = elementEnd + 1;
+				this->elementStart = this->elementEnd + 1;
 			}
 			break;
 		}
@@ -124,21 +124,20 @@ void CgnsCreator3D::writeBoundaries() {
 					quadrangle[j]++;
 				facetConnectivity.emplace_back(std::move(quadrangle));
 			}
-			int elementStart = this->sizes[1] + 1;
-			int elementEnd;
+
 			for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
 				std::vector<std::vector<int>> boundaryConnectivities(facetConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
 																facetConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
 
-				elementEnd = elementStart + boundaryConnectivities.size() - 1;
+				this->elementEnd = this->elementStart + boundaryConnectivities.size() - 1;
 
 				std::vector<int> connectivities = linearize(boundaryConnectivities);
 
 				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), QUAD_4,
-										elementStart, elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
+										this->elementStart, this->elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
 					throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(this->sectionIndices.size()));
 
-				elementStart = elementEnd + 1;
+				this->elementStart = this->elementEnd + 1;
 			}
 			break;
 		}
