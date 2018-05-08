@@ -6,7 +6,7 @@
 class CgnsWriter {
 	public:
 		CgnsWriter() = default;
-		CgnsWriter(const std::string& filePath);
+		CgnsWriter(const std::string& filePath, const std::string solutionLocation);
 
 		void writePermanentSolution();
 		void writePermanentField(const std::vector<double>& fieldValues, const std::string& fieldName);
@@ -25,6 +25,7 @@ class CgnsWriter {
 		void readZone();
 
 		std::string filePath;
+		int gridLocation;
 		int fileIndex, baseIndex, zoneIndex, solutionIndex, fieldIndex;
 		std::vector<int> solutionIndices, fieldsIndices;
 		std::vector<double> timeInstants;

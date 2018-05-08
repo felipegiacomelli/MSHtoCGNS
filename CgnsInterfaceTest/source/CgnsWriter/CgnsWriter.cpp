@@ -52,7 +52,7 @@ struct CgnsWriterFixture {
 FixtureTestSuite(CgnsWriterSuite, CgnsWriterFixture)
 
 TestCase(FirstTimeStep) {
-	CgnsWriter cgnsWriter(this->outputFile);
+	CgnsWriter cgnsWriter(this->outputFile, "Vertex");
 	cgnsWriter.writeTimeStep(this->timeInstant);
 	cgnsWriter.writeTransientField(this->temperature, "temperature");
 	cgnsWriter.writeTransientField(this->pressure, "pressure");

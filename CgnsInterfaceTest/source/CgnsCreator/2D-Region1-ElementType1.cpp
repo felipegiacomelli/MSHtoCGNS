@@ -37,17 +37,6 @@ FixtureTestSuite(Generate_Region1_ElementType1_2D, Region1_ElementType1_2D)
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;
 
-	float fileVersion;
-	cg_version(this->fileIndex, &fileVersion);
-	int fileType;
-	cg_is_cgns(this->filePath.c_str(), &fileType);
-	std::cout << std::endl << "fileVersion: " << fileVersion << std::endl;
-	std::cout << std::endl << "fileType: " << fileType << std::endl;
-
-	// GridLocation_t location
-	std::cout << std::endl << "Vertex: " << Vertex << std::endl;
-	std::cout << std::endl << "CellCenter: " << CellCenter << std::endl;
-
 	checkEqual(coordinates.size(), 5u);
 	checkClose(coordinates[0][0], 0.0, TOLERANCE); checkClose(coordinates[0][1], 0.0, TOLERANCE); checkClose(coordinates[0][2], 0.0, TOLERANCE);
 	checkClose(coordinates[1][0], 1.0, TOLERANCE); checkClose(coordinates[1][1], 0.0, TOLERANCE); checkClose(coordinates[1][2], 0.0, TOLERANCE);

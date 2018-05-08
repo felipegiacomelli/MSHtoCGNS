@@ -1,7 +1,14 @@
 #include <CgnsInterface/CgnsWriter.hpp>
 #include <cgnslib.h>
 
-CgnsWriter::CgnsWriter(const std::string& filePath) : filePath(filePath), isFinalized(false) {
+CgnsWriter::CgnsWriter(const std::string& filePath, const std::string solutionLocation) : filePath(filePath), isFinalized(false) {
+	if (solutionLocation == std::string("Vertex"))
+		this->gridLocation = 2;
+	else if (solutionLocation == std::string("CellCenter"))
+		this->gridLocation = 3;
+	else
+		throw std::runtime_error("CgnsWriter: Solution location must be either Vertex or CellCenter");
+
 	this->checkFile();
 	this->readBase();
 	this->readZone();
@@ -20,6 +27,12 @@ void CgnsWriter::checkFile() {
 
 	if (cg_open(this->filePath.c_str(), CG_MODE_MODIFY, &this->fileIndex))
 		throw std::runtime_error("CgnsWriter: Could not open the file " + this->filePath);
+
+	float version;
+	if (cg_version(this->fileIndex, &version))
+		throw std::runtime_error("CgnsWriter: Could read file version");
+	if (version <= 3.21)
+		throw std::runtime_error("CgnsWriter: File version (" + std::to_string(version) + ") is older than 3.3.0");
 }
 
 void CgnsWriter::readBase() {
@@ -39,8 +52,7 @@ void CgnsWriter::readZone() {
 }
 
 void CgnsWriter::writePermanentSolution() {
-	GridLocation_t location = Vertex;
-	cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Solution", location, &this->solutionIndex);
+	cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Solution", GridLocation_t(this->gridLocation), &this->solutionIndex);
 }
 
 void CgnsWriter::writePermanentField(const std::vector<double>& fieldValues, const std::string& fieldName) {
@@ -51,8 +63,7 @@ void CgnsWriter::writeTimeStep(const double& timeInstant) {
 	this->timeInstants.push_back(timeInstant);
 	this->solutionIndices.emplace_back(0);
 	std::string solutionName = std::string("TimeStep") + std::to_string(timeInstants.size());
-	GridLocation_t location = Vertex;
-	cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), location, &this->solutionIndices.back());
+	cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), GridLocation_t(this->gridLocation), &this->solutionIndices.back());
 }
 
 void CgnsWriter::writeTransientField(const std::vector<double>& fieldValues, const std::string& fieldName) {

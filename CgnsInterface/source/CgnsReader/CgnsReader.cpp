@@ -24,6 +24,12 @@ void CgnsReader::checkFile() {
 
 	if (cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex))
 		throw std::runtime_error("CgnsReader: Could not open the file " + this->filePath);
+
+	float version;
+	if (cg_version(this->fileIndex, &version))
+		throw std::runtime_error("CgnsReader: Could read file version");
+	if (version <= 3.21)
+		throw std::runtime_error("CgnsReader: File version (" + std::to_string(version) + ") is older than 3.3.0");
 }
 
 void CgnsReader::readBase() {
