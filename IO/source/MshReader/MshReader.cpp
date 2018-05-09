@@ -70,6 +70,8 @@ void MshReader::readConnectivities() {
 
 void MshReader::divideConnectivities() {
 	this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + this->numberOfFacets, this->connectivities.end());
+	int regionIndex = 1;
+	std::stable_sort(this->elements.begin(), this->elements.end(), [regionIndex](const auto& a, const auto& b) {return a[regionIndex] < b[regionIndex];});
 	for (unsigned i = 0; i < this->elements.size(); i++)
 		this->elements[i].push_back(i);
 	int numberOfElements = elements.size();
@@ -82,10 +84,6 @@ void MshReader::divideConnectivities() {
 }
 
 void MshReader::assignElementsToRegions() {
-	printf("\n");
-	print(this->elements, "elements");
-	printf("\n");
-
 	int counter = 0;
 	std::vector<unsigned> regionStart;
 	regionStart.emplace_back(0);
@@ -102,10 +100,6 @@ void MshReader::assignElementsToRegions() {
 	for (unsigned i = 0; i < regionStart.size()-1; i++)
 		for (unsigned j = regionStart[i]; j < regionStart[i+1]; j++)
 			this->elements[j][1] = i;
-
-	printf("\n");
-	print(this->elements, "elements");
-	printf("\n");
 
 	this->regionElements.resize(this->numberOfRegions, std::vector<int>());
 	for (unsigned i = 0; i < this->elements.size(); i++)
