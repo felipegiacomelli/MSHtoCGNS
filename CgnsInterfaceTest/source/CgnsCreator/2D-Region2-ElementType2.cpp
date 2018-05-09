@@ -1,0 +1,243 @@
+#include <BoostInterface/Test.hpp>
+#include <Grid/GridData.hpp>
+#include <IO/MshReader2D.hpp>
+#include <CgnsInterface/CgnsReader/CgnsReader2D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsCreator2D.hpp>
+#include <cgnslib.h>
+
+#define TOLERANCE 1e-12
+
+struct Region2_ElementType2_2D {
+	Region2_ElementType2_2D() {
+		CgnsReader2D inputReader(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/2D-Region2-ElementType2/11v_10e.cgns");
+		CgnsCreator2D fileIndex2D(inputReader.gridData, "./");
+		this->filePath = fileIndex2D.getFileName();
+		CgnsReader2D outputReader(this->filePath);
+		this->gridData = outputReader.gridData;
+		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex);
+	}
+
+	~Region2_ElementType2_2D() {
+		cg_close(this->fileIndex);
+		deleteDirectory("./11v_10e/");
+	};
+
+	std::string filePath;
+	GridDataShared gridData;
+	int fileIndex;
+	char name[100];
+	ElementType_t type;
+	int elementStart;
+	int elementEnd;
+	int nbndry;
+	int parent_flag;
+};
+
+FixtureTestSuite(Generate_Region2_ElementType2_2D, Region2_ElementType2_2D)
+
+TestCase(Coordinates) {
+	auto coordinates = this->gridData->coordinates;
+
+	checkEqual(coordinates.size(), 11u);
+	checkClose(coordinates[	0][0], 0.00, TOLERANCE); checkClose(coordinates[ 0][1], 0.00, TOLERANCE); checkClose(coordinates[ 0][2], 0.00, TOLERANCE);
+	checkClose(coordinates[	1][0], 0.50, TOLERANCE); checkClose(coordinates[ 1][1], 0.00, TOLERANCE); checkClose(coordinates[ 1][2], 0.00, TOLERANCE);
+	checkClose(coordinates[	2][0], 1.00, TOLERANCE); checkClose(coordinates[ 2][1], 0.00, TOLERANCE); checkClose(coordinates[ 2][2], 0.00, TOLERANCE);
+	checkClose(coordinates[	3][0], 0.00, TOLERANCE); checkClose(coordinates[ 3][1], 0.50, TOLERANCE); checkClose(coordinates[ 3][2], 0.00, TOLERANCE);
+	checkClose(coordinates[	4][0], 0.50, TOLERANCE); checkClose(coordinates[ 4][1], 0.50, TOLERANCE); checkClose(coordinates[ 4][2], 0.00, TOLERANCE);
+	checkClose(coordinates[	5][0], 1.00, TOLERANCE); checkClose(coordinates[ 5][1], 0.50, TOLERANCE); checkClose(coordinates[ 5][2], 0.00, TOLERANCE);
+	checkClose(coordinates[	6][0], 0.00, TOLERANCE); checkClose(coordinates[ 6][1], 1.00, TOLERANCE); checkClose(coordinates[ 6][2], 0.00, TOLERANCE);
+	checkClose(coordinates[	7][0], 0.50, TOLERANCE); checkClose(coordinates[ 7][1], 1.00, TOLERANCE); checkClose(coordinates[ 7][2], 0.00, TOLERANCE);
+	checkClose(coordinates[	8][0], 1.00, TOLERANCE); checkClose(coordinates[ 8][1], 1.00, TOLERANCE); checkClose(coordinates[ 8][2], 0.00, TOLERANCE);
+	checkClose(coordinates[	9][0], 0.25, TOLERANCE); checkClose(coordinates[ 9][1], 0.75, TOLERANCE); checkClose(coordinates[ 9][2], 0.00, TOLERANCE);
+	checkClose(coordinates[10][0], 0.75, TOLERANCE); checkClose(coordinates[10][1], 0.25, TOLERANCE); checkClose(coordinates[10][2], 0.00, TOLERANCE);
+}
+
+TestCase(Elements) {
+	auto triangles = this->gridData->triangleConnectivity;
+	checkEqual(triangles.size(), 8u);
+	checkEqual(triangles[0][0], 3); checkEqual(triangles[0][1],  4); checkEqual(triangles[0][2],  9); checkEqual(triangles[0][3], 0);
+	checkEqual(triangles[1][0], 3); checkEqual(triangles[1][1],  9); checkEqual(triangles[1][2],  6); checkEqual(triangles[1][3], 1);
+	checkEqual(triangles[2][0], 4); checkEqual(triangles[2][1],  7); checkEqual(triangles[2][2],  9); checkEqual(triangles[2][3], 2);
+	checkEqual(triangles[3][0], 6); checkEqual(triangles[3][1],  9); checkEqual(triangles[3][2],  7); checkEqual(triangles[3][3], 3);
+	checkEqual(triangles[4][0], 1); checkEqual(triangles[4][1],  2); checkEqual(triangles[4][2], 10); checkEqual(triangles[4][3], 5);
+	checkEqual(triangles[5][0], 1); checkEqual(triangles[5][1], 10); checkEqual(triangles[5][2],  4); checkEqual(triangles[5][3], 6);
+	checkEqual(triangles[6][0], 2); checkEqual(triangles[6][1],  5); checkEqual(triangles[6][2], 10); checkEqual(triangles[6][3], 7);
+	checkEqual(triangles[7][0], 4); checkEqual(triangles[7][1], 10); checkEqual(triangles[7][2],  5); checkEqual(triangles[7][3], 8);
+
+	auto quadrangles = this->gridData->quadrangleConnectivity;
+	checkEqual(quadrangles.size(), 2u);
+	checkEqual(quadrangles[0][0], 4); checkEqual(quadrangles[0][1], 5); checkEqual(quadrangles[0][2], 8); checkEqual(quadrangles[0][3], 7); checkEqual(quadrangles[0][4], 4);
+	checkEqual(quadrangles[1][0], 0); checkEqual(quadrangles[1][1], 1); checkEqual(quadrangles[1][2], 4); checkEqual(quadrangles[1][3], 3); checkEqual(quadrangles[1][4], 9);
+}
+
+TestCase(Facets) {
+	auto lines = this->gridData->lineConnectivity;
+
+	checkEqual(lines.size(), 8u);
+	checkEqual(lines[0][0], 6); checkEqual(lines[0][1], 3); checkEqual(lines[0][2], 10);
+	checkEqual(lines[1][0], 3); checkEqual(lines[1][1], 0); checkEqual(lines[1][2], 11);
+	checkEqual(lines[2][0], 2); checkEqual(lines[2][1], 5); checkEqual(lines[2][2], 12);
+	checkEqual(lines[3][0], 5); checkEqual(lines[3][1], 8); checkEqual(lines[3][2], 13);
+	checkEqual(lines[4][0], 0); checkEqual(lines[4][1], 1); checkEqual(lines[4][2], 14);
+	checkEqual(lines[5][0], 1); checkEqual(lines[5][1], 2); checkEqual(lines[5][2], 15);
+	checkEqual(lines[6][0], 8); checkEqual(lines[6][1], 7); checkEqual(lines[6][2], 16);
+	checkEqual(lines[7][0], 7); checkEqual(lines[7][1], 6); checkEqual(lines[7][2], 17);
+}
+
+TestCase(Regions) {
+	checkEqual(this->gridData->regions.size(), 2u);
+}
+
+TestCase(A) {
+	auto region = this->gridData->regions[0];
+
+	check(region.name == std::string("A"));
+
+	auto elementsOnRegion = region.elementsOnRegion;
+	checkEqual(elementsOnRegion.size(), 5u);
+	checkEqual(elementsOnRegion[0], 0);
+	checkEqual(elementsOnRegion[1], 1);
+	checkEqual(elementsOnRegion[2], 2);
+	checkEqual(elementsOnRegion[3], 3);
+	checkEqual(elementsOnRegion[4], 4);
+
+	cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(std::string(this->name) == std::string("A"));
+	check(this->type == MIXED);
+	checkEqual(this->elementStart, 1);
+	checkEqual(this->elementEnd  , 5);
+}
+
+TestCase(B) {
+	auto region = this->gridData->regions[1];
+
+	check(region.name == std::string("B"));
+
+	auto elementsOnRegion = region.elementsOnRegion;
+	checkEqual(elementsOnRegion.size(), 5u);
+	checkEqual(elementsOnRegion[0], 5);
+	checkEqual(elementsOnRegion[1], 6);
+	checkEqual(elementsOnRegion[2], 7);
+	checkEqual(elementsOnRegion[3], 8);
+	checkEqual(elementsOnRegion[4], 9);
+
+	cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(std::string(this->name) == std::string("B"));
+	check(this->type == MIXED);
+	checkEqual(this->elementStart, 6);
+	checkEqual(this->elementEnd  , 10);
+}
+
+TestCase(Boundaries) {
+	checkEqual(this->gridData->boundaries.size(), 4u);
+}
+
+TestCase(West) {
+	auto boundary = this->gridData->boundaries[0];
+
+	check(boundary.name == std::string("West"));
+
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 2u);
+	checkEqual(facetsOnBoundary[0], 10);
+	checkEqual(facetsOnBoundary[1], 11);
+
+	auto vertices = boundary.vertices;
+	checkEqual(vertices.size(), 3u);
+	checkEqual(vertices[0], 0);
+	checkEqual(vertices[1], 3);
+	checkEqual(vertices[2], 6);
+
+	cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("West"));
+	checkEqual(this->elementStart, 11);
+	checkEqual(this->elementEnd  , 12);
+	check(this->type == BAR_2);
+
+	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 1, nullptr);
+	cg_famname_read(this->name);
+	check(name == std::string("West"));
+}
+
+TestCase(East) {
+	auto boundary = this->gridData->boundaries[1];
+
+	check(boundary.name == std::string("East"));
+
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 2u);
+	checkEqual(facetsOnBoundary[0], 12);
+	checkEqual(facetsOnBoundary[1], 13);
+
+	auto vertices = boundary.vertices;
+	checkEqual(vertices.size(), 3u);
+	checkEqual(vertices[0], 2);
+	checkEqual(vertices[1], 5);
+	checkEqual(vertices[2], 8);
+
+	cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("East"));
+	checkEqual(this->elementStart, 13);
+	checkEqual(this->elementEnd  , 14);
+	check(this->type == BAR_2);
+
+	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 2, nullptr);
+	cg_famname_read(this->name);
+	check(name == std::string("East"));
+}
+
+TestCase(South) {
+	auto boundary = this->gridData->boundaries[2];
+
+	check(boundary.name == std::string("South"));
+
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 2u);
+	checkEqual(facetsOnBoundary[0], 14);
+	checkEqual(facetsOnBoundary[1], 15);
+
+	auto vertices = boundary.vertices;
+	checkEqual(vertices.size(), 3u);
+	checkEqual(vertices[0], 0);
+	checkEqual(vertices[1], 1);
+	checkEqual(vertices[2], 2);
+
+	cg_section_read(this->fileIndex, 1, 1, 5, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("South"));
+	checkEqual(this->elementStart, 15);
+	checkEqual(this->elementEnd  , 16);
+	check(this->type == BAR_2);
+
+	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 3, nullptr);
+	cg_famname_read(this->name);
+	check(name == std::string("South"));
+}
+
+TestCase(North) {
+	auto boundary = this->gridData->boundaries[3];
+
+	check(boundary.name == std::string("North"));
+
+	auto facetsOnBoundary = boundary.facetsOnBoundary;
+	checkEqual(facetsOnBoundary.size(), 2u);
+	checkEqual(facetsOnBoundary[0], 16);
+	checkEqual(facetsOnBoundary[1], 17);
+
+	auto vertices = boundary.vertices;
+	checkEqual(vertices.size(), 3u);
+	checkEqual(vertices[0], 6);
+	checkEqual(vertices[1], 7);
+	checkEqual(vertices[2], 8);
+
+	cg_section_read(this->fileIndex, 1, 1, 6, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+	check(name == std::string("North"));
+	checkEqual(this->elementStart, 17);
+	checkEqual(this->elementEnd  , 18);
+	check(this->type == BAR_2);
+
+	cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 4, nullptr);
+	cg_famname_read(this->name);
+	check(name == std::string("North"));
+}
+
+TestSuiteEnd()
