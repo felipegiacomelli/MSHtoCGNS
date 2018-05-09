@@ -34,10 +34,7 @@ void CgnsCreator2D::writeRegions() {
 		elementConnectivities.emplace_back(std::vector<int>());
 		std::transform(i->cbegin(), i->cend(), std::back_inserter(elementConnectivities.back()), [](auto x){return x + 1;});
 	}
-	// print(elementConnectivities, "elementConnectivities");
 	std::stable_sort(elementConnectivities.begin(), elementConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
-	// print(elementConnectivities, "elementConnectivities");
-
 	for (unsigned i = 0; i < elementConnectivities.size(); i++)
 		elementConnectivities[i].pop_back();
 
