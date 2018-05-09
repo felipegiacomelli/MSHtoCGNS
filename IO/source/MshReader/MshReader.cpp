@@ -1,4 +1,5 @@
 #include <IO/MshReader.hpp>
+#include <Utilities/Print.hpp>
 
 MshReader::MshReader(const std::string& filePath) : filePath(filePath) {
 	this->checkFile();
@@ -81,6 +82,10 @@ void MshReader::divideConnectivities() {
 }
 
 void MshReader::assignElementsToRegions() {
+	printf("\n");
+	print(this->elements, "elements");
+	printf("\n");
+
 	int counter = 0;
 	std::vector<unsigned> regionStart;
 	regionStart.emplace_back(0);
@@ -97,6 +102,10 @@ void MshReader::assignElementsToRegions() {
 	for (unsigned i = 0; i < regionStart.size()-1; i++)
 		for (unsigned j = regionStart[i]; j < regionStart[i+1]; j++)
 			this->elements[j][1] = i;
+
+	printf("\n");
+	print(this->elements, "elements");
+	printf("\n");
 
 	this->regionElements.resize(this->numberOfRegions, std::vector<int>());
 	for (unsigned i = 0; i < this->elements.size(); i++)
