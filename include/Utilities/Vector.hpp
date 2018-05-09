@@ -14,12 +14,11 @@ std::vector<T> linearize(const std::vector<std::vector<T>>& a) {
 	return b;
 }
 
-template<typename Iter>
-auto linearize(Iter cbegin, Iter cend) {
-	typename std::iterator_traits<Iter>::value_type a;
+template<class InputIt, class OutputIt>
+void append(InputIt cbegin, InputIt cend, OutputIt output) {
 	for (auto i = cbegin; i != cend; i++)
-		a.insert(a.end(), i->cbegin(), i->cend());
-	return a;
+		for (auto j = i->cbegin(); j != i->cend(); j++)
+			output = *j;
 }
 
 #endif

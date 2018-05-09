@@ -25,7 +25,9 @@ TestCase(linearize_matrix_via_iterators) {
 							 			  { 30.0, 40.0, 50.0},
 	                         			  { 60.0, 70.0, 80.0}};
 
-	std::vector<double> b = linearize(a.cbegin(), a.cend());
+	std::vector<double> b;
+	append(a.cbegin(), a.cend(), std::back_inserter(b));
+
 	checkClose(b[0], -10.0, TOLERANCE);
 	checkClose(b[1],  10.0, TOLERANCE);
 	checkClose(b[2],  20.0, TOLERANCE);
