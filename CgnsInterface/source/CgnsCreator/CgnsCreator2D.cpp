@@ -1,8 +1,6 @@
 #include <CgnsInterface/CgnsCreator/CgnsCreator2D.hpp>
 #include <cgnslib.h>
 
-#include <Utilities/Print.hpp>
-
 CgnsCreator2D::CgnsCreator2D(GridDataShared gridData, const std::string& folderPath) : CgnsCreator(gridData, folderPath) {
 	this->sizes[0] = this->gridData->coordinates.size();
 	this->sizes[1] = this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
@@ -30,12 +28,18 @@ void CgnsCreator2D::writeRegions() {
 	std::vector<std::vector<int>> elementConnectivities;
 	for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++) {
 		elementConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend()-1, std::back_inserter(elementConnectivities.back()), [](auto x){return x + 1;});
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(elementConnectivities.back()), [](auto x){return x + 1;});
 	}
 	for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++) {
 		elementConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend()-1, std::back_inserter(elementConnectivities.back()), [](auto x){return x + 1;});
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(elementConnectivities.back()), [](auto x){return x + 1;});
 	}
+	// print(elementConnectivities, "elementConnectivities");
+	std::stable_sort(elementConnectivities.begin(), elementConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
+	// print(elementConnectivities, "elementConnectivities");
+
+	for (unsigned i = 0; i < elementConnectivities.size(); i++)
+		elementConnectivities[i].pop_back();
 
 	for (auto region = this->gridData->regions.cbegin(); region != this->gridData->regions.cend(); region++) {
 		this->sectionIndices.emplace_back(0);
