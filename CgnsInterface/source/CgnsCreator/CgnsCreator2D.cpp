@@ -41,20 +41,21 @@ void CgnsCreator2D::writeRegions() {
 	for (auto region = this->gridData->regions.cbegin(); region != this->gridData->regions.cend(); region++) {
 		this->sectionIndices.emplace_back(0);
 
-		std::vector<std::vector<int>> regionConnectivities(elementConnectivities.cbegin() + region->elementsOnRegion.front(),
-															elementConnectivities.cbegin() + region->elementsOnRegion.back() + 1);
-	 	this->elementEnd += regionConnectivities.size();
+		auto regionBegin = elementConnectivities.cbegin() + region->elementsOnRegion.front();
+		auto regionEnd = elementConnectivities.cbegin() + region->elementsOnRegion.back() + 1;
+	 	this->elementEnd += (regionEnd - regionBegin);
 
 	 	ElementType_t elementType;
-	 	if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == 3u;}))
+	 	if (std::all_of(regionBegin, regionEnd, [](const auto& connectivity){return connectivity.size() == 3u;}))
 	 		elementType = TRI_3;
-	 	else if (std::all_of(regionConnectivities.cbegin(), regionConnectivities.cend(), [](const auto& connectivity){return connectivity.size() == 4u;}))
+	 	else if (std::all_of(regionBegin, regionEnd, [](const auto& connectivity){return connectivity.size() == 4u;}))
 	 		elementType = QUAD_4;
 		else
 			elementType = MIXED;
 
 		if (elementType != MIXED) {
-			std::vector<int> connectivities = linearize(regionConnectivities);
+			std::vector<int> connectivities;
+			append(regionBegin, regionEnd, std::back_inserter(connectivities));
 
 			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, region->name.c_str(), elementType,
 									this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndices.back()))
@@ -67,8 +68,8 @@ void CgnsCreator2D::writeRegions() {
 											this->elementStart, this->elementEnd, sizes[2], &this->sectionIndices.back()))
 			throw std::runtime_error("CgnsCreator2D: Could not partial write element section " + std::to_string(this->sectionIndices.size()));
 
-			for (unsigned j = 0; j < regionConnectivities.size(); j++) {
-				std::vector<int> connectivities = regionConnectivities[j];
+			for (auto j = regionBegin; j != regionEnd; j++) {
+				std::vector<int> connectivities = *j;
 
 				switch (connectivities.size()) {
 					case 3: {
