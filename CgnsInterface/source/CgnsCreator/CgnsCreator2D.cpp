@@ -105,12 +105,12 @@ void CgnsCreator2D::writeBoundaries() {
 	for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
 		this->sectionIndices.emplace_back(0);
 
-		std::vector<std::vector<int>> boundaryConnectivities(facetConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
-																facetConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
+		auto boundaryBegin = facetConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1];
+		auto boundaryEnd = facetConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1];
+		this->elementEnd = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
 
-		this->elementEnd = this->elementStart + boundaryConnectivities.size() - 1;
-
-		std::vector<int> connectivities = linearize(boundaryConnectivities);
+		std::vector<int> connectivities;
+		append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
 
 		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), BAR_2,
 								this->elementStart, this->elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
