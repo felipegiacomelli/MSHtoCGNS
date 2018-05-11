@@ -12,14 +12,21 @@ CgnsCreator3D::CgnsCreator3D(GridDataShared gridData, const std::string& folderP
 
 void CgnsCreator3D::defineGeometryType() {
 	if (this->gridData->tetrahedronConnectivity.size() > 0 && this->gridData->hexahedronConnectivity.size() == 0) {
-		this->geometry = 4;
-		this->boundary = 3;
+		this->geometry = 10;
+		if (this->gridData->triangleConnectivity.size() > 0 && this->gridData->quadrangleConnectivity.size() == 0)
+			this->boundary = 5;
+		else
+			throw std::runtime_error("CgnsCreator3D: Boundary type not supported for given element type");
 	}
 	else if (this->gridData->tetrahedronConnectivity.size() == 0 && this->gridData->hexahedronConnectivity.size() > 0) {
-		this->geometry = 8;
-		this->boundary = 4;
+		this->geometry = 17;
+		if (this->gridData->triangleConnectivity.size() == 0 && this->gridData->quadrangleConnectivity.size() > 0)
+			this->boundary = 7;
+		else
+			throw std::runtime_error("CgnsCreator3D: Boundary type not supported for given element type");
 	}
-	else throw std::runtime_error("CgnsCreator3D: Geometry type not supported");
+	else
+		throw std::runtime_error("CgnsCreator3D: Element type not supported");
 }
 
 void CgnsCreator3D::writeCoordinates() {
@@ -44,104 +51,63 @@ void CgnsCreator3D::writeCoordinates() {
 }
 
 void CgnsCreator3D::buildElementConnectivities() {
-
+	for (auto i = this->gridData->tetrahedronConnectivity.cbegin(); i != this->gridData->tetrahedronConnectivity.cend(); i++) {
+		this->elementConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x + 1;});
+	}
+	for (auto i = this->gridData->hexahedronConnectivity.cbegin(); i != this->gridData->hexahedronConnectivity.cend(); i++) {
+		this->elementConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x + 1;});
+	}
+	std::stable_sort(this->elementConnectivities.begin(), this->elementConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
+	for (unsigned i = 0; i < this->elementConnectivities.size(); i++)
+		this->elementConnectivities[i].pop_back();
 }
 
 void CgnsCreator3D::writeRegions() {
+	this->buildElementConnectivities();
 	this->sectionIndices.emplace_back(0);
 
-	switch (this->geometry) {
-		case 4: {
-			std::vector<std::vector<int>> regionConnectivities;
-			for (auto i = this->gridData->tetrahedronConnectivity.cbegin(); i != this->gridData->tetrahedronConnectivity.cend(); i++) {
-				regionConnectivities.emplace_back(std::vector<int>());
-				std::transform(i->cbegin(), i->cend()-1, std::back_inserter(regionConnectivities.back()), [](auto x){return x + 1;});
-			}
+	std::vector<int> connectivities;
+	append(this->elementConnectivities.cbegin(), this->elementConnectivities.cend(), std::back_inserter(connectivities));
 
-			std::vector<int> connectivities = linearize(regionConnectivities);
-
-			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", TETRA_4,
-									1, this->sizes[1], sizes[2], &connectivities[0], &this->sectionIndices.back()))
-				throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(1));
-
-			break;
-		}
-		case 8: {
-			std::vector<std::vector<int>> regionConnectivities;
-			for (auto i = this->gridData->hexahedronConnectivity.cbegin(); i != this->gridData->hexahedronConnectivity.cend(); i++) {
-				regionConnectivities.emplace_back(std::vector<int>());
-				std::transform(i->cbegin(), i->cend()-1, std::back_inserter(regionConnectivities.back()), [](auto x){return x + 1;});
-			}
-
-			std::vector<int> connectivities = linearize(regionConnectivities);
-
-			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", HEXA_8,
-									1, this->sizes[1], sizes[2], &connectivities[0], &this->sectionIndices.back()))
-				throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(1));
-
-			break;
-		}
-		default:
-			throw std::runtime_error("CgnsCreator3D: Geometry type not supported");
-	}
+	if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Geometry", ElementType_t(this->geometry),
+							1, this->sizes[1], sizes[2], &connectivities[0], &this->sectionIndices.back()))
+		throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(this->sectionIndices.size()));
 }
 
 void CgnsCreator3D::buildFacetConnectivities() {
-
+	for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++) {
+		this->facetConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->facetConnectivities.back()), [](auto x){return x + 1;});
+	}
+	for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++) {
+		this->facetConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->facetConnectivities.back()), [](auto x){return x + 1;});
+	}
+	std::stable_sort(this->facetConnectivities.begin(), this->facetConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
+	for (unsigned i = 0; i < this->facetConnectivities.size(); i++)
+		this->facetConnectivities[i].pop_back();
 }
 
 void CgnsCreator3D::writeBoundaries() {
-	this->sectionIndices.emplace_back(0);
+	this->buildFacetConnectivities();
 	this->elementStart = this->sizes[1] + 1;
 
-	switch (this->boundary) {
-		case 3: {
-			std::vector<std::vector<int>> facetConnectivity;
-			for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++) {
-				facetConnectivity.emplace_back(std::vector<int>());
-				std::transform(i->cbegin(), i->cend()-1, std::back_inserter(facetConnectivity.back()), [](auto x){return x + 1;});
-			}
+	for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
+		this->sectionIndices.emplace_back(0);
 
-			for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
-				std::vector<std::vector<int>> boundaryConnectivities(facetConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
-																facetConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
+		auto boundaryBegin = this->facetConnectivities.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1];
+		auto boundaryEnd = this->facetConnectivities.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1];
+		this->elementEnd = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
 
-				this->elementEnd = this->elementStart + boundaryConnectivities.size() - 1;
+		std::vector<int> connectivities;
+		append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
 
-				std::vector<int> connectivities = linearize(boundaryConnectivities);
+		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), ElementType_t(this->boundary),
+								this->elementStart, this->elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
+			throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(this->sectionIndices.size()));
 
-				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), TRI_3,
-										this->elementStart, this->elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
-					throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(this->sectionIndices.size()));
-
-				this->elementStart = this->elementEnd + 1;
-			}
-			break;
-		}
-		case 4: {
-			std::vector<std::vector<int>> facetConnectivity;
-			for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++) {
-				facetConnectivity.emplace_back(std::vector<int>());
-				std::transform(i->cbegin(), i->cend()-1, std::back_inserter(facetConnectivity.back()), [](auto x){return x + 1;});
-			}
-
-			for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
-				std::vector<std::vector<int>> boundaryConnectivities(facetConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1],
-																facetConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1]);
-
-				this->elementEnd = this->elementStart + boundaryConnectivities.size() - 1;
-
-				std::vector<int> connectivities = linearize(boundaryConnectivities);
-
-				if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), QUAD_4,
-										this->elementStart, this->elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
-					throw std::runtime_error("CgnsCreator3D: Could not write section " + std::to_string(this->sectionIndices.size()));
-
-				this->elementStart = this->elementEnd + 1;
-			}
-			break;
-		}
-		default:
-			throw std::runtime_error("CgnsCreator3D: Boundary type not supported");
+		this->elementStart = this->elementEnd + 1;
 	}
 }

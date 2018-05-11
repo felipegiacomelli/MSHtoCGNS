@@ -87,7 +87,7 @@ void CgnsCreator2D::writeRegions() {
 				}
 
 				if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(),
-										this->elementStart, this->elementStart, &connectivities[0]))
+												this->elementStart, this->elementStart, &connectivities[0]))
 					throw std::runtime_error("CgnsCreator2D: Could not write element " + std::to_string(this->elementStart) + " in section " +
 												std::to_string(this->sectionIndices.size()));
 
