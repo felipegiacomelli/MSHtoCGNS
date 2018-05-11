@@ -89,10 +89,24 @@ void CgnsReader::readBoundaries() {
 		if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, &vertices[0], nullptr))
 			throw std::runtime_error("CgnsReader: Could not read boundary");
 
-		for (unsigned i = 0; i < vertices.size(); i++)
-			vertices[i]--;
-		this->gridData->boundaries[boundaryIndex - 1].vertices = std::move(vertices);
+		std::transform(vertices.cbegin(), vertices.cend(), std::back_inserter(this->gridData->boundaries[boundaryIndex-1].vertices), [](auto x){return x - 1;});
 	}
+}
+
+void CgnsReader::addRegion(std::string&& name, int elementStart, int numberOfElements) {
+	RegionData region;
+	region.name = std::string(this->buffer);
+	region.elementsOnRegion.resize(numberOfElements);
+	std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), elementStart - 1);
+	this->gridData->regions.emplace_back(std::move(region));
+}
+
+void CgnsReader::addBoundary(std::string&& name, int elementStart, int numberOfElements) {
+	BoundaryData boundary;
+	boundary.name = this->buffer;
+	boundary.facetsOnBoundary.resize(numberOfElements);
+	std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), elementStart - 1);
+	this->gridData->boundaries.emplace_back(std::move(boundary));
 }
 
 std::vector<double> CgnsReader::readField(const int& solutionIndex, const std::string& fieldName) {

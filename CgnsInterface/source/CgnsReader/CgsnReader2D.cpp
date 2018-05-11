@@ -35,23 +35,12 @@ void CgnsReader2D::readSections() {
 			throw std::runtime_error("CgnsReader2D: Could not read section");
 		int numberOfElements = elementEnd - elementStart + 1;
 
-		if (elementType == MIXED || elementType == TRI_3 || elementType == QUAD_4) {
-			RegionData region;
-			region.name = std::string(this->buffer);
-			region.elementsOnRegion.resize(numberOfElements);
-			std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), elementStart - 1);
-			this->gridData->regions.emplace_back(std::move(region));
-		}
-		else if (elementType == BAR_2) {
-			BoundaryData boundary;
-			boundary.name = this->buffer;
-			boundary.facetsOnBoundary.resize(numberOfElements);
-			std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), elementStart - 1);
-			this->gridData->boundaries.emplace_back(std::move(boundary));
-		}
-		else {
+		if (elementType == MIXED || elementType == TRI_3 || elementType == QUAD_4)
+			this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
+		else if (elementType == BAR_2)
+			this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
+		else
 			throw std::runtime_error("CgnsReader2D: Section element type not supported");
-		}
 
 		int size;
 		if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))

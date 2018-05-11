@@ -18,8 +18,8 @@ class CgnsCreator {
 	protected:
 		void initialize();
 		void setupFile();
-		virtual void writeBase();
-		virtual void writeZone();
+		void writeBase();
+		void writeZone();
 		virtual void writeCoordinates() = 0;
 		void writeSections();
 		virtual void buildElementConnectivities() = 0;
