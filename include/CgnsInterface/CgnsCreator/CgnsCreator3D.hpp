@@ -12,7 +12,9 @@ class CgnsCreator3D : public CgnsCreator {
 	private:
 		void defineGeometryType();
 		void writeCoordinates() override;
+		void buildElementConnectivities() override;
 		void writeRegions() override;
+		void buildFacetConnectivities() override;
 		void writeBoundaries() override;
 
 		int geometry, boundary;

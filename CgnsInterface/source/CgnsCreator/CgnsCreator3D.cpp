@@ -43,6 +43,10 @@ void CgnsCreator3D::writeCoordinates() {
 
 }
 
+void CgnsCreator3D::buildElementConnectivities() {
+
+}
+
 void CgnsCreator3D::writeRegions() {
 	this->sectionIndices.emplace_back(0);
 
@@ -80,6 +84,10 @@ void CgnsCreator3D::writeRegions() {
 		default:
 			throw std::runtime_error("CgnsCreator3D: Geometry type not supported");
 	}
+}
+
+void CgnsCreator3D::buildFacetConnectivities() {
+
 }
 
 void CgnsCreator3D::writeBoundaries() {

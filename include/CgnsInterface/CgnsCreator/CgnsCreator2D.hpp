@@ -11,7 +11,9 @@ class CgnsCreator2D : public CgnsCreator {
 
 	private:
 		void writeCoordinates() override;
+		void buildElementConnectivities() override;
 		void writeRegions() override;
+		void buildFacetConnectivities() override;
 		void writeBoundaries() override;
 };
 
