@@ -8,8 +8,7 @@ class CgnsWriter {
 		CgnsWriter() = default;
 		CgnsWriter(const std::string& filePath, const std::string solutionLocation);
 
-		void writePermanentSolution();
-		void writePermanentField(const std::vector<double>& fieldValues, const std::string& fieldName);
+		void writePermanentField(const std::string& solutionName, const std::string& scalarFieldName, const std::vector<double>& fieldValues);
 
 		void writeTimeStep(const double& timeInstant);
 		void writeTransientField(const std::vector<double>& fieldValues, const std::string& fieldName);
