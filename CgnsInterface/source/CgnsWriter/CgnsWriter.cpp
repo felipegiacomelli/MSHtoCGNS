@@ -51,12 +51,13 @@ void CgnsWriter::readZone() {
 		throw std::runtime_error("CgnsWriter: The CGNS file has more than one zone");
 }
 
-void CgnsWriter::writePermanentSolution() {
-	cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, "Solution", GridLocation_t(this->gridLocation), &this->solutionIndex);
-}
-
-void CgnsWriter::writePermanentField(const std::vector<double>& fieldValues, const std::string& fieldName) {
-	cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->solutionIndex, RealDouble, fieldName.c_str(), &fieldValues[0], &this->fieldIndex);
+void CgnsWriter::writePermanentField(const std::string& solutionName, const std::string& fieldName, const std::vector<double>& fieldValues){
+	int solutionIndex, fieldIndex;
+	if (cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), GridLocation_t(this->gridLocation), &solutionIndex))
+		throw std::runtime_error("CgnsWriter: Could not write permanent solution " + solutionName);
+	if(cg_field_write(this->fileIndex,this->baseIndex,this->zoneIndex, solutionIndex, RealDouble, fieldName.c_str(), &fieldValues[0], &fieldIndex))
+		throw std::runtime_error("CgnsWriter: Could not write field " + fieldName);
+	return;
 }
 
 void CgnsWriter::writeTimeStep(const double& timeInstant) {
