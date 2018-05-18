@@ -108,6 +108,8 @@ macro (add_library _target)
     install (EXPORT ${Distribution} DESTINATION ${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
 endmacro ()
 
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/Grid DESTINATION ${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY}/include)
+
 ##################################################################
 # COMPONENTS
 ##################################################################

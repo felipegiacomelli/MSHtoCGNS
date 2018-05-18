@@ -12,6 +12,8 @@ class CgnsReader {
 
 		~CgnsReader();
 
+		static bool isCgnsFile(const std::string& filePath);
+
 		std::vector<double> readField(const int& solutionIndex, const std::string& fieldName);
 		int readNumberOfTimeSteps();
 		std::vector<double> readTimeInstants();

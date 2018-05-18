@@ -11,6 +11,13 @@ CgnsReader::CgnsReader(const std::string& filePath) : filePath(filePath) {
 	this->gridData->dimension = this->cellDimension;
 }
 
+bool CgnsReader::isCgnsFile(const std::string& filePath)
+{
+	int fileType;
+	int isCgnsFile = cg_is_cgns(filePath.c_str(), &fileType);
+	return isCgnsFile==CG_OK;
+}
+
 void CgnsReader::checkFile() {
     boost::filesystem::path input(this->filePath);
 	if (!boost::filesystem::exists(input.parent_path()))
@@ -22,12 +29,15 @@ void CgnsReader::checkFile() {
 	if (input.extension() != ".cgns")
 		throw std::runtime_error("CgnsReader: The file extension is not .cgns");
 
+	if (!CgnsReader::isCgnsFile(this->filePath))
+		throw std::runtime_error("CgnsReader: The file is not a valid cgns file");
+
 	if (cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex))
 		throw std::runtime_error("CgnsReader: Could not open the file " + this->filePath);
 
 	float version;
 	if (cg_version(this->fileIndex, &version))
-		throw std::runtime_error("CgnsReader: Could read file version");
+		throw std::runtime_error("CgnsReader: Could not read file version");
 	if (version <= 3.21)
 		throw std::runtime_error("CgnsReader: File version (" + std::to_string(version) + ") is older than 3.3.0");
 }
