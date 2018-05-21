@@ -12,6 +12,9 @@ class CgnsReader {
 
 		~CgnsReader();
 
+		static bool isCgnsFile(const std::string& filePath);
+
+		std::vector<double> readField(const std::string& solutionName, const std::string& fieldName);
 		std::vector<double> readField(const int& solutionIndex, const std::string& fieldName);
 		int readNumberOfTimeSteps();
 		std::vector<double> readTimeInstants();
@@ -29,6 +32,7 @@ class CgnsReader {
 		void addRegion(std::string&& name, int elementStart, int numberOfElements);
 		void addBoundary(std::string&& name, int elementStart, int numberOfElements);
 		void readBoundaries();
+		int readSolutionIndex(const std::string& solutionName);
 
 		std::string filePath;
 		char buffer[800];
