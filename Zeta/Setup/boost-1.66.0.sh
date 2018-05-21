@@ -17,4 +17,5 @@ cd $LIBRARY
 		--cxxflags=-fPIC \
 		link=shared runtime-link=shared \
 		threading=multi \
+		-j 2			\
 	 	--prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY install

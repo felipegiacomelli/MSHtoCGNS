@@ -11,5 +11,5 @@ cd $LIBRARY
 cd src
 ./../src/configure --without-fortran --disable-cgnstools --enable-shared \
                    --enable-debug --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY
-make
+make -j 2
 make install
