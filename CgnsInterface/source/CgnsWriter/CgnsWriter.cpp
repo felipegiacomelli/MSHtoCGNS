@@ -62,7 +62,7 @@ void CgnsWriter::writePermanentField(const std::string& fieldName, const std::ve
 		throw std::runtime_error("CgnsWriter: Could not write field " + fieldName);
 }
 
-void CgnsWriter::writeTimeStep(const double& timeInstant) {
+void CgnsWriter::writeTransientSolution(const double& timeInstant) {
 	this->timeInstants.push_back(timeInstant);
 	this->solutionIndices.emplace_back(0);
 	std::string solutionName = std::string("TimeStep") + std::to_string(timeInstants.size());

@@ -53,13 +53,13 @@ FixtureTestSuite(CgnsWriterSuite, CgnsWriterFixture)
 
 TestCase(FirstTimeStep) {
 	CgnsWriter cgnsWriter(this->outputFile, "Vertex");
-	cgnsWriter.writeTimeStep(this->timeInstant);
+	cgnsWriter.writeTransientSolution(this->timeInstant);
 	cgnsWriter.writeTransientField(this->temperature, "temperature");
 	cgnsWriter.writeTransientField(this->pressure, "pressure");
 
 	this->advanceTime();
 
-	cgnsWriter.writeTimeStep(this->timeInstant);
+	cgnsWriter.writeTransientSolution(this->timeInstant);
 	cgnsWriter.writeTransientField(this->temperature, "temperature");
 	cgnsWriter.writeTransientField(this->pressure, "pressure");
 
