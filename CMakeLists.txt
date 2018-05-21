@@ -109,6 +109,7 @@ macro (add_library _target)
 endmacro ()
 
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/Grid DESTINATION ${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY}/include)
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/Utilities DESTINATION ${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY}/include)
 
 ##################################################################
 # COMPONENTS

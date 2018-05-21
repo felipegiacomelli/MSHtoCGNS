@@ -12,7 +12,6 @@ class CgnsReader {
 
 		~CgnsReader();
 
-		static bool isCgnsFile(const std::string& filePath);
 
 		std::vector<double> readField(const std::string& solutionName, const std::string& fieldName);
 		std::vector<double> readField(const int& solutionIndex, const std::string& fieldName);
@@ -23,6 +22,7 @@ class CgnsReader {
 
 	protected:
 		void checkFile();
+		bool isCgnsFile();
 		void readBase();
 		void readZone();
 		void readNumberOfSections();

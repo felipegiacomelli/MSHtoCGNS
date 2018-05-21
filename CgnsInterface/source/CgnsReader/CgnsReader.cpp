@@ -11,13 +11,6 @@ CgnsReader::CgnsReader(const std::string& filePath) : filePath(filePath) {
 	this->gridData->dimension = this->cellDimension;
 }
 
-bool CgnsReader::isCgnsFile(const std::string& filePath)
-{
-	int fileType;
-	int isCgnsFile = cg_is_cgns(filePath.c_str(), &fileType);
-	return isCgnsFile==CG_OK;
-}
-
 void CgnsReader::checkFile() {
     boost::filesystem::path input(this->filePath);
 	if (!boost::filesystem::exists(input.parent_path()))
@@ -29,7 +22,7 @@ void CgnsReader::checkFile() {
 	if (input.extension() != ".cgns")
 		throw std::runtime_error("CgnsReader: The file extension is not .cgns");
 
-	if (!CgnsReader::isCgnsFile(this->filePath))
+	if (!this->isCgnsFile())
 		throw std::runtime_error("CgnsReader: The file is not a valid cgns file");
 
 	if (cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex))
@@ -38,8 +31,15 @@ void CgnsReader::checkFile() {
 	float version;
 	if (cg_version(this->fileIndex, &version))
 		throw std::runtime_error("CgnsReader: Could not read file version");
+
 	if (version <= 3.21)
 		throw std::runtime_error("CgnsReader: File version (" + std::to_string(version) + ") is older than 3.3.0");
+}
+
+bool CgnsReader::isCgnsFile() {
+	int fileType;
+	int isCgnsFile = cg_is_cgns(this->filePath.c_str(), &fileType);
+	return isCgnsFile == CG_OK;
 }
 
 void CgnsReader::readBase() {
@@ -119,20 +119,21 @@ void CgnsReader::addBoundary(std::string&& name, int elementStart, int numberOfE
 	this->gridData->boundaries.emplace_back(std::move(boundary));
 }
 
-int CgnsReader::readSolutionIndex(const std::string& solutionName)
-{
+int CgnsReader::readSolutionIndex(const std::string& solutionName) {
 	int numberOfSolutions;
-	if(cg_nsols(this->fileIndex, this->baseIndex, this->zoneIndex, &numberOfSolutions))
-		throw std::runtime_error("CgnsReader: Could not read number of solutions.");
+	if (cg_nsols(this->fileIndex, this->baseIndex, this->zoneIndex, &numberOfSolutions))
+		throw std::runtime_error("CgnsReader: Could not read number of solutions");
+
 	int solutionIndex;
-	for(solutionIndex=1 ; solutionIndex<=numberOfSolutions ; ++solutionIndex)
-	{
-		char readSolutionName[200];
+	for (solutionIndex = 1; solutionIndex <= numberOfSolutions; solutionIndex++) {
 		GridLocation_t gridLocation;
-		if(cg_sol_info(this->fileIndex,this->baseIndex,this->zoneIndex,solutionIndex,readSolutionName,&gridLocation))
-			throw std::runtime_error("CgnsReader: Could not read solution " + std::to_string(solutionIndex) + " information.");
-		if(solutionName.compare(readSolutionName)==0) break;
+		if (cg_sol_info(this->fileIndex, this->baseIndex, this->zoneIndex, solutionIndex, this->buffer, &gridLocation))
+			throw std::runtime_error("CgnsReader: Could not read solution " + std::to_string(solutionIndex) + " information");
+
+		if (solutionName.compare(this->buffer) == 0)
+			break;
 	}
+
 	return solutionIndex;
 }
 
@@ -150,8 +151,7 @@ std::vector<double> CgnsReader::readField(const int& solutionIndex, const std::s
 }
 
 std::vector<double> CgnsReader::readField(const std::string& solutionName, const std::string& fieldName){
-	int solutionIndex = this->readSolutionIndex(solutionName);
-	return this->readField(solutionIndex, fieldName);
+	return this->readField(this->readSolutionIndex(solutionName), fieldName);
 }
 
 int CgnsReader::readNumberOfTimeSteps() {
