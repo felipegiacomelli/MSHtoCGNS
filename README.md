@@ -1,11 +1,11 @@
 # MSHtoCGNS
 
-![Alt text](Zeta/Images/gmsh_grid.png ".msh grid visualized in gmsh")
-![Alt text](Zeta/Images/paraview_grid.jpg ".cgns grid visualized in paraview")
+![Alt text](Zeta/Images/gmsh_grid.png?height=100 ".msh grid visualized in gmsh")
+![Alt text](Zeta/Images/paraview_grid.jpg?height=100 ".cgns grid visualized in paraview")
 
-![Alt text](Zeta/Images/Pressure.jpg "Pressure")
-![Alt text](Zeta/Images/VelocityX.jpg "VelocityX")
-![Alt text](Zeta/Images/VelocityY.jpg "VelocityX")
+![Alt text](Zeta/Images/Pressure.jpg??height=100 "Pressure")
+![Alt text](Zeta/Images/VelocityX.jpg??height=100 "VelocityX")
+![Alt text](Zeta/Images/VelocityY.jpg??height=100 "VelocityX")
 
 
 Master: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=master)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS)
