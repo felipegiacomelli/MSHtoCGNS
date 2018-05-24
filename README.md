@@ -5,7 +5,7 @@ Develop: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?b
 
 Generate a gmsh format grid using [gmsh](http://gmsh.info/):
 
-<img src="Zeta/Images/gmsh_grid.png" alt="gmsh" height=250 width=600  />
+<img src="Zeta/Images/grid_gmsh.png" alt="gmsh" height=250 width=600  />
 
 Convert it to the CGNS format and open it with [paraview](https://www.paraview.org/):
 
