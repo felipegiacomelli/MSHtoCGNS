@@ -3,11 +3,11 @@
 Master: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=master)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS)
 Develop: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=develop)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS)
 
-Generate a gmsh format grid using [gmsh](http://gmsh.info/)
+Generate a gmsh format grid using [gmsh](http://gmsh.info/):
 
 <img src="Zeta/Images/gmsh_grid.png" alt="gmsh" height=250 width=600  />
 
-Convert it to the CGNS format and open it with [paraview](https://www.paraview.org/)
+Convert it to the CGNS format and open it with [paraview](https://www.paraview.org/):
 
 <img src="Zeta/Images/paraview_grid.png" alt="paraview" height=250 width=600  />
 
@@ -62,7 +62,9 @@ $ ./MSHtoCGNS -(dimension)
 Where dimension specifies the msh grid's dimension.
 
 ## Simulate
-Simulation results may be easily visualised
+
+Simulation results may be easily visualised.
+
 <p float="left">
 	<img src="Zeta/Images/Pressure.jpg" alt="gmsh" height=150 width=250  />
 	<img src="Zeta/Images/VelocityX.jpg" alt="gmsh" height=150 width=250  />
