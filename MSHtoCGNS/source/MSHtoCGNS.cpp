@@ -1,3 +1,7 @@
+#include <chrono>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
 #include <BoostInterface/Filesystem.hpp>
 #include <BoostInterface/PropertyTree.hpp>
 #include <Grid/GridData.hpp>
@@ -6,8 +10,63 @@
 #include <CgnsInterface/CgnsCreator/CgnsCreator2D.hpp>
 #include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
 
-#include <chrono>
-#include <fstream>
+void output(GridDataShared gridData, std::ofstream& file) {
+	int numberOfNodes = gridData->coordinates.size();
+	int numberOfElements = gridData->triangleConnectivity.size() + gridData->quadrangleConnectivity.size();
+
+	file << "GridData ###"        << std::endl;
+	file << "Number of nodes:   " << std::setw(3) << std::right << numberOfNodes    << std::endl;
+	file << "Number of element: " << std::setw(3) << std::right << numberOfElements << std::endl;
+
+	file << std::endl << "Coordinates" << std::endl;
+	for (auto i = gridData->coordinates.cbegin(); i != gridData->coordinates.cend(); i++) {
+		for (auto j = i->cbegin(); j != i->cend(); j++)
+			file << "\t" << std::setw(3) << std::right << *j;
+		file << std::endl;
+	}
+
+	if (gridData->triangleConnectivity.size() > 0) {
+		file << std::endl << "Triangle connectivity" << std::endl;
+		for (auto i = gridData->triangleConnectivity.cbegin(); i != gridData->triangleConnectivity.cend(); i++) {
+			for (auto j = i->cbegin(); j != i->cend(); j++)
+				file << "\t" << std::setw(3) << std::right << *j;
+			file << std::endl;
+		}
+	}
+	if (gridData->quadrangleConnectivity.size() > 0) {
+		file << std::endl << "Quadrangle connectivity" << std::endl;
+		for (auto i = gridData->quadrangleConnectivity.cbegin(); i != gridData->quadrangleConnectivity.cend(); i++) {
+			for (auto j = i->cbegin(); j != i->cend(); j++)
+				file << "\t" << std::setw(3) << std::right << *j;
+			file << std::endl;
+		}
+	}
+	if (gridData->lineConnectivity.size() > 0) {
+		file << std::endl << "Line connectivity" << std::endl;
+		for (auto i = gridData->lineConnectivity.cbegin(); i != gridData->lineConnectivity.cend(); i++) {
+			for (auto j = i->cbegin(); j != i->cend(); j++)
+				file << "\t" << std::setw(3) << std::right << *j;
+			file << std::endl;
+		}
+	}
+
+	file << std::endl << "Boundaries ###" << std::endl;
+	for (auto i = gridData->boundaries.cbegin(); i != gridData->boundaries.cend(); i ++) {
+		file << std::endl << "\t" << i->name << std::endl;
+		for (auto j = i->facetsOnBoundary.cbegin(); j != i->facetsOnBoundary.cend(); j++)
+			file << "\t" << *j;
+		file << std::endl;
+
+	}
+
+	file << std::endl << "Regions ###" << std::endl;
+	for (auto i = gridData->regions.cbegin(); i != gridData->regions.cend(); i ++) {
+		file << std::endl << "\t" << i->name << std::endl;
+		for (auto j = i->elementsOnRegion.cbegin(); j != i->elementsOnRegion.cend(); j++)
+			file << "\t" << *j;
+		file << std::endl;
+	}
+}
 
 int main(int argc, char** argv) {
 	if (argc != 2) throw std::runtime_error("Parameter is the mesh dimension.");
@@ -34,6 +93,11 @@ int main(int argc, char** argv) {
 			elapsedSeconds = end - start;
 			std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
 			std::cout << std::endl << "\tOutput file location       : " << fileIndex2D.getFileName() << std::endl << std::endl;
+
+			// std::ofstream file("GridData.txt", std::ofstream::out);
+			// output(gridData, file);
+			// file.close();
+
 			break;
 		}
 		case 3: {
@@ -56,6 +120,7 @@ int main(int argc, char** argv) {
 			elapsedSeconds = end - start;
 			std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
 			std::cout << std::endl << "\tOutput file location       : " << fileIndex3D.getFileName() << std::endl << std::endl;
+
 			break;
 		}
 		default:
