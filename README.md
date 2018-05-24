@@ -1,17 +1,17 @@
 # MSHtoCGNS
 
-![Alt text](Zeta/Images/gmsh_grid.png ".msh grid visualized in gmsh")
-![Alt text](Zeta/Images/paraview_grid.jpg ".cgns grid visualized in paraview")
-
-![Alt text](Zeta/Images/Pressure.jpg "Pressure")
-![Alt text](Zeta/Images/VelocityX.jpg "VelocityX")
-![Alt text](Zeta/Images/VelocityY.jpg "VelocityX")
-
-
 Master: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=master)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS)
 Develop: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=develop)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS)
 
-Reads a MSH file (from gmsh) and converts it to the CGNS format. This project currently supports:
+Generate a gmsh format grid using [gmsh](http://gmsh.info/)
+
+<img src="Zeta/Images/gmsh_grid.png" alt="gmsh" height=250 width=600  />
+
+Convert it to the CGNS format and open it with [paraview](https://www.paraview.org/)
+
+<img src="Zeta/Images/paraview_grid.png" alt="paraview" height=250 width=600  />
+
+This project currently supports:
 
 ## 2D grids
 - hybrid grids (triangles and quadrangles)
@@ -60,3 +60,11 @@ $ ./MSHtoCGNS -(dimension)
 ```
 
 Where dimension specifies the msh grid's dimension.
+
+## Simulate
+Simulation results may be easily visualised
+<p float="left">
+	<img src="Zeta/Images/Pressure.jpg" alt="gmsh" height=150 width=250  />
+	<img src="Zeta/Images/VelocityX.jpg" alt="gmsh" height=150 width=250  />
+	<img src="Zeta/Images/VelocityY.jpg" alt="gmsh" height=150 width=250  />
+</p>
