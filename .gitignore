@@ -38,6 +38,4 @@ build_sublime/
 build/
 
 # Application setup files
-Zeta/Script2D.json
-Zeta/Script3D.json
 Zeta/Libraries

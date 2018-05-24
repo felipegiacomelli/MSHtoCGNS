@@ -10,6 +10,7 @@ class CgnsCreator2D : public CgnsCreator {
 		~CgnsCreator2D() = default;
 
 	private:
+		void checkDimension() override;
 		void writeCoordinates() override;
 		void buildElementConnectivities() override;
 		void writeRegions() override;

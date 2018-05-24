@@ -22,7 +22,8 @@ void CgnsReader::checkFile() {
 	if (input.extension() != ".cgns")
 		throw std::runtime_error("CgnsReader: The file extension is not .cgns");
 
-	if (!this->isCgnsFile())
+	int fileType;
+	if (cg_is_cgns(this->filePath.c_str(), &fileType))
 		throw std::runtime_error("CgnsReader: The file is not a valid cgns file");
 
 	if (cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex))
@@ -34,12 +35,6 @@ void CgnsReader::checkFile() {
 
 	if (version <= 3.21)
 		throw std::runtime_error("CgnsReader: File version (" + std::to_string(version) + ") is older than 3.3.0");
-}
-
-bool CgnsReader::isCgnsFile() {
-	int fileType;
-	int isCgnsFile = cg_is_cgns(this->filePath.c_str(), &fileType);
-	return isCgnsFile == CG_OK;
 }
 
 void CgnsReader::readBase() {

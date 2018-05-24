@@ -5,9 +5,15 @@ CgnsCreator3D::CgnsCreator3D(GridDataShared gridData, const std::string& folderP
 	this->sizes[0] = this->gridData->coordinates.size();
 	this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size();
 	this->sizes[2] = 0;
+	this->checkDimension();
 	this->defineGeometryType();
 	this->setupFile();
 	this->initialize();
+}
+
+void CgnsCreator3D::checkDimension() {
+	if (this->gridData->dimension != 3)
+		throw std::runtime_error("CgnsCreator3D: gridData dimension must be equal to 3 and not " + std::to_string(this->gridData->dimension));
 }
 
 void CgnsCreator3D::defineGeometryType() {

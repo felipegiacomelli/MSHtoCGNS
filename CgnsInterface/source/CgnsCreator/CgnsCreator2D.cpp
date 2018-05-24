@@ -5,8 +5,14 @@ CgnsCreator2D::CgnsCreator2D(GridDataShared gridData, const std::string& folderP
 	this->sizes[0] = this->gridData->coordinates.size();
 	this->sizes[1] = this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
 	this->sizes[2] = 0;
+	this->checkDimension();
 	this->setupFile();
 	this->initialize();
+}
+
+void CgnsCreator2D::checkDimension() {
+	if (this->gridData->dimension != 2)
+		throw std::runtime_error("CgnsCreator2D: gridData dimension must be equal to 2 and not " + std::to_string(this->gridData->dimension));
 }
 
 void CgnsCreator2D::writeCoordinates() {

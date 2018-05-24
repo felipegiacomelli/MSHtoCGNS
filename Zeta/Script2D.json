@@ -1,7 +1,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/gmsh/MSHtoCGNS/11v_10e_2r.msh",
-        "output" : "./"
+        "input"  : "/home/felipe/Felipe/gmsh/duct/square.msh",
+        "output" : "/home/felipe/Felipe/grids/MSHtoCGNS/Duct/"
     }
 }
