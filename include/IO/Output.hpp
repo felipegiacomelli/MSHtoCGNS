@@ -1,5 +1,5 @@
-#ifndef OUTPUT_HPP
-#define OUTPUT_HPP
+#ifndef IO_OUTPUT_HPP
+#define IO_OUTPUT_HPP
 
 #include <iostream>
 #include <iomanip>

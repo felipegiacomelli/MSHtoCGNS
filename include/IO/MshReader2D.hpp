@@ -1,5 +1,5 @@
-#ifndef MSH_READER_2D_HPP
-#define MSH_READER_2D_HPP
+#ifndef IO_MSH_READER_2D_HPP
+#define IO_MSH_READER_2D_HPP
 
 #include <IO/MshReader.hpp>
 

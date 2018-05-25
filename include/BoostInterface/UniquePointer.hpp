@@ -1,5 +1,5 @@
-#ifndef UNIQUE_POINTER_HPP
-#define UNIQUE_POINTER_HPP
+#ifndef BOOST_INTERFACE_UNIQUE_POINTER_HPP
+#define BOOST_INTERFACE_UNIQUE_POINTER_HPP
 
 #include <boost/move/unique_ptr.hpp>
 

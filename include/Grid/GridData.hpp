@@ -1,5 +1,5 @@
-#ifndef GRID_DATA_HPP
-#define GRID_DATA_HPP
+#ifndef GRID_GRID_DATA_HPP
+#define GRID_GRID_DATA_HPP
 
 #include <BoostInterface/UniquePointer.hpp>
 #include <BoostInterface/SharedPointer.hpp>

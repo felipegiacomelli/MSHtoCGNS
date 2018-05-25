@@ -1,5 +1,5 @@
-#ifndef CGNS_FILE_3D_HPP
-#define CGNS_FILE_3D_HPP
+#ifndef CGNS_INTERFACE_CGNS_FILE_3D_HPP
+#define CGNS_INTERFACE_CGNS_FILE_3D_HPP
 
 #include <CgnsInterface/CgnsCreator.hpp>
 

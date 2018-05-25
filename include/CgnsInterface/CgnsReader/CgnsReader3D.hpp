@@ -1,5 +1,5 @@
-#ifndef CGNS_READER_3D_HPP
-#define CGNS_READER_3D_HPP
+#ifndef CGNS_INTERFACE_CGNS_READER_3D_HPP
+#define CGNS_INTERFACE_CGNS_READER_3D_HPP
 
 #include <CgnsInterface/CgnsReader.hpp>
 

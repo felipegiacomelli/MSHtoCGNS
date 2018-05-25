@@ -61,8 +61,6 @@ int main(int argc, char** argv) {
 			std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
 			std::cout << std::endl << "\tOutput file location       : " << fileIndex3D.getFileName() << std::endl << std::endl;
 
-			outputGridData3D(gridData, "./GridData.txt");
-
 			break;
 		}
 		default:
