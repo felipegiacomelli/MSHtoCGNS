@@ -1,6 +1,9 @@
 #ifndef GRID_GRID_DATA_HPP
 #define GRID_GRID_DATA_HPP
 
+#include <vector>
+#include <array>
+#include <string>
 #include <BoostInterface/UniquePointer.hpp>
 #include <BoostInterface/SharedPointer.hpp>
 
