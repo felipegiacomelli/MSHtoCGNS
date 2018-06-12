@@ -19,9 +19,6 @@ void CgnsReader::checkFile() {
 	if (!boost::filesystem::exists(this->filePath))
 		throw std::runtime_error("CgnsReader: There is no file in the given path");
 
-	if (input.extension() != ".cgns")
-		throw std::runtime_error("CgnsReader: The file extension is not .cgns");
-
 	int fileType;
 	if (cg_is_cgns(this->filePath.c_str(), &fileType))
 		throw std::runtime_error("CgnsReader: The file is not a valid cgns file");

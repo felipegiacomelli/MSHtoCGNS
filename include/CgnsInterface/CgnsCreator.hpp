@@ -13,7 +13,7 @@ class CgnsCreator {
 
 		std::string getFileName() const;
 
-		virtual ~CgnsCreator();
+		~CgnsCreator();
 
 	protected:
 		virtual void checkDimension() = 0;

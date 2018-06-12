@@ -22,9 +22,6 @@ void CgnsWriter::checkFile() {
 	if (!boost::filesystem::exists(this->filePath))
 		throw std::runtime_error("CgnsWriter: There is no file in the given path");
 
-	if (input.extension() != ".cgns")
-		throw std::runtime_error("CgnsWriter: The file extension is not .cgns");
-
 	if (cg_open(this->filePath.c_str(), CG_MODE_MODIFY, &this->fileIndex))
 		throw std::runtime_error("CgnsWriter: Could not open the file " + this->filePath);
 

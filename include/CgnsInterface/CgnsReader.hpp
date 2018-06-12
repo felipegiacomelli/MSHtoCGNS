@@ -10,14 +10,14 @@ class CgnsReader {
 	public:
 		CgnsReader(const std::string& filePath);
 
-		~CgnsReader();
-
 		std::vector<double> readField(const std::string& solutionName, const std::string& fieldName);
 		std::vector<double> readField(const int& solutionIndex, const std::string& fieldName);
 		int readNumberOfTimeSteps();
 		std::vector<double> readTimeInstants();
 
 		GridDataShared gridData;
+
+		~CgnsReader();
 
 	protected:
 		void checkFile();

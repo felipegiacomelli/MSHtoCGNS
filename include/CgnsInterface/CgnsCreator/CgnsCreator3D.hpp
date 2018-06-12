@@ -7,8 +7,6 @@ class CgnsCreator3D : public CgnsCreator {
 	public:
 		CgnsCreator3D(GridDataShared gridData, const std::string& folderPath);
 
-		~CgnsCreator3D() = default;
-
 	private:
 		void checkDimension() override;
 		void defineGeometryType();
