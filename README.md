@@ -21,6 +21,11 @@ This project currently supports:
 - tetrahedra **or** hexahedra grids
 - only one physical volume
 
+## CGNS IO
+- read 2D single element or mixed element unstructured grids
+- read 3D single element unstructured grids
+- write simulation results
+
 ---
 
 ## Dependencies
