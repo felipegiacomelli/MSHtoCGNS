@@ -39,7 +39,7 @@ void CgnsReader3D::readSections() {
 			throw std::runtime_error("CgnsReader3D: Could not read section");
 		int numberOfElements = elementEnd - elementStart + 1;
 
-		if (elementType == TETRA_4 || elementType == HEXA_8)
+		if (elementType == MIXED || elementType == TETRA_4 || elementType == HEXA_8)
 			this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
 		else if (elementType == TRI_3 || elementType == QUAD_4)
 			this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
@@ -59,6 +59,46 @@ void CgnsReader3D::readSections() {
 			throw std::runtime_error("CgnsReader3D: Could not read element number of vertices");
 
 		switch (elementType) {
+			case MIXED : {
+				int position = 0;
+				for (int e = 0; e < numberOfElements; e++) {
+					cg_npe(ElementType_t(connectivities[position]), &numberOfVertices);
+					std::vector<int> element(numberOfVertices);
+					for (int k = 0; k < numberOfVertices; ++k)
+						element[k] = connectivities[position+1+k] - 1;
+					element.emplace_back(elementStart - 1 + e);
+					switch(connectivities[position]) {
+						case TETRA_4: {
+							std::array<int, 5> tetrahedron;
+							std::copy_n(std::begin(element), 5, std::begin(tetrahedron));
+							this->gridData->tetrahedronConnectivity.emplace_back(std::move(tetrahedron));
+							break;
+						}
+						case HEXA_8: {
+							std::array<int, 9> hexahedron;
+							std::copy_n(std::begin(element), 9, std::begin(hexahedron));
+							this->gridData->hexahedronConnectivity.emplace_back(std::move(hexahedron));
+							break;
+						}
+						case PENTA_6: {
+							std::array<int, 7> prism;
+							std::copy_n(std::begin(element), 7, std::begin(prism));
+							this->gridData->prismConnectivity.emplace_back(std::move(prism));
+							break;
+						}
+						case PYRA_5: {
+							std::array<int, 6> pyramid;
+							std::copy_n(std::begin(element), 6, std::begin(pyramid));
+							this->gridData->pyramidConnectivity.emplace_back(std::move(pyramid));
+							break;
+						}
+						default:
+							throw std::runtime_error("CgnsReader3D: Element type in MIXED section not supported");
+					}
+					position += numberOfVertices + 1;
+				}
+				break;
+			}
 			case TETRA_4: {
 				for (int e = 0; e < numberOfElements; e++) {
 					std::array<int, 5> tetrahedron;
