@@ -43,6 +43,8 @@ void CgnsReader3D::readSections() {
 			this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
 		else if (elementType == TRI_3 || elementType == QUAD_4)
 			this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
+		else if (elementType == BAR_2)
+			this->addWell(std::string(this->buffer), elementStart, numberOfElements);
 		else
 			throw std::runtime_error("CgnsReader3D: Section element type not supported");
 
@@ -61,6 +63,7 @@ void CgnsReader3D::readSections() {
 		switch (elementType) {
 			case MIXED : {
 				int position = 0;
+				printf("\n\n position: %i \n\n", position);
 				for (int e = 0; e < numberOfElements; e++) {
 					cg_npe(ElementType_t(connectivities[position]), &numberOfVertices);
 					std::vector<int> element(numberOfVertices);
@@ -92,8 +95,8 @@ void CgnsReader3D::readSections() {
 							this->gridData->pyramidConnectivity.emplace_back(std::move(pyramid));
 							break;
 						}
-						default:
-							throw std::runtime_error("CgnsReader3D: Element type in MIXED section not supported");
+						// default:
+							// throw std::runtime_error("CgnsReader3D: Element type " + std::to_string(elementType) + " in MIXED section not supported");
 					}
 					position += numberOfVertices + 1;
 				}
@@ -139,8 +142,27 @@ void CgnsReader3D::readSections() {
 				}
 				break;
 			}
+			case BAR_2: {
+				for (int e = 0; e < numberOfElements; e++) {
+					std::array<int, 3> line;
+					for (int k = 0; k < numberOfVertices; k++)
+						line[k] = connectivities[e*numberOfVertices+k] - 1;
+					line.back() = (elementStart - 1 + e);
+					this->gridData->lineConnectivity.emplace_back(std::move(line));
+				}
+				break;
+			}
 			default:
-				throw std::runtime_error("CgnsReader3D: Non supported element found");
+				throw std::runtime_error("CgnsReader3D: Section element type not supported");
 		}
 	}
+}
+
+void CgnsReader3D::addWell(std::string&& name, int elementStart, int numberOfElements) {
+	WellData well;
+	well.name = name;
+	well.elementsOnWell.resize(numberOfElements);
+	std::iota(well.elementsOnWell.begin(), well.elementsOnWell.end(), elementStart - 1);
+	this->gridData->wells.emplace_back(std::move(well));
+	// printf("\n\nHullo\n\n");
 }

@@ -9,17 +9,11 @@
     {
         "sublimegdb_executables":
         {
-        	"IOTest":
+        	"CgnsInterfaceTest":
             {
-        		"sublimegdb_workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/IOTest/source",
+        		"sublimegdb_workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/CgnsInterfaceTest/source",
                 "workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/build_sublime/bin/Debug",
-            	"commandline": "gdb --interpreter=mi ./IOTest"
-            },
-            "MSHtoCGNS":
-            {
-        		"sublimegdb_workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/MSHtoCGNS/source",
-                "workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/build_sublime/bin/Debug",
-            	"commandline": "gdb --interpreter=mi ./MSHtoCGNS 2"
+            	"commandline": "gdb --interpreter=mi ./CgnsInterfaceTest"
             }
         }
     }

@@ -18,6 +18,12 @@ struct RegionData {
 	std::string	name;
 };
 
+struct WellData {
+	std::vector<int> elementsOnWell;
+	std::vector<int> vertices;
+	std::string	name;
+};
+
 struct GridData {
 	GridData() = default;
 
@@ -36,6 +42,7 @@ struct GridData {
 
 	std::vector<BoundaryData> boundaries;
 	std::vector<RegionData> regions;
+	std::vector<WellData> wells;
 };
 
 using GridDataShared = SharedPointer<GridData>;

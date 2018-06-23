@@ -77,7 +77,7 @@ void CgnsReader2D::readSections() {
 							break;
 						}
 						default:
-							throw std::runtime_error("CgnsReader2D: Element type in MIXED section not supported");
+							throw std::runtime_error("CgnsReader2D: Element type " + std::to_string(elementType) + " in MIXED section not supported");
 					}
 					position += numberOfVertices + 1;
 				}

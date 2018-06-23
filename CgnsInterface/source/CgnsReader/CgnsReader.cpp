@@ -30,8 +30,8 @@ void CgnsReader::checkFile() {
 	if (cg_version(this->fileIndex, &version))
 		throw std::runtime_error("CgnsReader: Could not read file version");
 
-	if (version <= 3.21)
-		throw std::runtime_error("CgnsReader: File version (" + std::to_string(version) + ") is older than 3.3.0");
+	// if (version <= 3.21)
+		// throw std::runtime_error("CgnsReader: File version (" + std::to_string(version) + ") is older than 3.3.0");
 }
 
 void CgnsReader::readBase() {
@@ -76,6 +76,7 @@ void CgnsReader::readNumberOfBoundaries() {
 void CgnsReader::readBoundaries() {
 	if (static_cast<unsigned>(this->numberOfBoundaries) != this->gridData->boundaries.size())
 		throw std::runtime_error("CgnsReader: mismatch between number of boundary conditions and boundary connectivities");
+	// printf("\n\n numberOfBoundaries: %i \n\n", this->numberOfBoundaries);
 
 	for (int boundaryIndex = 1; boundaryIndex <= this->numberOfBoundaries; boundaryIndex++) {
 		BCType_t boundaryConditionType;
@@ -97,7 +98,7 @@ void CgnsReader::readBoundaries() {
 
 void CgnsReader::addRegion(std::string&& name, int elementStart, int numberOfElements) {
 	RegionData region;
-	region.name = std::string(this->buffer);
+	region.name = name;
 	region.elementsOnRegion.resize(numberOfElements);
 	std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), elementStart - 1);
 	this->gridData->regions.emplace_back(std::move(region));
@@ -105,7 +106,7 @@ void CgnsReader::addRegion(std::string&& name, int elementStart, int numberOfEle
 
 void CgnsReader::addBoundary(std::string&& name, int elementStart, int numberOfElements) {
 	BoundaryData boundary;
-	boundary.name = this->buffer;
+	boundary.name = name;
 	boundary.facetsOnBoundary.resize(numberOfElements);
 	std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), elementStart - 1);
 	this->gridData->boundaries.emplace_back(std::move(boundary));
