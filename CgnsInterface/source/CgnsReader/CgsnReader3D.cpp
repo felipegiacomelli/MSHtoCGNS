@@ -47,11 +47,13 @@ void CgnsReader3D::readSections() {
 		if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr))
 			throw std::runtime_error("CgnsReader3D: Could not read section elements");
 
-		if (elementType == MIXED || elementType == TETRA_4 || elementType == HEXA_8)
+		if (elementType == MIXED)
 			if (ElementType_t(connectivities[0]) == TETRA_4 || ElementType_t(connectivities[0]) == HEXA_8 || ElementType_t(connectivities[0]) == PENTA_6 || ElementType_t(connectivities[0]) == PYRA_5)
 				this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
 			else
 				this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
+		else if (elementType == TETRA_4 || elementType == HEXA_8)
+				this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
 		else if (elementType == TRI_3 || elementType == QUAD_4)
 			this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
 		else if (elementType == BAR_2)
@@ -65,7 +67,6 @@ void CgnsReader3D::readSections() {
 
 		switch (elementType) {
 			case MIXED : {
-				std::cout << "MIXED section " << this->buffer << std::endl;
 				int position = 0;
 				for (int e = 0; e < numberOfElements; e++) {
 					cg_npe(ElementType_t(connectivities[position]), &numberOfVertices);
