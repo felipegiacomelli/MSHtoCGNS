@@ -23,8 +23,11 @@ This project currently supports:
 
 ## CGNS IO
 - read 2D single element or mixed element unstructured grids
-- read 3D single element unstructured grids
+- read 3D single element or hybrid unstructured grids
+- read well in a 3d unstructured grids
 - write simulation results
+
+<img src="Zeta/Images/paraview_hybrid_3d_with_well.png"  height=250 width=600  />
 
 ---
 
