@@ -39,15 +39,6 @@ void CgnsReader3D::readSections() {
 			throw std::runtime_error("CgnsReader3D: Could not read section");
 		int numberOfElements = elementEnd - elementStart + 1;
 
-		if (elementType == MIXED || elementType == TETRA_4 || elementType == HEXA_8)
-			this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
-		else if (elementType == TRI_3 || elementType == QUAD_4)
-			this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
-		else if (elementType == BAR_2)
-			this->addWell(std::string(this->buffer), elementStart, numberOfElements);
-		else
-			throw std::runtime_error("CgnsReader3D: Section element type not supported");
-
 		int size;
 		if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
 			throw std::runtime_error("CgnsReader3D: Could not read element data size");
@@ -56,14 +47,26 @@ void CgnsReader3D::readSections() {
 		if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr))
 			throw std::runtime_error("CgnsReader3D: Could not read section elements");
 
+		if (elementType == MIXED || elementType == TETRA_4 || elementType == HEXA_8)
+			if (ElementType_t(connectivities[0]) == TETRA_4 || ElementType_t(connectivities[0]) == HEXA_8 || ElementType_t(connectivities[0]) == PENTA_6 || ElementType_t(connectivities[0]) == PYRA_5)
+				this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
+			else
+				this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
+		else if (elementType == TRI_3 || elementType == QUAD_4)
+			this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
+		else if (elementType == BAR_2)
+			this->addWell(std::string(this->buffer), elementStart, numberOfElements);
+		else
+			throw std::runtime_error("CgnsReader3D: Section element type not supported");
+
 		int numberOfVertices;
 		if (cg_npe(elementType, &numberOfVertices))
 			throw std::runtime_error("CgnsReader3D: Could not read element number of vertices");
 
 		switch (elementType) {
 			case MIXED : {
+				std::cout << "MIXED section " << this->buffer << std::endl;
 				int position = 0;
-				printf("\n\n position: %i \n\n", position);
 				for (int e = 0; e < numberOfElements; e++) {
 					cg_npe(ElementType_t(connectivities[position]), &numberOfVertices);
 					std::vector<int> element(numberOfVertices);
@@ -93,6 +96,18 @@ void CgnsReader3D::readSections() {
 							std::array<int, 6> pyramid;
 							std::copy_n(std::begin(element), 6, std::begin(pyramid));
 							this->gridData->pyramidConnectivity.emplace_back(std::move(pyramid));
+							break;
+						}
+						case TRI_3: {
+							std::array<int, 4> triangle;
+							std::copy_n(std::begin(element), 4, std::begin(triangle));
+							this->gridData->triangleConnectivity.emplace_back(std::move(triangle));
+							break;
+						}
+						case QUAD_4: {
+							std::array<int, 5> quadrangle;
+							std::copy_n(std::begin(element), 5, std::begin(quadrangle));
+							this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));
 							break;
 						}
 						// default:

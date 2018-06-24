@@ -6,80 +6,84 @@
 
 struct Region1_Mixed_3D_Cgns {
 	Region1_Mixed_3D_Cgns() {
-		// CgnsReader3D cgnsReader3D(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/3D-Region1-Mixed/Grid.cgns");
-		// this->gridData = cgnsReader3D.gridData;
+		CgnsReader3D cgnsReader3D(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/3D-Region1-Mixed/Grid.cgns");
+		this->gridData = cgnsReader3D.gridData;
 	}
 
 	~Region1_Mixed_3D_Cgns() = default;
 
-	// GridDataShared gridData;
+	GridDataShared gridData;
 };
 
 FixtureTestSuite(ReadCgns_Region1_Mixed_3D, Region1_Mixed_3D_Cgns)
 
 TestCase(A) {
 	std::cout << std::endl;
-	// std::cout << "\tNumber of vertices: " << gridData->coordinates.size() << std::endl;
-	// std::cout << "\tNumber of elements: " << gridData->tetrahedronConnectivity.size() + gridData->hexahedronConnectivity.size() + gridData->prismConnectivity.size() + gridData->pyramidConnectivity.size() << std::endl;
-	std::cout << std::endl;
-	std::cout << "ElementTypeNull: " << ElementTypeNull << std::endl;
-	std::cout << "ElementTypeUserDefined: " << ElementTypeUserDefined << std::endl;
-	std::cout << "NODE: " << NODE << std::endl;
-	std::cout << "BAR_2: " << BAR_2 << std::endl;
-	std::cout << "BAR_3: " << BAR_3 << std::endl;
-	std::cout << "TRI_3: " << TRI_3 << std::endl;
-	std::cout << "TRI_6: " << TRI_6 << std::endl;
-	std::cout << "QUAD_4: " << QUAD_4 << std::endl;
-	std::cout << "QUAD_8: " << QUAD_8 << std::endl;
-	std::cout << "QUAD_9: " << QUAD_9 << std::endl;
-	std::cout << "TETRA_4: " << TETRA_4 << std::endl;
-	std::cout << "TETRA_10: " << TETRA_10 << std::endl;
-	std::cout << "PYRA_5: " << PYRA_5 << std::endl;
-	std::cout << "PYRA_14: " << PYRA_14 << std::endl;
-	std::cout << "PENTA_6: " << PENTA_6 << std::endl;
-	std::cout << "PENTA_15: " << PENTA_15 << std::endl;
-	std::cout << "PENTA_18: " << PENTA_18 << std::endl;
-	std::cout << "HEXA_8: " << HEXA_8 << std::endl;
-	std::cout << "HEXA_20: " << HEXA_20 << std::endl;
-	std::cout << "HEXA_27: " << HEXA_27 << std::endl;
-	std::cout << "MIXED: " << MIXED << std::endl;
-	std::cout << "PYRA_13: " << PYRA_13 << std::endl;
-	std::cout << "NGON_n: " << NGON_n << std::endl;
-	std::cout << "NFACE_n: " << NFACE_n << std::endl;
-	std::cout << "BAR_4: " << BAR_4 << std::endl;
-	std::cout << "TRI_9: " << TRI_9 << std::endl;
-	std::cout << "TRI_10: " << TRI_10 << std::endl;
-	std::cout << "QUAD_12: " << QUAD_12 << std::endl;
-	std::cout << "QUAD_16: " << QUAD_16 << std::endl;
-	std::cout << "TETRA_16: " << TETRA_16 << std::endl;
-	std::cout << "TETRA_20: " << TETRA_20 << std::endl;
-	std::cout << "PYRA_21: " << PYRA_21 << std::endl;
-	std::cout << "PYRA_29: " << PYRA_29 << std::endl;
-	std::cout << "PYRA_30: " << PYRA_30 << std::endl;
-	std::cout << "PENTA_24: " << PENTA_24 << std::endl;
-	std::cout << "PENTA_38: " << PENTA_38 << std::endl;
-	std::cout << "PENTA_40: " << PENTA_40 << std::endl;
-	std::cout << "HEXA_32: " << HEXA_32 << std::endl;
-	std::cout << "HEXA_56: " << HEXA_56 << std::endl;
-	std::cout << "HEXA_64: " << HEXA_64 << std::endl;
-	std::cout << "BAR_5: " << BAR_5 << std::endl;
-	std::cout << "TRI_12: " << TRI_12 << std::endl;
-	std::cout << "TRI_15: " << TRI_15 << std::endl;
-	std::cout << "QUAD_P4_16: " << QUAD_P4_16 << std::endl;
-	std::cout << "QUAD_25: " << QUAD_25 << std::endl;
-	std::cout << "TETRA_22: " << TETRA_22 << std::endl;
-	std::cout << "TETRA_34: " << TETRA_34 << std::endl;
-	std::cout << "TETRA_35: " << TETRA_35 << std::endl;
-	std::cout << "PYRA_P4_29: " << PYRA_P4_29 << std::endl;
-	std::cout << "PYRA_50: " << PYRA_50 << std::endl;
-	std::cout << "PYRA_55: " << PYRA_55 << std::endl;
-	std::cout << "PENTA_33: " << PENTA_33 << std::endl;
-	std::cout << "PENTA_66: " << PENTA_66 << std::endl;
-	std::cout << "PENTA_75: " << PENTA_75 << std::endl;
-	std::cout << "HEXA_44: " << HEXA_44 << std::endl;
-	std::cout << "HEXA_98: " << HEXA_98 << std::endl;
-	std::cout << "HEXA_125: " << HEXA_125 << std::endl;
+	std::cout << "\tNumber of vertices: " << gridData->coordinates.size() << std::endl;
+	std::cout << "\tNumber of elements: " << gridData->tetrahedronConnectivity.size() + gridData->hexahedronConnectivity.size() + gridData->prismConnectivity.size() + gridData->pyramidConnectivity.size() << std::endl;
 }
+
+// TestCase(B) {
+// 	std::cout << std::endl;
+// 	std::cout << std::endl;
+// 	std::cout << "ElementTypeNull: " << ElementTypeNull << std::endl;
+// 	std::cout << "ElementTypeUserDefined: " << ElementTypeUserDefined << std::endl;
+// 	std::cout << "NODE: " << NODE << std::endl;
+// 	std::cout << "BAR_2: " << BAR_2 << std::endl;
+// 	std::cout << "BAR_3: " << BAR_3 << std::endl;
+// 	std::cout << "TRI_3: " << TRI_3 << std::endl;
+// 	std::cout << "TRI_6: " << TRI_6 << std::endl;
+// 	std::cout << "QUAD_4: " << QUAD_4 << std::endl;
+// 	std::cout << "QUAD_8: " << QUAD_8 << std::endl;
+// 	std::cout << "QUAD_9: " << QUAD_9 << std::endl;
+// 	std::cout << "TETRA_4: " << TETRA_4 << std::endl;
+// 	std::cout << "TETRA_10: " << TETRA_10 << std::endl;
+// 	std::cout << "PYRA_5: " << PYRA_5 << std::endl;
+// 	std::cout << "PYRA_14: " << PYRA_14 << std::endl;
+// 	std::cout << "PENTA_6: " << PENTA_6 << std::endl;
+// 	std::cout << "PENTA_15: " << PENTA_15 << std::endl;
+// 	std::cout << "PENTA_18: " << PENTA_18 << std::endl;
+// 	std::cout << "HEXA_8: " << HEXA_8 << std::endl;
+// 	std::cout << "HEXA_20: " << HEXA_20 << std::endl;
+// 	std::cout << "HEXA_27: " << HEXA_27 << std::endl;
+// 	std::cout << "MIXED: " << MIXED << std::endl;
+// 	std::cout << "PYRA_13: " << PYRA_13 << std::endl;
+// 	std::cout << "NGON_n: " << NGON_n << std::endl;
+// 	std::cout << "NFACE_n: " << NFACE_n << std::endl;
+// 	std::cout << "BAR_4: " << BAR_4 << std::endl;
+// 	std::cout << "TRI_9: " << TRI_9 << std::endl;
+// 	std::cout << "TRI_10: " << TRI_10 << std::endl;
+// 	std::cout << "QUAD_12: " << QUAD_12 << std::endl;
+// 	std::cout << "QUAD_16: " << QUAD_16 << std::endl;
+// 	std::cout << "TETRA_16: " << TETRA_16 << std::endl;
+// 	std::cout << "TETRA_20: " << TETRA_20 << std::endl;
+// 	std::cout << "PYRA_21: " << PYRA_21 << std::endl;
+// 	std::cout << "PYRA_29: " << PYRA_29 << std::endl;
+// 	std::cout << "PYRA_30: " << PYRA_30 << std::endl;
+// 	std::cout << "PENTA_24: " << PENTA_24 << std::endl;
+// 	std::cout << "PENTA_38: " << PENTA_38 << std::endl;
+// 	std::cout << "PENTA_40: " << PENTA_40 << std::endl;
+// 	std::cout << "HEXA_32: " << HEXA_32 << std::endl;
+// 	std::cout << "HEXA_56: " << HEXA_56 << std::endl;
+// 	std::cout << "HEXA_64: " << HEXA_64 << std::endl;
+// 	std::cout << "BAR_5: " << BAR_5 << std::endl;
+// 	std::cout << "TRI_12: " << TRI_12 << std::endl;
+// 	std::cout << "TRI_15: " << TRI_15 << std::endl;
+// 	std::cout << "QUAD_P4_16: " << QUAD_P4_16 << std::endl;
+// 	std::cout << "QUAD_25: " << QUAD_25 << std::endl;
+// 	std::cout << "TETRA_22: " << TETRA_22 << std::endl;
+// 	std::cout << "TETRA_34: " << TETRA_34 << std::endl;
+// 	std::cout << "TETRA_35: " << TETRA_35 << std::endl;
+// 	std::cout << "PYRA_P4_29: " << PYRA_P4_29 << std::endl;
+// 	std::cout << "PYRA_50: " << PYRA_50 << std::endl;
+// 	std::cout << "PYRA_55: " << PYRA_55 << std::endl;
+// 	std::cout << "PENTA_33: " << PENTA_33 << std::endl;
+// 	std::cout << "PENTA_66: " << PENTA_66 << std::endl;
+// 	std::cout << "PENTA_75: " << PENTA_75 << std::endl;
+// 	std::cout << "HEXA_44: " << HEXA_44 << std::endl;
+// 	std::cout << "HEXA_98: " << HEXA_98 << std::endl;
+// 	std::cout << "HEXA_125: " << HEXA_125 << std::endl;
+// }
 
 // TestCase(Coordinates) {
 // 	auto coordinates = this->gridData->coordinates;
