@@ -52,7 +52,7 @@ void CgnsReader3D::readSections() {
 				this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
 			else
 				this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
-		else if (elementType == TETRA_4 || elementType == HEXA_8)
+		else if (elementType == TETRA_4 || elementType == HEXA_8 || elementType == PENTA_6 || elementType == PYRA_5)
 				this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
 		else if (elementType == TRI_3 || elementType == QUAD_4)
 			this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
@@ -134,6 +134,26 @@ void CgnsReader3D::readSections() {
 				}
 				break;
 			}
+			case PENTA_6: {
+				for (int e = 0; e < numberOfElements; e++) {
+					std::array<int, 7> prism;
+					for (int k = 0; k < numberOfVertices; k++)
+						prism[k] = connectivities[e*numberOfVertices+k] - 1;
+					prism.back() = (elementStart - 1 + e);
+					this->gridData->prismConnectivity.emplace_back(std::move(prism));
+				}
+				break;
+			}
+			case PYRA_5: {
+				for (int e = 0; e < numberOfElements; e++) {
+					std::array<int, 6> pyramid;
+					for (int k = 0; k < numberOfVertices; k++)
+						pyramid[k] = connectivities[e*numberOfVertices+k] - 1;
+					pyramid.back() = (elementStart - 1 + e);
+					this->gridData->pyramidConnectivity.emplace_back(std::move(pyramid));
+				}
+				break;
+			}
 			case TRI_3: {
 				for (int e = 0; e < numberOfElements; e++) {
 					std::array<int, 4> triangle;
@@ -165,7 +185,7 @@ void CgnsReader3D::readSections() {
 				break;
 			}
 			default:
-				throw std::runtime_error("CgnsReader3D: Section element type not supported");
+				throw std::runtime_error("CgnsReader3D: Section " + std::string(this->buffer) + " element type " + std::to_string(elementType) + " not supported");
 		}
 	}
 }
