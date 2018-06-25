@@ -39,8 +39,6 @@ void CgnsReader2D::readSections() {
 			this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
 		else if (elementType == BAR_2)
 			this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
-		else
-			throw std::runtime_error("CgnsReader2D: Section element type not supported");
 
 		int size;
 		if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
@@ -76,8 +74,6 @@ void CgnsReader2D::readSections() {
 							this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));
 							break;
 						}
-						default:
-							throw std::runtime_error("CgnsReader2D: Element type " + std::to_string(elementType) + " in MIXED section not supported");
 					}
 					position += numberOfVertices + 1;
 				}

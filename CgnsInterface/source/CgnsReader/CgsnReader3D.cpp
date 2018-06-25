@@ -58,8 +58,6 @@ void CgnsReader3D::readSections() {
 			this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
 		else if (elementType == BAR_2)
 			this->addWell(std::string(this->buffer), elementStart, numberOfElements);
-		else
-			throw std::runtime_error("CgnsReader3D: Section element type not supported");
 
 		int numberOfVertices;
 		if (cg_npe(elementType, &numberOfVertices))
@@ -111,8 +109,6 @@ void CgnsReader3D::readSections() {
 							this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));
 							break;
 						}
-						// default:
-							// throw std::runtime_error("CgnsReader3D: Element type " + std::to_string(elementType) + " in MIXED section not supported");
 					}
 					position += numberOfVertices + 1;
 				}
@@ -180,5 +176,4 @@ void CgnsReader3D::addWell(std::string&& name, int elementStart, int numberOfEle
 	well.elementsOnWell.resize(numberOfElements);
 	std::iota(well.elementsOnWell.begin(), well.elementsOnWell.end(), elementStart - 1);
 	this->gridData->wells.emplace_back(std::move(well));
-	// printf("\n\nHullo\n\n");
 }
