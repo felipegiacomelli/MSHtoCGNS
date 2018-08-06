@@ -53,7 +53,7 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 ##################################################################
 project (MSHtoCGNS)
 set (VERSION_MAJOR "0")
-set (VERSION_MINOR "9")
+set (VERSION_MINOR "10")
 set (VERSION_PATCH "0")
 set (VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -64,13 +64,13 @@ endif ()
 # EXTERNAL LIBRARIES
 ##################################################################
 set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Zeta/CMakeModules)
-set (BOOST_VERSION "1.66.0")
+set (BOOST_VERSION "1.67.0")
 set (CGNS_VERSION  "3.3.1" )
 
 ##############
 # BOOST
 ##############
-set (BOOST_ROOT ${CMAKE_SOURCE_DIR}/Zeta/Libraries/boost-1.66.0)
+set (BOOST_ROOT ${CMAKE_SOURCE_DIR}/Zeta/Libraries/boost-1.67.0)
 set (Components_Boost system filesystem unit_test_framework test_exec_monitor)
 set (Boost_USE_MULTITHREADED ON)
 find_package (Boost ${BOOST_VERSION} COMPONENTS ${Components_Boost} REQUIRED)

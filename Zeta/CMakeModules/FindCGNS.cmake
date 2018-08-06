@@ -6,11 +6,11 @@
 # CGNS_FOUND       - Do not attempt to use CGNS if "no" or undefined.
 
 find_path(CGNS_INCLUDE_DIR cgnslib.h
-  ${CGNS_DIR}/include
+  ${CGNS_DIR}/include NO_DEFAULT_PATH
 )
 
 find_library(CGNS_LIBRARY cgns
-  ${CGNS_DIR}/lib
+  ${CGNS_DIR}/lib NO_DEFAULT_PATH
 )
 
 set(CGNS_FOUND "NO")

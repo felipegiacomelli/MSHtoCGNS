@@ -18,8 +18,8 @@ fi
 
 cd $SETUP_DIRECTORY
 
-. boost-1.66.0.sh
+. boost-1.67.0.sh
 if [ $? -eq 0 ]; then
-	rm -rf $SETUP_DIRECTORY/boost-1.66.0
-	rm -rf $SETUP_DIRECTORY/boost-1.66.0.tar.gz
+	rm -rf $SETUP_DIRECTORY/boost-1.67.0
+	rm -rf $SETUP_DIRECTORY/boost-1.67.0.tar.gz
 fi

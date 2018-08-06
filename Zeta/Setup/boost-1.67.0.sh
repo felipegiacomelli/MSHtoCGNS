@@ -1,14 +1,14 @@
 # !/bin/bash
 
-LIBRARY="boost-1.66.0"
-DOWNLOAD_LINK="https://downloads.sourceforge.net/project/boost/boost/1.66.0/boost_1_66_0.tar.gz"
+LIBRARY="boost-1.67.0"
+DOWNLOAD_LINK="https://downloads.sourceforge.net/project/boost/boost/1.67.0/boost_1_67_0.tar.gz"
 COMPRESSED_LIBRARY=$LIBRARY.tar.gz
 VARIANT="debug"
 
 wget $DOWNLOAD_LINK -O $COMPRESSED_LIBRARY
 
 tar -x -z -f $COMPRESSED_LIBRARY
-mv boost_1_66_0 $LIBRARY
+mv boost_1_67_0 $LIBRARY
 cd $LIBRARY
 ./bootstrap.sh --with-libraries=system,filesystem,test \
 			   --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY
