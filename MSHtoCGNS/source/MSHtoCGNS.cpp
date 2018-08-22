@@ -32,11 +32,11 @@ int main(int argc, char** argv) {
 			std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
 			start = std::chrono::steady_clock::now();
-			CgnsCreator2D fileIndex2D(gridData, outputPath);
+			CgnsCreator2D creator2D(gridData, outputPath);
 			end = std::chrono::steady_clock::now();
 			elapsedSeconds = end - start;
 			std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
-			std::cout << std::endl << "\tOutput file location       : " << fileIndex2D.getFileName() << std::endl << std::endl;
+			std::cout << std::endl << "\tOutput file location       : " << creator2D.getFileName() << std::endl << std::endl;
 
 			break;
 		}
@@ -55,11 +55,11 @@ int main(int argc, char** argv) {
 			std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
 			start = std::chrono::steady_clock::now();
-			CgnsCreator3D fileIndex3D(gridData, outputPath);
+			CgnsCreator3D creator3D(gridData, outputPath);
 			end = std::chrono::steady_clock::now();
 			elapsedSeconds = end - start;
 			std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
-			std::cout << std::endl << "\tOutput file location       : " << fileIndex3D.getFileName() << std::endl << std::endl;
+			std::cout << std::endl << "\tOutput file location       : " << creator3D.getFileName() << std::endl << std::endl;
 
 			break;
 		}

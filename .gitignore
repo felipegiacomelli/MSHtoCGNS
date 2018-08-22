@@ -36,6 +36,8 @@
 # Folders
 build_sublime/
 build/
+debug/
+release/
 
 # Application setup files
 Zeta/Libraries

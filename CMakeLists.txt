@@ -120,8 +120,10 @@ add_subdirectory (IO)
 add_subdirectory (IOTest)
 add_subdirectory (CgnsInterface)
 add_subdirectory (CgnsInterfaceTest)
-add_subdirectory (MSHtoCGNS)
 add_subdirectory (UtilitiesTest)
+
+add_subdirectory (FileMender)
+add_subdirectory (MSHtoCGNS)
 
 #################################################################
 # TESTING
