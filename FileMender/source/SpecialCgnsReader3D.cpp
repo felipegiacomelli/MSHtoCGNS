@@ -47,6 +47,7 @@ void SpecialCgnsReader3D::readSections() {
 			continue;
 
 		int numberOfElements = elementEnd - elementStart + 1;
+		elementStart = gridData->tetrahedronConnectivity.size() + gridData->hexahedronConnectivity.size() + gridData->prismConnectivity.size() + gridData->pyramidConnectivity.size() + gridData->triangleConnectivity.size() + gridData->quadrangleConnectivity.size() + gridData->lineConnectivity.size();
 
 		int size;
 		if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
@@ -200,10 +201,26 @@ void SpecialCgnsReader3D::readSections() {
 	}
 }
 
+void SpecialCgnsReader3D::addRegion(std::string&& name, int elementStart, int numberOfElements) {
+	RegionData region;
+	region.name = name;
+	region.elementsOnRegion.resize(numberOfElements);
+	std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), elementStart);
+	this->gridData->regions.emplace_back(std::move(region));
+}
+
+void SpecialCgnsReader3D::addBoundary(std::string&& name, int elementStart, int numberOfElements) {
+	BoundaryData boundary;
+	boundary.name = name;
+	boundary.facetsOnBoundary.resize(numberOfElements);
+	std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), elementStart);
+	this->gridData->boundaries.emplace_back(std::move(boundary));
+}
+
 void SpecialCgnsReader3D::addWell(std::string&& name, int elementStart, int numberOfElements) {
 	WellData well;
 	well.name = name;
 	well.elementsOnWell.resize(numberOfElements);
-	std::iota(well.elementsOnWell.begin(), well.elementsOnWell.end(), elementStart - 1);
+	std::iota(well.elementsOnWell.begin(), well.elementsOnWell.end(), elementStart);
 	this->gridData->wells.emplace_back(std::move(well));
 }
