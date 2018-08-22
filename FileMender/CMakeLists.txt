@@ -2,6 +2,7 @@ project (FileMender)
 
 set (Dependencies BoostInterface IO CgnsInterface)
 
+include_directories (${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/include)
 include_directories (${CMAKE_SOURCE_DIR}/include)
 
 file (GLOB_RECURSE ${PROJECT_NAME}_sources ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/source/*.cpp)
