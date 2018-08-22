@@ -9,7 +9,14 @@ SpecialCgnsCreator3D::SpecialCgnsCreator3D(GridDataShared gridData, const std::s
 	this->sizes[2] = 0;
 	this->checkDimension();
 	this->setupFile();
-	this->initialize();
+		this->writeBase();
+		this->writeZone();
+		this->writeCoordinates();
+		// this->writeSections();
+			this->writeRegions();
+			// this->writeBoundaries();
+		// this->writeBoundaryConditions();
+		// this->initialize();
 }
 
 void SpecialCgnsCreator3D::checkDimension() {
@@ -47,6 +54,14 @@ void SpecialCgnsCreator3D::buildElementConnectivities() {
 		this->elementConnectivities.emplace_back(std::vector<int>());
 		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x + 1;});
 	}
+	for (auto i = this->gridData->prismConnectivity.cbegin(); i != this->gridData->prismConnectivity.cend(); i++) {
+		this->elementConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x + 1;});
+	}
+	for (auto i = this->gridData->pyramidConnectivity.cbegin(); i != this->gridData->pyramidConnectivity.cend(); i++) {
+		this->elementConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x + 1;});
+	}
 	std::stable_sort(this->elementConnectivities.begin(), this->elementConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
 	for (unsigned i = 0; i < this->elementConnectivities.size(); i++)
 		this->elementConnectivities[i].pop_back();
@@ -55,14 +70,14 @@ void SpecialCgnsCreator3D::buildElementConnectivities() {
 void SpecialCgnsCreator3D::writeRegions() {
 	this->buildElementConnectivities();
 
-	for (auto& region : gridData->regions) {
+	for (auto& region : this->gridData->regions) {
 		this->sectionIndices.emplace_back(0);
 
 		auto regionBegin = this->elementConnectivities.cbegin() + region.elementsOnRegion.front();
 		auto regionEnd = this->elementConnectivities.cbegin() + region.elementsOnRegion.back() + 1;
 	 	this->elementEnd += (regionEnd - regionBegin);
 
-	 	ElementType_t elementType;
+	 	ElementType_t elementType = ElementType_t(0);
 	 	if (std::all_of(regionBegin, regionEnd, [](const auto& connectivity){return connectivity.size() == 4u;}))
 	 		elementType = TETRA_4;
 	 	else if (std::all_of(regionBegin, regionEnd, [](const auto& connectivity){return connectivity.size() == 8u;}))
@@ -122,7 +137,6 @@ void SpecialCgnsCreator3D::writeRegions() {
 			}
 		}
 	}
-
 }
 
 void SpecialCgnsCreator3D::buildFacetConnectivities() {
@@ -141,22 +155,61 @@ void SpecialCgnsCreator3D::buildFacetConnectivities() {
 
 void SpecialCgnsCreator3D::writeBoundaries() {
 	this->buildFacetConnectivities();
-	this->elementStart = this->sizes[1] + 1;
+	this->elementStart = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size() + 1;
 
-	for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
+	for (auto& boundary : this->gridData->boundaries) {
 		this->sectionIndices.emplace_back(0);
 
-		auto boundaryBegin = this->facetConnectivities.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1];
-		auto boundaryEnd = this->facetConnectivities.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1];
+		auto boundaryBegin = this->facetConnectivities.cbegin() + boundary.facetsOnBoundary.front() - this->sizes[1];
+		auto boundaryEnd = this->facetConnectivities.cbegin() + boundary.facetsOnBoundary.back() + 1 - this->sizes[1];
 		this->elementEnd = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
 
-		std::vector<int> connectivities;
-		append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
+		ElementType_t elementType;
+	 	if (std::all_of(boundaryBegin, boundaryEnd, [](const auto& connectivity){return connectivity.size() == 3u;}))
+	 		elementType = TRI_3;
+	 	else if (std::all_of(boundaryBegin, boundaryEnd, [](const auto& connectivity){return connectivity.size() == 4u;}))
+	 		elementType = QUAD_4;
+		else
+			elementType = MIXED;
 
-		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), ElementType_t(0),
-								this->elementStart, this->elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndices.back()))
-			throw std::runtime_error("SpecialCgnsCreator3D: Could not write section " + std::to_string(this->sectionIndices.size()));
+		if (elementType != MIXED) {
+			std::vector<int> connectivities;
+			append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
 
-		this->elementStart = this->elementEnd + 1;
+			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType,
+									this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndices.back()))
+				throw std::runtime_error("SpecialCgnsCreator3D: Could not write facet section " + std::to_string(this->sectionIndices.size()));
+
+			this->elementStart = this->elementEnd + 1;
+		}
+		else {
+			if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType,
+											this->elementStart, this->elementEnd, sizes[2], &this->sectionIndices.back()))
+			throw std::runtime_error("SpecialCgnsCreator3D: Could not partial write facet section " + std::to_string(this->sectionIndices.size()));
+
+			for (auto j = boundaryBegin; j != boundaryEnd; j++) {
+				std::vector<int> connectivities = *j;
+
+				switch (connectivities.size()) {
+					case 3: {
+						connectivities.insert(connectivities.begin(), TRI_3);
+						break;
+					}
+					case 4: {
+						connectivities.insert(connectivities.begin(), QUAD_4);
+						break;
+					}
+					default:
+						throw std::runtime_error("SpecialCgnsCreator3D: Element type not supported");
+				}
+
+				if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(),
+												this->elementStart, this->elementStart, &connectivities[0]))
+					throw std::runtime_error("SpecialCgnsCreator3D: Could not write facet " + std::to_string(this->elementStart) + " in section " +
+												std::to_string(this->sectionIndices.size()));
+
+				this->elementStart++;
+			}
+		}
 	}
 }

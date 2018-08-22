@@ -45,13 +45,12 @@ int main() {
 
 	std::cout << std::endl << std::endl;
 
-	// output(gridData, outputPath);
-	// start = std::chrono::steady_clock::now();
-	// SpecialCgnsCreator3D creator(gridData, outputPath);
-	// end = std::chrono::steady_clock::now();
-	// elapsedSeconds = end - start;
-	// std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
-	// std::cout << std::endl << "\tOutput file location       : " << creator.getFileName() << std::endl << std::endl;
+	start = std::chrono::steady_clock::now();
+	SpecialCgnsCreator3D creator(gridData, outputPath);
+	end = std::chrono::steady_clock::now();
+	elapsedSeconds = end - start;
+	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
+	std::cout << std::endl << "\tOutput file location       : " << creator.getFileName() << std::endl << std::endl;
 
 	return 0;
 }
