@@ -12,8 +12,8 @@ SpecialCgnsCreator3D::SpecialCgnsCreator3D(GridDataShared gridData, const std::s
 		this->writeCoordinates();
 		// this->writeSections();
 			this->writeRegions();
-			this->writeBoundaries();
-		this->writeBoundaryConditions();
+			// this->writeBoundaries();
+		// this->writeBoundaryConditions();
 	// this->initialize();
 }
 
@@ -103,43 +103,87 @@ void SpecialCgnsCreator3D::writeRegions() {
 				throw std::runtime_error("SpecialCgnsCreator3D: Could not partial write element section " + std::to_string(this->sectionIndices.size()));
 
 
-			// for (auto j = regionBegin; j != regionEnd; j++) {
-				// std::vector<int> connectivities = *j;
+			std::set<unsigned> shapeType;
+			for (auto i = regionBegin; i != regionEnd; i++)
+				shapeType.insert(i->size());
 
-			auto beg = regionBegin - this->elementConnectivities.cbegin();
-			auto end = regionEnd   - this->elementConnectivities.cbegin();
+			std::vector<int> shapeBegin;
+			for (auto i = shapeType.cbegin(); i != shapeType.cend(); i++) {
+				int value = *i;
+				auto first = std::find_if(regionBegin, regionEnd, [=](const auto& connectivity){return connectivity.size() == value;});
+				shapeBegin.emplace_back(first - regionBegin);
+			}
+			std::stable_sort(shapeBegin.begin(), shapeBegin.end());
+			shapeBegin.emplace_back(regionEnd - regionBegin);
 
-			for (auto j = beg; j != end; j++) {
-				std::vector<int> connectivities = this->elementConnectivities[j];
+			for (unsigned i = 0; i < shapeBegin.size()-1; i++) {
 
-				switch (connectivities.size()) {
+				std::vector<std::vector<int>> shapeConnectivities(regionBegin + shapeBegin[i], regionBegin + shapeBegin[i+1]);
+
+				switch (shapeConnectivities[0].size()) {
 					case 4: {
-						connectivities.insert(connectivities.begin(), TETRA_4);
+						elementType = TETRA_4;
 						break;
 					}
 					case 8: {
-						connectivities.insert(connectivities.begin(), HEXA_8);
-						break;
-					}
-					case 6: {
-						connectivities.insert(connectivities.begin(), PENTA_6);
+						elementType = HEXA_8;
 						break;
 					}
 					case 5: {
-						connectivities.insert(connectivities.begin(), PYRA_5);
+						elementType = PYRA_5;
+						break;
+					}
+					case 6: {
+						elementType = PENTA_6;
 						break;
 					}
 					default:
 						throw std::runtime_error("SpecialCgnsCreator3D: Element type not supported");
 				}
 
-				if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(),
-												this->elementStart, this->elementStart, &connectivities[0]))
-					throw std::runtime_error("SpecialCgnsCreator3D: Could not write element " + std::to_string(this->elementStart) + " in section " +
-												std::to_string(this->sectionIndices.size()));
+				for (int j = 0; j < shapeConnectivities.size(); j++)
+					shapeConnectivities[j].insert(shapeConnectivities[j].begin(), elementType);
 
-				this->elementStart++;
+				std::vector<int> connectivities;
+				append(shapeConnectivities.cbegin(), shapeConnectivities.cend(), std::back_inserter(connectivities));
+
+				this->elementEnd = this->elementStart + shapeBegin[i+1] - shapeBegin[i];
+
+
+				for (int j = 0; j < shapeConnectivities.size(); j++)
+					if (shapeConnectivities[j].size() != 5u)
+						printf("\n\tFUCK YOU! - %i", j);
+
+				// for (int j = 0; j < shapeConnectivities[0].size(); j++)
+				// 	std::cout << "\t" << shapeConnectivities[0][j];
+
+				// for (int j = 0; j < shapeConnectivities.back().size(); j++)
+					// std::cout << "\t" << shapeConnectivities.back()[j];
+
+				// for (int j = 0; j < 10; j++)
+					// std::cout << "\t" << connectivities[j];
+
+				std::cout << std::endl;
+
+				std::cout << std::endl << "\tmat: " << shapeConnectivities.size() << "\tvec: " << connectivities.size() / shapeConnectivities[0].size();
+
+				std::cout << std::endl << "\tstart: " << this->elementStart << "\tend: " << this->elementEnd << std::endl << std::endl;
+
+				auto ier = cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(), this->elementStart, this->elementEnd, &connectivities[0]);
+
+				cg_error_exit();
+				// cg_error_print();
+
+				// if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(), this->elementStart, this->elementEnd, &connectivities[0]))
+					// throw std::runtime_error("SpecialCgnsCreator3D: Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndices.size()));
+
+				this->elementStart = this->elementEnd + 1;
 			}
+
+			std::cout << std::endl << "shapeBegin" << std::endl;
+			for (auto i = shapeBegin.cbegin(); i != shapeBegin.cend(); i++)
+				std::cout << "\t" << *i;
+			std::cout << std::endl << std::endl;
 		}
 	}
 }

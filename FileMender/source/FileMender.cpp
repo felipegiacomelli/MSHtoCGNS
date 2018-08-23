@@ -8,8 +8,9 @@
 #include <SpecialCgnsReader3D.hpp>
 #include <SpecialCgnsCreator3D.hpp>
 #include <Output.hpp>
+#include <cgnslib.h>
 
-void buildElementConnectivities(GridDataShared gridData);
+auto buildElementConnectivities(GridDataShared gridData);
 
 int main() {
 	boost::property_tree::ptree iroot;
@@ -26,6 +27,11 @@ int main() {
 	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
 	std::cout << std::endl << "numberOfElements: " << gridData->tetrahedronConnectivity.size() + gridData->hexahedronConnectivity.size() + gridData->prismConnectivity.size() + gridData->pyramidConnectivity.size();
+	std::cout << std::endl << "\ttetrahedra: " << gridData->tetrahedronConnectivity.size();
+	std::cout << std::endl << "\thexahedra:  " << gridData->hexahedronConnectivity.size();
+	std::cout << std::endl << "\tprisms:     " << gridData->prismConnectivity.size();
+	std::cout << std::endl << "\tpyramids:   " << gridData->pyramidConnectivity.size() << std::endl;
+
 	std::cout << std::endl << "numberOfFacets  : " << gridData->triangleConnectivity.size() + gridData->quadrangleConnectivity.size();
 	std::cout << std::endl << "numberOfLines   : " << gridData->lineConnectivity.size();
 	std::cout << std::endl << "total           : " << gridData->tetrahedronConnectivity.size() + gridData->hexahedronConnectivity.size() + gridData->prismConnectivity.size() + gridData->pyramidConnectivity.size() + gridData->triangleConnectivity.size() + gridData->quadrangleConnectivity.size() + gridData->lineConnectivity.size() << std::endl;
@@ -45,6 +51,8 @@ int main() {
 
 	std::cout << std::endl << std::endl;
 
+	// auto elementConnectivities = buildElementConnectivities(gridData);
+
 	start = std::chrono::steady_clock::now();
 	SpecialCgnsCreator3D creator(gridData, outputPath);
 	end = std::chrono::steady_clock::now();
@@ -55,7 +63,7 @@ int main() {
 	return 0;
 }
 
-void buildElementConnectivities(GridDataShared gridData) {
+auto buildElementConnectivities(GridDataShared gridData) {
 	std::vector<std::vector<int>> elementConnectivities;
 
 	// 3D
@@ -94,6 +102,8 @@ void buildElementConnectivities(GridDataShared gridData) {
 
 	std::stable_sort(elementConnectivities.begin(), elementConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
 
-	// for (unsigned i = 0; i < elementConnectivities.size(); i++)
-	// 	elementConnectivities[i].back() = i;
+	for (unsigned i = 0; i < elementConnectivities.size(); i++)
+		elementConnectivities[i].pop_back();
+
+	return elementConnectivities;
 }
