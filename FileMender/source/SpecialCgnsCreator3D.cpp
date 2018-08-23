@@ -3,9 +3,7 @@
 
 SpecialCgnsCreator3D::SpecialCgnsCreator3D(GridDataShared gridData, const std::string& folderPath) : CgnsCreator(gridData, folderPath) {
 	this->sizes[0] = this->gridData->coordinates.size();
-	this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size() +
-							this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size() +
-								this->gridData->lineConnectivity.size();
+	this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size();
 	this->sizes[2] = 0;
 	this->checkDimension();
 	this->setupFile();
@@ -14,9 +12,9 @@ SpecialCgnsCreator3D::SpecialCgnsCreator3D(GridDataShared gridData, const std::s
 		this->writeCoordinates();
 		// this->writeSections();
 			this->writeRegions();
-			// this->writeBoundaries();
-		// this->writeBoundaryConditions();
-		// this->initialize();
+			this->writeBoundaries();
+		this->writeBoundaryConditions();
+	// this->initialize();
 }
 
 void SpecialCgnsCreator3D::checkDimension() {
@@ -102,10 +100,17 @@ void SpecialCgnsCreator3D::writeRegions() {
 		else {
 			if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType,
 											this->elementStart, this->elementEnd, sizes[2], &this->sectionIndices.back()))
-			throw std::runtime_error("SpecialCgnsCreator3D: Could not partial write element section " + std::to_string(this->sectionIndices.size()));
+				throw std::runtime_error("SpecialCgnsCreator3D: Could not partial write element section " + std::to_string(this->sectionIndices.size()));
 
-			for (auto j = regionBegin; j != regionEnd; j++) {
-				std::vector<int> connectivities = *j;
+
+			// for (auto j = regionBegin; j != regionEnd; j++) {
+				// std::vector<int> connectivities = *j;
+
+			auto beg = regionBegin - this->elementConnectivities.cbegin();
+			auto end = regionEnd   - this->elementConnectivities.cbegin();
+
+			for (auto j = beg; j != end; j++) {
+				std::vector<int> connectivities = this->elementConnectivities[j];
 
 				switch (connectivities.size()) {
 					case 4: {

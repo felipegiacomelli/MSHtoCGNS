@@ -5,7 +5,7 @@ export FLIBS="-Wl,--no-as-needed -ldl -lz"
 export LIBS="-Wl,--no-as-needed -ldl -lz"
 export CLIBS="-ldl"
 
-git clone -b master https://github.com/CGNS/CGNS.git
+git clone -b master "https://github.com/CGNS/CGNS.git"
 mv CGNS $LIBRARY
 cd $LIBRARY
 cd src
