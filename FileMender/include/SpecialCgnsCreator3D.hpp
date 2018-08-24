@@ -9,11 +9,18 @@ class SpecialCgnsCreator3D : public CgnsCreator {
 
 	private:
 		void checkDimension() override;
+		void writeSections() override;
 		void writeCoordinates() override;
 		void buildElementConnectivities() override;
 		void writeRegions() override;
 		void buildFacetConnectivities() override;
 		void writeBoundaries() override;
+		void buildWellConnectivities();
+		void writeWells();
+
+		int numberOfElements;
+		int numberOfFacets;
+		std::vector<std::vector<int>> wellConnectivities;
 };
 
 #endif

@@ -36,6 +36,12 @@ void SpecialCgnsCreator3D::writeCoordinates() {
 
 }
 
+void SpecialCgnsCreator3D::writeSections() {
+	this->writeRegions();
+	this->writeBoundaries();
+	this->writeWells();
+}
+
 void SpecialCgnsCreator3D::buildElementConnectivities() {
 	for (auto i = this->gridData->tetrahedronConnectivity.cbegin(); i != this->gridData->tetrahedronConnectivity.cend(); i++) {
 		this->elementConnectivities.emplace_back(std::vector<int>());
@@ -164,13 +170,14 @@ void SpecialCgnsCreator3D::buildFacetConnectivities() {
 
 void SpecialCgnsCreator3D::writeBoundaries() {
 	this->buildFacetConnectivities();
-	this->elementStart = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size() + 1;
+	this->numberOfElements = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size();
+	this->elementStart = this->numberOfElements + 1;
 
 	for (auto& boundary : this->gridData->boundaries) {
 		this->sectionIndices.emplace_back(0);
 
-		auto boundaryBegin = this->facetConnectivities.cbegin() + boundary.facetsOnBoundary.front() - this->sizes[1];
-		auto boundaryEnd = this->facetConnectivities.cbegin() + boundary.facetsOnBoundary.back() + 1 - this->sizes[1];
+		auto boundaryBegin = this->facetConnectivities.cbegin() + boundary.facetsOnBoundary.front() - this->numberOfElements;
+		auto boundaryEnd = this->facetConnectivities.cbegin() + boundary.facetsOnBoundary.back() + 1 - this->numberOfElements;
 		this->elementEnd = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
 
 		ElementType_t elementType;
@@ -185,8 +192,7 @@ void SpecialCgnsCreator3D::writeBoundaries() {
 			std::vector<int> connectivities;
 			append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
 
-			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType,
-									this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndices.back()))
+			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndices.back()))
 				throw std::runtime_error("SpecialCgnsCreator3D: Could not write facet section " + std::to_string(this->sectionIndices.size()));
 
 			this->elementStart = this->elementEnd + 1;
@@ -233,9 +239,41 @@ void SpecialCgnsCreator3D::writeBoundaries() {
 			}
 			
 			if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(), this->elementStart, this->elementEnd, &connectivities[0]))
-					throw std::runtime_error("SpecialCgnsCreator3D: Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndices.size()));
+					throw std::runtime_error("SpecialCgnsCreator3D: Could not write facet " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndices.size()));
 
 			this->elementStart = this->elementEnd + 1;
 		}
+	}
+}
+
+void SpecialCgnsCreator3D::buildWellConnectivities() {
+	for (auto i = this->gridData->lineConnectivity.cbegin(); i != this->gridData->lineConnectivity.cend(); i++) {
+		this->wellConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->wellConnectivities.back()), [](auto x){return x + 1;});
+	}
+	std::stable_sort(this->wellConnectivities.begin(), this->wellConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
+	for (unsigned i = 0; i < this->wellConnectivities.size(); i++)
+		this->wellConnectivities[i].pop_back();
+}
+
+void SpecialCgnsCreator3D::writeWells() {
+	this->buildWellConnectivities();
+	this->numberOfFacets = this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
+	this->elementStart = this->numberOfElements + this->numberOfFacets + 1;
+
+	for (auto& well : this->gridData->wells) {
+		this->sectionIndices.emplace_back(0);
+
+		auto wellBegin = this->wellConnectivities.cbegin() + well.elementsOnWell.front() - this->numberOfElements - this->numberOfFacets;
+		auto wellEnd = this->wellConnectivities.cbegin() + well.elementsOnWell.back() + 1 - this->numberOfElements - this->numberOfFacets;
+		this->elementEnd = this->elementStart + (wellEnd - wellBegin) - 1;
+
+		std::vector<int> connectivities;
+		append(wellBegin, wellEnd, std::back_inserter(connectivities));
+
+		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, well.name.c_str(), BAR_2, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndices.back()))
+			throw std::runtime_error("SpecialCgnsCreator3D: Could not write well section " + std::to_string(this->sectionIndices.size()));
+
+		this->elementStart = this->elementEnd + 1;
 	}
 }
