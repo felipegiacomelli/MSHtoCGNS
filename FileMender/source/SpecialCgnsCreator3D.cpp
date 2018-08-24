@@ -149,11 +149,6 @@ void SpecialCgnsCreator3D::writeRegions() {
 
 				this->elementEnd = this->elementStart + shapeBegin[i+1] - shapeBegin[i];
 
-
-				for (int j = 0; j < shapeConnectivities.size(); j++)
-					if (shapeConnectivities[j].size() != 5u)
-						printf("\n\tFUCK YOU! - %i", j);
-
 				// for (int j = 0; j < shapeConnectivities[0].size(); j++)
 				// 	std::cout << "\t" << shapeConnectivities[0][j];
 
