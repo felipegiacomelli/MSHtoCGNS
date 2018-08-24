@@ -7,14 +7,7 @@ SpecialCgnsCreator3D::SpecialCgnsCreator3D(GridDataShared gridData, const std::s
 	this->sizes[2] = 0;
 	this->checkDimension();
 	this->setupFile();
-		this->writeBase();
-		this->writeZone();
-		this->writeCoordinates();
-		// this->writeSections();
-			this->writeRegions();
-			// this->writeBoundaries();
-		// this->writeBoundaryConditions();
-	// this->initialize();
+	this->initialize();
 }
 
 void SpecialCgnsCreator3D::checkDimension() {
@@ -107,17 +100,17 @@ void SpecialCgnsCreator3D::writeRegions() {
 			for (auto i = regionBegin; i != regionEnd; i++)
 				shapeType.insert(i->size());
 
-			std::vector<int> shapeBegin;
+			std::vector<unsigned> shapeBegin;
 			for (auto i = shapeType.cbegin(); i != shapeType.cend(); i++) {
-				int value = *i;
+				unsigned value = *i;
 				auto first = std::find_if(regionBegin, regionEnd, [=](const auto& connectivity){return connectivity.size() == value;});
 				shapeBegin.emplace_back(first - regionBegin);
 			}
 			std::stable_sort(shapeBegin.begin(), shapeBegin.end());
 			shapeBegin.emplace_back(regionEnd - regionBegin);
-
+			
+			std::vector<int> connectivities;
 			for (unsigned i = 0; i < shapeBegin.size()-1; i++) {
-
 				std::vector<std::vector<int>> shapeConnectivities(regionBegin + shapeBegin[i], regionBegin + shapeBegin[i+1]);
 
 				switch (shapeConnectivities[0].size()) {
@@ -141,44 +134,16 @@ void SpecialCgnsCreator3D::writeRegions() {
 						throw std::runtime_error("SpecialCgnsCreator3D: Element type not supported");
 				}
 
-				for (int j = 0; j < shapeConnectivities.size(); j++)
+				for (unsigned j = 0; j < shapeConnectivities.size(); j++)
 					shapeConnectivities[j].insert(shapeConnectivities[j].begin(), elementType);
 
-				std::vector<int> connectivities;
 				append(shapeConnectivities.cbegin(), shapeConnectivities.cend(), std::back_inserter(connectivities));
-
-				this->elementEnd = this->elementStart + shapeBegin[i+1] - shapeBegin[i];
-
-				// for (int j = 0; j < shapeConnectivities[0].size(); j++)
-				// 	std::cout << "\t" << shapeConnectivities[0][j];
-
-				// for (int j = 0; j < shapeConnectivities.back().size(); j++)
-					// std::cout << "\t" << shapeConnectivities.back()[j];
-
-				// for (int j = 0; j < 10; j++)
-					// std::cout << "\t" << connectivities[j];
-
-				std::cout << std::endl;
-
-				std::cout << std::endl << "\tmat: " << shapeConnectivities.size() << "\tvec: " << connectivities.size() / shapeConnectivities[0].size();
-
-				std::cout << std::endl << "\tstart: " << this->elementStart << "\tend: " << this->elementEnd << std::endl << std::endl;
-
-				auto ier = cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(), this->elementStart, this->elementEnd, &connectivities[0]);
-
-				cg_error_exit();
-				// cg_error_print();
-
-				// if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(), this->elementStart, this->elementEnd, &connectivities[0]))
-					// throw std::runtime_error("SpecialCgnsCreator3D: Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndices.size()));
-
-				this->elementStart = this->elementEnd + 1;
 			}
+			
+			if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(), this->elementStart, this->elementEnd, &connectivities[0]))
+					throw std::runtime_error("SpecialCgnsCreator3D: Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndices.size()));
 
-			std::cout << std::endl << "shapeBegin" << std::endl;
-			for (auto i = shapeBegin.cbegin(); i != shapeBegin.cend(); i++)
-				std::cout << "\t" << *i;
-			std::cout << std::endl << std::endl;
+			this->elementStart = this->elementEnd + 1;
 		}
 	}
 }
