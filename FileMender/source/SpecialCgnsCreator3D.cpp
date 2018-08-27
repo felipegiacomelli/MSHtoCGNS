@@ -114,7 +114,7 @@ void SpecialCgnsCreator3D::writeRegions() {
 			}
 			std::stable_sort(shapeBegin.begin(), shapeBegin.end());
 			shapeBegin.emplace_back(regionEnd - regionBegin);
-			
+
 			std::vector<int> connectivities;
 			for (unsigned i = 0; i < shapeBegin.size()-1; i++) {
 				std::vector<std::vector<int>> shapeConnectivities(regionBegin + shapeBegin[i], regionBegin + shapeBegin[i+1]);
@@ -145,7 +145,7 @@ void SpecialCgnsCreator3D::writeRegions() {
 
 				append(shapeConnectivities.cbegin(), shapeConnectivities.cend(), std::back_inserter(connectivities));
 			}
-			
+
 			if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(), this->elementStart, this->elementEnd, &connectivities[0]))
 					throw std::runtime_error("SpecialCgnsCreator3D: Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndices.size()));
 
@@ -214,7 +214,7 @@ void SpecialCgnsCreator3D::writeBoundaries() {
 			}
 			std::stable_sort(shapeBegin.begin(), shapeBegin.end());
 			shapeBegin.emplace_back(boundaryEnd - boundaryBegin);
-			
+
 			std::vector<int> connectivities;
 			for (unsigned i = 0; i < shapeBegin.size()-1; i++) {
 				std::vector<std::vector<int>> shapeConnectivities(boundaryBegin + shapeBegin[i], boundaryBegin + shapeBegin[i+1]);
@@ -237,7 +237,7 @@ void SpecialCgnsCreator3D::writeBoundaries() {
 
 				append(shapeConnectivities.cbegin(), shapeConnectivities.cend(), std::back_inserter(connectivities));
 			}
-			
+
 			if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(), this->elementStart, this->elementEnd, &connectivities[0]))
 					throw std::runtime_error("SpecialCgnsCreator3D: Could not write facet " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndices.size()));
 
