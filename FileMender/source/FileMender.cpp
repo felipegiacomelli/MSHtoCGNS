@@ -1,9 +1,5 @@
 #include <chrono>
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <BoostInterface/Filesystem.hpp>
-#include <BoostInterface/PropertyTree.hpp>
+
 #include <Grid/GridData.hpp>
 #include <SpecialCgnsReader3D.hpp>
 #include <SpecialCgnsCreator3D.hpp>
@@ -26,29 +22,7 @@ int main() {
 
 	printGridDataInformation(gridData);
 
-	// {
-	// 	auto elementConnectivities = buildElementConnectivities(gridData);
-	// 	std::string regionName("BODY_INJECTOR_WEST");
-	// 	std::array<double, 3> wellStart({-80.0, 60.0, 0.0});
-	// 	int wellDirection = 2;
-	// 	auto wellData = generateWell(elementConnectivities, gridData, regionName, wellStart, wellDirection);
-	// }
-
-	// {
-	// 	auto elementConnectivities = buildElementConnectivities(gridData);
-	// 	std::string regionName("BODY_INJECTOR_EAST");
-	// 	std::array<double, 3> wellStart({80.0, 60.0, 0.0});
-	// 	int wellDirection = 2;
-	// 	auto wellData = generateWell(elementConnectivities, gridData, regionName, wellStart, wellDirection);
-	// }
-
-	// {
-	// 	auto elementConnectivities = buildElementConnectivities(gridData);
-	// 	std::string regionName("BODY_WELL");
-	// 	std::array<double, 3> wellStart({0.0, -100.0, 30.0});
-	// 	int wellDirection = 1;
-	// 	auto wellData = generateWell(elementConnectivities, gridData, regionName, wellStart, wellDirection);
-	// }
+	WellGenerator wellGenerator(gridData, std::string(SCRIPT_DIRECTORY) + "ScriptWellGenerator.json");
 
 	start = std::chrono::steady_clock::now();
 	SpecialCgnsCreator3D creator(gridData, outputPath);
