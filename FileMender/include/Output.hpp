@@ -15,6 +15,12 @@ void output(InputIt cbegin, InputIt cend, std::ofstream& file) {
 	}
 }
 
+template<typename T>
+void print(const std::array<T, 3>& coordinate) {
+	for (int i = 0; i < 3; i++)
+		std::cout << "\t" << coordinate[i];
+}
+
 void output(GridDataShared gridData, std::string fileName);
 
 void printGridDataInformation(GridDataShared gridData);

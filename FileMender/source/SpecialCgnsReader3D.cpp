@@ -66,8 +66,8 @@ void SpecialCgnsReader3D::readSections() {
 				this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
 		else if (elementType == TRI_3 || elementType == QUAD_4)
 			this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
-		else if (elementType == BAR_2)
-			this->addWell(std::string(this->buffer), elementStart, numberOfElements);
+		// else if (elementType == BAR_2)
+			// this->addWell(std::string(this->buffer), elementStart, numberOfElements);
 
 		int numberOfVertices;
 		if (cg_npe(elementType, &numberOfVertices))
@@ -185,13 +185,13 @@ void SpecialCgnsReader3D::readSections() {
 				break;
 			}
 			case BAR_2: {
-				for (int e = 0; e < numberOfElements; e++) {
-					std::array<int, 3> line;
-					for (int k = 0; k < numberOfVertices; k++)
-						line[k] = connectivities[e*numberOfVertices+k] - 1;
-					line.back() = (elementStart - 1 + e);
-					this->gridData->lineConnectivity.emplace_back(std::move(line));
-				}
+				// for (int e = 0; e < numberOfElements; e++) {
+				// 	std::array<int, 3> line;
+				// 	for (int k = 0; k < numberOfVertices; k++)
+				// 		line[k] = connectivities[e*numberOfVertices+k] - 1;
+				// 	line.back() = (elementStart - 1 + e);
+				// 	this->gridData->lineConnectivity.emplace_back(std::move(line));
+				// }
 				this->numberOfBoundaries--;
 				break;
 			}
