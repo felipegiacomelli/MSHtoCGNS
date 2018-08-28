@@ -79,3 +79,30 @@ void output(GridDataShared gridData, std::string fileName) {
 
 	file.close();
 }
+
+void printGridDataInformation(GridDataShared gridData) {
+	std::cout << std::endl << "numberOfElements: " << gridData->tetrahedronConnectivity.size() + gridData->hexahedronConnectivity.size() + gridData->prismConnectivity.size() + gridData->pyramidConnectivity.size();
+	std::cout << std::endl << "\ttetrahedra: " << gridData->tetrahedronConnectivity.size();
+	std::cout << std::endl << "\thexahedra:  " << gridData->hexahedronConnectivity.size();
+	std::cout << std::endl << "\tprisms:     " << gridData->prismConnectivity.size();
+	std::cout << std::endl << "\tpyramids:   " << gridData->pyramidConnectivity.size() << std::endl;
+
+	std::cout << std::endl << "numberOfFacets  : " << gridData->triangleConnectivity.size() + gridData->quadrangleConnectivity.size();
+	std::cout << std::endl << "numberOfLines   : " << gridData->lineConnectivity.size();
+	std::cout << std::endl << "total           : " << gridData->tetrahedronConnectivity.size() + gridData->hexahedronConnectivity.size() + gridData->prismConnectivity.size() + gridData->pyramidConnectivity.size() + gridData->triangleConnectivity.size() + gridData->quadrangleConnectivity.size() + gridData->lineConnectivity.size() << std::endl;
+
+	for (auto region : gridData->regions)
+		std::cout << std::endl << std::setw(20) << std::left << region.name  << ": "  << std::setw(6) << std::right << region.elementsOnRegion.front()   << " - " << region.elementsOnRegion.back()   << " | " << region.elementsOnRegion.size();
+
+	std::cout << std::endl;
+
+	for (auto boundary : gridData->boundaries)
+		std::cout << std::endl << std::setw(20) << std::left << boundary.name << ": " << std::setw(6) << std::right << boundary.facetsOnBoundary.front() << " - " << boundary.facetsOnBoundary.back() << " | " << boundary.facetsOnBoundary.size();
+
+	std::cout << std::endl;
+
+	for (auto well : gridData->wells)
+		std::cout << std::endl << std::setw(20) << std::left << well.name     << ": " << std::setw(6) << std::right << well.linesOnWell.front()       << " - " << well.linesOnWell.back()       << " | " << well.linesOnWell.size();
+
+	std::cout << std::endl << std::endl;
+}

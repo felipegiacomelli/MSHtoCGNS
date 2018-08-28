@@ -229,8 +229,8 @@ void SpecialCgnsCreator3D::writeWells() {
 	for (auto& well : this->gridData->wells) {
 		this->sectionIndices.emplace_back(0);
 
-		auto wellBegin = this->wellConnectivities.cbegin() + well.elementsOnWell.front() - this->numberOfElements - this->numberOfFacets;
-		auto wellEnd = this->wellConnectivities.cbegin() + well.elementsOnWell.back() + 1 - this->numberOfElements - this->numberOfFacets;
+		auto wellBegin = this->wellConnectivities.cbegin() + well.linesOnWell.front() - this->numberOfElements - this->numberOfFacets;
+		auto wellEnd = this->wellConnectivities.cbegin() + well.linesOnWell.back() + 1 - this->numberOfElements - this->numberOfFacets;
 		this->elementEnd = this->elementStart + (wellEnd - wellBegin) - 1;
 
 		std::vector<int> connectivities;

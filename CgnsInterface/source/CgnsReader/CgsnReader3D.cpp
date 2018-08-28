@@ -193,7 +193,7 @@ void CgnsReader3D::readSections() {
 void CgnsReader3D::addWell(std::string&& name, int elementStart, int numberOfElements) {
 	WellData well;
 	well.name = name;
-	well.elementsOnWell.resize(numberOfElements);
-	std::iota(well.elementsOnWell.begin(), well.elementsOnWell.end(), elementStart - 1);
+	well.linesOnWell.resize(numberOfElements);
+	std::iota(well.linesOnWell.begin(), well.linesOnWell.end(), elementStart - 1);
 	this->gridData->wells.emplace_back(std::move(well));
 }

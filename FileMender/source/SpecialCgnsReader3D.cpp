@@ -220,7 +220,7 @@ void SpecialCgnsReader3D::addBoundary(std::string&& name, int elementStart, int 
 void SpecialCgnsReader3D::addWell(std::string&& name, int elementStart, int numberOfElements) {
 	WellData well;
 	well.name = name;
-	well.elementsOnWell.resize(numberOfElements);
-	std::iota(well.elementsOnWell.begin(), well.elementsOnWell.end(), elementStart);
+	well.linesOnWell.resize(numberOfElements);
+	std::iota(well.linesOnWell.begin(), well.linesOnWell.end(), elementStart);
 	this->gridData->wells.emplace_back(std::move(well));
 }

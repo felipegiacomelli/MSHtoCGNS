@@ -17,4 +17,6 @@ void output(InputIt cbegin, InputIt cend, std::ofstream& file) {
 
 void output(GridDataShared gridData, std::string fileName);
 
+void printGridDataInformation(GridDataShared gridData);
+
 #endif

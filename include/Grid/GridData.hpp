@@ -19,7 +19,7 @@ struct RegionData {
 };
 
 struct WellData {
-	std::vector<int> elementsOnWell;
+	std::vector<int> linesOnWell;
 	std::vector<int> vertices;
 	std::string	name;
 };
