@@ -12,12 +12,6 @@
 
 #define TOLERANCE 1e-3
 
-template<typename T>
-void print(const std::array<T, 3>& coordinate) {
-	for (int i = 0; i < 3; i++)
-		std::cout << "\t" << coordinate[i];
-}
-
 struct WellGeneratorData {
 	std::string regionName;
 	std::array<double, 3> wellStart;
@@ -35,8 +29,8 @@ class WellGenerator {
 		void checkGridData();
 		void readScript();
 		void buildElementConnectivities();
-		bool isClose(const std::array<double, 3>& coordinate, const std::array<double, 3>& wellStart, int wellDirection);
 		void generateWells();
+		bool isClose(const std::array<double, 3>& coordinate, const std::array<double, 3>& wellStart, int wellDirection);
 
 		GridDataShared gridData;
 		std::string wellGeneratorScript;

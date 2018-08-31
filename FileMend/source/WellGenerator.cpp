@@ -71,40 +71,23 @@ void WellGenerator::buildElementConnectivities() {
 		this->elementConnectivities[i].pop_back();
 }
 
-bool WellGenerator::isClose(const std::array<double, 3>& coordinate, const std::array<double, 3>& wellStart, int wellDirection) {
-	bool close = true;
-
-	for (int i = 0; i < 3; i++)
-		if (i != wellDirection)
-			close &= std::abs(coordinate[i] - wellStart[i]) < TOLERANCE;
-
-	return close;
-}
-
 void WellGenerator::generateWells() {
 	this->lineConnectivityShift = this->elementConnectivities.size();
 
 	for (auto wellGeneratorData : this->wellGeneratorDatum) {
 
-    	// std::cout << "\t" << wellGeneratorData.regionName << std::endl;
-    	// for (int i = 0; i < 3; i++)
-    	// 	std::cout << "\t" << wellGeneratorData.wellStart[i];
-    	// std::cout << std::endl << "\t" << wellGeneratorData.wellDirection << std::endl;
-
-		RegionData radialGridRegion;
+		RegionData wellRegion;
 		for (auto region : this->gridData->regions)
 			if (region.name == wellGeneratorData.regionName)
-				radialGridRegion = region;
+				wellRegion = region;
 
-		auto regionBegin = this->elementConnectivities.cbegin() + radialGridRegion.elementsOnRegion.front();
-		auto regionEnd = this->elementConnectivities.cbegin() + radialGridRegion.elementsOnRegion.back() + 1;
+		auto regionBegin = this->elementConnectivities.cbegin() + wellRegion.elementsOnRegion.front();
+		auto regionEnd = this->elementConnectivities.cbegin() + wellRegion.elementsOnRegion.back() + 1;
 
 		std::vector<std::vector<int>> prismsOnRegion;
 		for (auto element = regionBegin; element != regionEnd; element++)
 			if (element->size() == 6u)
 				prismsOnRegion.emplace_back(*element);
-
-		// std::cout << std::endl << "\tprismsOnRegion: " << prismsOnRegion.size() << std::endl;
 
 		std::set<int> wellIndices;
 		for (auto& prism : prismsOnRegion)
@@ -119,47 +102,27 @@ void WellGenerator::generateWells() {
 		std::stable_sort(wellVertices.begin(), wellVertices.end(), [=](const auto& a, const auto& b) {return a.second[wellGeneratorData.wellDirection] < b.second[wellGeneratorData.wellDirection];});
 		unsigned numberOfLines = wellVertices.size() - 1;
 
-		// std::cout << std::endl << "\tsorted well vertices: " << wellIndices.size() << std::endl;
-		// for (auto& vertex : wellVertices) {
-		// 	std::cout << "\t" << vertex.first;
-		// 	print(vertex.second);
-		// 	std::cout << std::endl;
-		// }
-
 		for (unsigned i = 0; i < numberOfLines; i++)
 			this->gridData->lineConnectivity.emplace_back(std::array<int, 3>{wellVertices[i].first, wellVertices[i+1].first, int(i) + this->lineConnectivityShift});
-
-		std::stable_sort(wellVertices.begin(), wellVertices.end(), [](const auto& a, const auto& b) {return a.first < b.first;});
-		std::vector<int> indices;
-		for (auto& vertex : wellVertices)
-			indices.emplace_back(vertex.first);
-
-		// std::cout << std::endl << "\tunsorted well vertices: " << wellIndices.size() << std::endl;
-		// for (auto& vertex : wellVertices) {
-		// 	std::cout << "\t" << vertex.first;
-		// 	print(vertex.second);
-		// 	std::cout << std::endl;
-
-		// }
 
 		WellData well;
 		well.name = wellGeneratorData.wellName;
 		well.linesOnWell.resize(numberOfLines);
 		std::iota(well.linesOnWell.begin(), well.linesOnWell.end(), this->lineConnectivityShift);
-		well.vertices = indices;
+		for (auto index : wellIndices)
+			well.vertices.emplace_back(index);
 		this->gridData->wells.emplace_back(std::move(well));
 
 		this->lineConnectivityShift +=  numberOfLines;
-
-		// std::cout << std::endl << "\twell line connectivity - " << numberOfLines << std::endl;
-		// for (auto& line : this->gridData->lineConnectivity) {
-		// 	print(line);
-		// 	std::cout << std::endl;
-		// }
-
-		// for (auto i : this->gridData->wells.back().vertices)
-		// 	std::cout << "\t" << i;
-
-		// std::cout << std::endl << std::endl << std::endl;
     }
+}
+
+bool WellGenerator::isClose(const std::array<double, 3>& coordinate, const std::array<double, 3>& wellStart, int wellDirection) {
+	bool close = true;
+
+	for (int i = 0; i < 3; i++)
+		if (i != wellDirection)
+			close &= std::abs(coordinate[i] - wellStart[i]) < TOLERANCE;
+
+	return close;
 }
