@@ -76,40 +76,37 @@ void WellGenerator::generateWells() {
 
 	for (auto wellGeneratorData : this->wellGeneratorDatum) {
 
-		RegionData wellRegion;
-		for (auto region : this->gridData->regions)
-			if (region.name == wellGeneratorData.regionName)
-				wellRegion = region;
+		auto wellRegion = std::find_if(this->gridData->regions.cbegin(), this->gridData->regions.cend(), [=](auto r){return r.name == wellGeneratorData.regionName;});
 
-		auto regionBegin = this->elementConnectivities.cbegin() + wellRegion.elementsOnRegion.front();
-		auto regionEnd = this->elementConnectivities.cbegin() + wellRegion.elementsOnRegion.back() + 1;
+		auto regionBegin = this->elementConnectivities.cbegin() + wellRegion->elementsOnRegion.front();
+		auto regionEnd = this->elementConnectivities.cbegin() + wellRegion->elementsOnRegion.back() + 1;
 
-		std::vector<std::vector<int>> prismsOnRegion;
+		std::vector<std::vector<int>> prisms;
 		for (auto element = regionBegin; element != regionEnd; element++)
 			if (element->size() == 6u)
-				prismsOnRegion.emplace_back(*element);
+				prisms.emplace_back(*element);
 
-		std::set<int> wellIndices;
-		for (auto& prism : prismsOnRegion)
-			for (auto& index : prism)
+		std::set<int> indices;
+		for (const auto& prism : prisms)
+			for (const auto& index : prism)
 				if (isClose(this->gridData->coordinates[index], wellGeneratorData.wellStart, wellGeneratorData.wellDirection))
-					wellIndices.insert(index);
+					indices.insert(index);
 
-		std::vector<std::pair<int, std::array<double, 3>>> wellVertices;
-		for (auto index = wellIndices.cbegin(); index != wellIndices.cend(); index++)
-			wellVertices.emplace_back(std::make_pair(*index, this->gridData->coordinates[*index]));
+		std::vector<std::pair<int, std::array<double, 3>>> vertices;
+		for (auto index = indices.cbegin(); index != indices.cend(); index++)
+			vertices.emplace_back(std::make_pair(*index, this->gridData->coordinates[*index]));
 
-		std::stable_sort(wellVertices.begin(), wellVertices.end(), [=](const auto& a, const auto& b) {return a.second[wellGeneratorData.wellDirection] < b.second[wellGeneratorData.wellDirection];});
-		unsigned numberOfLines = wellVertices.size() - 1;
+		std::stable_sort(vertices.begin(), vertices.end(), [=](const auto& a, const auto& b) {return a.second[wellGeneratorData.wellDirection] < b.second[wellGeneratorData.wellDirection];});
+		unsigned numberOfLines = vertices.size() - 1;
 
 		for (unsigned i = 0; i < numberOfLines; i++)
-			this->gridData->lineConnectivity.emplace_back(std::array<int, 3>{wellVertices[i].first, wellVertices[i+1].first, int(i) + this->lineConnectivityShift});
+			this->gridData->lineConnectivity.emplace_back(std::array<int, 3>{vertices[i].first, vertices[i+1].first, int(i) + this->lineConnectivityShift});
 
 		WellData well;
 		well.name = wellGeneratorData.wellName;
 		well.linesOnWell.resize(numberOfLines);
 		std::iota(well.linesOnWell.begin(), well.linesOnWell.end(), this->lineConnectivityShift);
-		for (auto index : wellIndices)
+		for (auto index : indices)
 			well.vertices.emplace_back(index);
 		this->gridData->wells.emplace_back(std::move(well));
 
