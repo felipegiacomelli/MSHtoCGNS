@@ -6,6 +6,7 @@
 #include <cgnslib.h>
 
 #define TOLERANCE 1e-12
+
 struct Region1_ElementType1_2D {
 	Region1_ElementType1_2D() {
 		CgnsReader2D inputReader(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/2D-Region1-ElementType1/5v_4e.cgns");

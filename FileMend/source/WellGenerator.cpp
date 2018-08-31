@@ -117,34 +117,34 @@ void WellGenerator::generateWells() {
 			wellVertices.emplace_back(std::make_pair(*index, this->gridData->coordinates[*index]));
 
 		std::stable_sort(wellVertices.begin(), wellVertices.end(), [=](const auto& a, const auto& b) {return a.second[wellGeneratorData.wellDirection] < b.second[wellGeneratorData.wellDirection];});
-		unsigned numberOfLine = wellVertices.size() - 1;
+		unsigned numberOfLines = wellVertices.size() - 1;
 
-		// std::cout << std::endl << "\tsorted well vertices: " << wellIndices.size() << std::endl;
-		// for (auto& vertex : wellVertices) {
-		// 	std::cout << "\t" << vertex.first;
-		// 	print(vertex.second);
-		// 	std::cout << std::endl;
-		// }
+		std::cout << std::endl << "\tsorted well vertices: " << wellIndices.size() << std::endl;
+		for (auto& vertex : wellVertices) {
+			std::cout << "\t" << vertex.first;
+			print(vertex.second);
+			std::cout << std::endl;
+		}
 
-		for (unsigned i = 0; i < numberOfLine; i++)
+		for (unsigned i = 0; i < numberOfLines; i++)
 			this->gridData->lineConnectivity.emplace_back(std::array<int, 3>{wellVertices[i].first, wellVertices[i+1].first, int(i) + this->lineConnectivityShift});
-
-		// std::cout << std::endl << "\twell line connectivity - " << lineConnectivity.size() << std::endl;
-		// for (auto& line : lineConnectivity) {
-		// 	print(line);
-		// 	std::cout << std::endl;
-		// }
 
 		WellData well;
 		well.name = wellGeneratorData.wellName;
-		well.linesOnWell.resize(numberOfLine);
+		well.linesOnWell.resize(numberOfLines);
 		std::iota(well.linesOnWell.begin(), well.linesOnWell.end(), this->lineConnectivityShift);
 		this->gridData->wells.emplace_back(std::move(well));
 
-		this->lineConnectivityShift +=  numberOfLine;
+		this->lineConnectivityShift +=  numberOfLines;
+
+		std::cout << std::endl << "\twell line connectivity - " << numberOfLines << std::endl;
+		for (auto& line : this->gridData->lineConnectivity) {
+			print(line);
+			std::cout << std::endl;
+		}
 
 		for (auto i : well.linesOnWell)
 			std::cout << "\t" << i;
-		std::cout << std::endl << std::endl;
+		std::cout << std::endl << std::endl << std::endl;
     }
 }
