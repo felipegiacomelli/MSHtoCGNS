@@ -24,6 +24,8 @@ int main() {
 
 	WellGenerator wellGenerator(gridData, std::string(SCRIPT_DIRECTORY) + "ScriptWellGenerator.json");
 
+	printGridDataInformation(gridData);
+
 	start = std::chrono::steady_clock::now();
 	SpecialCgnsCreator3D creator(gridData, outputPath);
 	end = std::chrono::steady_clock::now();

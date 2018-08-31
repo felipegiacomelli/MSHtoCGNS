@@ -37,6 +37,8 @@ class WellGenerator {
 		std::string wellGeneratorScript;
 		std::vector<WellGeneratorData> wellGeneratorDatum;
 		std::vector<std::vector<int>> elementConnectivities;
+		int numberOfElements;
+		int numberOfFacets;
 		int lineConnectivityShift;
 };
 

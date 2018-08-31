@@ -3,6 +3,8 @@
 WellGenerator::WellGenerator(GridDataShared gridData, std::string wellGeneratorScript) : gridData(gridData), wellGeneratorScript(wellGeneratorScript) {
 	this->checkGridData();
 	this->readScript();
+	this->numberOfElements = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size();
+	this->numberOfFacets = this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
 	this->buildElementConnectivities();
 	this->generateWells();
 }
@@ -70,13 +72,13 @@ void WellGenerator::buildElementConnectivities() {
 }
 
 bool WellGenerator::isClose(const std::array<double, 3>& coordinate, const std::array<double, 3>& wellStart, int wellDirection) {
-	bool closeEnough = true;
-	for (int i = 0; i < 3; i++) {
-		if (i != wellDirection) {
-			closeEnough &= std::abs(coordinate[i] - wellStart[i]) < TOLERANCE;
-		}
-	}
-	return closeEnough;
+	bool close = true;
+
+	for (int i = 0; i < 3; i++)
+		if (i != wellDirection)
+			close &= std::abs(coordinate[i] - wellStart[i]) < TOLERANCE;
+
+	return close;
 }
 
 void WellGenerator::generateWells() {
@@ -115,6 +117,7 @@ void WellGenerator::generateWells() {
 			wellVertices.emplace_back(std::make_pair(*index, this->gridData->coordinates[*index]));
 
 		std::stable_sort(wellVertices.begin(), wellVertices.end(), [=](const auto& a, const auto& b) {return a.second[wellGeneratorData.wellDirection] < b.second[wellGeneratorData.wellDirection];});
+		unsigned numberOfLine = wellVertices.size() - 1;
 
 		// std::cout << std::endl << "\tsorted well vertices: " << wellIndices.size() << std::endl;
 		// for (auto& vertex : wellVertices) {
@@ -122,7 +125,6 @@ void WellGenerator::generateWells() {
 		// 	print(vertex.second);
 		// 	std::cout << std::endl;
 		// }
-		unsigned numberOfLine = wellVertices.size() - 1;
 
 		for (unsigned i = 0; i < numberOfLine; i++)
 			this->gridData->lineConnectivity.emplace_back(std::array<int, 3>{wellVertices[i].first, wellVertices[i+1].first, int(i) + this->lineConnectivityShift});
@@ -137,7 +139,7 @@ void WellGenerator::generateWells() {
 		well.name = wellGeneratorData.wellName;
 		well.linesOnWell.resize(numberOfLine);
 		std::iota(well.linesOnWell.begin(), well.linesOnWell.end(), this->lineConnectivityShift);
-		// this->gridData->wells.emplace_back(std::move(well));
+		this->gridData->wells.emplace_back(std::move(well));
 
 		this->lineConnectivityShift +=  numberOfLine;
 
