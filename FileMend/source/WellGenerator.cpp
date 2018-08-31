@@ -86,10 +86,10 @@ void WellGenerator::generateWells() {
 
 	for (auto wellGeneratorData : this->wellGeneratorDatum) {
 
-    	std::cout << "\t" << wellGeneratorData.regionName << std::endl;
-    	for (int i = 0; i < 3; i++)
-    		std::cout << "\t" << wellGeneratorData.wellStart[i];
-    	std::cout << std::endl << "\t" << wellGeneratorData.wellDirection << std::endl;
+    	// std::cout << "\t" << wellGeneratorData.regionName << std::endl;
+    	// for (int i = 0; i < 3; i++)
+    	// 	std::cout << "\t" << wellGeneratorData.wellStart[i];
+    	// std::cout << std::endl << "\t" << wellGeneratorData.wellDirection << std::endl;
 
 		RegionData radialGridRegion;
 		for (auto region : this->gridData->regions)
@@ -119,32 +119,47 @@ void WellGenerator::generateWells() {
 		std::stable_sort(wellVertices.begin(), wellVertices.end(), [=](const auto& a, const auto& b) {return a.second[wellGeneratorData.wellDirection] < b.second[wellGeneratorData.wellDirection];});
 		unsigned numberOfLines = wellVertices.size() - 1;
 
-		std::cout << std::endl << "\tsorted well vertices: " << wellIndices.size() << std::endl;
-		for (auto& vertex : wellVertices) {
-			std::cout << "\t" << vertex.first;
-			print(vertex.second);
-			std::cout << std::endl;
-		}
+		// std::cout << std::endl << "\tsorted well vertices: " << wellIndices.size() << std::endl;
+		// for (auto& vertex : wellVertices) {
+		// 	std::cout << "\t" << vertex.first;
+		// 	print(vertex.second);
+		// 	std::cout << std::endl;
+		// }
 
 		for (unsigned i = 0; i < numberOfLines; i++)
 			this->gridData->lineConnectivity.emplace_back(std::array<int, 3>{wellVertices[i].first, wellVertices[i+1].first, int(i) + this->lineConnectivityShift});
+
+		std::stable_sort(wellVertices.begin(), wellVertices.end(), [](const auto& a, const auto& b) {return a.first < b.first;});
+		std::vector<int> indices;
+		for (auto& vertex : wellVertices)
+			indices.emplace_back(vertex.first);
+
+		// std::cout << std::endl << "\tunsorted well vertices: " << wellIndices.size() << std::endl;
+		// for (auto& vertex : wellVertices) {
+		// 	std::cout << "\t" << vertex.first;
+		// 	print(vertex.second);
+		// 	std::cout << std::endl;
+
+		// }
 
 		WellData well;
 		well.name = wellGeneratorData.wellName;
 		well.linesOnWell.resize(numberOfLines);
 		std::iota(well.linesOnWell.begin(), well.linesOnWell.end(), this->lineConnectivityShift);
+		well.vertices = indices;
 		this->gridData->wells.emplace_back(std::move(well));
 
 		this->lineConnectivityShift +=  numberOfLines;
 
-		std::cout << std::endl << "\twell line connectivity - " << numberOfLines << std::endl;
-		for (auto& line : this->gridData->lineConnectivity) {
-			print(line);
-			std::cout << std::endl;
-		}
+		// std::cout << std::endl << "\twell line connectivity - " << numberOfLines << std::endl;
+		// for (auto& line : this->gridData->lineConnectivity) {
+		// 	print(line);
+		// 	std::cout << std::endl;
+		// }
 
-		for (auto i : well.linesOnWell)
-			std::cout << "\t" << i;
-		std::cout << std::endl << std::endl << std::endl;
+		// for (auto i : this->gridData->wells.back().vertices)
+		// 	std::cout << "\t" << i;
+
+		// std::cout << std::endl << std::endl << std::endl;
     }
 }

@@ -61,21 +61,21 @@ FixtureTestSuite(FileMendSuite, FileMendFixture)
 
 TestCase(FileMendTest) {
 	auto start = std::chrono::steady_clock::now();
-	SpecialCgnsReader3D reader(inputPath);
+	SpecialCgnsReader3D reader(this->inputPath);
 	GridDataShared  gridData = reader.gridData;
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> elapsedSeconds = end - start;
-	std::cout << std::endl << "\tGrid path: " << inputPath;
+	std::cout << std::endl << "\tGrid path: " << this->inputPath;
 	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
-	printGridDataInformation(gridData);
+	// printGridDataInformation(gridData);
 
 	WellGenerator wellGenerator(gridData, this->wellGeneratorScript);
 
-	printGridDataInformation(gridData);
+	// printGridDataInformation(gridData);
 
 	start = std::chrono::steady_clock::now();
-	SpecialCgnsCreator3D creator(gridData, outputPath);
+	SpecialCgnsCreator3D creator(gridData, this->outputPath);
 	end = std::chrono::steady_clock::now();
 	elapsedSeconds = end - start;
 	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
