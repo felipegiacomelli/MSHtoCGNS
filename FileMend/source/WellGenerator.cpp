@@ -1,4 +1,4 @@
-#include <WellGenerator.hpp>
+#include <FileMend/WellGenerator.hpp>
 
 WellGenerator::WellGenerator(GridDataShared gridData, std::string wellGeneratorScript) : gridData(gridData), wellGeneratorScript(wellGeneratorScript) {
 	this->checkGridData();

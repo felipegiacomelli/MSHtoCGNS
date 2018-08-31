@@ -9,9 +9,14 @@
 #include <BoostInterface/PropertyTree.hpp>
 #include <Utilities/Vector.hpp>
 #include <Grid/GridData.hpp>
-#include <Output.hpp>
 
 #define TOLERANCE 1e-3
+
+template<typename T>
+void print(const std::array<T, 3>& coordinate) {
+	for (int i = 0; i < 3; i++)
+		std::cout << "\t" << coordinate[i];
+}
 
 struct WellGeneratorData {
 	std::string regionName;
