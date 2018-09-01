@@ -11,13 +11,15 @@
 struct FileMendFixture {
 	FileMendFixture() {
 		boost::property_tree::ptree iroot;
-		boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMender.json", iroot);
+		boost::property_tree::read_json(std::string(TEST_INPUT_DIRECTORY) + "FileMend/ScriptMender.json", iroot);
 		this->inputPath  = iroot.get<std::string>("path.input");
 		this->outputPath = iroot.get<std::string>("path.output");
-		this->wellGeneratorScript = std::string(SCRIPT_DIRECTORY) + "ScriptWellGenerator.json";
+		this->wellGeneratorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/ScriptWellGenerator.json";
 	}
 
-	~FileMendFixture() = default;
+	~FileMendFixture() {
+		deleteDirectory("./9821v_45841e/");
+	}
 
 	std::string inputPath;
 	std::string outputPath;
@@ -27,13 +29,8 @@ struct FileMendFixture {
 FixtureTestSuite(FileMendSuite, FileMendFixture)
 
 TestCase(FileMendTest) {
-	auto start = std::chrono::steady_clock::now();
-	SpecialCgnsReader3D reader(this->inputPath);
+	SpecialCgnsReader3D reader(std::string(TEST_INPUT_DIRECTORY) + this->inputPath);
 	GridDataShared  gridData = reader.gridData;
-	auto end = std::chrono::steady_clock::now();
-	std::chrono::duration<double> elapsedSeconds = end - start;
-	std::cout << std::endl << "\tGrid path: " << this->inputPath;
-	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
 	checkEqual(gridData->wells.size(), 0u);
 	checkEqual(gridData->lineConnectivity.size(), 0u);
@@ -174,12 +171,7 @@ TestCase(FileMendTest) {
 	checkEqual(well.vertices[18], 8937);
 	checkEqual(well.vertices[19], 8944);
 
-	start = std::chrono::steady_clock::now();
 	SpecialCgnsCreator3D creator(gridData, this->outputPath);
-	end = std::chrono::steady_clock::now();
-	elapsedSeconds = end - start;
-	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
-	std::cout << std::endl << "\tOutput file location       : " << creator.getFileName() << std::endl << std::endl;
 }
 
 TestSuiteEnd()

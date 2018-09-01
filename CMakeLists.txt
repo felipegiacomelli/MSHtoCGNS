@@ -124,6 +124,7 @@ add_subdirectory (FileMend)
 add_subdirectory (FileMendTest)
 add_subdirectory (UtilitiesTest)
 
+add_subdirectory (Mender)
 add_subdirectory (MSHtoCGNS)
 
 #################################################################
