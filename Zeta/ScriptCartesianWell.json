@@ -1,0 +1,7 @@
+{
+    "path" :
+    {
+        "input"  : "/home/felipe/Felipe/grids/MSHtoCGNS/Cube/125v_64e/Grid.cgns",
+        "output" : "./"
+    }
+}

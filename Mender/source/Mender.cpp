@@ -68,8 +68,8 @@ void printGridDataInformation(GridDataShared gridData) {
 	std::cout << std::endl << "\t\t\tpyramids:   " << gridData->pyramidConnectivity.size() << std::endl;
 
 	std::cout << std::endl << "\t\tnumberOfFacets  : " << gridData->triangleConnectivity.size() + gridData->quadrangleConnectivity.size();
-	std::cout << std::endl << "\t\t\ttriangle: " << gridData->tetrahedronConnectivity.size();
-	std::cout << std::endl << "\t\t\tquadrangle:  " << gridData->hexahedronConnectivity.size() << std::endl;
+	std::cout << std::endl << "\t\t\ttriangle: " << gridData->triangleConnectivity.size();
+	std::cout << std::endl << "\t\t\tquadrangle:  " << gridData->quadrangleConnectivity.size() << std::endl;
 
 	std::cout << std::endl << "\t\tnumberOfLines   : " << gridData->lineConnectivity.size() << std::endl;
 
