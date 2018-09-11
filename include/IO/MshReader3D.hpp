@@ -5,7 +5,7 @@
 
 class MshReader3D : public MshReader {
 	public:
-		MshReader3D(const std::string& filePath);
+		MshReader3D(std::string filePath);
 
 		~MshReader3D() = default;
 

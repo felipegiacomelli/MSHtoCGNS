@@ -5,7 +5,7 @@
 
 class CgnsReader2D : public CgnsReader {
 	public:
-		CgnsReader2D(const std::string& filePath);
+		CgnsReader2D(std::string filePath);
 
 	private:
 		void readCoordinates() override;

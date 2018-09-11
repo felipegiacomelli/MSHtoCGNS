@@ -5,7 +5,7 @@
 
 class CgnsCreator3D : public CgnsCreator {
 	public:
-		CgnsCreator3D(GridDataShared gridData, const std::string& folderPath);
+		CgnsCreator3D(GridDataShared gridData, std::string folderPath);
 
 	private:
 		void checkDimension() override;

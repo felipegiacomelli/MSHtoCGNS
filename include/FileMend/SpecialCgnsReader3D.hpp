@@ -5,7 +5,7 @@
 
 class SpecialCgnsReader3D : public CgnsReader {
 	public:
-		SpecialCgnsReader3D(const std::string& filePath);
+		SpecialCgnsReader3D(std::string filePath);
 
 	private:
 		void readCoordinates() override;

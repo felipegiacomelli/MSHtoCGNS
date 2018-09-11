@@ -9,7 +9,7 @@
 
 class CgnsCreator {
 	public:
-		CgnsCreator(GridDataShared gridData, const std::string& folderPath);
+		CgnsCreator(GridDataShared gridData, std::string folderPath);
 
 		std::string getFileName() const;
 
@@ -20,7 +20,7 @@ class CgnsCreator {
 		void setupFile();
 		void initialize();
 		void writeBase();
-		void writeZone();
+		virtual void writeZone();
 		virtual void writeCoordinates() = 0;
 		virtual void writeSections();
 		virtual void buildElementConnectivities() = 0;

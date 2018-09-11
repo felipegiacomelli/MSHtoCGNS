@@ -5,7 +5,7 @@
 
 #include <boost/filesystem.hpp>
 
-void createDirectory(const std::string&);
-void deleteDirectory(const std::string&);
+void createDirectory(std::string);
+void deleteDirectory(std::string);
 
 #endif

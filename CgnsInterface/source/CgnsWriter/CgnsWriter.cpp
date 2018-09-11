@@ -1,7 +1,7 @@
 #include <CgnsInterface/CgnsWriter.hpp>
 #include <cgnslib.h>
 
-CgnsWriter::CgnsWriter(const std::string& filePath, const std::string solutionLocation) : filePath(filePath), isFinalized(false) {
+CgnsWriter::CgnsWriter(std::string filePath, const std::string solutionLocation) : filePath(filePath), isFinalized(false) {
 	if (solutionLocation == std::string("Vertex"))
 		this->gridLocation = 2;
 	else if (solutionLocation == std::string("CellCenter"))
@@ -48,13 +48,13 @@ void CgnsWriter::readZone() {
 		throw std::runtime_error("CgnsWriter: The CGNS file has more than one zone");
 }
 
-void CgnsWriter::writePermanentSolution(const std::string& solutionName) {
+void CgnsWriter::writePermanentSolution(std::string solutionName) {
 	if (cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), GridLocation_t(this->gridLocation), &this->permanentSolutionIndex))
 		throw std::runtime_error("CgnsWriter: Could not write permanent solution " + solutionName);
 }
 
 
-void CgnsWriter::writePermanentField(const std::string& fieldName, const std::vector<double>& fieldValues){
+void CgnsWriter::writePermanentField(std::string fieldName, const std::vector<double>& fieldValues){
 	if (cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->permanentSolutionIndex, RealDouble, fieldName.c_str(), &fieldValues[0], &this->permanentFieldIndex))
 		throw std::runtime_error("CgnsWriter: Could not write field " + fieldName);
 }
@@ -66,7 +66,7 @@ void CgnsWriter::writeTransientSolution(const double& timeInstant) {
 	cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), GridLocation_t(this->gridLocation), &this->solutionIndices.back());
 }
 
-void CgnsWriter::writeTransientField(const std::vector<double>& fieldValues, const std::string& fieldName) {
+void CgnsWriter::writeTransientField(const std::vector<double>& fieldValues, std::string fieldName) {
 	this->fieldsIndices.emplace_back(0);
 	cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->solutionIndices.back(), RealDouble, fieldName.c_str(), &fieldValues[0], &this->fieldsIndices.back());
 }

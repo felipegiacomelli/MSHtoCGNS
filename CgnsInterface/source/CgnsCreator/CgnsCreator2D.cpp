@@ -1,7 +1,7 @@
 #include <CgnsInterface/CgnsCreator/CgnsCreator2D.hpp>
 #include <cgnslib.h>
 
-CgnsCreator2D::CgnsCreator2D(GridDataShared gridData, const std::string& folderPath) : CgnsCreator(gridData, folderPath) {
+CgnsCreator2D::CgnsCreator2D(GridDataShared gridData, std::string folderPath) : CgnsCreator(gridData, folderPath) {
 	this->sizes[0] = this->gridData->coordinates.size();
 	this->sizes[1] = this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
 	this->sizes[2] = 0;

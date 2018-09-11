@@ -1,7 +1,7 @@
 #include <MultipleZonesCgnsCreator3D.hpp>
 #include <cgnslib.h>
 
-MultipleZonesCgnsCreator3D::MultipleZonesCgnsCreator3D(GridDataShared gridData, const std::string& folderPath) : CgnsCreator(gridData, folderPath) {
+MultipleZonesCgnsCreator3D::MultipleZonesCgnsCreator3D(GridDataShared gridData, std::string folderPath) : CgnsCreator(gridData, folderPath) {
 	this->sizes[0] = this->gridData->coordinates.size();
 	this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size();
 	this->sizes[2] = 0;
@@ -11,6 +11,11 @@ MultipleZonesCgnsCreator3D::MultipleZonesCgnsCreator3D(GridDataShared gridData, 
 }
 
 void MultipleZonesCgnsCreator3D::checkDimension() {
+	if (this->gridData->dimension != 3)
+		throw std::runtime_error("MultipleZonesCgnsCreator3D: gridData dimension must be equal to 3 and not " + std::to_string(this->gridData->dimension));
+}
+
+void MultipleZonesCgnsCreator3D::writeZone() {
 	if (this->gridData->dimension != 3)
 		throw std::runtime_error("MultipleZonesCgnsCreator3D: gridData dimension must be equal to 3 and not " + std::to_string(this->gridData->dimension));
 }

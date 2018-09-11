@@ -5,10 +5,11 @@
 
 class MultipleZonesCgnsCreator3D : public CgnsCreator {
 	public:
-		MultipleZonesCgnsCreator3D(GridDataShared gridData, const std::string& folderPath);
+		MultipleZonesCgnsCreator3D(GridDataShared gridData, std::string folderPath);
 
 	private:
 		void checkDimension() override;
+		void writeZone() override;
 		void writeSections() override;
 		void writeCoordinates() override;
 		void buildElementConnectivities() override;

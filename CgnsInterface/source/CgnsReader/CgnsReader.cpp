@@ -1,7 +1,7 @@
 #include <CgnsInterface/CgnsReader.hpp>
 #include <cgnslib.h>
 
-CgnsReader::CgnsReader(const std::string& filePath) : filePath(filePath) {
+CgnsReader::CgnsReader(std::string filePath) : filePath(filePath) {
 	this->checkFile();
 	this->readBase();
 	this->readZone();
@@ -111,7 +111,7 @@ void CgnsReader::addBoundary(std::string&& name, int elementStart, int numberOfE
 	this->gridData->boundaries.emplace_back(std::move(boundary));
 }
 
-int CgnsReader::readSolutionIndex(const std::string& solutionName) {
+int CgnsReader::readSolutionIndex(std::string solutionName) {
 	int numberOfSolutions;
 	if (cg_nsols(this->fileIndex, this->baseIndex, this->zoneIndex, &numberOfSolutions))
 		throw std::runtime_error("CgnsReader: Could not read number of solutions");
@@ -129,7 +129,7 @@ int CgnsReader::readSolutionIndex(const std::string& solutionName) {
 	return solutionIndex;
 }
 
-std::vector<double> CgnsReader::readField(const int& solutionIndex, const std::string& fieldName) {
+std::vector<double> CgnsReader::readField(const int& solutionIndex, std::string fieldName) {
 	int dataDimension, solutionEnd;
 	if (cg_sol_size(this->fileIndex, this->baseIndex, this->zoneIndex, solutionIndex, &dataDimension, &solutionEnd))
 		throw std::runtime_error("CgnsReader: Could not read solution " + std::to_string(solutionIndex));
@@ -142,7 +142,7 @@ std::vector<double> CgnsReader::readField(const int& solutionIndex, const std::s
 	return field;
 }
 
-std::vector<double> CgnsReader::readField(const std::string& solutionName, const std::string& fieldName){
+std::vector<double> CgnsReader::readField(std::string solutionName, std::string fieldName){
 	return this->readField(this->readSolutionIndex(solutionName), fieldName);
 }
 

@@ -1,7 +1,7 @@
 #include <FileMend/SpecialCgnsCreator3D.hpp>
 #include <cgnslib.h>
 
-SpecialCgnsCreator3D::SpecialCgnsCreator3D(GridDataShared gridData, const std::string& folderPath) : CgnsCreator(gridData, folderPath) {
+SpecialCgnsCreator3D::SpecialCgnsCreator3D(GridDataShared gridData, std::string folderPath) : CgnsCreator(gridData, folderPath) {
 	this->sizes[0] = this->gridData->coordinates.size();
 	this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size();
 	this->sizes[2] = 0;

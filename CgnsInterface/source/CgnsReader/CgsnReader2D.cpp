@@ -1,7 +1,7 @@
 #include <CgnsInterface/CgnsReader/CgnsReader2D.hpp>
 #include <cgnslib.h>
 
-CgnsReader2D::CgnsReader2D(const std::string& filePath) : CgnsReader(filePath) {
+CgnsReader2D::CgnsReader2D(std::string filePath) : CgnsReader(filePath) {
 	this->readCoordinates();
 	this->readSections();
 	this->readBoundaries();

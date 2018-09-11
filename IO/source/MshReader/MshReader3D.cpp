@@ -1,7 +1,7 @@
 #include <IO/MshReader3D.hpp>
 #include <Utilities/Print.hpp>
 
-MshReader3D::MshReader3D(const std::string& filePath) : MshReader(filePath) {
+MshReader3D::MshReader3D(std::string filePath) : MshReader(filePath) {
 	this->gridData->dimension = 3;
 	this->readNodes();
 	this->readPhysicalEntities();
