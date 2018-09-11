@@ -62,9 +62,6 @@ void MshReader2D::readPhysicalEntities() {
 	this->gridData->regions.resize(regionsIndices.size());
 	for (unsigned i = 0; i < regionsIndices.size(); i++)
 		this->gridData->regions[i].name = entitiesNames[regionsIndices[i]];
-
-	std::iota(boundaryIndices.begin(), boundaryIndices.end(), 0);
-	std::iota(regionsIndices.begin(), regionsIndices.end(), 0);
 }
 
 void MshReader2D::determineNumberOfFacets() {

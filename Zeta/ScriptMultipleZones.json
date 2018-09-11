@@ -1,0 +1,7 @@
+{
+    "path" :
+    {
+        "input"  : "/home/felipe/Felipe/gmsh/reservoir/4x4x4_2x2x2.msh",
+        "output" : "/home/felipe/Downloads/RESERVOIR/"
+    }
+}

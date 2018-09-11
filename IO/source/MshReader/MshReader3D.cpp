@@ -1,4 +1,5 @@
 #include <IO/MshReader3D.hpp>
+#include <Utilities/Print.hpp>
 
 MshReader3D::MshReader3D(const std::string& filePath) : MshReader(filePath) {
 	this->gridData->dimension = 3;
@@ -45,14 +46,13 @@ void MshReader3D::readPhysicalEntities() {
 				break;
 			}
 			case 2: {
-				regionsIndices.push_back(entitiesIndices[i]);;
+				regionsIndices.push_back(entitiesIndices[i]);
 				break;
 			}
 			default:
-				throw std::runtime_error("MshReader3D: Non supported physical entity found");
+				throw std::runtime_error("MshReader3Ds: Physical entity " + std::to_string(entitiesTypes[i]) + " not supported");
 		}
 	}
-	if (regionsIndices.size() != 1) throw std::runtime_error("MshReader3D: One and only one geometry supported");
 
 	this->numberOfBoundaries = boundaryIndices.size();
 	this->gridData->boundaries.resize(boundaryIndices.size());
@@ -63,8 +63,6 @@ void MshReader3D::readPhysicalEntities() {
 	this->gridData->regions.resize(regionsIndices.size());
 	for (unsigned i = 0; i < regionsIndices.size(); i++)
 		this->gridData->regions[i].name = entitiesNames[regionsIndices[i]];
-
-	std::iota(boundaryIndices.begin(), boundaryIndices.end(), 0);
 }
 
 void MshReader3D::determineNumberOfFacets() {

@@ -36,7 +36,7 @@ if (UNIX)
     endif ()
 
 	set (CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} "-g -DDEBUG -Wall -Wno-parentheses" CACHE STRING "Setting default compiler flags.")
-	set (CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3 -DNDEBUG -Wno-expansion-to-defined -Wno-deprecated-declarations" CACHE STRING "Setting default compiler flags")
+	set (CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3 -DNDEBUG -Wall -Wno-expansion-to-defined -Wno-deprecated-declarations" CACHE STRING "Setting default compiler flags")
 
 	set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${BUILD_TYPE_OUTPUT_DIRECTORY})
 	set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${BUILD_TYPE_OUTPUT_DIRECTORY})
@@ -127,6 +127,7 @@ add_subdirectory (UtilitiesTest)
 add_subdirectory (CartesianWell)
 add_subdirectory (Mender)
 add_subdirectory (MSHtoCGNS)
+add_subdirectory (MultipleZones)
 
 #################################################################
 # TESTING
