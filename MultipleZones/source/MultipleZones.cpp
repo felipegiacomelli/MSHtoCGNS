@@ -5,28 +5,35 @@
 #include <IO/Output.hpp>
 #include <IO/MshReader2D.hpp>
 #include <IO/MshReader3D.hpp>
+#include <Utilities/Print.hpp>
 
 #include <MultipleZonesCgnsCreator3D.hpp>
 
 void printGridDataInformation(GridDataShared gridData);
+GridDataShared extractGridDataEntities(GridDataShared gridData, boost::property_tree::ptree script);
+std::vector<std::vector<int>> buildElementConnectivities(GridDataShared gridData);
 
 int main() {
-	boost::property_tree::ptree iroot;
-	boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMultipleZones.json", iroot);
-	std::string inputPath  = iroot.get<std::string>("path.input");
-	std::string outputPath = iroot.get<std::string>("path.output");
+	boost::property_tree::ptree script;
+	boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMultipleZones.json", script);
+	std::string inputPath(script.get<std::string>("path.input"));
+	std::string outputPath(script.get<std::string>("path.output"));
 
 	auto start = std::chrono::steady_clock::now();
 	MshReader3D reader(inputPath);
-	GridDataShared  gridData = reader.gridData;
+	GridDataShared  gridData(reader.gridData);
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> elapsedSeconds = end - start;
 	std::cout << std::endl << "\tGrid path: " << inputPath;
 	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
-	printGridDataInformation(gridData);
+	auto reservoir = extractGridDataEntities(gridData, script);
 
-	start = std::chrono::steady_clock::now();
+	printf("\n\n");
+	printGridDataInformation(gridData);
+	printf("#############################\n");
+	printGridDataInformation(reservoir);
+
 	MultipleZonesCgnsCreator3D creator(gridData, outputPath);
 	end = std::chrono::steady_clock::now();
 	elapsedSeconds = end - start;
@@ -34,6 +41,154 @@ int main() {
 	std::cout << std::endl << "\tOutput file location       : " << creator.getFileName() << std::endl << std::endl;
 
 	return 0;
+}
+
+GridDataShared extractGridDataEntities(GridDataShared gridData, boost::property_tree::ptree script) {
+	auto extract(MakeShared<GridData>());
+	auto elementConnectivities = buildElementConnectivities(gridData);
+	int localIndex = 0;
+
+	std::vector<std::string> regions;
+	for (auto region : script.get_child("regions"))
+		regions.emplace_back(region.second.get_value<std::string>());
+
+	for (auto name : regions) {
+		auto iterator(std::find_if(gridData->regions.cbegin(),gridData->regions.cend(), [=](auto r){return r.name == name;}));
+		if (iterator == gridData->regions.cend())
+			throw std::runtime_error("extractGridDataEntities: There is no region " + name + " in gridData");
+		auto region(*iterator);
+
+		auto regionBegin = elementConnectivities.begin() + region.elementsOnRegion.front();
+		auto regionEnd = elementConnectivities.begin() + region.elementsOnRegion.back() + 1;
+
+		std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), localIndex);
+
+		printf("\n\n");
+		print(region.elementsOnRegion, "elementsOnRegion");
+
+		for (auto element = regionBegin; element != regionEnd; element++) {
+
+			element->push_back(localIndex);
+
+			switch (element->size()) {
+				case 5: {
+					std::array<int, 5> tetrahedron;
+					std::copy_n(element->cbegin(), 5, std::begin(tetrahedron));
+					extract->tetrahedronConnectivity.emplace_back(std::move(tetrahedron));
+					break;
+				}
+				case 9: {
+					std::array<int, 9> hexahedron;
+					std::copy_n(element->cbegin(), 9, std::begin(hexahedron));
+					extract->hexahedronConnectivity.emplace_back(std::move(hexahedron));
+					break;
+				}
+				case 7: {
+					std::array<int, 7> prism;
+					std::copy_n(element->cbegin(), 7, std::begin(prism));
+					extract->prismConnectivity.emplace_back(std::move(prism));
+					break;
+				}
+				case 6: {
+					std::array<int, 6> pyramid;
+					std::copy_n(element->cbegin(), 6, std::begin(pyramid));
+					extract->pyramidConnectivity.emplace_back(std::move(pyramid));
+					break;
+				}
+			}
+
+			localIndex++;
+
+		}
+
+		extract->regions.emplace_back(region);
+	}
+
+	std::vector<std::string> boundaries;
+	for (auto boundary : script.get_child("boundaries"))
+		boundaries.emplace_back(boundary.second.get_value<std::string>());
+
+	for (auto name : boundaries) {
+		auto iterator(std::find_if(gridData->boundaries.cbegin(),gridData->boundaries.cend(), [=](auto b){return b.name == name;}));
+		if (iterator == gridData->boundaries.cend())
+			throw std::runtime_error("extractGridDataEntities: There is no boundary " + name + " in gridData");
+		auto boundary(*iterator);
+		gridData->boundaries.erase(iterator);
+
+		auto boundaryBegin = elementConnectivities.begin() + boundary.facetsOnBoundary.front();
+		auto boundaryEnd = elementConnectivities.begin() + boundary.facetsOnBoundary.back() + 1;
+
+		std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), localIndex);
+
+		printf("\n\n");
+		print(boundary.facetsOnBoundary, "facetsOnBoundary");
+
+		for (auto facet = boundaryBegin; facet != boundaryEnd; facet++) {
+
+			facet->push_back(localIndex);
+
+			switch (facet->size()) {
+				case 4: {
+					std::array<int, 4> triangle;
+					std::copy_n(facet->cbegin(), 4, std::begin(triangle));
+					extract->triangleConnectivity.emplace_back(std::move(triangle));
+					break;
+				}
+				case 5: {
+					std::array<int, 5> quadrangle;
+					std::copy_n(facet->cbegin(), 5, std::begin(quadrangle));
+					extract->quadrangleConnectivity.emplace_back(std::move(quadrangle));
+					break;
+				}
+			}
+
+			localIndex++;
+
+		}
+
+		extract->boundaries.emplace_back(boundary);
+	}
+
+	return extract;
+}
+
+
+
+std::vector<std::vector<int>> buildElementConnectivities(GridDataShared gridData) {
+	std::vector<std::vector<int>> elementConnectivities;
+
+	for (auto i = gridData->tetrahedronConnectivity.cbegin(); i != gridData->tetrahedronConnectivity.cend(); i++) {
+		elementConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(elementConnectivities.back()), [](auto x){return x;});
+	}
+	for (auto i = gridData->hexahedronConnectivity.cbegin(); i != gridData->hexahedronConnectivity.cend(); i++) {
+		elementConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(elementConnectivities.back()), [](auto x){return x;});
+	}
+	for (auto i = gridData->prismConnectivity.cbegin(); i != gridData->prismConnectivity.cend(); i++) {
+		elementConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(elementConnectivities.back()), [](auto x){return x;});
+	}
+	for (auto i = gridData->pyramidConnectivity.cbegin(); i != gridData->pyramidConnectivity.cend(); i++) {
+		elementConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(elementConnectivities.back()), [](auto x){return x;});
+	}
+
+	for (auto i = gridData->triangleConnectivity.cbegin(); i != gridData->triangleConnectivity.cend(); i++) {
+		elementConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(elementConnectivities.back()), [](auto x){return x;});
+	}
+	for (auto i = gridData->quadrangleConnectivity.cbegin(); i != gridData->quadrangleConnectivity.cend(); i++) {
+		elementConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(elementConnectivities.back()), [](auto x){return x;});
+	}
+
+	std::stable_sort(elementConnectivities.begin(), elementConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
+
+	for (unsigned i = 0; i < elementConnectivities.size(); i++)
+		elementConnectivities[i].pop_back();
+
+	return elementConnectivities;
 }
 
 void printGridDataInformation(GridDataShared gridData) {

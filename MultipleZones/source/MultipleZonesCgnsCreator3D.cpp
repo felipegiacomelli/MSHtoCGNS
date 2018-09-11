@@ -16,8 +16,8 @@ void MultipleZonesCgnsCreator3D::checkDimension() {
 }
 
 void MultipleZonesCgnsCreator3D::writeZone() {
-	if (this->gridData->dimension != 3)
-		throw std::runtime_error("MultipleZonesCgnsCreator3D: gridData dimension must be equal to 3 and not " + std::to_string(this->gridData->dimension));
+	if (cg_zone_write(this->fileIndex, this->baseIndex, this->zoneName.c_str(), &this->sizes[0], Unstructured, &this->zoneIndex))
+		throw std::runtime_error("CgnsCreator: Could not write zone");
 }
 
 void MultipleZonesCgnsCreator3D::writeCoordinates() {

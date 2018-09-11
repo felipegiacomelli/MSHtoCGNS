@@ -18,7 +18,7 @@ class CgnsCreator {
 	protected:
 		virtual void checkDimension() = 0;
 		void setupFile();
-		void initialize();
+		virtual void initialize();
 		void writeBase();
 		virtual void writeZone();
 		virtual void writeCoordinates() = 0;
