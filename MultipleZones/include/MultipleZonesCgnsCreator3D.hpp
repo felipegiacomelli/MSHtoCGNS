@@ -5,12 +5,12 @@
 
 class MultipleZonesCgnsCreator3D : public CgnsCreator {
 	public:
-		MultipleZonesCgnsCreator3D(GridDataShared gridData, std::string folderPath);
+		MultipleZonesCgnsCreator3D(std::vector<GridDataShared> gridDatas, std::vector<std::string> zoneNames, std::string folderPath);
 
 	private:
+		void initialize();
 		void checkDimension() override;
 		void setDimensions() override;
-		void writeZone() override;
 		void writeSections() override;
 		void writeCoordinates() override;
 		void buildElementConnectivities() override;
@@ -19,6 +19,10 @@ class MultipleZonesCgnsCreator3D : public CgnsCreator {
 		void writeBoundaries() override;
 		void buildWellConnectivities();
 		void writeWells();
+
+		std::vector<GridDataShared> gridDatas;
+		std::vector<std::string> zoneNames;
+		bool firstCall;
 
 		int numberOfElements;
 		int numberOfFacets;

@@ -2,7 +2,6 @@
 #include <cgnslib.h>
 
 CgnsCreator2D::CgnsCreator2D(GridDataShared gridData, std::string folderPath) : CgnsCreator(gridData, folderPath) {
-
 	this->checkDimension();
 	this->setDimensions();
 	this->setupFile();

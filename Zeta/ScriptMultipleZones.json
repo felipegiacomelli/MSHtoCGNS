@@ -5,7 +5,7 @@
         "output" : "/home/felipe/Downloads/RESERVOIR/"
     },
 
-    "regions" : ["Reservoir"],
+    "regions" : ["Limestone"],
 
     "boundaries" : ["ReservoirWest", "ReservoirEast", "ReservoirSouth", "ReservoirNorth", "ReservoirBottom", "ReservoirTop"]
 }

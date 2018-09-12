@@ -21,7 +21,7 @@ class CgnsCreator {
 		void setupFile();
 		virtual void initialize();
 		void writeBase();
-		virtual void writeZone();
+		void writeZone();
 		virtual void writeCoordinates() = 0;
 		virtual void writeSections();
 		virtual void buildElementConnectivities() = 0;

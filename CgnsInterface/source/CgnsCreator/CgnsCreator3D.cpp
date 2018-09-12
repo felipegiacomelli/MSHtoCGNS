@@ -60,7 +60,6 @@ void CgnsCreator3D::writeCoordinates() {
 
 	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateZ", coordinatesZ, &this->coordinateIndices[2]))
 		throw std::runtime_error("CgnsCreator3D: Could not write CoordinateZ");
-
 }
 
 void CgnsCreator3D::buildElementConnectivities() {

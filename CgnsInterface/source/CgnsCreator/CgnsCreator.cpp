@@ -1,7 +1,10 @@
 #include <CgnsInterface/CgnsCreator.hpp>
 #include <cgnslib.h>
 
-CgnsCreator::CgnsCreator(GridDataShared gridData, std::string folderPath) : gridData(gridData), folderPath(folderPath), elementStart(1), elementEnd(0) {}
+CgnsCreator::CgnsCreator(GridDataShared gridData, std::string folderPath) : gridData(gridData), folderPath(folderPath), elementStart(1), elementEnd(0) {
+	this->baseName = "Base";
+	this->zoneName = "Zone";
+}
 
 void CgnsCreator::setupFile() {
 	boost::filesystem::path input(this->folderPath);
@@ -28,13 +31,11 @@ void CgnsCreator::initialize() {
 }
 
 void CgnsCreator::writeBase() {
-	this->baseName = "Base";
 	if (cg_base_write(this->fileIndex, this->baseName.c_str(), this->cellDimension, this->physicalDimension, &this->baseIndex))
 		throw std::runtime_error("CgnsCreator: Could not write base");
 }
 
 void CgnsCreator::writeZone() {
-	this->zoneName = "Zone";
 	if (cg_zone_write(this->fileIndex, this->baseIndex, this->zoneName.c_str(), &this->sizes[0], Unstructured, &this->zoneIndex))
 		throw std::runtime_error("CgnsCreator: Could not write zone");
 }

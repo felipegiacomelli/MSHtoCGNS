@@ -12,9 +12,16 @@
         	"CgnsInterfaceTest":
             {
         		"sublimegdb_workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/CgnsInterfaceTest/source",
-                "workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/build_sublime/bin/Debug",
+                "workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/debug/bin/Debug",
             	"commandline": "gdb --interpreter=mi ./CgnsInterfaceTest",
                 "arguments": "--run_test=ReadCgns_Region1_Mixed_3D"
+            },
+            "MultipleZones":
+            {
+                "sublimegdb_workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/MultipleZones/source",
+                "workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/debug/bin/Debug",
+                "commandline": "gdb --interpreter=mi ./MultipleZones",
+                "arguments": ""
             }
         }
     }
