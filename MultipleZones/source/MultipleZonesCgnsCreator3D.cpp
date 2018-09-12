@@ -15,11 +15,12 @@ void MultipleZonesCgnsCreator3D::initialize() {
 		if (firstCall) {
 			firstCall = false;
 			this->setupFile();
-			this->writeBase();
 		}
 
+		this->baseName = this->zoneNames[i];
 		this->zoneName = this->zoneNames[i];
 
+		this->writeBase();
 		this->writeZone();
 		this->writeCoordinates();
 		this->writeSections();
