@@ -2,10 +2,8 @@
 #include <cgnslib.h>
 
 CgnsCreator3D::CgnsCreator3D(GridDataShared gridData, std::string folderPath) : CgnsCreator(gridData, folderPath) {
-	this->sizes[0] = this->gridData->coordinates.size();
-	this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size();
-	this->sizes[2] = 0;
 	this->checkDimension();
+	this->setDimensions();
 	this->defineGeometryType();
 	this->setupFile();
 	this->initialize();
@@ -14,6 +12,15 @@ CgnsCreator3D::CgnsCreator3D(GridDataShared gridData, std::string folderPath) : 
 void CgnsCreator3D::checkDimension() {
 	if (this->gridData->dimension != 3)
 		throw std::runtime_error("CgnsCreator3D: gridData dimension must be equal to 3 and not " + std::to_string(this->gridData->dimension));
+}
+
+void CgnsCreator3D::setDimensions() {
+	this->physicalDimension = this->gridData->dimension;
+	this->cellDimension = this->gridData->dimension;
+	this->coordinateIndices.resize(this->gridData->dimension);
+	this->sizes[0] = this->gridData->coordinates.size();
+	this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size();
+	this->sizes[2] = 0;
 }
 
 void CgnsCreator3D::defineGeometryType() {

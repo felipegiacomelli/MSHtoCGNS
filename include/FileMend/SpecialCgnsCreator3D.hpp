@@ -9,6 +9,7 @@ class SpecialCgnsCreator3D : public CgnsCreator {
 
 	private:
 		void checkDimension() override;
+		void setDimensions() override;
 		void writeSections() override;
 		void writeCoordinates() override;
 		void buildElementConnectivities() override;

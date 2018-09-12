@@ -9,6 +9,7 @@ class MultipleZonesCgnsCreator3D : public CgnsCreator {
 
 	private:
 		void checkDimension() override;
+		void setDimensions() override;
 		void writeZone() override;
 		void writeSections() override;
 		void writeCoordinates() override;

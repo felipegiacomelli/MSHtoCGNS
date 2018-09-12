@@ -6,6 +6,7 @@ SpecialCgnsCreator3D::SpecialCgnsCreator3D(GridDataShared gridData, std::string 
 	this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size();
 	this->sizes[2] = 0;
 	this->checkDimension();
+	this->setDimensions();
 	this->setupFile();
 	this->initialize();
 }
@@ -13,6 +14,15 @@ SpecialCgnsCreator3D::SpecialCgnsCreator3D(GridDataShared gridData, std::string 
 void SpecialCgnsCreator3D::checkDimension() {
 	if (this->gridData->dimension != 3)
 		throw std::runtime_error("SpecialCgnsCreator3D: gridData dimension must be equal to 3 and not " + std::to_string(this->gridData->dimension));
+}
+
+void SpecialCgnsCreator3D::setDimensions() {
+	this->physicalDimension = this->gridData->dimension;
+	this->cellDimension = this->gridData->dimension;
+	this->coordinateIndices.resize(this->gridData->dimension);
+	this->sizes[0] = this->gridData->coordinates.size();
+	this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size();
+	this->sizes[2] = 0;
 }
 
 void SpecialCgnsCreator3D::writeCoordinates() {

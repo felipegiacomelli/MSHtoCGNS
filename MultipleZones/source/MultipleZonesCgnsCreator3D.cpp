@@ -2,10 +2,8 @@
 #include <cgnslib.h>
 
 MultipleZonesCgnsCreator3D::MultipleZonesCgnsCreator3D(GridDataShared gridData, std::string folderPath) : CgnsCreator(gridData, folderPath) {
-	this->sizes[0] = this->gridData->coordinates.size();
-	this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size();
-	this->sizes[2] = 0;
 	this->checkDimension();
+	this->setDimensions();
 	this->setupFile();
 	this->initialize();
 }
@@ -15,7 +13,17 @@ void MultipleZonesCgnsCreator3D::checkDimension() {
 		throw std::runtime_error("MultipleZonesCgnsCreator3D: gridData dimension must be equal to 3 and not " + std::to_string(this->gridData->dimension));
 }
 
+void MultipleZonesCgnsCreator3D::setDimensions() {
+	this->physicalDimension = this->gridData->dimension;
+	this->cellDimension = this->gridData->dimension;
+	this->coordinateIndices.resize(this->gridData->dimension);
+	this->sizes[0] = this->gridData->coordinates.size();
+	this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size();
+	this->sizes[2] = 0;
+}
+
 void MultipleZonesCgnsCreator3D::writeZone() {
+	this->zoneName = "Zone";
 	if (cg_zone_write(this->fileIndex, this->baseIndex, this->zoneName.c_str(), &this->sizes[0], Unstructured, &this->zoneIndex))
 		throw std::runtime_error("CgnsCreator: Could not write zone");
 }

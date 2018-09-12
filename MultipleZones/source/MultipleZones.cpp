@@ -46,6 +46,7 @@ int main() {
 GridDataShared extractGridDataEntities(GridDataShared gridData, boost::property_tree::ptree script) {
 	auto extract(MakeShared<GridData>());
 	auto elementConnectivities = buildElementConnectivities(gridData);
+	std::set<int> vertices;
 	int localIndex = 0;
 
 	std::vector<std::string> regions;
@@ -63,10 +64,12 @@ GridDataShared extractGridDataEntities(GridDataShared gridData, boost::property_
 
 		std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), localIndex);
 
-		printf("\n\n");
-		print(region.elementsOnRegion, "elementsOnRegion");
+		// printf("\n\n"); print(region.elementsOnRegion, "elementsOnRegion");
 
 		for (auto element = regionBegin; element != regionEnd; element++) {
+
+			for (auto vertex  : *element)
+				vertices.insert(vertex);
 
 			element->push_back(localIndex);
 
@@ -120,8 +123,7 @@ GridDataShared extractGridDataEntities(GridDataShared gridData, boost::property_
 
 		std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), localIndex);
 
-		printf("\n\n");
-		print(boundary.facetsOnBoundary, "facetsOnBoundary");
+		// printf("\n\n"); print(boundary.facetsOnBoundary, "facetsOnBoundary");
 
 		for (auto facet = boundaryBegin; facet != boundaryEnd; facet++) {
 
@@ -148,6 +150,34 @@ GridDataShared extractGridDataEntities(GridDataShared gridData, boost::property_
 
 		extract->boundaries.emplace_back(boundary);
 	}
+
+	for (auto vertex : vertices)
+		extract->coordinates.push_back(gridData->coordinates[vertex]);
+
+	printf("\n"); for (auto vertex : vertices) std::cout << "\t" << vertex;  printf("\n\n");
+
+	printf("\n"); print(extract->hexahedronConnectivity.cbegin(), extract->hexahedronConnectivity.cend(), "hexas"); printf("\n");
+	printf("\n"); print(extract->quadrangleConnectivity.cbegin(), extract->quadrangleConnectivity.cend(), "quads"); printf("\n");
+
+	std::unordered_map<int, int> globalToLocal;
+	int index = 0;
+	for (auto vertex : vertices) {
+		globalToLocal[vertex] = index;
+		index++;
+	}
+
+	// printf("\n"); for (auto map : globalToLocal) std::cout << "\t" << map.first << " - " << map.second << std::endl;  printf("\n\n");
+
+	for (auto& hexahedron : extract->hexahedronConnectivity)
+		for (auto vertex = hexahedron.begin(); vertex != hexahedron.end() - 1; vertex++)
+			*vertex = globalToLocal[*vertex];
+
+	for (auto& quadrangle : extract->quadrangleConnectivity)
+		for (auto vertex = quadrangle.begin(); vertex != quadrangle.end() - 1; vertex++)
+			*vertex = globalToLocal[*vertex];
+
+	printf("\n"); print(extract->hexahedronConnectivity.cbegin(), extract->hexahedronConnectivity.cend(), "hexas"); printf("\n");
+	printf("\n"); print(extract->quadrangleConnectivity.cbegin(), extract->quadrangleConnectivity.cend(), "quads"); printf("\n");
 
 	return extract;
 }
@@ -192,6 +222,8 @@ std::vector<std::vector<int>> buildElementConnectivities(GridDataShared gridData
 }
 
 void printGridDataInformation(GridDataShared gridData) {
+	std::cout << std::endl << "\t\tnumberOfVertices: " << gridData->coordinates.size() << std::endl;
+
 	std::cout << std::endl << "\t\tnumberOfElements: " << gridData->tetrahedronConnectivity.size() + gridData->hexahedronConnectivity.size() + gridData->prismConnectivity.size() + gridData->pyramidConnectivity.size();
 	std::cout << std::endl << "\t\t\ttetrahedra: " << gridData->tetrahedronConnectivity.size();
 	std::cout << std::endl << "\t\t\thexahedra:  " << gridData->hexahedronConnectivity.size();
