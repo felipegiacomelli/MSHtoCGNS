@@ -30,8 +30,8 @@ void CgnsReader::checkFile() {
 	if (cg_version(this->fileIndex, &version))
 		throw std::runtime_error("CgnsReader: Could not read file version");
 
-	// if (version <= 3.21)
-		// throw std::runtime_error("CgnsReader: File version (" + std::to_string(version) + ") is older than 3.3.0");
+	if (version <= 3.10)
+		throw std::runtime_error("CgnsReader: File version (" + std::to_string(version) + ") is older than 3.11");
 }
 
 void CgnsReader::readBase() {
@@ -83,8 +83,7 @@ void CgnsReader::readBoundaries() {
 		int numberOfVertices, NormalListSize;
 		int NormalIndex, ndataset;
 		DataType_t NormalDataType;
-		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &boundaryConditionType, &pointSetType, &numberOfVertices,
-							&NormalIndex, &NormalListSize, &NormalDataType, &ndataset))
+		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &boundaryConditionType, &pointSetType, &numberOfVertices, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset))
 			throw std::runtime_error("CgnsReader: Could not read boundary information");
 
 		std::vector<int> vertices(numberOfVertices);
@@ -170,7 +169,6 @@ std::vector<double> CgnsReader::readTimeInstants() {
 
  	return timeInstants;
 }
-
 
 CgnsReader::~CgnsReader() {
 	cg_close(this->fileIndex);

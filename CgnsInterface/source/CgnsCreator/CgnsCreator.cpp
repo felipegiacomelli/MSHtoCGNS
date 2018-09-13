@@ -47,20 +47,18 @@ void CgnsCreator::writeSections() {
 
 void CgnsCreator::writeBoundaryConditions() {
 	for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
-		this->boundaryIndices.emplace_back(0);
 
 		std::vector<int> indices;
 		std::transform(boundary->vertices.cbegin(), boundary->vertices.cend(), std::back_inserter(indices), [](auto x){return x + 1;});
 
-		if (cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), BCWall,
-							PointList, indices.size(), &indices[0], &this->boundaryIndices.back()))
-			throw std::runtime_error("CgnsCreator: Could not write boundary condition " + std::to_string(this->boundaryIndices.size()));
+		if (cg_boco_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), BCWall, PointList, indices.size(), &indices[0], &this->boundaryIndex))
+			throw std::runtime_error("CgnsCreator: Could not write boundary condition " + std::to_string(this->boundaryIndex));
 
-		if (cg_goto(this->fileIndex, this->baseIndex, "Zone_t", this->zoneIndex, "ZoneBC_t", 1, "BC_t", this->boundaryIndices.back(), nullptr))
-			throw std::runtime_error("CgnsCreator: Could go to boundary condition " + std::to_string(this->boundaryIndices.size()));
+		if (cg_goto(this->fileIndex, this->baseIndex, "Zone_t", this->zoneIndex, "ZoneBC_t", 1, "BC_t", this->boundaryIndex, nullptr))
+			throw std::runtime_error("CgnsCreator: Could go to boundary condition " + std::to_string(this->boundaryIndex));
 
 		if (cg_famname_write(boundary->name.c_str()))
-			throw std::runtime_error("CgnsCreator: Could not write boundary condition " + std::to_string(this->boundaryIndices.size()) + " family name");
+			throw std::runtime_error("CgnsCreator: Could not write boundary condition " + std::to_string(this->boundaryIndex) + " family name");
 	}
 }
 

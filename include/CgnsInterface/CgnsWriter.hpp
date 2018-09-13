@@ -6,7 +6,7 @@
 class CgnsWriter {
 	public:
 		CgnsWriter() = default;
-		CgnsWriter(std::string filePath, const std::string solutionLocation);
+		CgnsWriter(std::string filePath, std::string solutionLocation);
 
 		void writePermanentSolution(std::string solutionName);
 		void writePermanentField(std::string scalarFieldName, const std::vector<double>& fieldValues);

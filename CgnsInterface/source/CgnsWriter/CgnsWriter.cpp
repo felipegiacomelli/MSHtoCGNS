@@ -1,7 +1,7 @@
 #include <CgnsInterface/CgnsWriter.hpp>
 #include <cgnslib.h>
 
-CgnsWriter::CgnsWriter(std::string filePath, const std::string solutionLocation) : filePath(filePath), isFinalized(false) {
+CgnsWriter::CgnsWriter(std::string filePath, std::string solutionLocation) : filePath(filePath), isFinalized(false) {
 	if (solutionLocation == std::string("Vertex"))
 		this->gridLocation = 2;
 	else if (solutionLocation == std::string("CellCenter"))
@@ -28,8 +28,9 @@ void CgnsWriter::checkFile() {
 	float version;
 	if (cg_version(this->fileIndex, &version))
 		throw std::runtime_error("CgnsWriter: Could read file version");
-	if (version <= 3.21)
-		throw std::runtime_error("CgnsWriter: File version (" + std::to_string(version) + ") is older than 3.3.0");
+
+	if (version <= 3.10)
+		throw std::runtime_error("CgnsReader: File version (" + std::to_string(version) + ") is older than 3.11");
 }
 
 void CgnsWriter::readBase() {

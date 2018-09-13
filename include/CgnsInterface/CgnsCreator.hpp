@@ -32,14 +32,12 @@ class CgnsCreator {
 
 		GridDataShared gridData;
 		std::string folderPath, baseName, zoneName, fileName;
-		int cellDimension, physicalDimension;
+		int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
 		std::array<int, 3> sizes;
-		int fileIndex, baseIndex, zoneIndex;
-		std::vector<int> coordinateIndices, sectionIndices, boundaryIndices;
+		int coordinateIndex, sectionIndex, boundaryIndex;
 		int elementStart, elementEnd;
 
-		std::vector<std::vector<int>> elementConnectivities;
-		std::vector<std::vector<int>> facetConnectivities;
+		std::vector<std::vector<int>> elementConnectivities, facetConnectivities;
 };
 
 #endif
