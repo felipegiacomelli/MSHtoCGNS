@@ -10,14 +10,18 @@ class CgnsCreator3D : public CgnsCreator {
 	private:
 		void checkDimension() override;
 		void setDimensions() override;
-		void defineGeometryType();
 		void writeCoordinates() override;
+		void writeSections() override;
 		void buildElementConnectivities() override;
 		void writeRegions() override;
 		void buildFacetConnectivities() override;
 		void writeBoundaries() override;
+		void buildWellConnectivities();
+		void writeWells();
 
-		int geometry, boundary;
+		int numberOfElements;
+		int numberOfFacets;
+		std::vector<std::vector<int>> wellConnectivities;
 };
 
 #endif

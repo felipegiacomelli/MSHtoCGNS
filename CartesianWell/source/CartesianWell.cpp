@@ -4,7 +4,7 @@
 #include <BoostInterface/PropertyTree.hpp>
 #include <Grid/GridData.hpp>
 #include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
-#include <FileMend/SpecialCgnsCreator3D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
 
 void printGridDataInformation(GridDataShared gridData);
 void printWellsInformation(GridDataShared gridData);
@@ -58,7 +58,7 @@ int main() {
 		gridData->wells.emplace_back(std::move(well));
 
 	start = std::chrono::steady_clock::now();
-	SpecialCgnsCreator3D creator(gridData, outputPath);
+	CgnsCreator3D creator(gridData, outputPath);
 	end = std::chrono::steady_clock::now();
 	elapsedSeconds = end - start;
 	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";

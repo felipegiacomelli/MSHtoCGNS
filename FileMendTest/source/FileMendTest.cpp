@@ -5,7 +5,7 @@
 #include <BoostInterface/Test.hpp>
 #include <Grid/GridData.hpp>
 #include <FileMend/SpecialCgnsReader3D.hpp>
-#include <FileMend/SpecialCgnsCreator3D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
 #include <FileMend/WellGenerator.hpp>
 
 struct FileMendFixture {
@@ -171,7 +171,7 @@ TestCase(FileMendTest) {
 	checkEqual(well.vertices[18], 8937);
 	checkEqual(well.vertices[19], 8944);
 
-	SpecialCgnsCreator3D creator(gridData, this->outputPath);
+	CgnsCreator3D creator(gridData, this->outputPath);
 }
 
 TestSuiteEnd()
