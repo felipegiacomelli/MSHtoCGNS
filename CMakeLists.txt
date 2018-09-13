@@ -36,7 +36,7 @@ if (UNIX)
     endif ()
 
 	set (CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} "-g -DDEBUG -Wall -Wno-parentheses" CACHE STRING "Setting default compiler flags.")
-	set (CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3 -DNDEBUG -Wall -Wno-expansion-to-defined -Wno-deprecated-declarations" CACHE STRING "Setting default compiler flags")
+	set (CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3 -DNDEBUG -Wall -Wno-expansion-to-defined -Wno-deprecated-declarations -Wno-parentheses" CACHE STRING "Setting default compiler flags")
 
 	set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${BUILD_TYPE_OUTPUT_DIRECTORY})
 	set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${BUILD_TYPE_OUTPUT_DIRECTORY})
@@ -70,7 +70,7 @@ set (CGNS_VERSION  "3.3.1" )
 ##############
 # BOOST
 ##############
-set (BOOST_ROOT ${CMAKE_SOURCE_DIR}/Zeta/Libraries/boost-1.67.0)
+set (BOOST_ROOT ${CMAKE_SOURCE_DIR}/Zeta/Libraries/boost-1.67.0/${BUILD_TYPE_OUTPUT_DIRECTORY})
 set (Components_Boost system filesystem unit_test_framework test_exec_monitor)
 set (Boost_USE_MULTITHREADED ON)
 find_package (Boost ${BOOST_VERSION} COMPONENTS ${Components_Boost} REQUIRED)
@@ -81,7 +81,7 @@ endif ()
 ##############
 # CGNS
 ##############
-set (CGNS_DIR ${CMAKE_SOURCE_DIR}/Zeta/Libraries/cgns-3.3.1)
+set (CGNS_DIR ${CMAKE_SOURCE_DIR}/Zeta/Libraries/cgns-3.3.1/${BUILD_TYPE_OUTPUT_DIRECTORY})
 find_package (CGNS ${CGNS_VERSION} REQUIRED)
 if (CGNS_FOUND)
     include_directories (${CGNS_INCLUDE_DIR})
