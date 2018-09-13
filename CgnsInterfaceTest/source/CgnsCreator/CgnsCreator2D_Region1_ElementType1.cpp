@@ -7,8 +7,8 @@
 
 #define TOLERANCE 1e-12
 
-struct Region1_ElementType1_2D {
-	Region1_ElementType1_2D() {
+struct CgnsCreator2DFixture_Region1_ElementType1 {
+	CgnsCreator2DFixture_Region1_ElementType1() {
 		CgnsReader2D inputReader(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/2D-Region1-ElementType1/5v_4e.cgns");
 		CgnsCreator2D cgnsCreator2D(inputReader.gridData, "./TEST_FILE.cgns");
 		this->filePath = cgnsCreator2D.getFileName();
@@ -17,7 +17,7 @@ struct Region1_ElementType1_2D {
 		cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex);
 	}
 
-	~Region1_ElementType1_2D() {
+	~CgnsCreator2DFixture_Region1_ElementType1() {
 		cg_close(this->fileIndex);
 		boost::filesystem::remove_all(this->filePath);
 	};
@@ -33,7 +33,7 @@ struct Region1_ElementType1_2D {
 	int parent_flag;
 };
 
-FixtureTestSuite(Generate_Region1_ElementType1_2D, Region1_ElementType1_2D)
+FixtureTestSuite(CgnsCreator2DSuite_Region1_ElementType1, CgnsCreator2DFixture_Region1_ElementType1)
 
 TestCase(Coordinates) {
 	auto coordinates = this->gridData->coordinates;
