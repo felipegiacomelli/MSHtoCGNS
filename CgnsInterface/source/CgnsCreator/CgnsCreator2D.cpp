@@ -55,8 +55,8 @@ void CgnsCreator2D::writeRegions() {
 
 	for (auto region = this->gridData->regions.cbegin(); region != this->gridData->regions.cend(); region++) {
 
-		auto regionBegin = this->elementConnectivities.cbegin() + region->elementsOnRegion.front();
-		auto regionEnd = this->elementConnectivities.cbegin() + region->elementsOnRegion.back() + 1;
+		auto regionBegin = this->elementConnectivities.begin() + region->elementsOnRegion.front();
+		auto regionEnd = this->elementConnectivities.begin() + region->elementsOnRegion.back() + 1;
 	 	this->elementEnd += (regionEnd - regionBegin);
 
 	 	ElementType_t elementType;
@@ -78,17 +78,16 @@ void CgnsCreator2D::writeRegions() {
 		}
 		else {
 			if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region->name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
-			throw std::runtime_error("CgnsCreator2D: Could not partial write element section " + std::to_string(this->sectionIndex));
+				throw std::runtime_error("CgnsCreator2D: Could not partial write element section " + std::to_string(this->sectionIndex));
 
-			std::vector<std::vector<int>> sectionConnectivities(regionBegin, regionEnd);
-			for (unsigned i = 0; i < sectionConnectivities.size(); i++) {
-				switch (sectionConnectivities[i].size()) {
+			for (auto element = regionBegin; element != regionEnd; element++) {
+				switch (element->size()) {
 					case 3 : {
-						sectionConnectivities[i].insert(sectionConnectivities[i].begin(), TRI_3);
+						element->insert(element->begin(), TRI_3);
 						break;
 					}
 					case 4: {
-						sectionConnectivities[i].insert(sectionConnectivities[i].begin(), QUAD_4);
+						element->insert(element->begin(), QUAD_4);
 						break;
 					}
 					default:
@@ -97,7 +96,7 @@ void CgnsCreator2D::writeRegions() {
 			}
 
 			std::vector<int> connectivities;
-			append(sectionConnectivities.cbegin(), sectionConnectivities.cend(), std::back_inserter(connectivities));
+			append(regionBegin, regionEnd, std::back_inserter(connectivities));
 
 			if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->elementEnd, &connectivities[0]))
 					throw std::runtime_error("CgnsCreator2D: Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));

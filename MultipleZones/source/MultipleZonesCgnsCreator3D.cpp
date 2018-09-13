@@ -99,10 +99,10 @@ void MultipleZonesCgnsCreator3D::buildElementConnectivities() {
 void MultipleZonesCgnsCreator3D::writeRegions() {
 	this->buildElementConnectivities();
 
-	for (auto& region : this->gridData->regions) {
+	for (auto region : this->gridData->regions) {
 
-		auto regionBegin = this->elementConnectivities.cbegin() + region.elementsOnRegion.front();
-		auto regionEnd = this->elementConnectivities.cbegin() + region.elementsOnRegion.back() + 1;
+		auto regionBegin = this->elementConnectivities.begin() + region.elementsOnRegion.front();
+		auto regionEnd = this->elementConnectivities.begin() + region.elementsOnRegion.back() + 1;
 	 	this->elementEnd += (regionEnd - regionBegin);
 
 	 	ElementType_t elementType = ElementType_t(0);
@@ -130,32 +130,31 @@ void MultipleZonesCgnsCreator3D::writeRegions() {
 			if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
 				throw std::runtime_error("MultipleZonesCgnsCreator3D: Could not partial write element section " + std::to_string(this->sectionIndex));
 
-			std::vector<std::vector<int>> sectionConnectivities(regionBegin, regionEnd);
-			for (unsigned i = 0; i < sectionConnectivities.size(); i++) {
-				switch (sectionConnectivities[i].size()) {
+			for (auto element = regionBegin; element != regionEnd; element++) {
+				switch (element->size()) {
 					case 4: {
-						sectionConnectivities[i].insert(sectionConnectivities[i].begin(), TETRA_4);
+						element->insert(element->begin(), TETRA_4);
 						break;
 					}
 					case 8: {
-						sectionConnectivities[i].insert(sectionConnectivities[i].begin(), HEXA_8);
+						element->insert(element->begin(), HEXA_8);
 						break;
 					}
 					case 5: {
-						sectionConnectivities[i].insert(sectionConnectivities[i].begin(), PYRA_5);
+						element->insert(element->begin(), PYRA_5);
 						break;
 					}
 					case 6: {
-						sectionConnectivities[i].insert(sectionConnectivities[i].begin(), PENTA_6);
+						element->insert(element->begin(), PENTA_6);
 						break;
 					}
 					default:
-						throw std::runtime_error("MultipleZonesCgnsCreator3D: Element type not supported");
+						throw std::runtime_error("CgnsCreator3D: Element type not supported");
 				}
 			}
 
 			std::vector<int> connectivities;
-			append(sectionConnectivities.cbegin(), sectionConnectivities.cend(), std::back_inserter(connectivities));
+			append(regionBegin, regionEnd, std::back_inserter(connectivities));
 
 			if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->elementEnd, &connectivities[0]))
 					throw std::runtime_error("MultipleZonesCgnsCreator3D: Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
@@ -184,10 +183,10 @@ void MultipleZonesCgnsCreator3D::writeBoundaries() {
 	this->numberOfElements = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size();
 	this->elementStart = this->numberOfElements + 1;
 
-	for (auto& boundary : this->gridData->boundaries) {
+	for (auto boundary : this->gridData->boundaries) {
 
-		auto boundaryBegin = this->facetConnectivities.cbegin() + boundary.facetsOnBoundary.front() - this->numberOfElements;
-		auto boundaryEnd = this->facetConnectivities.cbegin() + boundary.facetsOnBoundary.back() + 1 - this->numberOfElements;
+		auto boundaryBegin = this->facetConnectivities.begin() + boundary.facetsOnBoundary.front() - this->numberOfElements;
+		auto boundaryEnd = this->facetConnectivities.begin() + boundary.facetsOnBoundary.back() + 1 - this->numberOfElements;
 		this->elementEnd = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
 
 		ElementType_t elementType;
@@ -211,24 +210,23 @@ void MultipleZonesCgnsCreator3D::writeBoundaries() {
 			if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
 				throw std::runtime_error("MultipleZonesCgnsCreator3D: Could not partial write facet section " + std::to_string(this->sectionIndex));
 
-			std::vector<std::vector<int>> sectionConnectivities(boundaryBegin, boundaryEnd);
-			for (unsigned i = 0; i < sectionConnectivities.size(); i++) {
-				switch (sectionConnectivities[i].size()) {
+			for (auto facet = boundaryBegin; facet != boundaryEnd; facet++) {
+				switch (facet->size()) {
 					case 3: {
-						sectionConnectivities[i].insert(sectionConnectivities[i].begin(), TRI_3);
+						facet->insert(facet->begin(), TRI_3);
 						break;
 					}
 					case 4: {
-						sectionConnectivities[i].insert(sectionConnectivities[i].begin(), QUAD_4);
+						facet->insert(facet->begin(), QUAD_4);
 						break;
 					}
 					default:
-						throw std::runtime_error("MultipleZonesCgnsCreator3D: Facet type not supported");
+						throw std::runtime_error("CgnsCreator3D: Facet type not supported");
 				}
 			}
 
 			std::vector<int> connectivities;
-			append(sectionConnectivities.cbegin(), sectionConnectivities.cend(), std::back_inserter(connectivities));
+			append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
 
 			if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->elementEnd, &connectivities[0]))
 					throw std::runtime_error("MultipleZonesCgnsCreator3D: Could not write facet " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));

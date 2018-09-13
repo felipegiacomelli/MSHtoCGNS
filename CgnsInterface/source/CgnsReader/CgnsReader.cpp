@@ -59,7 +59,7 @@ void CgnsReader::readZone() {
 	if (zoneType != Unstructured)
 		throw std::runtime_error("CgnsReader: Only unstructured zones are supported");
 
-	if (cg_zone_read(this->fileIndex, this->baseIndex, this->zoneIndex, this->buffer, &this->sizes[0]))
+	if (cg_zone_read(this->fileIndex, this->baseIndex, this->zoneIndex, this->buffer, this->sizes))
 		throw std::runtime_error("CgnsReader: Could not read zone");
 }
 
@@ -90,7 +90,7 @@ void CgnsReader::readBoundaries() {
 		if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, &vertices[0], nullptr))
 			throw std::runtime_error("CgnsReader: Could not read boundary");
 
-		std::transform(vertices.cbegin(), vertices.cend(), std::back_inserter(this->gridData->boundaries[boundaryIndex-1].vertices), [](auto x){return x - 1;});
+		std::transform(vertices.cbegin(), vertices.cend(), std::back_inserter(this->gridData->boundaries[boundaryIndex - 1].vertices), [](auto x){return x - 1;});
 	}
 }
 

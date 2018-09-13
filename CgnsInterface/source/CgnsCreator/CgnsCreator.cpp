@@ -36,7 +36,7 @@ void CgnsCreator::writeBase() {
 }
 
 void CgnsCreator::writeZone() {
-	if (cg_zone_write(this->fileIndex, this->baseIndex, this->zoneName.c_str(), &this->sizes[0], Unstructured, &this->zoneIndex))
+	if (cg_zone_write(this->fileIndex, this->baseIndex, this->zoneName.c_str(), this->sizes, Unstructured, &this->zoneIndex))
 		throw std::runtime_error("CgnsCreator: Could not write zone");
 }
 

@@ -51,7 +51,7 @@ struct CgnsWriterFixture {
 
 FixtureTestSuite(CgnsWriterSuite, CgnsWriterFixture)
 
-TestCase(FirstTimeStep) {
+TestCase(CgnsWriterTest) {
 	CgnsWriter cgnsWriter(this->outputFile, "Vertex");
 	cgnsWriter.writeTransientSolution(this->timeInstant);
 	cgnsWriter.writeTransientField(this->temperature, "temperature");
@@ -70,7 +70,6 @@ TestCase(FirstTimeStep) {
 	cg_nsols(this->fileIndex, this->baseIndex, this->zoneIndex, &numberOfSolutions);
 	checkEqual(numberOfSolutions, 2);
 
-	// First time step
 	int solutionNumber = 1;
 	cg_sol_info(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, this->buffer, &this->location);
 	checkEqual(this->buffer, "TimeStep1");
