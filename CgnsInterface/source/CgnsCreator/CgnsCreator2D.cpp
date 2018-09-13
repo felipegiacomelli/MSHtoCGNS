@@ -83,29 +83,29 @@ void CgnsCreator2D::writeRegions() {
 											this->elementStart, this->elementEnd, sizes[2], &this->sectionIndices.back()))
 			throw std::runtime_error("CgnsCreator2D: Could not partial write element section " + std::to_string(this->sectionIndices.size()));
 
-			for (auto j = regionBegin; j != regionEnd; j++) {
-				std::vector<int> connectivities = *j;
-
-				switch (connectivities.size()) {
-					case 3: {
-						connectivities.insert(connectivities.begin(), TRI_3);
+			std::vector<std::vector<int>> sectionConnectivities(regionBegin, regionEnd);
+			for (unsigned i = 0; i < sectionConnectivities.size(); i++) {
+				switch (sectionConnectivities[i].size()) {
+					case 3 : {
+						sectionConnectivities[i].insert(sectionConnectivities[i].begin(), TRI_3);
 						break;
 					}
 					case 4: {
-						connectivities.insert(connectivities.begin(), QUAD_4);
+						sectionConnectivities[i].insert(sectionConnectivities[i].begin(), QUAD_4);
 						break;
 					}
 					default:
-						throw std::runtime_error("CgnsCreator2D: Element type not supported");
+						throw std::runtime_error("SpecialCgnsCreator3D: Element type not supported");
 				}
-
-				if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(),
-												this->elementStart, this->elementStart, &connectivities[0]))
-					throw std::runtime_error("CgnsCreator2D: Could not write element " + std::to_string(this->elementStart) + " in section " +
-												std::to_string(this->sectionIndices.size()));
-
-				this->elementStart++;
 			}
+
+			std::vector<int> connectivities;
+			append(sectionConnectivities.cbegin(), sectionConnectivities.cend(), std::back_inserter(connectivities));
+
+			if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndices.back(), this->elementStart, this->elementEnd, &connectivities[0]))
+					throw std::runtime_error("CgnsCreator2D: Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndices.size()));
+
+			this->elementStart = this->elementEnd + 1;
 		}
 	}
 }
