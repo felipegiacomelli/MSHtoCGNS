@@ -59,13 +59,13 @@ void SpecialCgnsReader3D::readSections() {
 
 		if (elementType == MIXED)
 			if (ElementType_t(connectivities[0]) == TETRA_4 || ElementType_t(connectivities[0]) == HEXA_8 || ElementType_t(connectivities[0]) == PENTA_6 || ElementType_t(connectivities[0]) == PYRA_5)
-				this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
+				this->addRegion(std::string(this->buffer), elementStart + 1, numberOfElements);
 			else
-				this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
+				this->addBoundary(std::string(this->buffer), elementStart + 1, numberOfElements);
 		else if (elementType == TETRA_4 || elementType == HEXA_8 || elementType == PENTA_6 || elementType == PYRA_5)
-				this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
+				this->addRegion(std::string(this->buffer), elementStart + 1, numberOfElements);
 		else if (elementType == TRI_3 || elementType == QUAD_4)
-			this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
+			this->addBoundary(std::string(this->buffer), elementStart + 1, numberOfElements);
 
 		int numberOfVertices;
 		if (cg_npe(elementType, &numberOfVertices))
@@ -190,20 +190,4 @@ void SpecialCgnsReader3D::readSections() {
 				throw std::runtime_error("SpecialCgnsReader3D: Section " + std::string(this->buffer) + " element type " + std::to_string(elementType) + " not supported");
 		}
 	}
-}
-
-void SpecialCgnsReader3D::addRegion(std::string&& name, int elementStart, int numberOfElements) {
-	RegionData region;
-	region.name = name;
-	region.elementsOnRegion.resize(numberOfElements);
-	std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), elementStart);
-	this->gridData->regions.emplace_back(std::move(region));
-}
-
-void SpecialCgnsReader3D::addBoundary(std::string&& name, int elementStart, int numberOfElements) {
-	BoundaryData boundary;
-	boundary.name = name;
-	boundary.facetsOnBoundary.resize(numberOfElements);
-	std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), elementStart);
-	this->gridData->boundaries.emplace_back(std::move(boundary));
 }

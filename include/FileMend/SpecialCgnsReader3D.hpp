@@ -10,8 +10,6 @@ class SpecialCgnsReader3D : public CgnsReader {
 	private:
 		void readCoordinates() override;
 		void readSections() override;
-		void addRegion(std::string&& name, int elementStart, int numberOfElements);
-		void addBoundary(std::string&& name, int elementStart, int numberOfElements);
 };
 
 #endif
