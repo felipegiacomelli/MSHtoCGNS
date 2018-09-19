@@ -2,6 +2,7 @@
 
 #include <Grid/GridData.hpp>
 #include <FileMend/SpecialCgnsReader3D.hpp>
+#include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
 #include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
 #include <FileMend/WellGenerator.hpp>
 
@@ -34,8 +35,11 @@ int main() {
 	std::string outputPath = iroot.get<std::string>("path.output");
 
 	auto start = std::chrono::steady_clock::now();
-	SpecialCgnsReader3D reader(inputPath);
+	// SpecialCgnsReader3D reader(inputPath);
+	CgnsReader3D reader(inputPath); //
 	GridDataShared  gridData = reader.gridData;
+	gridData->wells.clear(); //
+	gridData->lineConnectivity.clear(); //
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> elapsedSeconds = end - start;
 	std::cout << std::endl << "\tGrid path: " << inputPath;

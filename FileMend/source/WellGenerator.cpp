@@ -36,6 +36,11 @@ void WellGenerator::readScript() {
 
 		this->wellGeneratorDatum.back().wellName = wellRegion.second.get<std::string>("wellName");
     }
+
+    //
+    	this->wellGeneratorDatum.pop_back();
+    	this->wellGeneratorDatum.pop_back();
+    //
 }
 
 void WellGenerator::buildElementConnectivities() {
@@ -86,6 +91,105 @@ void WellGenerator::generateWells() {
 			if (element->size() == 6u)
 				prisms.emplace_back(*element);
 
+		int numberOfPrisms = prisms.size();
+		printf("\n\n\tnumberOfPrisms: %i\n", numberOfPrisms);
+
+		int wellStartIndex = -1;
+		for (const auto& prism : prisms)
+			for (const auto& index : prism)
+				if (isClose(this->gridData->coordinates[index], wellGeneratorData.wellStart))
+					wellStartIndex = index;
+
+		printf("\n\n\twellStartIndex: %i\n", wellStartIndex);
+		for (auto coordinate : this->gridData->coordinates[wellStartIndex])
+			std::cout << "\t" << coordinate;
+
+		std::set<int> wellStartPrisms; int k = 0;
+		for (const auto& prism : prisms) {
+			if (std::find(prism.cbegin(), prism.cend(), wellStartIndex) != prism.cend())
+				wellStartPrisms.insert(k);
+			k++;
+		}
+
+		int numberOfElementsPerSection = wellStartPrisms.size();
+
+		printf("\n\n\tnumberOfElementsPerSection: %i\n", numberOfElementsPerSection);
+		for (const auto& prismIndex : wellStartPrisms)
+			std::cout << "\t" << prismIndex;
+
+		printf("\n");
+
+		for (const auto& prismIndex : wellStartPrisms) {
+			printf("\n");
+			for (const auto& index : prisms[prismIndex])
+				if (index == wellStartIndex)
+					std::cout << "\t\033[1;31m" << index <<"\033[0m";
+				else
+					std::cout << "\t" << index;
+		}
+
+		std::set<int> wellStartVertices;
+		for (const auto& prismIndex : wellStartPrisms)
+			wellStartVertices.insert(prisms[prismIndex].cbegin(), prisms[prismIndex].cend());
+
+		int numberOfVerticesPerSection = wellStartVertices.size();
+
+		printf("\n\n\tnumberOfVerticesPerSection: %i\n", numberOfVerticesPerSection);
+
+		std::unordered_map<int, int> map;
+		// for (const auto& vertexIndex : wellStartVertices)
+		// 	map[vertexIndex] = 0;
+
+		for (const auto& vertexIndex : wellStartVertices) {
+			int l = 0;
+			for (const auto& prismIndex : wellStartPrisms)
+				if (std::find(prisms[prismIndex].cbegin(), prisms[prismIndex].cend(), vertexIndex) != prisms[prismIndex].cend())
+					l++;
+			map[vertexIndex] = l;
+		}
+
+		for (auto value : map)
+			std::cout << "\t" << value.first << " : " << value.second << std::endl;
+
+		printf("\n\t##########################################\n");
+
+		// std::vector<std::pair<int, std::array<double, 3>>> vertices;
+		// for (auto index = indices.cbegin(); index != indices.cend(); index++)
+		// 	vertices.emplace_back(std::make_pair(*index, this->gridData->coordinates[*index]));
+
+		// std::stable_sort(vertices.begin(), vertices.end(), [=](const auto& a, const auto& b) {return a.second[wellGeneratorData.wellDirection] < b.second[wellGeneratorData.wellDirection];});
+		// unsigned numberOfLines = vertices.size() - 1;
+
+		// for (unsigned i = 0; i < numberOfLines; i++)
+		// 	this->gridData->lineConnectivity.emplace_back(std::array<int, 3>{vertices[i].first, vertices[i+1].first, int(i) + this->lineConnectivityShift});
+
+		// WellData well;
+		// well.name = wellGeneratorData.wellName;
+		// well.linesOnWell.resize(numberOfLines);
+		// std::iota(well.linesOnWell.begin(), well.linesOnWell.end(), this->lineConnectivityShift);
+		// for (auto index : indices)
+		// 	well.vertices.emplace_back(index);
+		// this->gridData->wells.emplace_back(std::move(well));
+
+		// this->lineConnectivityShift +=  numberOfLines;
+    }
+}
+
+void WellGenerator::generateWells(int i) {
+	this->lineConnectivityShift = this->elementConnectivities.size();
+
+	for (auto wellGeneratorData : this->wellGeneratorDatum) {
+
+		auto wellRegion = std::find_if(this->gridData->regions.cbegin(), this->gridData->regions.cend(), [=](auto r){return r.name == wellGeneratorData.regionName;});
+
+		auto regionBegin = this->elementConnectivities.cbegin() + wellRegion->elementsOnRegion.front();
+		auto regionEnd = this->elementConnectivities.cbegin() + wellRegion->elementsOnRegion.back() + 1;
+
+		std::vector<std::vector<int>> prisms;
+		for (auto element = regionBegin; element != regionEnd; element++)
+			if (element->size() == 6u)
+				prisms.emplace_back(*element);
+
 		std::set<int> indices;
 		for (const auto& prism : prisms)
 			for (const auto& index : prism)
@@ -120,6 +224,15 @@ bool WellGenerator::isClose(const std::array<double, 3>& coordinate, const std::
 	for (int i = 0; i < 3; i++)
 		if (i != wellDirection)
 			close &= std::abs(coordinate[i] - wellStart[i]) < TOLERANCE;
+
+	return close;
+}
+
+bool WellGenerator::isClose(const std::array<double, 3>& coordinate, const std::array<double, 3>& referencePoint) {
+	bool close = true;
+
+	for (int i = 0; i < 3; i++)
+		close &= std::abs(coordinate[i] - referencePoint[i]) < TOLERANCE;
 
 	return close;
 }

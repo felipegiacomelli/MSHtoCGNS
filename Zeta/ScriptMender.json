@@ -1,7 +1,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Downloads/mender/HeartGrid.cgns",
+        "input"  : "/home/felipe/Felipe/grids/MSHtoCGNS/HeartReservoir/Grid.cgns",
         "output" : "/home/felipe/Downloads/mender/"
     }
 }
