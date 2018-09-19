@@ -7,7 +7,7 @@
 #include <IO/MshReader3D.hpp>
 #include <Utilities/Print.hpp>
 
-#include <MultipleZonesCgnsCreator3D.hpp>
+#include <MultipleBasesCgnsCreator3D.hpp>
 
 void printGridDataInformation(GridDataShared gridData);
 GridDataShared extractGridDataEntities(GridDataShared gridData, boost::property_tree::ptree script);
@@ -34,7 +34,7 @@ int main() {
 	printf("#############################\n");
 	printGridDataInformation(gridDatas.back());
 
-	MultipleZonesCgnsCreator3D creator(gridDatas, zoneNames, outputPath);
+	MultipleBasesCgnsCreator3D creator(gridDatas, zoneNames, outputPath);
 	end = std::chrono::steady_clock::now();
 	elapsedSeconds = end - start;
 	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";

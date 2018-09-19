@@ -1,4 +1,4 @@
-project (MultipleZones)
+project (MultipleBases)
 
 set (Dependencies BoostInterface IO CgnsInterface FileMend)
 

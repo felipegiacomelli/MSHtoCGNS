@@ -127,7 +127,7 @@ add_subdirectory (UtilitiesTest)
 add_subdirectory (CartesianWell)
 add_subdirectory (Mender)
 add_subdirectory (MSHtoCGNS)
-add_subdirectory (MultipleZones)
+add_subdirectory (MultipleBases)
 
 #################################################################
 # TESTING

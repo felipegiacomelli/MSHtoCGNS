@@ -1,11 +1,11 @@
-#ifndef MULTIPLE_ZONES_CGNS_CREATOR_3D_HPP
-#define MULTIPLE_ZONES_CGNS_CREATOR_3D_HPP
+#ifndef MULTIPLE_BASES_CGNS_CREATOR_3D_HPP
+#define MULTIPLE_BASES_CGNS_CREATOR_3D_HPP
 
 #include <CgnsInterface/CgnsCreator.hpp>
 
-class MultipleZonesCgnsCreator3D : public CgnsCreator {
+class MultipleBasesCgnsCreator3D : public CgnsCreator {
 	public:
-		MultipleZonesCgnsCreator3D(std::vector<GridDataShared> gridDatas, std::vector<std::string> zoneNames, std::string folderPath);
+		MultipleBasesCgnsCreator3D(std::vector<GridDataShared> gridDatas, std::vector<std::string> zoneNames, std::string folderPath);
 
 	private:
 		void initialize();
