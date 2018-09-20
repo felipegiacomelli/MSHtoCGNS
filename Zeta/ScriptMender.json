@@ -1,7 +1,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/grids/MSHtoCGNS/HeartReservoir/Grid.cgns",
+        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/FileMend/9821v_45841e.cgns",
         "output" : "/home/felipe/Downloads/mender/"
     }
 }

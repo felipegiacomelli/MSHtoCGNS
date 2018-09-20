@@ -35,11 +35,8 @@ int main() {
 	std::string outputPath = iroot.get<std::string>("path.output");
 
 	auto start = std::chrono::steady_clock::now();
-	// SpecialCgnsReader3D reader(inputPath);
-	CgnsReader3D reader(inputPath); //
+	SpecialCgnsReader3D reader(inputPath);
 	GridDataShared  gridData = reader.gridData;
-	gridData->wells.clear(); //
-	gridData->lineConnectivity.clear(); //
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> elapsedSeconds = end - start;
 	std::cout << std::endl << "\tGrid path: " << inputPath;
@@ -49,8 +46,8 @@ int main() {
 
 	WellGenerator wellGenerator(gridData, std::string(SCRIPT_DIRECTORY) + "ScriptWellGenerator.json");
 
-	createSingleRegion(gridData, "RESERVOIR");
-	applyRatio(gridData, 1.0);
+	// createSingleRegion(gridData, "RESERVOIR");
+	// applyRatio(gridData, 1.0);
 
 	start = std::chrono::steady_clock::now();
 	CgnsCreator3D creator(gridData, outputPath);

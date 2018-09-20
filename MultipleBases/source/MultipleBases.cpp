@@ -15,7 +15,7 @@ std::vector<std::vector<int>> buildElementConnectivities(GridDataShared gridData
 
 int main() {
 	boost::property_tree::ptree script;
-	boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMultipleZones.json", script);
+	boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMultipleBases.json", script);
 	std::string inputPath(script.get<std::string>("path.input"));
 	std::string outputPath(script.get<std::string>("path.output"));
 
