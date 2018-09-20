@@ -47,7 +47,6 @@ void CgnsCreator::writeSections() {
 
 void CgnsCreator::writeBoundaryConditions() {
 	for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
-
 		std::vector<int> indices;
 		std::transform(boundary->vertices.cbegin(), boundary->vertices.cend(), std::back_inserter(indices), [](auto x){return x + 1;});
 

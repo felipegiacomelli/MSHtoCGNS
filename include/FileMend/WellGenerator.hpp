@@ -28,18 +28,17 @@ class WellGenerator {
 	private:
 		void checkGridData();
 		void readScript();
-		void buildElementConnectivities();
 		void generateWells();
-		void defineQuantities(std::vector<std::vector<int>> prisms);
+		void defineQuantities();
 		bool isClose(const std::array<double, 3>& coordinate, const std::array<double, 3>& referencePoint);
 
 		GridDataShared gridData;
 		std::string wellGeneratorScript;
 		std::vector<WellGeneratorData> wellGeneratorDatum;
-		std::vector<std::vector<int>> elementConnectivities;
 		int lineConnectivityShift;
 
 		int currentIndex = -1;
+		std::vector<std::vector<int>> prisms;
 		int numberOfElementsPerSection;
 		int numberOfSegments;
 		int numberOfPrisms;

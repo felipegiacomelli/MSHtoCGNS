@@ -25,10 +25,7 @@ struct WellData {
 };
 
 struct GridData {
-	GridData() = default;
-
 	int dimension;
-	int numberOfElements;
 
 	std::vector<std::array<double, 3>> coordinates;
 

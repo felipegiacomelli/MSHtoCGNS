@@ -4,7 +4,6 @@
 WellGenerator::WellGenerator(GridDataShared gridData, std::string wellGeneratorScript) : gridData(gridData), wellGeneratorScript(wellGeneratorScript) {
 	this->checkGridData();
 	this->readScript();
-	this->buildElementConnectivities();
 	this->generateWells();
 }
 
@@ -35,75 +34,47 @@ void WellGenerator::readScript() {
     }
 }
 
-void WellGenerator::buildElementConnectivities() {
-	for (auto i = this->gridData->tetrahedronConnectivity.cbegin(); i != this->gridData->tetrahedronConnectivity.cend(); i++) {
-		this->elementConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x;});
-	}
-	for (auto i = this->gridData->hexahedronConnectivity.cbegin(); i != this->gridData->hexahedronConnectivity.cend(); i++) {
-		this->elementConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x;});
-	}
-	for (auto i = this->gridData->prismConnectivity.cbegin(); i != this->gridData->prismConnectivity.cend(); i++) {
-		this->elementConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x;});
-	}
-	for (auto i = this->gridData->pyramidConnectivity.cbegin(); i != this->gridData->pyramidConnectivity.cend(); i++) {
-		this->elementConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x;});
-	}
-
-	std::stable_sort(this->elementConnectivities.begin(), this->elementConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
-
-	for (unsigned i = 0; i < this->elementConnectivities.size(); i++)
-		this->elementConnectivities[i].pop_back();
-}
-
 void WellGenerator::generateWells() {
-	this->lineConnectivityShift = this->elementConnectivities.size() + this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
+		this->lineConnectivityShift = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size()
+										+ this->gridData->pyramidConnectivity.size() + this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
 
 	for (auto wellGeneratorData : this->wellGeneratorDatum) {
 
 		auto wellRegion = std::find_if(this->gridData->regions.cbegin(), this->gridData->regions.cend(), [=](auto r){return r.name == wellGeneratorData.regionName;});
 
-		auto regionBegin = this->elementConnectivities.cbegin() + wellRegion->elementsOnRegion.front();
-		auto regionEnd = this->elementConnectivities.cbegin() + wellRegion->elementsOnRegion.back() + 1;
+		for (auto i = this->gridData->prismConnectivity.cbegin(); i != this->gridData->prismConnectivity.cend(); i++)
+			if (i->back() >= wellRegion->elementsOnRegion.front() && i->back() <= wellRegion->elementsOnRegion.back())
+				this->prisms.emplace_back(i->cbegin(), i->cend()-1);
 
-		std::vector<std::vector<int>> prisms;
-		for (auto element = regionBegin; element != regionEnd; element++)
-			if (element->size() == 6u)
-				prisms.emplace_back(*element);
-		this->numberOfPrisms = prisms.size();
-
-		for (const auto& prism : prisms)
+		for (const auto& prism : this->prisms)
 			for (const auto& index : prism)
 				if (isClose(this->gridData->coordinates[index], wellGeneratorData.wellStart))
 					this->currentIndex = index;
 
-		this->defineQuantities(prisms);
+		this->defineQuantities();
 
 		std::vector<int> vertices;
 		vertices.push_back(this->currentIndex);
-		for (int k = 0; k < numberOfSegments; k++) {
+		for (int k = 0; k < this->numberOfSegments; k++) {
 			std::set<int> wellStartPrisms;
-			for (auto i = 0u; i < prisms.size(); i++)
-				if (std::find(prisms[i].cbegin(), prisms[i].cend(), this->currentIndex) != prisms[i].cend())
+			for (auto i = 0u; i < this->prisms.size(); i++)
+				if (std::find(this->prisms[i].cbegin(), this->prisms[i].cend(), this->currentIndex) != this->prisms[i].cend())
 					wellStartPrisms.insert(i);
 
 			std::set<int> wellStartVertices;
 			for (const auto& prismIndex : wellStartPrisms)
-				wellStartVertices.insert(prisms[prismIndex].cbegin(), prisms[prismIndex].cend());
+				wellStartVertices.insert(this->prisms[prismIndex].cbegin(), this->prisms[prismIndex].cend());
 
 			std::unordered_map<int, int> map;
 			for (const auto& vertexIndex : wellStartVertices)
 				for (const auto& prismIndex : wellStartPrisms)
-					if (std::find(prisms[prismIndex].cbegin(), prisms[prismIndex].cend(), vertexIndex) != prisms[prismIndex].cend())
+					if (std::find(this->prisms[prismIndex].cbegin(), this->prisms[prismIndex].cend(), vertexIndex) != this->prisms[prismIndex].cend())
 						map[vertexIndex]++;
 
 			this->currentIndex = std::find_if(map.cbegin(), map.cend(), [=](auto entry){return entry.first != this->currentIndex && entry.second == numberOfElementsPerSection;})->first;
 
 			for (auto rit = wellStartPrisms.crbegin(); rit != wellStartPrisms.crend(); rit++)
-				prisms.erase(prisms.begin() + *rit);
+				this->prisms.erase(this->prisms.begin() + *rit);
 
 			vertices.push_back(this->currentIndex);
 		}
@@ -126,12 +97,13 @@ void WellGenerator::generateWells() {
     }
 }
 
-void WellGenerator::defineQuantities(std::vector<std::vector<int>> prisms) {
+void WellGenerator::defineQuantities() {
 	std::set<int> wellStartPrisms;
-	for (auto i = 0u; i < prisms.size(); i++)
-		if (std::find(prisms[i].cbegin(), prisms[i].cend(), currentIndex) != prisms[i].cend())
+	for (auto i = 0u; i < this->prisms.size(); i++)
+		if (std::find(this->prisms[i].cbegin(), this->prisms[i].cend(), this->currentIndex) != this->prisms[i].cend())
 			wellStartPrisms.insert(i);
 
+	this->numberOfPrisms = this->prisms.size();
 	this->numberOfElementsPerSection = wellStartPrisms.size();
 	this->numberOfSegments = this->numberOfPrisms / this->numberOfElementsPerSection;
 }
