@@ -14,7 +14,7 @@ CgnsReader::CgnsReader(std::string filePath) : filePath(filePath) {
 void CgnsReader::checkFile() {
     boost::filesystem::path input(this->filePath);
 	if (!boost::filesystem::exists(input.parent_path()))
-		throw std::runtime_error("CgnsReader: The parent path does not exist");
+		throw std::runtime_error("CgnsReader: The parent path " + input.parent_path().string() + " does not exist");
 
 	if (!boost::filesystem::exists(this->filePath))
 		throw std::runtime_error("CgnsReader: There is no file in the given path");
