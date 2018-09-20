@@ -55,6 +55,7 @@ void WellGenerator::generateWells() {
 
 		std::vector<int> vertices;
 		vertices.push_back(this->currentIndex);
+
 		for (int k = 0; k < this->numberOfSegments; k++) {
 			std::set<int> wellStartPrisms;
 			for (auto i = 0u; i < this->prisms.size(); i++)
