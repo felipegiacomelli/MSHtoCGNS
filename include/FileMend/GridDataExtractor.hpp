@@ -21,12 +21,16 @@ class GridDataExtractor {
 
 		~GridDataExtractor() = default;
 
+		GridDataShared extract;
+
 	private:
 		void checkGridData();
 		void readScript();
 		void buildElementConnectivities();
 		void extractRegions();
 		void extractBoundaries();
+		void extractVertices();
+		void fixIndices();
 
 		GridDataShared original;
 		std::string gridDataExtractorScript;
@@ -34,7 +38,6 @@ class GridDataExtractor {
 		std::vector<std::vector<int>> elementConnectivities;
 		std::set<int> vertices;
 		int localIndex = 0;
-		GridDataShared extract;
 };
 
 #endif

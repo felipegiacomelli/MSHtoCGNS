@@ -26,8 +26,18 @@ int main() {
 	std::cout << std::endl << "\tGrid path: " << inputPath;
 	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
+	printGridDataInformation(reader.gridData);
+	printf("#############################\n");
+
 	std::vector<GridDataShared> gridDatas{reader.gridData, extractGridDataEntities(reader.gridData, script)};
 	std::vector<std::string> zoneNames{"Rock", "Reservoir"};
+
+	for (auto i = 0 ; i < gridDatas.back()->coordinates.size(); i++) {
+		printf("\n");
+		for (int j = 0; j < 3; j++) {
+			printf("checkClose(extract->coordinates[%i][%i], %.4e, TOLERANCE);\t", i, j, gridDatas.back()->coordinates[i][j]);
+		}
+	}
 
 	printf("\n\n");
 	printGridDataInformation(gridDatas.front());

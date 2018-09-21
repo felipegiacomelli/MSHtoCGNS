@@ -34,7 +34,7 @@ void print(InputIt cbegin, InputIt cend, std::string&& message) {
 	std::cout << "\t" << message << std::endl << std::endl;
 	for (auto i = cbegin; i != cend; i++) {
 		for (auto j = i->cbegin(); j != i->cend(); j++) {
-			std::cout << "\t" << *j;
+			std::cout << "\t" << std::setw(3) << std::right <<*j;
 		}
 		std::cout << std::endl;
 	}

@@ -6,6 +6,10 @@ GridDataExtractor::GridDataExtractor(GridDataShared original, std::string gridDa
 	this->buildElementConnectivities();
 	this->extract = MakeShared<GridData>();
 	this->extract->dimension = 3;
+	this->extractRegions();
+	this->extractBoundaries();
+	this->extractVertices();
+	this->fixIndices();
 }
 
 void GridDataExtractor::checkGridData() {
@@ -106,5 +110,95 @@ void GridDataExtractor::extractRegions() {
 }
 
 void GridDataExtractor::extractBoundaries() {
+	for (auto name : this->gridDataExtractorDatum.back().boundaries) {
+		auto iterator(std::find_if(this->original->boundaries.cbegin(),this->original->boundaries.cend(), [=](auto b){return b.name == name;}));
+		if (iterator == this->original->boundaries.cend())
+			throw std::runtime_error("GridDataExtractor: There is no boundary " + name + " in gridData");
+		auto boundary(*iterator);
 
+		std::vector<int> deleteIndices;
+		for (auto i = this->original->triangleConnectivity.cbegin(); i != this->original->triangleConnectivity.cend(); i++)
+			if (i->back() >= boundary.facetsOnBoundary.front() && i->back() <= boundary.facetsOnBoundary.back())
+				deleteIndices.emplace_back(i -  this->original->triangleConnectivity.cbegin());
+
+		for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); rit++)
+			this->original->triangleConnectivity.erase(this->original->triangleConnectivity.begin() + *rit);
+
+		deleteIndices.clear();
+		for (auto i = this->original->quadrangleConnectivity.cbegin(); i != this->original->quadrangleConnectivity.cend(); i++)
+			if (i->back() >= boundary.facetsOnBoundary.front() && i->back() <= boundary.facetsOnBoundary.back())
+				deleteIndices.emplace_back(i -  this->original->quadrangleConnectivity.cbegin());
+
+		for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); rit++)
+			this->original->quadrangleConnectivity.erase(this->original->quadrangleConnectivity.begin() + *rit);
+
+		this->original->boundaries.erase(iterator);
+
+		auto boundaryBegin = this->elementConnectivities.begin() + boundary.facetsOnBoundary.front();
+		auto boundaryEnd = this->elementConnectivities.begin() + boundary.facetsOnBoundary.back() + 1;
+
+		std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), localIndex);
+
+
+		for (auto facet = boundaryBegin; facet != boundaryEnd; facet++) {
+
+			facet->push_back(localIndex);
+
+			switch (facet->size()) {
+				case 4: {
+					std::array<int, 4> triangle;
+					std::copy_n(facet->cbegin(), 4, std::begin(triangle));
+					this->extract->triangleConnectivity.emplace_back(std::move(triangle));
+					break;
+				}
+				case 5: {
+					std::array<int, 5> quadrangle;
+					std::copy_n(facet->cbegin(), 5, std::begin(quadrangle));
+					this->extract->quadrangleConnectivity.emplace_back(std::move(quadrangle));
+					break;
+				}
+			}
+
+			localIndex++;
+
+		}
+
+		this->extract->boundaries.emplace_back(boundary);
+	}
+}
+
+void GridDataExtractor::extractVertices() {
+	for (auto vertex : this->vertices)
+		this->extract->coordinates.push_back(this->original->coordinates[vertex]);
+}
+
+void GridDataExtractor::fixIndices() {
+	std::unordered_map<int, int> originalToExtract;
+	int index = 0;
+	for (auto vertex : vertices)
+		originalToExtract[vertex] = index++;
+
+	for (auto& tetrahedron : this->extract->tetrahedronConnectivity)
+		for (auto vertex = tetrahedron.begin(); vertex != tetrahedron.end() - 1; vertex++)
+			*vertex = originalToExtract[*vertex];
+
+	for (auto& hexahedron : this->extract->hexahedronConnectivity)
+		for (auto vertex = hexahedron.begin(); vertex != hexahedron.end() - 1; vertex++)
+			*vertex = originalToExtract[*vertex];
+
+	for (auto& prism : this->extract->prismConnectivity)
+		for (auto vertex = prism.begin(); vertex != prism.end() - 1; vertex++)
+			*vertex = originalToExtract[*vertex];
+
+	for (auto& pyramid : this->extract->pyramidConnectivity)
+		for (auto vertex = pyramid.begin(); vertex != pyramid.end() - 1; vertex++)
+			*vertex = originalToExtract[*vertex];
+
+	for (auto& triangle : this->extract->triangleConnectivity)
+		for (auto vertex = triangle.begin(); vertex != triangle.end() - 1; vertex++)
+			*vertex = originalToExtract[*vertex];
+
+	for (auto& quadrangle : this->extract->quadrangleConnectivity)
+		for (auto vertex = quadrangle.begin(); vertex != quadrangle.end() - 1; vertex++)
+			*vertex = originalToExtract[*vertex];
 }
