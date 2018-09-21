@@ -8,6 +8,9 @@ WellGenerator::WellGenerator(GridDataShared gridData, std::string wellGeneratorS
 }
 
 void WellGenerator::checkGridData() {
+	if (this->gridData->dimension != 3)
+		throw std::runtime_error("WellGenerator: gridData dimension must be 3 and not " + std::to_string(this->gridData->dimension));
+
 	if (this->gridData->wells.size() != 0u)
 		throw std::runtime_error("WellGenerator: Number of wells in gridData must be 0 and not " + std::to_string(this->gridData->wells.size()));
 
