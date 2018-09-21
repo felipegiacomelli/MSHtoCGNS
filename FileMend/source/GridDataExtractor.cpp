@@ -4,6 +4,8 @@ GridDataExtractor::GridDataExtractor(GridDataShared original, std::string gridDa
 	this->checkGridData();
 	this->readScript();
 	this->buildElementConnectivities();
+	this->extract = MakeShared<GridData>();
+	this->extract->dimension = 3;
 }
 
 void GridDataExtractor::checkGridData() {

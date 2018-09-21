@@ -36,7 +36,7 @@ int main() {
 
 	auto start = std::chrono::steady_clock::now();
 	SpecialCgnsReader3D reader(inputPath);
-	GridDataShared  gridData = reader.gridData;
+	GridDataShared gridData = reader.gridData;
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> elapsedSeconds = end - start;
 	std::cout << std::endl << "\tGrid path: " << inputPath;
