@@ -41,6 +41,42 @@ void CgnsCreator3D::writeCoordinates() {
 		throw std::runtime_error("CgnsCreator3D: Could not write CoordinateZ");
 }
 
+void CgnsCreator3D::buildGlobalConnectivities() {
+	for (auto i = this->gridData->tetrahedronConnectivity.cbegin(); i != this->gridData->tetrahedronConnectivity.cend(); i++) {
+		this->globalConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+	}
+	for (auto i = this->gridData->hexahedronConnectivity.cbegin(); i != this->gridData->hexahedronConnectivity.cend(); i++) {
+		this->globalConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+	}
+	for (auto i = this->gridData->prismConnectivity.cbegin(); i != this->gridData->prismConnectivity.cend(); i++) {
+		this->globalConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+	}
+	for (auto i = this->gridData->pyramidConnectivity.cbegin(); i != this->gridData->pyramidConnectivity.cend(); i++) {
+		this->globalConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+	}
+
+	for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++) {
+		this->globalConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+	}
+	for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++) {
+		this->globalConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+	}
+
+	for (auto i = this->gridData->lineConnectivity.cbegin(); i != this->gridData->lineConnectivity.cend(); i++) {
+		this->globalConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+	}
+
+	std::stable_sort(this->globalConnectivities.begin(), this->globalConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
+	for (unsigned i = 0; i < this->globalConnectivities.size(); i++)
+		this->globalConnectivities[i].pop_back();
+}
 
 void CgnsCreator3D::writeSections() {
 	this->writeRegions();
@@ -48,34 +84,11 @@ void CgnsCreator3D::writeSections() {
 	this->writeWells();
 }
 
-void CgnsCreator3D::buildElementConnectivities() {
-	for (auto i = this->gridData->tetrahedronConnectivity.cbegin(); i != this->gridData->tetrahedronConnectivity.cend(); i++) {
-		this->elementConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x + 1;});
-	}
-	for (auto i = this->gridData->hexahedronConnectivity.cbegin(); i != this->gridData->hexahedronConnectivity.cend(); i++) {
-		this->elementConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x + 1;});
-	}
-	for (auto i = this->gridData->prismConnectivity.cbegin(); i != this->gridData->prismConnectivity.cend(); i++) {
-		this->elementConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x + 1;});
-	}
-	for (auto i = this->gridData->pyramidConnectivity.cbegin(); i != this->gridData->pyramidConnectivity.cend(); i++) {
-		this->elementConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x + 1;});
-	}
-	std::stable_sort(this->elementConnectivities.begin(), this->elementConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
-	for (unsigned i = 0; i < this->elementConnectivities.size(); i++)
-		this->elementConnectivities[i].pop_back();
-}
-
 void CgnsCreator3D::writeRegions() {
-	this->buildElementConnectivities();
-
 	for (auto region : this->gridData->regions) {
-		auto regionBegin = this->elementConnectivities.begin() + region.elementsOnRegion.front();
-		auto regionEnd = this->elementConnectivities.begin() + region.elementsOnRegion.back() + 1;
+
+		auto regionBegin = this->globalConnectivities.begin() + region.elementsOnRegion.front();
+		auto regionEnd = this->globalConnectivities.begin() + region.elementsOnRegion.back() + 1;
 	 	this->elementEnd += (regionEnd - regionBegin);
 
 	 	ElementType_t elementType = ElementType_t(0);
@@ -137,29 +150,11 @@ void CgnsCreator3D::writeRegions() {
 	}
 }
 
-void CgnsCreator3D::buildFacetConnectivities() {
-	for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++) {
-		this->facetConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->facetConnectivities.back()), [](auto x){return x + 1;});
-	}
-	for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++) {
-		this->facetConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->facetConnectivities.back()), [](auto x){return x + 1;});
-	}
-	std::stable_sort(this->facetConnectivities.begin(), this->facetConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
-	for (unsigned i = 0; i < this->facetConnectivities.size(); i++)
-		this->facetConnectivities[i].pop_back();
-}
-
 void CgnsCreator3D::writeBoundaries() {
-	this->buildFacetConnectivities();
-	this->numberOfElements = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size();
-	this->elementStart = this->numberOfElements + 1;
-
 	for (auto boundary : this->gridData->boundaries) {
 
-		auto boundaryBegin = this->facetConnectivities.begin() + boundary.facetsOnBoundary.front() - this->numberOfElements;
-		auto boundaryEnd = this->facetConnectivities.begin() + boundary.facetsOnBoundary.back() + 1 - this->numberOfElements;
+		auto boundaryBegin = this->globalConnectivities.begin() + boundary.facetsOnBoundary.front();
+		auto boundaryEnd = this->globalConnectivities.begin() + boundary.facetsOnBoundary.back() + 1;
 		this->elementEnd = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
 
 		ElementType_t elementType;
@@ -209,25 +204,11 @@ void CgnsCreator3D::writeBoundaries() {
 	}
 }
 
-void CgnsCreator3D::buildWellConnectivities() {
-	for (auto i = this->gridData->lineConnectivity.cbegin(); i != this->gridData->lineConnectivity.cend(); i++) {
-		this->wellConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->wellConnectivities.back()), [](auto x){return x + 1;});
-	}
-	std::stable_sort(this->wellConnectivities.begin(), this->wellConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
-	for (unsigned i = 0; i < this->wellConnectivities.size(); i++)
-		this->wellConnectivities[i].pop_back();
-}
-
 void CgnsCreator3D::writeWells() {
-	this->buildWellConnectivities();
-	this->numberOfFacets = this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
-	this->elementStart = this->numberOfElements + this->numberOfFacets + 1;
+	for (auto well : this->gridData->wells) {
 
-	for (auto& well : this->gridData->wells) {
-
-		auto wellBegin = this->wellConnectivities.cbegin() + well.linesOnWell.front() - this->numberOfElements - this->numberOfFacets;
-		auto wellEnd = this->wellConnectivities.cbegin() + well.linesOnWell.back() + 1 - this->numberOfElements - this->numberOfFacets;
+		auto wellBegin = this->globalConnectivities.cbegin() + well.linesOnWell.front();
+		auto wellEnd = this->globalConnectivities.cbegin() + well.linesOnWell.back() + 1;
 		this->elementEnd = this->elementStart + (wellEnd - wellBegin) - 1;
 
 		std::vector<int> connectivities;

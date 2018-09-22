@@ -36,27 +36,32 @@ void CgnsCreator2D::writeCoordinates() {
 		throw std::runtime_error("CgnsCreator2D: Could not write CoordinateY");
 }
 
-void CgnsCreator2D::buildElementConnectivities() {
+void CgnsCreator2D::buildGlobalConnectivities() {
 	for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++) {
-		this->elementConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x + 1;});
+		this->globalConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
 	}
 	for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++) {
-		this->elementConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->elementConnectivities.back()), [](auto x){return x + 1;});
+		this->globalConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
 	}
-	std::stable_sort(this->elementConnectivities.begin(), this->elementConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
-	for (unsigned i = 0; i < this->elementConnectivities.size(); i++)
-		this->elementConnectivities[i].pop_back();
+
+	for (auto i = this->gridData->lineConnectivity.cbegin(); i != this->gridData->lineConnectivity.cend(); i++) {
+		this->globalConnectivities.emplace_back(std::vector<int>());
+		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+	}
+
+	std::stable_sort(this->globalConnectivities.begin(), this->globalConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
+
+	for (unsigned i = 0; i < this->globalConnectivities.size(); i++)
+		this->globalConnectivities[i].pop_back();
 }
 
 void CgnsCreator2D::writeRegions() {
-	this->buildElementConnectivities();
-
 	for (auto region = this->gridData->regions.cbegin(); region != this->gridData->regions.cend(); region++) {
 
-		auto regionBegin = this->elementConnectivities.begin() + region->elementsOnRegion.front();
-		auto regionEnd = this->elementConnectivities.begin() + region->elementsOnRegion.back() + 1;
+		auto regionBegin = this->globalConnectivities.begin() + region->elementsOnRegion.front();
+		auto regionEnd = this->globalConnectivities.begin() + region->elementsOnRegion.back() + 1;
 	 	this->elementEnd += (regionEnd - regionBegin);
 
 	 	ElementType_t elementType;
@@ -106,23 +111,11 @@ void CgnsCreator2D::writeRegions() {
 	}
 }
 
-void CgnsCreator2D::buildFacetConnectivities() {
-	for (auto i = this->gridData->lineConnectivity.cbegin(); i != this->gridData->lineConnectivity.cend(); i++) {
-		this->facetConnectivities.emplace_back(std::vector<int>());
-		std::transform(i->cbegin(), i->cend(), std::back_inserter(this->facetConnectivities.back()), [](auto x){return x + 1;});
-	}
-	std::stable_sort(this->facetConnectivities.begin(), this->facetConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
-	for (unsigned i = 0; i < this->facetConnectivities.size(); i++)
-		this->facetConnectivities[i].pop_back();
-}
-
 void CgnsCreator2D::writeBoundaries() {
-	this->buildFacetConnectivities();
-
 	for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
 
-		auto boundaryBegin = this->facetConnectivities.cbegin() + boundary->facetsOnBoundary.front() - this->sizes[1];
-		auto boundaryEnd = this->facetConnectivities.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->sizes[1];
+		auto boundaryBegin = this->globalConnectivities.cbegin() + boundary->facetsOnBoundary.front();
+		auto boundaryEnd = this->globalConnectivities.cbegin() + boundary->facetsOnBoundary.back() + 1;
 		this->elementEnd = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
 
 		std::vector<int> connectivities;

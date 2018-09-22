@@ -11,17 +11,11 @@ class CgnsCreator3D : public CgnsCreator {
 		void checkDimension() override;
 		void setDimensions() override;
 		void writeCoordinates() override;
+		void buildGlobalConnectivities() override;
 		void writeSections() override;
-		void buildElementConnectivities() override;
 		void writeRegions() override;
-		void buildFacetConnectivities() override;
 		void writeBoundaries() override;
-		void buildWellConnectivities();
 		void writeWells();
-
-		int numberOfElements;
-		int numberOfFacets;
-		std::vector<std::vector<int>> wellConnectivities;
 };
 
 #endif

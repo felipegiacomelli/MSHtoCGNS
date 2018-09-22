@@ -23,10 +23,9 @@ class CgnsCreator {
 		void writeBase();
 		void writeZone();
 		virtual void writeCoordinates() = 0;
+		virtual void buildGlobalConnectivities() = 0;
 		virtual void writeSections();
-		virtual void buildElementConnectivities() = 0;
 		virtual void writeRegions() = 0;
-		virtual void buildFacetConnectivities() = 0;
 		virtual void writeBoundaries() = 0;
 		void writeBoundaryConditions();
 
@@ -37,7 +36,7 @@ class CgnsCreator {
 		int coordinateIndex, sectionIndex, boundaryIndex;
 		int elementStart, elementEnd;
 
-		std::vector<std::vector<int>> elementConnectivities, facetConnectivities;
+		std::vector<std::vector<int>> globalConnectivities;
 };
 
 #endif

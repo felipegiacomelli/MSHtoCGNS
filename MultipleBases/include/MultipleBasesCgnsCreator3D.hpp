@@ -11,22 +11,16 @@ class MultipleBasesCgnsCreator3D : public CgnsCreator {
 		void initialize();
 		void checkDimension() override;
 		void setDimensions() override;
-		void writeSections() override;
 		void writeCoordinates() override;
-		void buildElementConnectivities() override;
+		void buildGlobalConnectivities() override;
+		void writeSections() override;
 		void writeRegions() override;
-		void buildFacetConnectivities() override;
 		void writeBoundaries() override;
-		void buildWellConnectivities();
 		void writeWells();
 
 		std::vector<GridDataShared> gridDatas;
 		std::vector<std::string> zoneNames;
 		bool firstCall;
-
-		int numberOfElements;
-		int numberOfFacets;
-		std::vector<std::vector<int>> wellConnectivities;
 };
 
 #endif

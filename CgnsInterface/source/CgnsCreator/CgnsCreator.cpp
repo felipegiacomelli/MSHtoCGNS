@@ -26,6 +26,7 @@ void CgnsCreator::initialize() {
 	this->writeBase();
 	this->writeZone();
 	this->writeCoordinates();
+	this->buildGlobalConnectivities();
 	this->writeSections();
 	this->writeBoundaryConditions();
 }
