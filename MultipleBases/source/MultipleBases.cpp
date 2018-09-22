@@ -4,6 +4,7 @@
 #include <Grid/GridData.hpp>
 #include <IO/MshReader3D.hpp>
 #include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
+#include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
 #include <FileMend/GridDataExtractor.hpp>
 #include <Utilities/Print.hpp>
 
@@ -14,36 +15,48 @@ void printGridDataInformation(GridDataShared gridData);
 int main() {
 	boost::property_tree::ptree script;
 	boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMultipleBases.json", script);
-	std::string inputPath(script.get<std::string>("path.input"));
-	std::string outputPath(script.get<std::string>("path.output"));
+	boost::filesystem::path inputPath(script.get<std::string>("path.input"));
+	boost::filesystem::path outputPath(script.get<std::string>("path.output"));
 
 	auto start = std::chrono::steady_clock::now();
-	// MshReader3D reader(inputPath);
-	CgnsReader3D reader(inputPath);
+
+	GridDataShared gridData;
+	if (inputPath.extension() == std::string(".msh")) {
+		MshReader3D reader(inputPath.string());
+		gridData = reader.gridData;
+	}
+	else if (inputPath.extension() == std::string(".cgns")) {
+		CgnsReader3D reader(inputPath.string());
+		gridData = reader.gridData;
+	}
+	else
+		throw std::runtime_error("MultipleBases: file extension " + inputPath.extension().string() + " not supported");
+
 	auto end = std::chrono::steady_clock::now();
+
 	std::chrono::duration<double> elapsedSeconds = end - start;
-	std::cout << std::endl << "\tGrid path: " << inputPath;
+	std::cout << std::endl << "\tGrid path: " << inputPath.string();
 	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
-	printGridDataInformation(reader.gridData);
+	printGridDataInformation(gridData);
 	printf("\t#############################\n\n");
 
-	GridDataExtractor gridDataExtractor(reader.gridData, std::string(SCRIPT_DIRECTORY) + "ScriptGridDataExtractor.json");
+	GridDataExtractor gridDataExtractor(gridData, std::string(SCRIPT_DIRECTORY) + "ScriptGridDataExtractor.json");
 
-	std::vector<GridDataShared> gridDatas{reader.gridData, gridDataExtractor.extract};
+	std::vector<GridDataShared> gridDatas{gridData, gridDataExtractor.extract};
 	std::vector<std::string> zoneNames{"Rock", "Reservoir"};
-
-	printGridDataInformation(gridDatas.front());
-	printf("\t#############################\n");
 
 	printGridDataInformation(gridDatas.back());
 	printf("\t#############################\n");
 
-	MultipleBasesCgnsCreator3D creator(gridDatas, zoneNames, outputPath);
+	start = std::chrono::steady_clock::now();
+	// MultipleBasesCgnsCreator3D creator(gridDatas, zoneNames, outputPath.string());
+	CgnsCreator3D creator(gridDataExtractor.extract, outputPath.string());
 	end = std::chrono::steady_clock::now();
+
 	elapsedSeconds = end - start;
 	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
-	std::cout << std::endl << "\tOutput file location       : " << creator.getFileName() << std::endl << std::endl;
+	std::cout << std::endl << "\tOutput file location       : " << outputPath.string() << std::endl << std::endl;
 
 	return 0;
 }

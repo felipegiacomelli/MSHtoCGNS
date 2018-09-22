@@ -12,7 +12,7 @@
 struct GridDataExtractorData {
 	std::vector<std::string> regions;
 	std::vector<std::string> boundaries;
-	std::string wellName;
+	std::vector<std::string> wells;
 };
 
 class GridDataExtractor {
@@ -29,6 +29,7 @@ class GridDataExtractor {
 		void buildElementConnectivities();
 		void extractRegions();
 		void extractBoundaries();
+		void extractWells();
 		void extractVertices();
 		void fixIndices();
 

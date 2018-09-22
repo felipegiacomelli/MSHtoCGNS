@@ -1,5 +1,7 @@
 {
     "regions" : ["Limestone"],
 
-    "boundaries" : ["ReservoirWest", "ReservoirEast", "ReservoirSouth", "ReservoirNorth", "ReservoirBottom", "ReservoirTop"]
+    "boundaries" : ["ReservoirWest", "ReservoirEast", "ReservoirSouth", "ReservoirNorth", "ReservoirBottom", "ReservoirTop"],
+
+    "wells": []
 }

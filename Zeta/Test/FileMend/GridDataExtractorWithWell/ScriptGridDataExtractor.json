@@ -3,5 +3,5 @@
 
     "boundaries" : [],
 
-    "wells" : ["LINE_WELL"]
+    "wells": ["LINE_WELL"]
 }

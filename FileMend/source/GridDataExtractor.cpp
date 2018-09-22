@@ -8,6 +8,7 @@ GridDataExtractor::GridDataExtractor(GridDataShared original, std::string gridDa
 	this->extract->dimension = 3;
 	this->extractRegions();
 	this->extractBoundaries();
+	this->extractWells();
 	this->extractVertices();
 	this->fixIndices();
 }
@@ -28,6 +29,9 @@ void GridDataExtractor::readScript() {
 
 	for (auto boundary : iroot.get_child("boundaries"))
 		this->gridDataExtractorDatum.back().boundaries.emplace_back(boundary.second.get_value<std::string>());
+
+	for (auto wells : iroot.get_child("wells"))
+		this->gridDataExtractorDatum.back().wells.emplace_back(wells.second.get_value<std::string>());
 }
 
 void GridDataExtractor::buildElementConnectivities() {
@@ -49,6 +53,9 @@ void GridDataExtractor::buildElementConnectivities() {
 	for (auto i = this->original->quadrangleConnectivity.cbegin(); i != this->original->quadrangleConnectivity.cend(); i++)
 		this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
+	for (auto i = this->original->lineConnectivity.cbegin(); i != this->original->lineConnectivity.cend(); i++)
+		this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
+
 	std::stable_sort(this->elementConnectivities.begin(), this->elementConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
 
 	for (unsigned i = 0; i < this->elementConnectivities.size(); i++)
@@ -57,6 +64,7 @@ void GridDataExtractor::buildElementConnectivities() {
 
 void GridDataExtractor::extractRegions() {
 	for (auto name : this->gridDataExtractorDatum.back().regions) {
+
 		auto iterator(std::find_if(this->original->regions.cbegin(),this->original->regions.cend(), [=](auto r){return r.name == name;}));
 		if (iterator == this->original->regions.cend())
 			throw std::runtime_error("GridDataExtractor: There is no region " + name + " in gridData");
@@ -111,6 +119,7 @@ void GridDataExtractor::extractRegions() {
 
 void GridDataExtractor::extractBoundaries() {
 	for (auto name : this->gridDataExtractorDatum.back().boundaries) {
+
 		auto iterator(std::find_if(this->original->boundaries.cbegin(),this->original->boundaries.cend(), [=](auto b){return b.name == name;}));
 		if (iterator == this->original->boundaries.cend())
 			throw std::runtime_error("GridDataExtractor: There is no boundary " + name + " in gridData");
@@ -166,6 +175,35 @@ void GridDataExtractor::extractBoundaries() {
 	}
 }
 
+void GridDataExtractor::extractWells() {
+	for (auto name : this->gridDataExtractorDatum.back().wells) {
+
+		auto iterator(std::find_if(this->original->wells.cbegin(),this->original->wells.cend(), [=](auto w){return w.name == name;}));
+		if (iterator == this->original->wells.cend())
+			throw std::runtime_error("GridDataExtractor: There is no well " + name + " in gridData");
+		auto well(*iterator);
+
+		auto wellBegin = this->elementConnectivities.begin() + well.linesOnWell.front();
+		auto wellEnd = this->elementConnectivities.begin() + well.linesOnWell.back() + 1;
+
+		std::iota(well.linesOnWell.begin(), well.linesOnWell.end(), localIndex);
+
+		for (auto element = wellBegin; element != wellEnd; element++) {
+
+			element->push_back(localIndex);
+
+			std::array<int, 3> line;
+			std::copy_n(element->cbegin(), 3, std::begin(line));
+			this->extract->lineConnectivity.emplace_back(std::move(line));
+
+			localIndex++;
+
+		}
+
+		this->extract->wells.emplace_back(well);
+	}
+}
+
 void GridDataExtractor::extractVertices() {
 	for (auto vertex : this->vertices)
 		this->extract->coordinates.push_back(this->original->coordinates[vertex]);
@@ -199,5 +237,9 @@ void GridDataExtractor::fixIndices() {
 
 	for (auto& quadrangle : this->extract->quadrangleConnectivity)
 		for (auto vertex = quadrangle.begin(); vertex != quadrangle.end() - 1; vertex++)
+			*vertex = originalToExtract[*vertex];
+
+	for (auto& line : this->extract->lineConnectivity)
+		for (auto vertex = line.begin(); vertex != line.end() - 1; vertex++)
 			*vertex = originalToExtract[*vertex];
 }

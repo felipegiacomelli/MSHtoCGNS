@@ -1,7 +1,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/FileMend/9821v_45841e.cgns",
+        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/CgnsInterface/3D-Region1-Mixed/12523v_57072e.cgns",
         "output" : "/home/felipe/Downloads/mender/"
     }
 }

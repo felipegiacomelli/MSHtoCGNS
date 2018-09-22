@@ -1,11 +1,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Downloads/heart/original/Grid.cgns",
+        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/FileMend/GridDataExtractorWithWell/12523v_57072e.cgns",
         "output" : "/home/felipe/Downloads/heart/"
-    },
-
-    "regions" : ["BODY_INJECTOR_WEST", "BODY_INJECTOR_EAST", "BODY_WELL"],
-
-    "boundaries" : []
+    }
 }
