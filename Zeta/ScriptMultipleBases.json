@@ -1,7 +1,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/FileMend/GridDataExtractorWithWell/12523v_57072e.cgns",
+        "input"  : "/home/felipe/Downloads/heart/original/Grid.cgns",
         "output" : "/home/felipe/Downloads/heart/"
     }
 }

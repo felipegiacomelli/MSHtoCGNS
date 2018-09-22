@@ -1,7 +1,7 @@
 {
-    "regions" : ["BODY_WELL"],
+    "regions" : ["BODY_INJECTOR_WEST"],
 
     "boundaries" : [],
 
-    "wells" : ["LINE_WELL"]
+    "wells" : ["LINE_INJECTOR_WEST"]
 }
