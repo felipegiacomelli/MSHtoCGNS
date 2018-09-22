@@ -139,7 +139,6 @@ void GridDataExtractor::extractBoundaries() {
 
 		std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), localIndex);
 
-
 		for (auto facet = boundaryBegin; facet != boundaryEnd; facet++) {
 
 			facet->push_back(localIndex);

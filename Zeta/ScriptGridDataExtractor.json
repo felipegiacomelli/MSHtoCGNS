@@ -1,5 +1,5 @@
 {
-    "regions" : ["Limestone"],
+    "regions" : ["BODY_INJECTOR_WEST", "BODY_INJECTOR_EAST", "BODY_WELL"],
 
-    "boundaries" : ["ReservoirWest", "ReservoirEast", "ReservoirSouth", "ReservoirNorth", "ReservoirBottom", "ReservoirTop"]
+    "boundaries" : []
 }

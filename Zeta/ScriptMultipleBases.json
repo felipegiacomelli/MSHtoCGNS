@@ -1,12 +1,11 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/gmsh/reservoir/4x4x4_2x2x2.msh",
-        "output" : "/home/felipe/Downloads/RESERVOIR/"
+        "input"  : "/home/felipe/Downloads/heart/original/Grid.cgns",
+        "output" : "/home/felipe/Downloads/heart/"
     },
 
-    "regions" : ["Limestone"],
+    "regions" : ["BODY_INJECTOR_WEST", "BODY_INJECTOR_EAST", "BODY_WELL"],
 
-    "boundaries" : ["ReservoirWest", "ReservoirEast", "ReservoirSouth", "ReservoirNorth", "ReservoirBottom", "ReservoirTop"]
+    "boundaries" : []
 }
-

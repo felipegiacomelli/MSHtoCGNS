@@ -2,8 +2,8 @@
 
 #include <BoostInterface/PropertyTree.hpp>
 #include <Grid/GridData.hpp>
-#include <IO/Output.hpp>
 #include <IO/MshReader3D.hpp>
+#include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
 #include <FileMend/GridDataExtractor.hpp>
 #include <Utilities/Print.hpp>
 
@@ -18,24 +18,26 @@ int main() {
 	std::string outputPath(script.get<std::string>("path.output"));
 
 	auto start = std::chrono::steady_clock::now();
-	MshReader3D reader(inputPath);
+	// MshReader3D reader(inputPath);
+	CgnsReader3D reader(inputPath);
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> elapsedSeconds = end - start;
 	std::cout << std::endl << "\tGrid path: " << inputPath;
 	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
 	printGridDataInformation(reader.gridData);
-	printf("#############################\n");
+	printf("\t#############################\n\n");
 
 	GridDataExtractor gridDataExtractor(reader.gridData, std::string(SCRIPT_DIRECTORY) + "ScriptGridDataExtractor.json");
 
 	std::vector<GridDataShared> gridDatas{reader.gridData, gridDataExtractor.extract};
 	std::vector<std::string> zoneNames{"Rock", "Reservoir"};
 
-	printf("\n\n");
 	printGridDataInformation(gridDatas.front());
-	printf("#############################\n");
+	printf("\t#############################\n");
+
 	printGridDataInformation(gridDatas.back());
+	printf("\t#############################\n");
 
 	MultipleBasesCgnsCreator3D creator(gridDatas, zoneNames, outputPath);
 	end = std::chrono::steady_clock::now();
