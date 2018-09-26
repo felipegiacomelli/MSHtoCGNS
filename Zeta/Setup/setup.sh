@@ -2,7 +2,7 @@
 
 export SETUP_DIRECTORY=$PWD
 export LIBRARY_INSTALL_DIRECTORY=$PWD/../Libraries
-export BUILD_TYPE="Release"
+export BUILD_TYPE="Debug"
 
 cd ..
 
