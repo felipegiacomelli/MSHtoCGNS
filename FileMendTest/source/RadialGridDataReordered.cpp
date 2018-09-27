@@ -12,13 +12,12 @@ struct RadialGridDataReorderFixture {
 
 	std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/RadialGridDataReordered/370v_324e.cgns";
 	GridDataShared gridData;
-	std::string radialGridDataReorderedScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/RadialGridDataReordered/ScriptRadialGridDataReorder.json";
 };
 
 FixtureTestSuite(RadialGridDataReorderSuite, RadialGridDataReorderFixture)
 
 TestCase(RadialGridDataReorderTest) {
-	RadialGridDataReordered radialGridDataReordered(this->gridData, this->radialGridDataReorderedScript);
+	RadialGridDataReordered radialGridDataReordered(this->gridData);
 }
 
 TestSuiteEnd()
