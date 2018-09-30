@@ -37,6 +37,15 @@ TestCase(RadialGridDataReorderTest) {
 		std::cout << std::endl;
 	}
 
+	std::cout << std::endl;
+
+	for (int i = 0; i < 9; i++) {
+		std::cout << "\t";
+		for (auto v : final->lineConnectivity[i])
+			std::cout << "\t" << v;
+		std::cout << std::endl;
+	}
+
 }
 
 TestSuiteEnd()
