@@ -8,6 +8,7 @@ RadialGridDataReordered::RadialGridDataReordered(GridDataShared gridData) : grid
 	this->final = MakeShared<GridData>();
 	this->final->dimension = 3;
 	this->reorder();
+	this->fixIndices();
 }
 
 void RadialGridDataReordered::checkGridData() {
@@ -40,6 +41,7 @@ void RadialGridDataReordered::defineQuantities() {
 	printf("\n\tnumberOfSegments             : %i", numberOfSegments);
 	printf("\n\tnumberOfPrisms               : %i", int(this->gridData->prismConnectivity.size()));
 	printf("\n\tnumberOfHexahedrons          : %i", int(this->gridData->hexahedronConnectivity.size()));
+	printf("\n\tnumberOfVerticesPerSegment   : %i", int(this->gridData->coordinates.size() / this->numberOfSegments));
 	printf("\n\tnumberOfPrismsPerSegment     : %i", numberOfPrismsPerSegment);
 	printf("\n\tnumberOfHexahedronsPerSegment: %i", numberOfHexahedronsPerSegment);
 	printf("\n\tnumberOfHexahedronsPerRadius : %i", numberOfHexahedronsPerRadius);
@@ -59,8 +61,6 @@ void RadialGridDataReordered::copyElements() {
 void RadialGridDataReordered::reorder() {
 	for (int s = 0; s < this->numberOfSegments; s++) {
 		this->final->lineConnectivity.push_back(this->gridData->lineConnectivity[s]);
-
-		std::cout << "\tsegment \033[1;31m" << s << "\033[0m: " << this->final->lineConnectivity[s][0] << " - " << this->final->lineConnectivity[s][1] << std::endl;
 
 		for (const auto& prism : this->prisms)
 			if (hasElement(prism.cbegin(), prism.cend()-1, this->final->lineConnectivity[s].front()))
@@ -104,7 +104,9 @@ void RadialGridDataReordered::reorder() {
 				firstFacet = lastFacet;
 			}
 		}
-		this->fixIndices(s);
+		this->addVertices(s);
+
+		std::cout << "\tsegment \033[1;31m" << s << "\033[0m: " << this->final->lineConnectivity[s][0] << " - " << this->final->lineConnectivity[s][1] << std::endl;
 
 		printf("\n\t\tprismIndices (%i): ", int(this->final->prismConnectivity.size() / (s+1)));
 		for (int i = 0; i < this->numberOfPrismsPerSegment; i++)
@@ -119,32 +121,50 @@ void RadialGridDataReordered::reorder() {
 	}
 }
 
-void RadialGridDataReordered::fixIndices(int segment) {
-	std::set<int> vertices;
-	vertices.insert(this->final->lineConnectivity[segment][0]);
-	vertices.insert(this->final->lineConnectivity[segment][1]);
+void RadialGridDataReordered::addVertices(int segment) {
+	for (int v = 0; v < 2; v++)
+		if (!hasElement(this->vertices.cbegin(), this->vertices.cend(), this->final->lineConnectivity[segment][v]))
+			this->vertices.push_back(this->final->lineConnectivity[segment][v]);
+
 	for (int h = 0; h < this->numberOfHexahedronsPerSegment; h++)
 		for (int v = 0; v < 8; v++)
-			vertices.insert(this->final->hexahedronConnectivity[segment * this->numberOfHexahedronsPerSegment + h][v]);
+			if (!hasElement(this->vertices.cbegin(), this->vertices.cend(), this->final->hexahedronConnectivity[segment * this->numberOfHexahedronsPerSegment + h][v]))
+				this->vertices.push_back(this->final->hexahedronConnectivity[segment * this->numberOfHexahedronsPerSegment + h][v]);
+}
 
+void RadialGridDataReordered::fixIndices() {
 	std::unordered_map<int, int> originalToFinal;
 	int index = 0;
-	for (auto vertex : vertices)
+	for (auto vertex : this->vertices)
 		originalToFinal[vertex] = index++;
 
-	for (int h = 0; h < this->numberOfHexahedronsPerSegment; h++)
-		for (int v = 0; v < 8; v++)
-			this->final->hexahedronConnectivity[segment * this->numberOfHexahedronsPerSegment + h][v] = originalToFinal[this->final->hexahedronConnectivity[segment * this->numberOfHexahedronsPerSegment + h][v]];
+	for (auto& hexahedron : this->final->hexahedronConnectivity)
+		for (auto vertex = hexahedron.begin(); vertex != hexahedron.end() - 1; vertex++)
+			*vertex = originalToFinal[*vertex];
 
-	for (int p = 0; p < this->numberOfPrismsPerSegment; p++)
-		for (int v = 0; v < 6; v++)
-			this->final->prismConnectivity[segment * this->numberOfPrismsPerSegment + p][v] = originalToFinal[this->final->prismConnectivity[segment * this->numberOfPrismsPerSegment + p][v]];
+	for (auto& prism : this->final->prismConnectivity)
+		for (auto vertex = prism.begin(); vertex != prism.end() - 1; vertex++)
+			*vertex = originalToFinal[*vertex];
 
-	this->final->lineConnectivity[segment][0] = originalToFinal[this->final->lineConnectivity[segment][0]]; this->final->lineConnectivity[segment][1] = originalToFinal[this->final->lineConnectivity[segment][1]];
+	for (auto& line : this->final->lineConnectivity)
+		for (auto vertex = line.begin(); vertex != line.end() - 1; vertex++)
+			*vertex = originalToFinal[*vertex];
+
+	for (int s = 0; s < this->numberOfSegments; s++) {
+		for (int h = 0; h < this->numberOfHexahedronsPerSegment; h++)
+			this->final->hexahedronConnectivity[s * this->numberOfHexahedronsPerSegment + h].back() = this->elementShift++;
+
+		for (int p = 0; p < this->numberOfPrismsPerSegment; p++)
+			this->final->prismConnectivity[s * this->numberOfPrismsPerSegment + p].back() = this->elementShift++;
+	}
+
+	for (int s = 0; s < this->numberOfSegments; s++)
+		this->final->lineConnectivity[s].back() = this->elementShift++;
 }
 
 RadialGridDataReordered::~RadialGridDataReordered() {
 	printf("\n\n");
 	printf("\tprisms: %i\n", int(this->prisms.size()));
 	printf("\thexahedra: %i\n", int(this->hexahedra.size()));
+	printf("\tvertices: %i\n", int(this->vertices.size()));
 }

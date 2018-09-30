@@ -18,6 +18,25 @@ FixtureTestSuite(RadialGridDataReorderSuite, RadialGridDataReorderFixture)
 
 TestCase(RadialGridDataReorderTest) {
 	RadialGridDataReordered radialGridDataReordered(this->gridData);
+
+	auto final = radialGridDataReordered.final;
+
+	for (int i = 0; i < 24; i++) {
+		std::cout << "\t";
+		for (auto v : final->hexahedronConnectivity[i])
+			std::cout << "\t" << v;
+		std::cout << std::endl;
+	}
+
+	std::cout << std::endl;
+
+	for (int i = 0; i < 12; i++) {
+		std::cout << "\t";
+		for (auto v : final->prismConnectivity[i])
+			std::cout << "\t" << v;
+		std::cout << std::endl;
+	}
+
 }
 
 TestSuiteEnd()

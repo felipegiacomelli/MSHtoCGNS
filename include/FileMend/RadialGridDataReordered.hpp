@@ -21,12 +21,15 @@ class RadialGridDataReordered {
 
 		~RadialGridDataReordered();
 
+		GridDataShared final;
+
 	private:
 		void checkGridData();
 		void defineQuantities();
 		void copyElements();
 		void reorder();
-		void fixIndices(int segment);
+		void addVertices(int segment);
+		void fixIndices();
 
 		// void buildElementConnectivities();
 		// void extractRegions();
@@ -35,7 +38,6 @@ class RadialGridDataReordered {
 		// void extractVertices();
 
 		GridDataShared gridData;
-		GridDataShared final;
 
 		int numberOfSegments;
 		int numberOfPrismsPerSegment;
@@ -44,6 +46,8 @@ class RadialGridDataReordered {
 
 		std::vector<std::array<int, 9>> hexahedra;
 		std::vector<std::array<int, 7>> prisms;
+
+		std::vector<int> vertices;
 
 		int vertexShift = 0;
 		int elementShift = 0;
