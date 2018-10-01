@@ -15,5 +15,6 @@
 #define check BOOST_CHECK
 #define checkClose BOOST_CHECK_CLOSE
 #define checkEqual BOOST_CHECK_EQUAL
+#define checkSmall BOOST_CHECK_SMALL
 
 #endif

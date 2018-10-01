@@ -38,7 +38,7 @@ class RadialGridDataReordered {
 		void defineQuantities();
 		void copyData();
 		void reorder();
-		void addVertices(int segment);
+		void addVertices();
 		void fixIndices();
 		void copyVertices();
 		void copyRegions();
@@ -62,7 +62,6 @@ class RadialGridDataReordered {
 		std::vector<std::array<int, 7>> prisms;
 
 		std::vector<int> vertices;
-		std::vector<int> vs;
 
 		int vertexShift = 0;
 		int elementShift = 0;

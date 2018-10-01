@@ -8,6 +8,7 @@ RadialGridDataReordered::RadialGridDataReordered(GridDataShared gridData) : grid
 	this->final = MakeShared<GridData>();
 	this->final->dimension = 3;
 	this->reorder();
+	this->addVertices();
 	this->fixIndices();
 	this->copyVertices();
 	this->copyRegions();
@@ -123,7 +124,6 @@ void RadialGridDataReordered::reorder() {
 				firstFacet = lastFacet;
 			}
 		}
-		this->addVertices(s);
 
 		// std::cout << "\tsegment \033[1;31m" << s << "\033[0m: " << this->final->lineConnectivity[s][0] << " - " << this->final->lineConnectivity[s][1] << std::endl;
 
@@ -140,18 +140,7 @@ void RadialGridDataReordered::reorder() {
 	}
 }
 
-void RadialGridDataReordered::addVertices(int segment) {
-	for (int v = 0; v < 2; v++)
-		if (!hasElement(this->vertices.cbegin(), this->vertices.cend(), this->final->lineConnectivity[segment][v]))
-			this->vertices.push_back(this->final->lineConnectivity[segment][v]);
-
-	for (int h = 0; h < this->numberOfHexahedronsPerSegment; h++)
-		for (int v = 0; v < 8; v++)
-			if (!hasElement(this->vertices.cbegin(), this->vertices.cend(), this->final->hexahedronConnectivity[segment * this->numberOfHexahedronsPerSegment + h][v]))
-				this->vertices.push_back(this->final->hexahedronConnectivity[segment * this->numberOfHexahedronsPerSegment + h][v]);
-}
-
-void RadialGridDataReordered::fixIndices() {
+void RadialGridDataReordered::addVertices() {
 	for (int s = 0; s < this->numberOfSegments; s++) {
 		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[s][0]];
 		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[s][1]];
@@ -161,7 +150,7 @@ void RadialGridDataReordered::fixIndices() {
 
 		for (auto coordinate = this->coordinates.cbegin(); coordinate != this->coordinates.cend(); coordinate++)
 			if (std::abs(std::inner_product(coordinate->cbegin(), coordinate->cend(), normal.begin(), -d)) < 1e-4)
-				this->vs.push_back(coordinate - this->coordinates.cbegin());
+				this->vertices.push_back(coordinate - this->coordinates.cbegin());
 
 		std::cout << "\tplane:" << std::scientific << std::setprecision(6) << "\t" << normal[0] << "\t" << normal[1] << "\t" << normal[2] << "\t" << d << std::endl << std::endl;
 	}
@@ -174,19 +163,20 @@ void RadialGridDataReordered::fixIndices() {
 
 		for (auto coordinate = this->coordinates.cbegin(); coordinate != this->coordinates.cend(); coordinate++)
 			if (std::abs(std::inner_product(coordinate->cbegin(), coordinate->cend(), normal.begin(), -d)) < 1e-4)
-				this->vs.push_back(coordinate - this->coordinates.cbegin());
+				this->vertices.push_back(coordinate - this->coordinates.cbegin());
 
 		std::cout << "\tplane:" << std::scientific << std::setprecision(6) << "\t" << normal[0] << "\t" << normal[1] << "\t" << normal[2] << "\t" << d << std::endl << std::endl;
 	}
-	// printf("\n\tvs (%i) \n", int(vs.size()));
-	// for (auto v : this->vs)
+	// printf("\n\tvertices (%i) \n", int(vertices.size()));
+	// for (auto v : this->vertices)
 		// std::cout << "\t" << std::right << std::setw(4) << v << ":" << "\t" << std::scientific << std::setprecision(4) << this->coordinates[v][2] << std::endl;
 	// std::cout << std::endl << std::endl;
+}
 
+void RadialGridDataReordered::fixIndices() {
 	std::unordered_map<int, int> originalToFinal;
 	int index = 0;
-	// for (auto vertex : this->vertices)
-	for (auto vertex : this->vs)
+	for (auto vertex : this->vertices)
 		originalToFinal[vertex] = index++;
 
 	for (auto& hexahedron : this->final->hexahedronConnectivity)
@@ -214,8 +204,7 @@ void RadialGridDataReordered::fixIndices() {
 }
 
 void RadialGridDataReordered::copyVertices() {
-	// for (auto vertex : this->vertices)
-	for (auto vertex : this->vs)
+	for (auto vertex : this->vertices)
 		this->final->coordinates.emplace_back(this->gridData->coordinates[vertex]);
 }
 
@@ -233,5 +222,4 @@ RadialGridDataReordered::~RadialGridDataReordered() {
 	printf("\tprisms: %i\n", int(this->prisms.size()));
 	printf("\thexahedra: %i\n", int(this->hexahedra.size()));
 	printf("\tvertices: %i\n", int(this->vertices.size()));
-	printf("\tvs: %i\n", int(this->vs.size()));
 }
