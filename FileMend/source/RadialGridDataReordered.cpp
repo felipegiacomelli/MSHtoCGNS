@@ -9,10 +9,10 @@ RadialGridDataReordered::RadialGridDataReordered(GridDataShared gridData) : grid
 	this->final->dimension = 3;
 	this->reorder();
 	this->addVertices();
-	this->fixIndices();
 	this->copyVertices();
 	this->copyRegions();
 	this->copyWells();
+	this->fixIndices();
 }
 
 void RadialGridDataReordered::checkGridData() {
@@ -83,83 +83,90 @@ void RadialGridDataReordered::reorder() {
 	for (int s = 0; s < this->numberOfSegments; s++) {
 		this->final->lineConnectivity.push_back(this->gridData->lineConnectivity[s]);
 
-		for (const auto& prism : this->prisms)
-			if (hasElement(prism.cbegin(), prism.cend()-1, this->final->lineConnectivity[s].front()))
-				this->final->prismConnectivity.push_back(prism);
-
-		for (auto rit = this->final->prismConnectivity.crbegin(); rit != this->final->prismConnectivity.crend()-s*this->numberOfPrismsPerSegment; rit++)
-			this->prisms.erase(this->prisms.begin() + rit->back());
-		for (auto i = 0u; i < this->prisms.size(); i++)
-			this->prisms[i].back() = i;
+		for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
+			if (hasElement(prism->cbegin(), prism->cend()-1, this->final->lineConnectivity[s].front()))
+				this->copyPrism(prism);
+			else
+				prism++;
 
 		for (int p = 0; p < this->numberOfPrismsPerSegment; p++) {
-			std::vector<int> firstFacet(4);
-			std::copy_if(this->final->prismConnectivity[s*this->numberOfPrismsPerSegment+p].cbegin(), this->final->prismConnectivity[s*this->numberOfPrismsPerSegment+p].cend()-1, firstFacet.begin(), [=](auto& p){return p != this->final->lineConnectivity[s][0] && p != this->final->lineConnectivity[s][1];});
+			auto prism = this->final->prismConnectivity[s*this->numberOfPrismsPerSegment+p];
+			auto line = this->final->lineConnectivity[s];
+			std::array<int, 4> firstFacet;
+			std::copy_if(prism.cbegin(), prism.cend()-1, firstFacet.begin(), [=](auto& p){return p != line[0] && p != line[1];});
 
-			for (const auto& hexa : this->hexahedra)
-				if (hasElement(hexa.cbegin(), hexa.cend()-1, firstFacet[0]))
-					if (hasElement(hexa.cbegin(), hexa.cend()-1, firstFacet[1]))
-						if (hasElement(hexa.cbegin(), hexa.cend()-1, firstFacet[2]))
-							if (hasElement(hexa.cbegin(), hexa.cend()-1, firstFacet[3]))
-								this->final->hexahedronConnectivity.push_back(hexa);
-
-			this->hexahedra.erase(this->hexahedra.begin() + this->final->hexahedronConnectivity.back().back());
-			for (auto i = 0u; i < this->hexahedra.size(); i++)
-				this->hexahedra[i].back() = i;
+			for (auto hexa = this->hexahedra.begin(); hexa != this->hexahedra.end();)
+				if (hasElements(hexa->cbegin(), hexa->cend()-1, firstFacet))
+					this->copyHexahedron(hexa);
+				else
+					hexa++;
 
 			for (int h = 0; h < this->numberOfHexahedronsPerRadius-1; h++) {
-				std::vector<int> lastFacet(4);
-				std::copy_if(this->final->hexahedronConnectivity.back().cbegin(), this->final->hexahedronConnectivity.back().cend()-1, lastFacet.begin(), [=](auto& p){return !hasElement(firstFacet.cbegin(), firstFacet.cend(), p);});
+				auto hexahedron = this->final->hexahedronConnectivity.back();
+				std::array<int, 4> lastFacet;
+				std::copy_if(hexahedron.cbegin(), hexahedron.cend()-1, lastFacet.begin(), [=](auto& p){return !hasElement(firstFacet.cbegin(), firstFacet.cend(), p);});
 
-				for (const auto& hexa : this->hexahedra)
-					if (hasElement(hexa.cbegin(), hexa.cend()-1, lastFacet[0]))
-						if (hasElement(hexa.cbegin(), hexa.cend()-1, lastFacet[1]))
-							if (hasElement(hexa.cbegin(), hexa.cend()-1, lastFacet[2]))
-								if (hasElement(hexa.cbegin(), hexa.cend()-1, lastFacet[3]))
-									this->final->hexahedronConnectivity.push_back(hexa);
-
-				this->hexahedra.erase(this->hexahedra.begin() + this->final->hexahedronConnectivity.back().back());
-				for (auto i = 0u; i < this->hexahedra.size(); i++)
-					this->hexahedra[i].back() = i;
+				for (auto hexa = this->hexahedra.begin(); hexa != this->hexahedra.end();)
+					if (hasElements(hexa->cbegin(), hexa->cend()-1, lastFacet))
+						this->copyHexahedron(hexa);
+					else
+						hexa++;
 
 				firstFacet = lastFacet;
 			}
 		}
-
-		// std::cout << "\tsegment \033[1;31m" << s << "\033[0m: " << this->final->lineConnectivity[s][0] << " - " << this->final->lineConnectivity[s][1] << std::endl;
-
-		// printf("\n\t\tprismIndices (%i): ", int(this->final->prismConnectivity.size() / (s+1)));
-		// for (int i = 0; i < this->numberOfPrismsPerSegment; i++)
-		// 	std::cout << this->final->prismConnectivity[s*this->numberOfPrismsPerSegment+i].back() << ", ";;
-
-		// printf("\n\t\thexahIndices (%i): ", int(this->final->hexahedronConnectivity.size() / (s+1)));
-		// for (int i = 0; i < this->numberOfHexahedronsPerSegment; i++)
-		// 	std::cout << this->final->hexahedronConnectivity[s*this->numberOfHexahedronsPerSegment+i].back() << ", ";
-
-		// printf("\n\n");
-
 	}
 }
 
+void RadialGridDataReordered::copyPrism(std::vector<std::array<int, 7>>::iterator prism) {
+	this->final->prismConnectivity.push_back(this->gridData->prismConnectivity[prism->back()]);
+	prism = this->prisms.erase(prism);
+}
+
+void RadialGridDataReordered::copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron) {
+	this->final->hexahedronConnectivity.push_back(this->gridData->hexahedronConnectivity[hexahedron->back()]);
+	hexahedron = this->hexahedra.erase(hexahedron);
+}
+
 void RadialGridDataReordered::addVertices() {
-	for (int s = 0; s < this->numberOfSegments; s++) {
-		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[s][0]];
-		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[s][1]];
+	{
+		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[0][0]];
+		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[0][1]];
 
 		std::array<double, 3> normal;
 		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<double>());
 
 		double d = std::inner_product(first.begin(), first.end(), normal.begin(), 0.0);
 
-		for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();) {
-			if (std::abs(std::inner_product(coordinate->second.cbegin(), coordinate->second.cend(), normal.begin(), -d)) < this->tolerance) {
-				this->vertices.push_back(coordinate->first);
-				coordinate = this->coordinates.erase(coordinate);
-			}
+		for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();)
+			if (std::abs(std::inner_product(coordinate->second.cbegin(), coordinate->second.cend(), normal.begin(), -d)) < this->tolerance)
+				this->addVertex(coordinate);
 			else
 				coordinate++;
-		}
 	}
+
+	for (int s = 1; s < this->numberOfSegments; s++) {
+		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[s-1][0]];
+		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[s-1][1]];
+		std::array<double, 3> temporary;
+		std::transform(first.begin(), first.end(), last.begin(), temporary.begin(), std::minus<double>());
+
+		first = this->gridData->coordinates[this->gridData->lineConnectivity[s][0]];
+		last  = this->gridData->coordinates[this->gridData->lineConnectivity[s][1]];
+		std::array<double, 3> normal;
+		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<double>());
+
+		std::transform(temporary.begin(), temporary.end(), normal.begin(), normal.begin(), std::plus<double>());
+
+		double d = -1.0 * std::inner_product(first.begin(), first.end(), normal.begin(), 0.0);
+
+		for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();)
+			if (std::abs(std::inner_product(coordinate->second.cbegin(), coordinate->second.cend(), normal.begin(), d)) < this->tolerance)
+				this->addVertex(coordinate);
+			else
+				coordinate++;
+	}
+
 	{
 		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[this->numberOfSegments-1][0]];
 		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[this->numberOfSegments-1][1]];
@@ -167,21 +174,32 @@ void RadialGridDataReordered::addVertices() {
 		std::array<double, 3> normal;
 		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<double>());
 
-		double d = std::inner_product(last.begin(), last.end(), normal.begin(), 0.0);
+		double d = -1.0 * std::inner_product(last.begin(), last.end(), normal.begin(), 0.0);
 
-		for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();) {
-			if (std::abs(std::inner_product(coordinate->second.cbegin(), coordinate->second.cend(), normal.begin(), -d)) < this->tolerance) {
-				this->vertices.push_back(coordinate->first);
-				coordinate = this->coordinates.erase(coordinate);
-			}
+		for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();)
+			if (std::abs(std::inner_product(coordinate->second.cbegin(), coordinate->second.cend(), normal.begin(), d)) < this->tolerance)
+				this->addVertex(coordinate);
 			else
 				coordinate++;
 		}
-	}
-	// printf("\n\tvertices (%i) \n", int(vertices.size()));
-	// for (auto v : this->vertices)
-		// std::cout << "\t" << std::right << std::setw(4) << v << ":" << "\t" << std::scientific << std::setprecision(4) << this->coordinates[v][2] << std::endl;
-	// std::cout << std::endl << std::endl;
+}
+
+void RadialGridDataReordered::addVertex(std::vector<std::pair<int, std::array<double, 3>>>::iterator vertex) {
+	this->vertices.push_back(vertex->first);
+	vertex = this->coordinates.erase(vertex);
+}
+
+void RadialGridDataReordered::copyVertices() {
+	for (auto vertex : this->vertices)
+		this->final->coordinates.emplace_back(this->gridData->coordinates[vertex]);
+}
+
+void RadialGridDataReordered::copyRegions() {
+	this->final->regions = this->gridData->regions;
+}
+
+void RadialGridDataReordered::copyWells() {
+	this->final->wells = this->gridData->wells;
 }
 
 void RadialGridDataReordered::fixIndices() {
@@ -202,6 +220,9 @@ void RadialGridDataReordered::fixIndices() {
 		for (auto vertex = line.begin(); vertex != line.end() - 1; vertex++)
 			*vertex = originalToFinal[*vertex];
 
+	for (auto& vertex : this->final->wells[0].vertices)
+		vertex = originalToFinal[vertex];
+
 	for (int s = 0; s < this->numberOfSegments; s++) {
 		for (int h = 0; h < this->numberOfHexahedronsPerSegment; h++)
 			this->final->hexahedronConnectivity[s * this->numberOfHexahedronsPerSegment + h].back() = this->elementShift++;
@@ -212,26 +233,4 @@ void RadialGridDataReordered::fixIndices() {
 
 	for (int s = 0; s < this->numberOfSegments; s++)
 		this->final->lineConnectivity[s].back() = this->elementShift++;
-}
-
-void RadialGridDataReordered::copyVertices() {
-	for (auto vertex : this->vertices)
-		this->final->coordinates.emplace_back(this->gridData->coordinates[vertex]);
-}
-
-void RadialGridDataReordered::copyRegions() {
-	this->final->regions = this->gridData->regions;
-}
-
-void RadialGridDataReordered::copyWells() {
-	this->final->wells = this->gridData->wells;
-	this->final->wells[0].vertices.clear();
-}
-
-RadialGridDataReordered::~RadialGridDataReordered() {
-	printf("\n\n");
-	printf("\tprisms: %i\n", int(this->prisms.size()));
-	printf("\thexahedra: %i\n", int(this->hexahedra.size()));
-	printf("\tvertices: %i\n", int(this->vertices.size()));
-	printf("\tcoordinates: %i\n", int(this->coordinates.size()));
 }

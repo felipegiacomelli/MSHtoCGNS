@@ -15,11 +15,21 @@ bool hasElement(InputIt cbegin, InputIt cend, const int& element) {
 	return std::find(cbegin, cend, element) != cend;
 }
 
+template<class InputIt>
+bool hasElements(InputIt cbegin, InputIt cend, const std::array<int, 4>& facetConnectivity) {
+	bool close = true;
+
+	for (const int& vertex : facetConnectivity)
+		close &= hasElement(cbegin, cend, vertex);
+
+	return close;
+}
+
 class RadialGridDataReordered {
 	public:
 		RadialGridDataReordered(GridDataShared gridData);
 
-		~RadialGridDataReordered();
+		~RadialGridDataReordered() = default;
 
 		GridDataShared final;
 
@@ -30,7 +40,10 @@ class RadialGridDataReordered {
 		void defineQuantities();
 		void copyData();
 		void reorder();
+		void copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron);
+		void copyPrism(std::vector<std::array<int, 7>>::iterator prism);
 		void addVertices();
+		void addVertex(std::vector<std::pair<int, std::array<double, 3>>>::iterator vertex);
 		void fixIndices();
 		void copyVertices();
 		void copyRegions();

@@ -1,3 +1,23 @@
+RadialGridDataReordered::~RadialGridDataReordered() {
+	printf("\n\n");
+	printf("\tprisms: %i\n", int(this->prisms.size()));
+	printf("\thexahedra: %i\n", int(this->hexahedra.size()));
+	printf("\tvertices: %i\n", int(this->vertices.size()));
+	printf("\tcoordinates: %i\n", int(this->coordinates.size()));
+}
+
+		// std::cout << "\tsegment \033[1;31m" << s << "\033[0m: " << this->final->lineConnectivity[s][0] << " - " << this->final->lineConnectivity[s][1] << std::endl;
+
+		// printf("\n\t\tprismIndices (%i): ", int(this->final->prismConnectivity.size() / (s+1)));
+		// for (int i = 0; i < this->numberOfPrismsPerSegment; i++)
+		// 	std::cout << this->final->prismConnectivity[s*this->numberOfPrismsPerSegment+i].back() << ", ";;
+
+		// printf("\n\t\thexahIndices (%i): ", int(this->final->hexahedronConnectivity.size() / (s+1)));
+		// for (int i = 0; i < this->numberOfHexahedronsPerSegment; i++)
+		// 	std::cout << this->final->hexahedronConnectivity[s*this->numberOfHexahedronsPerSegment+i].back() << ", ";
+
+		// printf("\n\n");
+
 	for (int i = 0; i < 24; i++) {
 		std::cout << "\t";
 		for (auto v : final->hexahedronConnectivity[i])
