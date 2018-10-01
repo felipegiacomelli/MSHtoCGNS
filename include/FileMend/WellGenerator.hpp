@@ -11,8 +11,6 @@
 #include <Utilities/Vector.hpp>
 #include <Grid/GridData.hpp>
 
-#define TOLERANCE 1e-3
-
 struct WellGeneratorData {
 	std::string regionName;
 	std::array<double, 3> wellStart;
@@ -25,6 +23,8 @@ class WellGenerator {
 		WellGenerator(GridDataShared gridData, std::string wellGeneratorScript);
 
 		~WellGenerator() = default;
+
+		double tolerance = 1e-3;
 
 	private:
 		void checkGridData();

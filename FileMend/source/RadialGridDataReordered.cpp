@@ -67,7 +67,8 @@ void RadialGridDataReordered::defineQuantities() {
 }
 
 void RadialGridDataReordered::copyData() {
-	this->coordinates = this->gridData->coordinates;
+	for (auto i = 0u; i < this->gridData->coordinates.size(); i++)
+		this->coordinates.emplace_back(std::make_pair(i, this->gridData->coordinates[i]));
 
 	this->hexahedra = this->gridData->hexahedronConnectivity;
 	for (auto i = 0u; i < this->hexahedra.size(); i++)
@@ -145,27 +146,37 @@ void RadialGridDataReordered::addVertices() {
 		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[s][0]];
 		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[s][1]];
 
-		auto normal =  last - first;
+		std::array<double, 3> normal;
+		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<double>());
+
 		double d = std::inner_product(first.begin(), first.end(), normal.begin(), 0.0);
 
-		for (auto coordinate = this->coordinates.cbegin(); coordinate != this->coordinates.cend(); coordinate++)
-			if (std::abs(std::inner_product(coordinate->cbegin(), coordinate->cend(), normal.begin(), -d)) < 1e-4)
-				this->vertices.push_back(coordinate - this->coordinates.cbegin());
-
-		std::cout << "\tplane:" << std::scientific << std::setprecision(6) << "\t" << normal[0] << "\t" << normal[1] << "\t" << normal[2] << "\t" << d << std::endl << std::endl;
+		for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();) {
+			if (std::abs(std::inner_product(coordinate->second.cbegin(), coordinate->second.cend(), normal.begin(), -d)) < this->tolerance) {
+				this->vertices.push_back(coordinate->first);
+				coordinate = this->coordinates.erase(coordinate);
+			}
+			else
+				coordinate++;
+		}
 	}
 	{
 		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[this->numberOfSegments-1][0]];
 		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[this->numberOfSegments-1][1]];
 
-		auto normal =  last - first;
+		std::array<double, 3> normal;
+		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<double>());
+
 		double d = std::inner_product(last.begin(), last.end(), normal.begin(), 0.0);
 
-		for (auto coordinate = this->coordinates.cbegin(); coordinate != this->coordinates.cend(); coordinate++)
-			if (std::abs(std::inner_product(coordinate->cbegin(), coordinate->cend(), normal.begin(), -d)) < 1e-4)
-				this->vertices.push_back(coordinate - this->coordinates.cbegin());
-
-		std::cout << "\tplane:" << std::scientific << std::setprecision(6) << "\t" << normal[0] << "\t" << normal[1] << "\t" << normal[2] << "\t" << d << std::endl << std::endl;
+		for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();) {
+			if (std::abs(std::inner_product(coordinate->second.cbegin(), coordinate->second.cend(), normal.begin(), -d)) < this->tolerance) {
+				this->vertices.push_back(coordinate->first);
+				coordinate = this->coordinates.erase(coordinate);
+			}
+			else
+				coordinate++;
+		}
 	}
 	// printf("\n\tvertices (%i) \n", int(vertices.size()));
 	// for (auto v : this->vertices)
@@ -222,4 +233,5 @@ RadialGridDataReordered::~RadialGridDataReordered() {
 	printf("\tprisms: %i\n", int(this->prisms.size()));
 	printf("\thexahedra: %i\n", int(this->hexahedra.size()));
 	printf("\tvertices: %i\n", int(this->vertices.size()));
+	printf("\tcoordinates: %i\n", int(this->coordinates.size()));
 }
