@@ -15,6 +15,16 @@ bool hasElement(InputIt cbegin, InputIt cend, const int& element) {
 	return std::find(cbegin, cend, element) != cend;
 }
 
+template<class T>
+T operator -(const T& a, const T& b) {
+	T c;
+
+	for (auto i = 0u; i < a.size(); i++)
+		c[i] = a[i] - b[i];
+
+	return c;
+}
+
 class RadialGridDataReordered {
 	public:
 		RadialGridDataReordered(GridDataShared gridData);
@@ -26,10 +36,13 @@ class RadialGridDataReordered {
 	private:
 		void checkGridData();
 		void defineQuantities();
-		void copyElements();
+		void copyData();
 		void reorder();
 		void addVertices(int segment);
 		void fixIndices();
+		void copyVertices();
+		void copyRegions();
+		void copyWells();
 
 		// void buildElementConnectivities();
 		// void extractRegions();
@@ -44,10 +57,12 @@ class RadialGridDataReordered {
 		int numberOfHexahedronsPerSegment;
 		int numberOfHexahedronsPerRadius;
 
+		std::vector<std::array<double, 3>> coordinates;
 		std::vector<std::array<int, 9>> hexahedra;
 		std::vector<std::array<int, 7>> prisms;
 
 		std::vector<int> vertices;
+		std::vector<int> vs;
 
 		int vertexShift = 0;
 		int elementShift = 0;
