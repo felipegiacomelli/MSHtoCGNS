@@ -75,7 +75,7 @@ void CgnsReader::readNumberOfBoundaries() {
 
 void CgnsReader::readBoundaries() {
 	if (static_cast<unsigned>(this->numberOfBoundaries) != this->gridData->boundaries.size())
-		throw std::runtime_error("CgnsReader: mismatch between number of boundary conditions and boundary connectivities");
+		throw std::runtime_error("CgnsReader: mismatch between number of boundary conditions " + std::to_string(this->numberOfBoundaries) + " and number of boundaries " + std::to_string(this->gridData->boundaries.size()));
 
 	for (int boundaryIndex = 1; boundaryIndex <= this->numberOfBoundaries; boundaryIndex++) {
 		BCType_t boundaryConditionType;

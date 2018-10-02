@@ -40,7 +40,7 @@ void SpecialCgnsReader3D::readSections() {
 
 		std::string sectionName(this->buffer);
 		if (sectionName.substr(sectionName.length() - 3) == "_1D") {
-			this->numberOfBoundaries--;
+			// this->numberOfBoundaries--;
 			continue;
 		}
 		if (sectionName.substr(sectionName.length() - 3) == "_0D")
@@ -183,7 +183,7 @@ void SpecialCgnsReader3D::readSections() {
 				break;
 			}
 			case BAR_2: {
-				this->numberOfBoundaries--;
+				// this->numberOfBoundaries--;
 				break;
 			}
 			default:
@@ -194,7 +194,7 @@ void SpecialCgnsReader3D::readSections() {
 
 void SpecialCgnsReader3D::readBoundaries() {
 	if (static_cast<unsigned>(this->numberOfBoundaries) != this->gridData->boundaries.size())
-		throw std::runtime_error("SpecialCgnsReader3D: mismatch between number of boundary conditions and boundary connectivities");
+		throw std::runtime_error("SpecialCgnsReader3D: mismatch between number of boundary conditions " + std::to_string(this->numberOfBoundaries) + " and number of boundaries " + std::to_string(this->gridData->boundaries.size()));
 
 	for (int boundaryIndex = 1; boundaryIndex <= this->numberOfBoundaries; boundaryIndex++) {
 		BCType_t boundaryConditionType;
