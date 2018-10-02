@@ -29,7 +29,7 @@ class CgnsReader {
 		virtual void readSections() = 0;
 		void addRegion(std::string&& name, int elementStart, int numberOfElements);
 		void addBoundary(std::string&& name, int elementStart, int numberOfElements);
-		void readBoundaries();
+		virtual void readBoundaries();
 		int readSolutionIndex(std::string solutionName);
 
 		std::string filePath;

@@ -191,3 +191,24 @@ void SpecialCgnsReader3D::readSections() {
 		}
 	}
 }
+
+void SpecialCgnsReader3D::readBoundaries() {
+	if (static_cast<unsigned>(this->numberOfBoundaries) != this->gridData->boundaries.size())
+		throw std::runtime_error("SpecialCgnsReader3D: mismatch between number of boundary conditions and boundary connectivities");
+
+	for (int boundaryIndex = 1; boundaryIndex <= this->numberOfBoundaries; boundaryIndex++) {
+		BCType_t boundaryConditionType;
+		PointSetType_t pointSetType;
+		int numberOfVertices, NormalListSize;
+		int NormalIndex, ndataset;
+		DataType_t NormalDataType;
+		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &boundaryConditionType, &pointSetType, &numberOfVertices, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset))
+			throw std::runtime_error("SpecialCgnsReader3D: Could not read boundary information");
+
+		std::vector<int> vertices(numberOfVertices);
+		if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, &vertices[0], nullptr))
+			throw std::runtime_error("SpecialCgnsReader3D: Could not read boundary");
+
+		std::transform(vertices.cbegin(), vertices.cend(), std::back_inserter(this->gridData->boundaries[boundaryIndex - 1].vertices), [](auto x){return x - 1;});
+	}
+}

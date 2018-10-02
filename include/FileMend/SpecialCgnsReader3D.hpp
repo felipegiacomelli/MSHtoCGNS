@@ -10,6 +10,7 @@ class SpecialCgnsReader3D : public CgnsReader {
 	private:
 		void readCoordinates() override;
 		void readSections() override;
+		void readBoundaries() override;
 };
 
 #endif

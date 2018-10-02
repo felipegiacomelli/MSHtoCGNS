@@ -2,6 +2,6 @@
     "path" :
     {
         "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/CgnsInterface/3D-Region1-Mixed/12523v_57072e.cgns",
-        "output" : "/home/felipe/Downloads/mender/"
+        "output" : "/home/felipe/Downloads/msh_to_cgns/mender/"
     }
 }
