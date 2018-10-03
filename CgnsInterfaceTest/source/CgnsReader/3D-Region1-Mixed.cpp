@@ -16,7 +16,7 @@ struct Region1_Mixed_3D_Cgns {
 
 FixtureTestSuite(ReadCgns_Region1_Mixed_3D, Region1_Mixed_3D_Cgns)
 
-TestCase(Sizes) {
+TestCase(CgnsReader3DTest) {
 	checkEqual(this->gridData->coordinates.size(), 12523u);
 	checkEqual(this->gridData->tetrahedronConnectivity.size(), 53352u);
 	checkEqual(this->gridData->hexahedronConnectivity.size(), 1848u);
@@ -28,75 +28,61 @@ TestCase(Sizes) {
 	checkEqual(this->gridData->boundaries.size(), 6u);
 	checkEqual(this->gridData->regions.size(), 2u);
 	checkEqual(this->gridData->wells.size(), 1u);
-}
 
-TestCase(Tetrahedra) {
-	auto connectivity = this->gridData->tetrahedronConnectivity.front();
-	checkEqual(connectivity[0], 12522); checkEqual(connectivity[1],  187); checkEqual(connectivity[2], 8793); checkEqual(connectivity[3], 3980);
-	checkEqual(connectivity.back(), 0);
+	auto tetrahedron = this->gridData->tetrahedronConnectivity.front();
+	checkEqual(tetrahedron[0], 12522); checkEqual(tetrahedron[1],  187); checkEqual(tetrahedron[2], 8793); checkEqual(tetrahedron[3], 3980);
+	checkEqual(tetrahedron.back(), 0);
 
-	connectivity = this->gridData->tetrahedronConnectivity.back();
-	checkEqual(connectivity[0], 12150); checkEqual(connectivity[1],  10771); checkEqual(connectivity[2], 10772); checkEqual(connectivity[3], 3620);
-	checkEqual(connectivity.back(), 53351);
-}
+	tetrahedron = this->gridData->tetrahedronConnectivity.back();
+	checkEqual(tetrahedron[0], 12150); checkEqual(tetrahedron[1],  10771); checkEqual(tetrahedron[2], 10772); checkEqual(tetrahedron[3], 3620);
+	checkEqual(tetrahedron.back(), 53351);
 
-TestCase(Hexahedra) {
-	auto connectivity = this->gridData->hexahedronConnectivity.front();
-	checkEqual(connectivity[0], 11573); checkEqual(connectivity[1], 11567); checkEqual(connectivity[2], 10039); checkEqual(connectivity[3], 10052); checkEqual(connectivity[4], 11574); checkEqual(connectivity[5], 11568); checkEqual(connectivity[6], 10041); checkEqual(connectivity[7], 10054);
-	checkEqual(connectivity.back(), 54300);
+	auto hexahedron = this->gridData->hexahedronConnectivity.front();
+	checkEqual(hexahedron[0], 11573); checkEqual(hexahedron[1], 11567); checkEqual(hexahedron[2], 10039); checkEqual(hexahedron[3], 10052); checkEqual(hexahedron[4], 11574); checkEqual(hexahedron[5], 11568); checkEqual(hexahedron[6], 10041); checkEqual(hexahedron[7], 10054);
+	checkEqual(hexahedron.back(), 54300);
 
-	connectivity = this->gridData->hexahedronConnectivity.back();
-	checkEqual(connectivity.back(), 56147);
-}
+	hexahedron = this->gridData->hexahedronConnectivity.back();
+	checkEqual(hexahedron.back(), 56147);
 
-TestCase(Prisms) {
-	auto connectivity = this->gridData->prismConnectivity.front();
-	checkEqual(connectivity[0], 9471); checkEqual(connectivity[1], 10275); checkEqual(connectivity[2], 10278); checkEqual(connectivity[3], 9484); checkEqual(connectivity[4], 10287); checkEqual(connectivity[5], 10290);
-	checkEqual(connectivity.back(), 56148);
+	auto prism = this->gridData->prismConnectivity.front();
+	checkEqual(prism[0], 9471); checkEqual(prism[1], 10275); checkEqual(prism[2], 10278); checkEqual(prism[3], 9484); checkEqual(prism[4], 10287); checkEqual(prism[5], 10290);
+	checkEqual(prism.back(), 56148);
 
-	connectivity = this->gridData->prismConnectivity.back();
-	checkEqual(connectivity[0], 9770); checkEqual(connectivity[1], 10554); checkEqual(connectivity[2], 11061); checkEqual(connectivity[3], 9783); checkEqual(connectivity[4], 10566); checkEqual(connectivity[5], 11067);
-	checkEqual(connectivity.back(), 57071);
-}
+	prism = this->gridData->prismConnectivity.back();
+	checkEqual(prism[0], 9770); checkEqual(prism[1], 10554); checkEqual(prism[2], 11061); checkEqual(prism[3], 9783); checkEqual(prism[4], 10566); checkEqual(prism[5], 11067);
+	checkEqual(prism.back(), 57071);
 
-TestCase(Pyramids) {
-	auto connectivity = this->gridData->pyramidConnectivity.front();
-	checkEqual(connectivity[0], 8796); checkEqual(connectivity[1], 8794); checkEqual(connectivity[2], 8793); checkEqual(connectivity[3], 8795); checkEqual(connectivity[4], 12522);
-	checkEqual(connectivity.back(), 53352);
+	auto pyramid = this->gridData->pyramidConnectivity.front();
+	checkEqual(pyramid[0], 8796); checkEqual(pyramid[1], 8794); checkEqual(pyramid[2], 8793); checkEqual(pyramid[3], 8795); checkEqual(pyramid[4], 12522);
+	checkEqual(pyramid.back(), 53352);
 
-	connectivity = this->gridData->pyramidConnectivity.back();
-	checkEqual(connectivity[0], 10060); checkEqual(connectivity[1], 10047); checkEqual(connectivity[2], 10044); checkEqual(connectivity[3], 10057); checkEqual(connectivity[4], 11575);
-	checkEqual(connectivity.back(), 54299);
-}
+	pyramid = this->gridData->pyramidConnectivity.back();
+	checkEqual(pyramid[0], 10060); checkEqual(pyramid[1], 10047); checkEqual(pyramid[2], 10044); checkEqual(pyramid[3], 10057); checkEqual(pyramid[4], 11575);
+	checkEqual(pyramid.back(), 54299);
 
-TestCase(Triangles) {
-	auto connectivity = this->gridData->triangleConnectivity.front();
-	checkEqual(connectivity[0], 8688); 	checkEqual(connectivity[1], 911); 	checkEqual(connectivity[2], 1025);
-	checkEqual(connectivity.back(), 57072);
+	auto triangle = this->gridData->triangleConnectivity.front();
+	checkEqual(triangle[0], 8688); 	checkEqual(triangle[1], 911); 	checkEqual(triangle[2], 1025);
+	checkEqual(triangle.back(), 57072);
 
-	connectivity = this->gridData->triangleConnectivity.back();
-	checkEqual(connectivity[0], 8815); 	checkEqual(connectivity[1], 8893); 	checkEqual(connectivity[2], 8702);
-	checkEqual(connectivity.back(), 59933);
-}
+	triangle = this->gridData->triangleConnectivity.back();
+	checkEqual(triangle[0], 8815); 	checkEqual(triangle[1], 8893); 	checkEqual(triangle[2], 8702);
+	checkEqual(triangle.back(), 59933);
 
-TestCase(Quadrangles) {
-	auto connectivity = this->gridData->quadrangleConnectivity.front();
-	checkEqual(connectivity[0], 8946); 	checkEqual(connectivity[1], 8948); 	checkEqual(connectivity[2], 8698); 	checkEqual(connectivity[3], 8694);
-	checkEqual(connectivity.back(), 59934);
+	auto quadrangle = this->gridData->quadrangleConnectivity.front();
+	checkEqual(quadrangle[0], 8946); 	checkEqual(quadrangle[1], 8948); 	checkEqual(quadrangle[2], 8698); 	checkEqual(quadrangle[3], 8694);
+	checkEqual(quadrangle.back(), 59934);
 
-	connectivity = this->gridData->quadrangleConnectivity.back();
-	checkEqual(connectivity[0], 8811); 	checkEqual(connectivity[1], 8889); 	checkEqual(connectivity[2], 8891); 	checkEqual(connectivity[3], 8813);
-	checkEqual(connectivity.back(), 59957);
-}
+	quadrangle = this->gridData->quadrangleConnectivity.back();
+	checkEqual(quadrangle[0], 8811); 	checkEqual(quadrangle[1], 8889); 	checkEqual(quadrangle[2], 8891); 	checkEqual(quadrangle[3], 8813);
+	checkEqual(quadrangle.back(), 59957);
 
-TestCase(Lines) {
-	auto connectivity = this->gridData->lineConnectivity.front();
-	checkEqual(connectivity[0], 9056); checkEqual(connectivity[1], 9069);
-	checkEqual(connectivity.back(), 59958);
+	auto line = this->gridData->lineConnectivity.front();
+	checkEqual(line[0], 9056); checkEqual(line[1], 9069);
+	checkEqual(line.back(), 59958);
 
-	connectivity = this->gridData->lineConnectivity.back();
-	checkEqual(connectivity[0], 9069); checkEqual(connectivity[1], 9250);
-	checkEqual(connectivity.back(), 60034);
+	line = this->gridData->lineConnectivity.back();
+	checkEqual(line[0], 9069); checkEqual(line[1], 9250);
+	checkEqual(line.back(), 60034);
 }
 
 TestSuiteEnd()
