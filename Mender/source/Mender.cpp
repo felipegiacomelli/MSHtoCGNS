@@ -111,8 +111,6 @@ int main() {
 		}
 		propertyTree.add_child("wells", entities);
 
-		output(propertyTree, "script.json");
-
 		GridDataExtractor gridDataExtractor(gridData, propertyTree);
 		radialGridData = gridDataExtractor.extract;
 	}
