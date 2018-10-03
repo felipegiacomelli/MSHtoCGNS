@@ -29,10 +29,10 @@ void applyRatio(GridDataShared gridData, const double& ratio) {
 }
 
 int main() {
-	boost::property_tree::ptree iroot;
-	boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMender.json", iroot);
-	std::string inputPath  = iroot.get<std::string>("path.input");
-	std::string outputPath = iroot.get<std::string>("path.output");
+	boost::property_tree::ptree propertyTree;
+	boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMender.json", propertyTree);
+	std::string inputPath  = propertyTree.get<std::string>("path.input");
+	std::string outputPath = propertyTree.get<std::string>("path.output");
 
 	auto start = std::chrono::steady_clock::now();
 	SpecialCgnsReader3D reader(inputPath);
@@ -83,7 +83,7 @@ void printGridDataInformation(GridDataShared gridData) {
 
 	std::cout << std::endl << "\t\tnumberOfBoundaries: " << gridData->boundaries.size();
 	for (auto boundary : gridData->boundaries)
-		std::cout << std::endl << "\t\t\t" << std::setw(20) << std::left << boundary.name << ": " << std::setw(6) << std::right << boundary.facetsOnBoundary.front() << " - " << boundary.facetsOnBoundary.back() << " | " << boundary.facetsOnBoundary.size();
+		std::cout << std::endl << "\t\t\t" << std::setw(20) << std::left << boundary.name << ": " << std::setw(6) << std::right << boundary.facetsOnBoundary.front() << " - " << boundary.facetsOnBoundary.back() << " | " << boundary.facetsOnBoundary.size() << " | " << boundary.vertices.size();
 	std::cout << std::endl;
 
 	std::cout << std::endl << "\t\tnumberOfWells: " << gridData->wells.size();

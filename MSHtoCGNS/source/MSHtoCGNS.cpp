@@ -18,10 +18,10 @@ int main(int argc, char** argv) {
 
 	switch (dimension) {
 		case 2: {
-   			boost::property_tree::ptree iroot;
-    		boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "Script2D.json", iroot);
-    		std::string inputPath  = iroot.get<std::string>("path.input");
-    		std::string outputPath = iroot.get<std::string>("path.output");
+   			boost::property_tree::ptree propertyTree;
+    		boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "Script2D.json", propertyTree);
+    		std::string inputPath  = propertyTree.get<std::string>("path.input");
+    		std::string outputPath = propertyTree.get<std::string>("path.output");
 
 			auto start = std::chrono::steady_clock::now();
 			MshReader2D reader2D(inputPath);
@@ -41,10 +41,10 @@ int main(int argc, char** argv) {
 			break;
 		}
 		case 3: {
-			boost::property_tree::ptree iroot;
-			boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "Script3D.json", iroot);
-			std::string inputPath  = iroot.get<std::string>("path.input");
-			std::string outputPath = iroot.get<std::string>("path.output");
+			boost::property_tree::ptree propertyTree;
+			boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "Script3D.json", propertyTree);
+			std::string inputPath  = propertyTree.get<std::string>("path.input");
+			std::string outputPath = propertyTree.get<std::string>("path.output");
 
 			auto start = std::chrono::steady_clock::now();
 			MshReader3D reader3D(inputPath);

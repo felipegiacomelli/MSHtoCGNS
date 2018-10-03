@@ -34,16 +34,15 @@ void SpecialCgnsReader3D::readSections() {
 		ElementType_t elementType;
 		int elementStart, elementEnd;
 		int lastBoundaryElement, parentFlag;
-		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd,
-								&lastBoundaryElement, &parentFlag))
+		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag))
 			throw std::runtime_error("SpecialCgnsReader3D: Could not read section");
 
 		std::string sectionName(this->buffer);
-		if (sectionName.substr(sectionName.length() - 3) == "_1D") {
-			// this->numberOfBoundaries--;
+		if (sectionName.substr(sectionName.length() - 3) == "_1D")
 			continue;
-		}
 		if (sectionName.substr(sectionName.length() - 3) == "_0D")
+			continue;
+		if (elementType == BAR_2)
 			continue;
 
 		int numberOfElements = elementEnd - elementStart + 1;
@@ -182,10 +181,6 @@ void SpecialCgnsReader3D::readSections() {
 				}
 				break;
 			}
-			case BAR_2: {
-				// this->numberOfBoundaries--;
-				break;
-			}
 			default:
 				throw std::runtime_error("SpecialCgnsReader3D: Section " + std::string(this->buffer) + " element type " + std::to_string(elementType) + " not supported");
 		}
@@ -193,9 +188,6 @@ void SpecialCgnsReader3D::readSections() {
 }
 
 void SpecialCgnsReader3D::readBoundaries() {
-	if (static_cast<unsigned>(this->numberOfBoundaries) != this->gridData->boundaries.size())
-		throw std::runtime_error("SpecialCgnsReader3D: mismatch between number of boundary conditions " + std::to_string(this->numberOfBoundaries) + " and number of boundaries " + std::to_string(this->gridData->boundaries.size()));
-
 	for (int boundaryIndex = 1; boundaryIndex <= this->numberOfBoundaries; boundaryIndex++) {
 		BCType_t boundaryConditionType;
 		PointSetType_t pointSetType;
@@ -205,10 +197,19 @@ void SpecialCgnsReader3D::readBoundaries() {
 		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &boundaryConditionType, &pointSetType, &numberOfVertices, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset))
 			throw std::runtime_error("SpecialCgnsReader3D: Could not read boundary information");
 
-		std::vector<int> vertices(numberOfVertices);
-		if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, &vertices[0], nullptr))
-			throw std::runtime_error("SpecialCgnsReader3D: Could not read boundary");
+		if (cg_goto(this->fileIndex, this->baseIndex, "Zone_t", this->zoneIndex, "ZoneBC_t", 1, "BC_t", boundaryIndex, nullptr))
+			throw std::runtime_error("SpecialCgnsReader3D: Could go to boundary condition " + std::to_string(boundaryIndex));
 
-		std::transform(vertices.cbegin(), vertices.cend(), std::back_inserter(this->gridData->boundaries[boundaryIndex - 1].vertices), [](auto x){return x - 1;});
+		if (cg_famname_read(this->buffer))
+			throw std::runtime_error("SpecialCgnsReader3D: Could not read boundary condition " + std::to_string(boundaryIndex) + " family name");
+
+		auto boundary = std::find_if(this->gridData->boundaries.begin(), this->gridData->boundaries.end(), [this](auto b){return b.name == std::string(this->buffer);});
+		if (boundary != this->gridData->boundaries.end()) {
+			std::vector<int> vertices(numberOfVertices);
+			if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, &vertices[0], nullptr))
+				throw std::runtime_error("SpecialCgnsReader3D: Could not read boundary " + std::to_string(boundaryIndex));
+
+			std::transform(vertices.cbegin(), vertices.cend(), std::back_inserter(boundary->vertices), [](auto x){return x - 1;});
+		}
 	}
 }

@@ -19,18 +19,18 @@ void GridDataExtractor::checkGridData() {
 }
 
 void GridDataExtractor::readScript() {
-	boost::property_tree::ptree iroot;
-	boost::property_tree::read_json(this->gridDataExtractorScript, iroot);
+	boost::property_tree::ptree propertyTree;
+	boost::property_tree::read_json(this->gridDataExtractorScript, propertyTree);
 
 	this->gridDataExtractorDatum.emplace_back();
 
-	for (auto region : iroot.get_child("regions"))
+	for (auto region : propertyTree.get_child("regions"))
 		this->gridDataExtractorDatum.back().regions.emplace_back(region.second.get_value<std::string>());
 
-	for (auto boundary : iroot.get_child("boundaries"))
+	for (auto boundary : propertyTree.get_child("boundaries"))
 		this->gridDataExtractorDatum.back().boundaries.emplace_back(boundary.second.get_value<std::string>());
 
-	for (auto wells : iroot.get_child("wells"))
+	for (auto wells : propertyTree.get_child("wells"))
 		this->gridDataExtractorDatum.back().wells.emplace_back(wells.second.get_value<std::string>());
 }
 
