@@ -8,7 +8,7 @@
 #include <FileMend/GridDataExtractor.hpp>
 #include <Utilities/Print.hpp>
 
-#include <MultipleBasesCgnsCreator3D.hpp>
+#include <FileMend/MultipleBasesCgnsCreator3D.hpp>
 
 void printGridDataInformation(GridDataShared gridData);
 
@@ -44,14 +44,14 @@ int main() {
 	GridDataExtractor gridDataExtractor(gridData, std::string(SCRIPT_DIRECTORY) + "ScriptGridDataExtractor.json");
 
 	std::vector<GridDataShared> gridDatas{gridData, gridDataExtractor.extract};
-	std::vector<std::string> zoneNames{"Rock", "Reservoir"};
+	std::vector<std::string> baseNames{"Rock", "Reservoir"};
 
 	printGridDataInformation(gridDatas.back());
 	printf("\t#############################\n");
 
 	start = std::chrono::steady_clock::now();
-	// MultipleBasesCgnsCreator3D creator(gridDatas, zoneNames, outputPath.string());
 	CgnsCreator3D creator(gridDataExtractor.extract, outputPath.string());
+	// MultipleBasesCgnsCreator3D(gridDatas, baseNames, outputPath.string());
 	end = std::chrono::steady_clock::now();
 
 	elapsedSeconds = end - start;

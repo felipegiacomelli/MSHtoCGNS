@@ -5,7 +5,7 @@
 
 class MultipleBasesCgnsCreator3D : public CgnsCreator {
 	public:
-		MultipleBasesCgnsCreator3D(std::vector<GridDataShared> gridDatas, std::vector<std::string> zoneNames, std::string folderPath);
+		MultipleBasesCgnsCreator3D(std::vector<GridDataShared> gridDatas, std::vector<std::string> baseNames, std::string folderPath);
 
 	private:
 		void initialize();
@@ -19,7 +19,7 @@ class MultipleBasesCgnsCreator3D : public CgnsCreator {
 		void writeWells();
 
 		std::vector<GridDataShared> gridDatas;
-		std::vector<std::string> zoneNames;
+		std::vector<std::string> baseNames;
 		bool firstCall;
 };
 

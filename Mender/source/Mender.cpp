@@ -1,12 +1,19 @@
 #include <chrono>
 
+#include <Utilities/Output.hpp>
 #include <Grid/GridData.hpp>
 #include <FileMend/SpecialCgnsReader3D.hpp>
-#include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
 #include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
 #include <FileMend/WellGenerator.hpp>
+#include <FileMend/GridDataExtractor.hpp>
+#include <FileMend/RadialGridDataReordered.hpp>
+#include <FileMend/MultipleBasesCgnsCreator3D.hpp>
 
 void printGridDataInformation(GridDataShared gridData);
+
+void renameZones(GridDataShared gridData, boost::property_tree::ptree) {
+
+}
 
 void createSingleRegion(GridDataShared gridData, std::string regionName) {
 	std::vector<int> elementsOnRegion;
@@ -44,8 +51,8 @@ int main() {
 
 	printGridDataInformation(gridData);
 
-	propertyTree.clear();
 	{
+		propertyTree.clear();
 		std::string regionName("WELL_BODY");
 
 		boost::property_tree::ptree wellStart;
@@ -65,13 +72,58 @@ int main() {
 		wellRegions.push_back(std::make_pair("", region));
 
 		propertyTree.add_child("wellRegions", wellRegions);
-	}
 
-	WellGenerator wellGenerator(gridData, propertyTree);
+		WellGenerator wellGenerator(gridData, propertyTree);
+	}
 	// WellGenerator wellGenerator(gridData, std::string(SCRIPT_DIRECTORY) + "ScriptWellGenerator.json");
 
+	GridDataShared radialGridData;
+	{
+		propertyTree.clear();
+
+		boost::property_tree::ptree entities;
+
+		std::vector<std::string> names{"WELL_BODY"};
+		for (auto name : names) {
+			boost::property_tree::ptree entity;
+			entity.put("", name);
+			entities.push_back(std::make_pair("", entity));
+		}
+		propertyTree.add_child("regions", entities);
+
+		entities.clear();
+
+		names = std::vector<std::string>{};
+		for (auto name : names) {
+			boost::property_tree::ptree entity;
+			entity.put("", name);
+			entities.push_back(std::make_pair("", entity));
+		}
+		propertyTree.add_child("boundaries", entities);
+
+		entities.clear();
+
+		names = std::vector<std::string>{"LINE_WELL"};
+		for (auto name : names) {
+			boost::property_tree::ptree entity;
+			entity.put("", name);
+			entities.push_back(std::make_pair("", entity));
+		}
+		propertyTree.add_child("wells", entities);
+
+		output(propertyTree, "script.json");
+
+		GridDataExtractor gridDataExtractor(gridData, propertyTree);
+		radialGridData = gridDataExtractor.extract;
+	}
+	// GridDataExtractor gridDataExtractor(gridData, std::string(SCRIPT_DIRECTORY) + "ScriptGridDataExtractor.json")
+	// radialGridData = gridDataExtractor.extract;
+
+	RadialGridDataReordered radialGridDataReordered(radialGridData);
+	radialGridData = radialGridData;
+
 	start = std::chrono::steady_clock::now();
-	CgnsCreator3D creator(gridData, outputPath);
+	MultipleBasesCgnsCreator3D creator({gridData, radialGridData}, {"Reservoir", "Well"}, outputPath);
 	end = std::chrono::steady_clock::now();
 	elapsedSeconds = end - start;
 	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";

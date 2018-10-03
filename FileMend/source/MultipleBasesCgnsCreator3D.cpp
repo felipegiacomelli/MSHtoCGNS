@@ -1,7 +1,7 @@
-#include <MultipleBasesCgnsCreator3D.hpp>
+#include <FileMend/MultipleBasesCgnsCreator3D.hpp>
 #include <cgnslib.h>
 
-MultipleBasesCgnsCreator3D::MultipleBasesCgnsCreator3D(std::vector<GridDataShared> gridDatas, std::vector<std::string> zoneNames, std::string folderPath) : CgnsCreator(nullptr, folderPath), gridDatas(gridDatas), zoneNames(zoneNames), firstCall(true) {
+MultipleBasesCgnsCreator3D::MultipleBasesCgnsCreator3D(std::vector<GridDataShared> gridDatas, std::vector<std::string> baseNames, std::string folderPath) : CgnsCreator(nullptr, folderPath), gridDatas(gridDatas), baseNames(baseNames), firstCall(true) {
 	this->initialize();
 }
 
@@ -17,8 +17,8 @@ void MultipleBasesCgnsCreator3D::initialize() {
 			this->setupFile();
 		}
 
-		this->baseName = this->zoneNames[i];
-		this->zoneName = this->zoneNames[i];
+		this->baseName = this->baseNames[i];
+		this->zoneName = this->baseNames[i];
 
 		this->writeBase();
 		this->writeZone();

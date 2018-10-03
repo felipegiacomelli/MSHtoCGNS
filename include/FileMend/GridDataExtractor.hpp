@@ -20,6 +20,8 @@ class GridDataExtractor {
 	public:
 		GridDataExtractor(GridDataShared original, std::string gridDataExtractorScript);
 
+		GridDataExtractor(GridDataShared original, boost::property_tree::ptree propertyTree);
+
 		~GridDataExtractor() = default;
 
 		GridDataShared extract;
@@ -35,7 +37,8 @@ class GridDataExtractor {
 		void fixIndices();
 
 		GridDataShared original;
-		std::string gridDataExtractorScript;
+		boost::property_tree::ptree propertyTree;
+
 		std::vector<GridDataExtractorData> gridDataExtractorDatum;
 		std::vector<std::vector<int>> elementConnectivities;
 		std::set<int> vertices;

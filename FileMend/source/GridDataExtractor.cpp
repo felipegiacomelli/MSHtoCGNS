@@ -1,6 +1,20 @@
 #include <FileMend/GridDataExtractor.hpp>
 
-GridDataExtractor::GridDataExtractor(GridDataShared original, std::string gridDataExtractorScript) : original(original), gridDataExtractorScript(gridDataExtractorScript) {
+GridDataExtractor::GridDataExtractor(GridDataShared original, std::string gridDataExtractorScript) : original(original) {
+	this->checkGridData();
+	boost::property_tree::read_json(gridDataExtractorScript, this->propertyTree);
+	this->readScript();
+	this->buildElementConnectivities();
+	this->extract = MakeShared<GridData>();
+	this->extract->dimension = 3;
+	this->extractRegions();
+	this->extractBoundaries();
+	this->extractWells();
+	this->extractVertices();
+	this->fixIndices();
+}
+
+GridDataExtractor::GridDataExtractor(GridDataShared original, boost::property_tree::ptree propertyTree) : original(original), propertyTree(propertyTree) {
 	this->checkGridData();
 	this->readScript();
 	this->buildElementConnectivities();
@@ -19,18 +33,15 @@ void GridDataExtractor::checkGridData() {
 }
 
 void GridDataExtractor::readScript() {
-	boost::property_tree::ptree propertyTree;
-	boost::property_tree::read_json(this->gridDataExtractorScript, propertyTree);
-
 	this->gridDataExtractorDatum.emplace_back();
 
-	for (auto region : propertyTree.get_child("regions"))
+	for (auto region : this->propertyTree.get_child("regions"))
 		this->gridDataExtractorDatum.back().regions.emplace_back(region.second.get_value<std::string>());
 
-	for (auto boundary : propertyTree.get_child("boundaries"))
+	for (auto boundary : this->propertyTree.get_child("boundaries"))
 		this->gridDataExtractorDatum.back().boundaries.emplace_back(boundary.second.get_value<std::string>());
 
-	for (auto wells : propertyTree.get_child("wells"))
+	for (auto wells : this->propertyTree.get_child("wells"))
 		this->gridDataExtractorDatum.back().wells.emplace_back(wells.second.get_value<std::string>());
 }
 
@@ -80,7 +91,7 @@ void GridDataExtractor::extractRegions() {
 			for (auto vertex  : *element)
 				this->vertices.insert(vertex);
 
-			element->push_back(this->localIndex);
+			element->push_back(this->localIndex++);
 
 			switch (element->size()) {
 				case 5: {
@@ -108,8 +119,6 @@ void GridDataExtractor::extractRegions() {
 					break;
 				}
 			}
-
-			this->localIndex++;
 
 		}
 
@@ -146,11 +155,11 @@ void GridDataExtractor::extractBoundaries() {
 		auto boundaryBegin = this->elementConnectivities.begin() + boundary.facetsOnBoundary.front();
 		auto boundaryEnd = this->elementConnectivities.begin() + boundary.facetsOnBoundary.back() + 1;
 
-		std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), localIndex);
+		std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), this->localIndex);
 
 		for (auto facet = boundaryBegin; facet != boundaryEnd; facet++) {
 
-			facet->push_back(localIndex);
+			facet->push_back(this->localIndex++);
 
 			switch (facet->size()) {
 				case 4: {
@@ -166,8 +175,6 @@ void GridDataExtractor::extractBoundaries() {
 					break;
 				}
 			}
-
-			localIndex++;
 
 		}
 
@@ -186,18 +193,15 @@ void GridDataExtractor::extractWells() {
 		auto wellBegin = this->elementConnectivities.begin() + well.linesOnWell.front();
 		auto wellEnd = this->elementConnectivities.begin() + well.linesOnWell.back() + 1;
 
-		std::iota(well.linesOnWell.begin(), well.linesOnWell.end(), localIndex);
+		std::iota(well.linesOnWell.begin(), well.linesOnWell.end(), this->localIndex);
 
 		for (auto element = wellBegin; element != wellEnd; element++) {
 
-			element->push_back(localIndex);
+			element->push_back(this->localIndex++);
 
 			std::array<int, 3> line;
 			std::copy_n(element->cbegin(), 3, std::begin(line));
 			this->extract->lineConnectivity.emplace_back(std::move(line));
-
-			localIndex++;
-
 		}
 
 		this->extract->wells.emplace_back(well);

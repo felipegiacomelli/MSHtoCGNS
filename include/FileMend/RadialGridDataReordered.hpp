@@ -49,12 +49,6 @@ class RadialGridDataReordered {
 		void copyRegions();
 		void copyWells();
 
-		// void buildElementConnectivities();
-		// void extractRegions();
-		// void extractBoundaries();
-		// void extractWells();
-		// void extractVertices();
-
 		GridDataShared gridData;
 
 		int numberOfSegments;
