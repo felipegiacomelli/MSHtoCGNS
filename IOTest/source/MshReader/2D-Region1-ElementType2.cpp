@@ -1,5 +1,5 @@
 #include <BoostInterface/Test.hpp>
-#include <IO/MshReader2D.hpp>
+#include <IO/MshReader/MshReader2D.hpp>
 
 #define TOLERANCE 1e-12
 

@@ -6,8 +6,8 @@
 #include <BoostInterface/PropertyTree.hpp>
 #include <Grid/GridData.hpp>
 #include <IO/Output.hpp>
-#include <IO/MshReader2D.hpp>
-#include <IO/MshReader3D.hpp>
+#include <IO/MshReader/MshReader2D.hpp>
+#include <IO/MshReader/MshReader3D.hpp>
 #include <CgnsInterface/CgnsCreator/CgnsCreator2D.hpp>
 #include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
 

@@ -1,5 +1,5 @@
-#ifndef CGNS_INTERFACE_CGNS_CREATOR_HPP
-#define CGNS_INTERFACE_CGNS_CREATOR_HPP
+#ifndef CGNS_CREATOR_HPP
+#define CGNS_CREATOR_HPP
 
 #include <set>
 #include <algorithm>

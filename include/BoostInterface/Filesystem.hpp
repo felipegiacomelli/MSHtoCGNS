@@ -1,5 +1,5 @@
-#ifndef BOOST_INTERFACE_FILESYSTEM_HPP
-#define BOOST_INTERFACE_FILESYSTEM_HPP
+#ifndef FILESYSTEM_HPP
+#define FILESYSTEM_HPP
 
 #include <iostream>
 

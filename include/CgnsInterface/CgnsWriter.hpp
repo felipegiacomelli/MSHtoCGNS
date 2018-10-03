@@ -1,5 +1,5 @@
-#ifndef CGNS_INTERFACE_CGNS_WRITER_HPP
-#define CGNS_INTERFACE_CGNS_WRITER_HPP
+#ifndef CGNS_WRITER_HPP
+#define CGNS_WRITER_HPP
 
 #include <BoostInterface/Filesystem.hpp>
 

@@ -1,5 +1,5 @@
-#ifndef CGNS_INTERFACE_CGNS_READER_HPP
-#define CGNS_INTERFACE_CGNS_READER_HPP
+#ifndef CGNS_READER_HPP
+#define CGNS_READER_HPP
 
 #include <BoostInterface/Filesystem.hpp>
 #include <Grid/GridData.hpp>
