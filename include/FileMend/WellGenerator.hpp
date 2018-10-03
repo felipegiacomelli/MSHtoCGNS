@@ -22,6 +22,8 @@ class WellGenerator {
 	public:
 		WellGenerator(GridDataShared gridData, std::string wellGeneratorScript);
 
+		WellGenerator(GridDataShared gridData, boost::property_tree::ptree propertyTree);
+
 		~WellGenerator() = default;
 
 		double tolerance = 1e-3;
@@ -34,7 +36,8 @@ class WellGenerator {
 		bool isClose(const std::array<double, 3>& coordinate, const std::array<double, 3>& referencePoint);
 
 		GridDataShared gridData;
-		std::string wellGeneratorScript;
+		boost::property_tree::ptree propertyTree;
+
 		std::vector<WellGeneratorData> wellGeneratorDatum;
 		int lineConnectivityShift;
 

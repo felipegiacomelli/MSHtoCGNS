@@ -1,3 +1,10 @@
+	// std::ofstream outputFile("ScriptWellGenerator.json");
+	// std::stringstream ss;
+	// boost::property_tree::json_parser::write_json(ss, propertyTree);
+	// outputFile << ss.str();
+	// outputFile.close();
+
+
 RadialGridDataReordered::~RadialGridDataReordered() {
 	printf("\n\n");
 	printf("\tprisms: %i\n", int(this->prisms.size()));

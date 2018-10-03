@@ -1,6 +1,13 @@
 #include <FileMend/WellGenerator.hpp>
 
-WellGenerator::WellGenerator(GridDataShared gridData, std::string wellGeneratorScript) : gridData(gridData), wellGeneratorScript(wellGeneratorScript) {
+WellGenerator::WellGenerator(GridDataShared gridData, std::string wellGeneratorScript) : gridData(gridData) {
+	this->checkGridData();
+	boost::property_tree::read_json(wellGeneratorScript, this->propertyTree);
+	this->readScript();
+	this->generateWells();
+}
+
+WellGenerator::WellGenerator(GridDataShared gridData, boost::property_tree::ptree propertyTree) : gridData(gridData), propertyTree(propertyTree) {
 	this->checkGridData();
 	this->readScript();
 	this->generateWells();
@@ -18,10 +25,7 @@ void WellGenerator::checkGridData() {
 }
 
 void WellGenerator::readScript() {
-	boost::property_tree::ptree propertyTree;
-	boost::property_tree::read_json(this->wellGeneratorScript, propertyTree);
-
-	for (const auto& wellRegion : propertyTree.get_child("wellRegions")) {
+	for (const auto& wellRegion : this->propertyTree.get_child("wellRegions")) {
 		this->wellGeneratorDatum.emplace_back();
 
 		this->wellGeneratorDatum.back().regionName = wellRegion.second.get<std::string>("regionName");

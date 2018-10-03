@@ -44,10 +44,31 @@ int main() {
 
 	printGridDataInformation(gridData);
 
-	WellGenerator wellGenerator(gridData, std::string(SCRIPT_DIRECTORY) + "ScriptWellGenerator.json");
+	propertyTree.clear();
+	{
+		std::string regionName("WELL_BODY");
 
-	// createSingleRegion(gridData, "RESERVOIR");
-	// applyRatio(gridData, 1.0);
+		boost::property_tree::ptree wellStart;
+		boost::property_tree::ptree x, y, z;
+		x.put("",  20.0); wellStart.push_back(std::make_pair("", x));
+		y.put("", 125.0); wellStart.push_back(std::make_pair("", y));
+		z.put("",  50.0); wellStart.push_back(std::make_pair("", z));
+
+		std::string wellName("LINE_WELL");
+
+		boost::property_tree::ptree region;
+		region.put("regionName", regionName);
+		region.add_child("wellStart", wellStart);
+		region.put("wellName", wellName);
+
+		boost::property_tree::ptree wellRegions;
+		wellRegions.push_back(std::make_pair("", region));
+
+		propertyTree.add_child("wellRegions", wellRegions);
+	}
+
+	WellGenerator wellGenerator(gridData, propertyTree);
+	// WellGenerator wellGenerator(gridData, std::string(SCRIPT_DIRECTORY) + "ScriptWellGenerator.json");
 
 	start = std::chrono::steady_clock::now();
 	CgnsCreator3D creator(gridData, outputPath);
