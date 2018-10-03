@@ -1,13 +1,13 @@
-#ifndef MSH_READER_2D_HPP
-#define MSH_READER_2D_HPP
+#ifndef MSH_READER_3D_HPP
+#define MSH_READER_3D_HPP
 
-#include <IO/MshReader.hpp>
+#include <MshInterface/MshReader.hpp>
 
-class MshReader2D : public MshReader {
+class MshReader3D : public MshReader {
 	public:
-		MshReader2D(std::string filePath);
+		MshReader3D(std::string filePath);
 
-		~MshReader2D() = default;
+		~MshReader3D() = default;
 
 	private:
 		void readPhysicalEntities() override;

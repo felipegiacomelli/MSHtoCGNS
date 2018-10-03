@@ -1,11 +1,11 @@
 #include <BoostInterface/Test.hpp>
-#include <IO/MshReader/MshReader2D.hpp>
+#include <MshInterface/MshReader/MshReader2D.hpp>
 
 #define TOLERANCE 1e-12
 
 struct Region1_ElementType1_2D_Msh {
 	Region1_ElementType1_2D_Msh() {
-		MshReader2D mshReader2D(std::string(TEST_INPUT_DIRECTORY) + "IO/2D-Region1-ElementType1/5v_4e.msh");
+		MshReader2D mshReader2D(std::string(TEST_INPUT_DIRECTORY) + "MshInterface/2D-Region1-ElementType1/5v_4e.msh");
 		this->gridData = mshReader2D.gridData;
 	}
 

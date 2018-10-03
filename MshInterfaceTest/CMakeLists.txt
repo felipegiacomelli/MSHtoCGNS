@@ -1,6 +1,6 @@
-project (IOTest)
+project (MshInterfaceTest)
 
-set (Dependencies IO)
+set (Dependencies MshInterface)
 
 include_directories (${CMAKE_SOURCE_DIR}/include)
 

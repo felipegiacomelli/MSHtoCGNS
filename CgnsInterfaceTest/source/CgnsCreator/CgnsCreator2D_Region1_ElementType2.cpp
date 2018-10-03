@@ -1,6 +1,6 @@
 #include <BoostInterface/Test.hpp>
 #include <Grid/GridData.hpp>
-#include <IO/MshReader/MshReader2D.hpp>
+#include <MshInterface/MshReader/MshReader2D.hpp>
 #include <CgnsInterface/CgnsReader/CgnsReader2D.hpp>
 #include <CgnsInterface/CgnsCreator/CgnsCreator2D.hpp>
 #include <cgnslib.h>

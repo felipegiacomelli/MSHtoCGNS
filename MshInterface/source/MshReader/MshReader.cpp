@@ -1,4 +1,4 @@
-#include <IO/MshReader.hpp>
+#include <MshInterface/MshReader.hpp>
 
 MshReader::MshReader(std::string filePath) : filePath(filePath) {
 	this->checkFile();

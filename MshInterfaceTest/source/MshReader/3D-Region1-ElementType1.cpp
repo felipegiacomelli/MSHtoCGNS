@@ -1,11 +1,11 @@
 #include <BoostInterface/Test.hpp>
-#include <IO/MshReader/MshReader3D.hpp>
+#include <MshInterface/MshReader/MshReader3D.hpp>
 
 #define TOLERANCE 1e-12
 
 struct Region1_ElementType1_3D_Msh {
 	Region1_ElementType1_3D_Msh() {
-		MshReader3D mshReader3D(std::string(TEST_INPUT_DIRECTORY) + "IO/3D-Region1-ElementType1/14v_24e.msh");
+		MshReader3D mshReader3D(std::string(TEST_INPUT_DIRECTORY) + "MshInterface/3D-Region1-ElementType1/14v_24e.msh");
 		this->gridData = mshReader3D.gridData;
 	}
 

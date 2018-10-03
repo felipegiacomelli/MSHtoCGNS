@@ -1,4 +1,4 @@
-project (IO)
+project (MshInterface)
 
 set (Dependencies )
 

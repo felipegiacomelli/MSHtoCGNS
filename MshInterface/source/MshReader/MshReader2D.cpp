@@ -1,4 +1,4 @@
-#include <IO/MshReader/MshReader2D.hpp>
+#include <MshInterface/MshReader/MshReader2D.hpp>
 
 MshReader2D::MshReader2D(std::string filePath) : MshReader(filePath) {
 	this->gridData->dimension = 2;

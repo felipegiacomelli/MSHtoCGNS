@@ -1,4 +1,4 @@
-#include <IO/Output.hpp>
+#include <MshInterface/Output.hpp>
 
 void output(GridDataShared gridData, std::string fileName) {
 	std::ofstream file(fileName, std::ofstream::out);

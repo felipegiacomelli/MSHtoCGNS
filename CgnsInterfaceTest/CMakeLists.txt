@@ -1,6 +1,6 @@
 project (CgnsInterfaceTest)
 
-set (Dependencies BoostInterface CgnsInterface IO)
+set (Dependencies BoostInterface CgnsInterface MshInterface)
 
 include_directories (${CMAKE_SOURCE_DIR}/include)
 
