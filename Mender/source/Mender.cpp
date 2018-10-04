@@ -164,14 +164,14 @@ void runWithScript() {
 	RadialGridDataReordered radialGridDataReordered(gridData);
 	gridData = radialGridDataReordered.final;
 
-	// start = std::chrono::steady_clock::now();
-	// CgnsCreator3D creator(gridData, outputPath);
-	// end = std::chrono::steady_clock::now();
-	// elapsedSeconds = end - start;
-	// std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
-	// std::cout << std::endl << "\tOutput file location       : " << creator.getFileName() << std::endl << std::endl;
-
 	printGridDataInformation(gridData);
+
+	start = std::chrono::steady_clock::now();
+	CgnsCreator3D creator(gridData, outputPath);
+	end = std::chrono::steady_clock::now();
+	elapsedSeconds = end - start;
+	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
+	std::cout << std::endl << "\tOutput file location       : " << creator.getFileName() << std::endl << std::endl;
 }
 
 

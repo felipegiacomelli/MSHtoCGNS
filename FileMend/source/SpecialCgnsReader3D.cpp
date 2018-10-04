@@ -12,15 +12,15 @@ void SpecialCgnsReader3D::readCoordinates() {
 
 	std::vector<double> coordinatesX(this->sizes[0]);
 	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, this->sizes, &coordinatesX[0]))
-		throw std::runtime_error("CgnsReader3D: Could not read CoordinateX");
+		throw std::runtime_error("SpecialCgnsReader3D: Could not read CoordinateX");
 
 	std::vector<double> coordinatesY(this->sizes[0]);
 	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, this->sizes, &coordinatesY[0]))
-		throw std::runtime_error("CgnsReader3D: Could not read CoordinateY");
+		throw std::runtime_error("SpecialCgnsReader3D: Could not read CoordinateY");
 
 	std::vector<double> coordinatesZ(this->sizes[0]);
 	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateZ", RealDouble, &one, this->sizes, &coordinatesZ[0]))
-		throw std::runtime_error("CgnsReader3D: Could not read CoordinateZ");
+		throw std::runtime_error("SpecialCgnsReader3D: Could not read CoordinateZ");
 
 	this->gridData->coordinates.resize(this->sizes[0], std::array<double, 3>());
 	for (int i = 0; i < this->sizes[0]; i++) {
