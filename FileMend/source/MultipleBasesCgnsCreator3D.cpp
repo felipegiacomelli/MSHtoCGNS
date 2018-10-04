@@ -50,22 +50,22 @@ void MultipleBasesCgnsCreator3D::setDimensions() {
 }
 
 void MultipleBasesCgnsCreator3D::writeCoordinates() {
-	double coordinatesX[this->sizes[0]];
-	double coordinatesY[this->sizes[0]];
-	double coordinatesZ[this->sizes[0]];
+	std::vector<double> coordinatesX(this->sizes[0]);
+	std::vector<double> coordinatesY(this->sizes[0]);
+	std::vector<double> coordinatesZ(this->sizes[0]);
 	for (int i = 0; i < this->sizes[0]; i++) {
 		coordinatesX[i] = this->gridData->coordinates[i][0];
 		coordinatesY[i] = this->gridData->coordinates[i][1];
 		coordinatesZ[i] = this->gridData->coordinates[i][2];
 	}
 
-	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateX", coordinatesX, &this->coordinateIndex))
+	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateX", &coordinatesX[0], &this->coordinateIndex))
 		throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not write CoordinateX");
 
-	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateY", coordinatesY, &this->coordinateIndex))
+	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateY", &coordinatesY[0], &this->coordinateIndex))
 		throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not write CoordinateY");
 
-	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateZ", coordinatesZ, &this->coordinateIndex))
+	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateZ", &coordinatesZ[0], &this->coordinateIndex))
 		throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not write CoordinateZ");
 }
 

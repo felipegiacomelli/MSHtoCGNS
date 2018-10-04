@@ -125,11 +125,11 @@ void MshReader2D::addBoundaries() {
 void MshReader2D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
-		std::vector<std::array<int, 3>> facets(this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
+		std::vector<std::array<int, 3>> boundaryConnectivity(this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
 												this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->elements.size());
-		for (unsigned j = 0; j < facets.size(); j++)
+		for (unsigned j = 0; j < boundaryConnectivity.size(); j++)
 			for (unsigned k = 0; k != 2u; k++)
-				vertices.insert(facets[j][k]);
+				vertices.insert(boundaryConnectivity[j][k]);
 		boundary->vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
 	}
 }

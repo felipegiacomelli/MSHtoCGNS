@@ -16,7 +16,7 @@ class CgnsWriter {
 
 		void finalizeTransient();
 
-		~CgnsWriter();
+		virtual ~CgnsWriter();
 
 	private:
 		void initialize();

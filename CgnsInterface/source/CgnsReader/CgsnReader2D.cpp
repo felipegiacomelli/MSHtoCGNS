@@ -10,12 +10,12 @@ CgnsReader2D::CgnsReader2D(std::string filePath) : CgnsReader(filePath) {
 void CgnsReader2D::readCoordinates() {
 	int one = 1;
 
-	double coordinatesX[this->sizes[0]];
-	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, this->sizes, coordinatesX))
+	std::vector<double> coordinatesX(this->sizes[0]);
+	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, this->sizes, &coordinatesX[0]))
 		throw std::runtime_error("CgnsReader2D: Could not read CoordinateX");
 
-	double coordinatesY[this->sizes[0]];
-	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, this->sizes, coordinatesY))
+	std::vector<double> coordinatesY(this->sizes[0]);
+	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, this->sizes, &coordinatesY[0]))
 		throw std::runtime_error("CgnsReader2D: Could not read CoordinateY");
 
 	this->gridData->coordinates.resize(this->sizes[0], std::array<double, 3>());
@@ -44,8 +44,8 @@ void CgnsReader2D::readSections() {
 		if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
 			throw std::runtime_error("CgnsReader2D: Could not read element data size");
 
-		int connectivities[size];
-		if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, connectivities, nullptr))
+		std::vector<int> connectivities(size);
+		if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], nullptr))
 			throw std::runtime_error("CgnsReader2D: Could not read section elements");
 
 		int numberOfVertices;

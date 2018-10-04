@@ -17,7 +17,7 @@ class CgnsReader {
 
 		GridDataShared gridData;
 
-		~CgnsReader();
+		virtual ~CgnsReader();
 
 	protected:
 		void checkFile();
