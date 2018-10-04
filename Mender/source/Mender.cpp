@@ -11,6 +11,8 @@
 
 void printGridDataInformation(GridDataShared gridData);
 
+void runWithScript();
+
 void renameZones(GridDataShared gridData, boost::property_tree::ptree) {
 
 }
@@ -35,11 +37,18 @@ void applyRatio(GridDataShared gridData, const double& ratio) {
 			position *= ratio;
 }
 
-int main() {
+int main(int argc, char** argv) {
+	if (argc > 1) {
+		runWithScript();
+		return 0;
+	}
+
 	boost::property_tree::ptree propertyTree;
 	boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMender.json", propertyTree);
-	std::string inputPath  = propertyTree.get<std::string>("path.input");
-	std::string outputPath = propertyTree.get<std::string>("path.output");
+	// std::string inputPath  = propertyTree.get<std::string>("path.input");
+	// std::string outputPath = propertyTree.get<std::string>("path.output");
+	std::string inputPath  = std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/3D-Region1-Mixed/12523v_57072e.cgns";
+	std::string outputPath = "/home/felipe/Downloads/msh_to_cgns/mender/9821v_45841e";
 
 	auto start = std::chrono::steady_clock::now();
 	SpecialCgnsReader3D reader(inputPath);
@@ -131,6 +140,37 @@ int main() {
 
 	return 0;
 }
+
+void runWithScript() {
+	boost::property_tree::ptree propertyTree;
+	boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMender.json", propertyTree);
+	std::string inputPath  = propertyTree.get<std::string>("path.input");
+	std::string outputPath = propertyTree.get<std::string>("path.output");
+
+	auto start = std::chrono::steady_clock::now();
+	SpecialCgnsReader3D reader(inputPath);
+	GridDataShared gridData = reader.gridData;
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> elapsedSeconds = end - start;
+	std::cout << std::endl << "\tGrid path: " << inputPath;
+	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
+
+	printGridDataInformation(gridData);
+
+	propertyTree = propertyTree.get_child("ScriptWellGenerator");
+
+	WellGenerator wellGenerator(gridData, propertyTree);
+
+	start = std::chrono::steady_clock::now();
+	CgnsCreator3D creator(gridData, outputPath);
+	end = std::chrono::steady_clock::now();
+	elapsedSeconds = end - start;
+	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
+	std::cout << std::endl << "\tOutput file location       : " << creator.getFileName() << std::endl << std::endl;
+
+	printGridDataInformation(gridData);
+}
+
 
 void printGridDataInformation(GridDataShared gridData) {
 	std::cout << std::endl << "\t\tnumberOfElements: " << gridData->tetrahedronConnectivity.size() + gridData->hexahedronConnectivity.size() + gridData->prismConnectivity.size() + gridData->pyramidConnectivity.size();

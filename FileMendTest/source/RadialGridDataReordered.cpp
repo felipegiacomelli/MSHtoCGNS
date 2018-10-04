@@ -81,6 +81,10 @@ TestCase(RadialGridDataReorderTest) {
 	for (int i = 333; i < 370; i++)
 		checkClose(final->coordinates[i][2], 49.999999, TOLERANCE);
 
+	std::cout << std::endl;
+	for (int i = 0; i < 9; i++)
+		std::cout << std::scientific << std::setprecision(16) << std::abs(final->coordinates[final->lineConnectivity[i][0]][2] - final->coordinates[final->lineConnectivity[i][1]][2]) << std::endl;
+
 	for (int i = 0; i < 10; i++) {
 		if (i == 0 || i == 8 || i == 9) {
 			checkClose(final->coordinates[37*i +  0][0], -81.29376453, TOLERANCE);	checkClose(final->coordinates[37*i +  0][1], 55.17165378, TOLERANCE);
@@ -161,8 +165,6 @@ TestCase(RadialGridDataReorderTest) {
 			checkClose(final->coordinates[37*i + 36][0], -79.56877801, TOLERANCE);	checkClose(final->coordinates[37*i + 36][1], 61.60876730, TOLERANCE);
 		}
 	}
-
-	CgnsCreator3D creator(final, "/home/felipe/Downloads/msh_to_cgns");
 }
 
 TestSuiteEnd()

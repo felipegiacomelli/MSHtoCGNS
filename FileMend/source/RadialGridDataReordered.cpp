@@ -31,20 +31,11 @@ void RadialGridDataReordered::checkGridData() {
 	if (this->gridData->pyramidConnectivity.size() != 0u)
 		throw std::runtime_error("WellGenerator: gridData pyramidConnectivity size must be 0 and not " + std::to_string(this->gridData->pyramidConnectivity.size()));
 
-	if (this->gridData->triangleConnectivity.size() != 0u)
-		throw std::runtime_error("WellGenerator: gridData triangleConnectivity size must be 0 and not " + std::to_string(this->gridData->triangleConnectivity.size()));
-
-	if (this->gridData->quadrangleConnectivity.size() != 0u)
-		throw std::runtime_error("WellGenerator: gridData quadrangleConnectivity size must be 0 and not " + std::to_string(this->gridData->quadrangleConnectivity.size()));
-
 	if (this->gridData->lineConnectivity.size() == 0u)
 		throw std::runtime_error("WellGenerator: gridData lineConnectivity size must not be 0");
 
 	if (this->gridData->regions.size() != 1u)
 		throw std::runtime_error("WellGenerator: gridData regions size must be 1 and not " + std::to_string(this->gridData->regions.size()));
-
-	if (this->gridData->boundaries.size() != 0u)
-		throw std::runtime_error("WellGenerator: gridData boundaries size must be 0 and not " + std::to_string(this->gridData->boundaries.size()));
 
 	if (this->gridData->wells.size() != 1u)
 		throw std::runtime_error("WellGenerator: gridData wells size must be 1 and not " + std::to_string(this->gridData->wells.size()));

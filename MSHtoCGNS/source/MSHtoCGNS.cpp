@@ -13,7 +13,7 @@
 
 int main(int argc, char** argv) {
 	if (argc != 2)
-		throw std::runtime_error("Parameter is the mesh dimension.");
+		throw std::runtime_error("MSHtoCGNS: Mesh dimension must be passed as a parameter");
 	unsigned dimension = std::stoul(argv[1]);
 
 	switch (dimension) {
