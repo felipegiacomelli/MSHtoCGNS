@@ -58,18 +58,12 @@ void output(GridDataShared gridData, std::string fileName) {
 
 	file << std::endl << "### Boundaries - " << gridData->boundaries.size() << std::endl;
 	for (auto boundary : gridData->boundaries) {
-		file << std::endl << "\t" << boundary.name << std::endl;
-		for (auto j = boundary.facetsOnBoundary.cbegin(); j != boundary.facetsOnBoundary.cend(); j++)
-			file << "\t" << *j;
-		file << std::endl;
+		file << std::endl << "\t" << boundary.name << " : " << boundary.facetBegin << " " << boundary.facetEnd << std::endl;
 	}
 
 	file << std::endl << "### Regions - " << gridData->regions.size() << std::endl;
 	for (auto region : gridData->regions) {
-		file << std::endl << "\t" << region.name << std::endl;
-		for (auto j = region.elementsOnRegion.cbegin(); j != region.elementsOnRegion.cend(); j++)
-			file << "\t" << *j;
-		file << std::endl;
+		file << std::endl << "\t" << region.name << " : " << region.elementBegin << " " << region.elementEnd << std::endl;
 	}
 
 	file << std::endl;

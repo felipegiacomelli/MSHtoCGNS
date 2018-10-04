@@ -116,7 +116,7 @@ void MultipleBasesCgnsCreator3D::buildGlobalConnectivities() {
 void MultipleBasesCgnsCreator3D::writeRegions() {
 	for (auto region : this->gridData->regions) {
 
-		auto regionBegin = this->globalConnectivities.begin() + region.elementsOnRegion.front();
+		auto regionBegin = this->globalConnectivities.begin() + region.elementBegin;
 		auto regionEnd = this->globalConnectivities.begin() + region.elementsOnRegion.back() + 1;
 	 	this->elementEnd += (regionEnd - regionBegin);
 
@@ -182,7 +182,7 @@ void MultipleBasesCgnsCreator3D::writeRegions() {
 void MultipleBasesCgnsCreator3D::writeBoundaries() {
 	for (auto boundary : this->gridData->boundaries) {
 
-		auto boundaryBegin = this->globalConnectivities.begin() + boundary.facetsOnBoundary.front();
+		auto boundaryBegin = this->globalConnectivities.begin() + boundary.facetBegin;
 		auto boundaryEnd = this->globalConnectivities.begin() + boundary.facetsOnBoundary.back() + 1;
 		this->elementEnd = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
 

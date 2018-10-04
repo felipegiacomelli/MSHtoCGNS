@@ -80,12 +80,12 @@ void printGridDataInformation(GridDataShared gridData) {
 
 	std::cout << std::endl << "\t\tnumberOfRegions: " << gridData->regions.size();
 	for (auto region : gridData->regions)
-		std::cout << std::endl << "\t\t\t" << std::setw(20) << std::left << region.name  << ": "  << std::setw(6) << std::right << region.elementsOnRegion.front()   << " - " << region.elementsOnRegion.back()   << " | " << region.elementsOnRegion.size();
+		std::cout << std::endl << "\t\t\t" << std::setw(20) << std::left << region.name  << ": "  << std::setw(6) << std::right << region.elementBegin   << " - " << region.elementsOnRegion.back()   << " | " << region.elementsOnRegion.size();
 	std::cout << std::endl;
 
 	std::cout << std::endl << "\t\tnumberOfBoundaries: " << gridData->boundaries.size();
 	for (auto boundary : gridData->boundaries)
-		std::cout << std::endl << "\t\t\t" << std::setw(20) << std::left << boundary.name << ": " << std::setw(6) << std::right << boundary.facetsOnBoundary.front() << " - " << boundary.facetsOnBoundary.back() << " | " << boundary.facetsOnBoundary.size();
+		std::cout << std::endl << "\t\t\t" << std::setw(20) << std::left << boundary.name << ": " << std::setw(6) << std::right << boundary.facetBegin << " - " << boundary.facetsOnBoundary.back() << " | " << boundary.facetsOnBoundary.size();
 	std::cout << std::endl;
 
 	std::cout << std::endl << "\t\tnumberOfWells: " << gridData->wells.size();

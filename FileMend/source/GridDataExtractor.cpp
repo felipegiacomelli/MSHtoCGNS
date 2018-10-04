@@ -81,7 +81,7 @@ void GridDataExtractor::extractRegions() {
 			throw std::runtime_error("GridDataExtractor: There is no region " + name + " in gridData");
 		auto region(*iterator);
 
-		auto regionBegin = this->elementConnectivities.begin() + region.elementsOnRegion.front();
+		auto regionBegin = this->elementConnectivities.begin() + region.elementBegin;
 		auto regionEnd = this->elementConnectivities.begin() + region.elementsOnRegion.back() + 1;
 
 		std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), this->localIndex);
@@ -136,7 +136,7 @@ void GridDataExtractor::extractBoundaries() {
 
 		std::vector<int> deleteIndices;
 		for (auto i = this->original->triangleConnectivity.cbegin(); i != this->original->triangleConnectivity.cend(); i++)
-			if (i->back() >= boundary.facetsOnBoundary.front() && i->back() <= boundary.facetsOnBoundary.back())
+			if (i->back() >= boundary.facetBegin && i->back() <= boundary.facetsOnBoundary.back())
 				deleteIndices.emplace_back(i -  this->original->triangleConnectivity.cbegin());
 
 		for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); rit++)
@@ -144,7 +144,7 @@ void GridDataExtractor::extractBoundaries() {
 
 		deleteIndices.clear();
 		for (auto i = this->original->quadrangleConnectivity.cbegin(); i != this->original->quadrangleConnectivity.cend(); i++)
-			if (i->back() >= boundary.facetsOnBoundary.front() && i->back() <= boundary.facetsOnBoundary.back())
+			if (i->back() >= boundary.facetBegin && i->back() <= boundary.facetsOnBoundary.back())
 				deleteIndices.emplace_back(i -  this->original->quadrangleConnectivity.cbegin());
 
 		for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); rit++)
@@ -152,7 +152,7 @@ void GridDataExtractor::extractBoundaries() {
 
 		this->original->boundaries.erase(iterator);
 
-		auto boundaryBegin = this->elementConnectivities.begin() + boundary.facetsOnBoundary.front();
+		auto boundaryBegin = this->elementConnectivities.begin() + boundary.facetBegin;
 		auto boundaryEnd = this->elementConnectivities.begin() + boundary.facetsOnBoundary.back() + 1;
 
 		std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), this->localIndex);

@@ -76,7 +76,8 @@ void MshReader2D::determineNumberOfFacets() {
 
 void MshReader2D::addRegions() {
 	for (unsigned i = 0; i < this->regionElements.size(); i++) {
-		this->gridData->regions[i].elementsOnRegion = this->regionElements[i];
+		this->gridData->regions[i].elementBegin = this->regionElements[i].front();
+		this->gridData->regions[i].elementEnd   = this->regionElements[i].back() + 1;
 		for (unsigned j = 0; j < this->regionElements[i].size(); j++) {
 			int index = this->regionElements[i][j];
 			int type  = this->elements[index][0];
@@ -103,10 +104,11 @@ void MshReader2D::addRegions() {
 
 void MshReader2D::addBoundaries() {
 	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
+		this->gridData->boundaries[i].facetBegin = this->boundaryFacets[i].front();
+		this->gridData->boundaries[i].facetEnd   = this->boundaryFacets[i].back() + 1;
 		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
 			int index = this->boundaryFacets[i][j];
 			int type  = this->facets[index][0];
-			this->gridData->boundaries[i].facetsOnBoundary.emplace_back(this->facets[index].back());
 			std::vector<int> connectivity(this->facets[index].cbegin() + 2, this->facets[index].cend());
 			switch (type) {
 				case 0: {
@@ -125,8 +127,7 @@ void MshReader2D::addBoundaries() {
 void MshReader2D::defineBoundaryVertices() {
 	for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
 		std::set<int> vertices;
-		std::vector<std::array<int, 3>> boundaryConnectivity(this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.front() - this->elements.size(),
-												this->gridData->lineConnectivity.cbegin() + boundary->facetsOnBoundary.back() + 1 - this->elements.size());
+		std::vector<std::array<int, 3>> boundaryConnectivity(this->gridData->lineConnectivity.cbegin() + boundary->facetBegin - this->elements.size(), this->gridData->lineConnectivity.cbegin() + boundary->facetEnd - this->elements.size());
 		for (unsigned j = 0; j < boundaryConnectivity.size(); j++)
 			for (unsigned k = 0; k != 2u; k++)
 				vertices.insert(boundaryConnectivity[j][k]);

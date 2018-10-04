@@ -38,35 +38,35 @@ TestCase(GridDataExtractorTest) {
 	checkEqual(this->gridData->wells.size()     ,  0u);
 
 	checkEqual(this->gridData->boundaries[0].facetsOnBoundary.size() , 16u);
-	checkEqual(this->gridData->boundaries[0].facetsOnBoundary.front(), 72 );
+	checkEqual(this->gridData->boundaries[0].facetBegin, 72 );
 	checkEqual(this->gridData->boundaries[0].facetsOnBoundary.back() , 87 );
 
 	checkEqual(this->gridData->boundaries[1].facetsOnBoundary.size() , 16u);
-	checkEqual(this->gridData->boundaries[1].facetsOnBoundary.front(), 88 );
+	checkEqual(this->gridData->boundaries[1].facetBegin, 88 );
 	checkEqual(this->gridData->boundaries[1].facetsOnBoundary.back() , 103 );
 
 	checkEqual(this->gridData->boundaries[2].facetsOnBoundary.size() ,  16u);
-	checkEqual(this->gridData->boundaries[2].facetsOnBoundary.front(), 104 );
+	checkEqual(this->gridData->boundaries[2].facetBegin, 104 );
 	checkEqual(this->gridData->boundaries[2].facetsOnBoundary.back() , 119 );
 
 	checkEqual(this->gridData->boundaries[3].facetsOnBoundary.size() ,  16u);
-	checkEqual(this->gridData->boundaries[3].facetsOnBoundary.front(), 120 );
+	checkEqual(this->gridData->boundaries[3].facetBegin, 120 );
 	checkEqual(this->gridData->boundaries[3].facetsOnBoundary.back() , 135 );
 
 	checkEqual(this->gridData->boundaries[4].facetsOnBoundary.size() ,  16u);
-	checkEqual(this->gridData->boundaries[4].facetsOnBoundary.front(), 136 );
+	checkEqual(this->gridData->boundaries[4].facetBegin, 136 );
 	checkEqual(this->gridData->boundaries[4].facetsOnBoundary.back() , 151 );
 
 	checkEqual(this->gridData->boundaries[5].facetsOnBoundary.size() ,  16u);
-	checkEqual(this->gridData->boundaries[5].facetsOnBoundary.front(), 152 );
+	checkEqual(this->gridData->boundaries[5].facetBegin, 152 );
 	checkEqual(this->gridData->boundaries[5].facetsOnBoundary.back() , 167 );
 
 	checkEqual(this->gridData->regions[0].elementsOnRegion.size() , 64u);
-	checkEqual(this->gridData->regions[0].elementsOnRegion.front(),  0 );
+	checkEqual(this->gridData->regions[0].elementBegin,  0 );
 	checkEqual(this->gridData->regions[0].elementsOnRegion.back() , 63 );
 
 	checkEqual(this->gridData->regions[1].elementsOnRegion.size() ,  8u);
-	checkEqual(this->gridData->regions[1].elementsOnRegion.front(), 64 );
+	checkEqual(this->gridData->regions[1].elementBegin, 64 );
 	checkEqual(this->gridData->regions[1].elementsOnRegion.back() , 71 );
 
 	GridDataShared extract = gridDataExtractor.extract;
@@ -88,31 +88,31 @@ TestCase(GridDataExtractorTest) {
 	checkEqual(extract->wells.size()     ,  0u);
 
 	checkEqual(extract->boundaries[0].facetsOnBoundary.size() ,  4u);
-	checkEqual(extract->boundaries[0].facetsOnBoundary.front(),  8 );
+	checkEqual(extract->boundaries[0].facetBegin,  8 );
 	checkEqual(extract->boundaries[0].facetsOnBoundary.back() , 11 );
 
 	checkEqual(extract->boundaries[1].facetsOnBoundary.size() ,  4u);
-	checkEqual(extract->boundaries[1].facetsOnBoundary.front(), 12 );
+	checkEqual(extract->boundaries[1].facetBegin, 12 );
 	checkEqual(extract->boundaries[1].facetsOnBoundary.back() , 15 );
 
 	checkEqual(extract->boundaries[2].facetsOnBoundary.size() ,  4u);
-	checkEqual(extract->boundaries[2].facetsOnBoundary.front(), 16 );
+	checkEqual(extract->boundaries[2].facetBegin, 16 );
 	checkEqual(extract->boundaries[2].facetsOnBoundary.back() , 19 );
 
 	checkEqual(extract->boundaries[3].facetsOnBoundary.size() ,  4u);
-	checkEqual(extract->boundaries[3].facetsOnBoundary.front(), 20 );
+	checkEqual(extract->boundaries[3].facetBegin, 20 );
 	checkEqual(extract->boundaries[3].facetsOnBoundary.back() , 23 );
 
 	checkEqual(extract->boundaries[4].facetsOnBoundary.size() ,  4u);
-	checkEqual(extract->boundaries[4].facetsOnBoundary.front(), 24 );
+	checkEqual(extract->boundaries[4].facetBegin, 24 );
 	checkEqual(extract->boundaries[4].facetsOnBoundary.back() , 27 );
 
 	checkEqual(extract->boundaries[5].facetsOnBoundary.size() ,  4u);
-	checkEqual(extract->boundaries[5].facetsOnBoundary.front(), 28 );
+	checkEqual(extract->boundaries[5].facetBegin, 28 );
 	checkEqual(extract->boundaries[5].facetsOnBoundary.back() , 31 );
 
 	checkEqual(extract->regions[0].elementsOnRegion.size() , 8u);
-	checkEqual(extract->regions[0].elementsOnRegion.front(), 0 );
+	checkEqual(extract->regions[0].elementBegin, 0 );
 	checkEqual(extract->regions[0].elementsOnRegion.back() , 7 );
 
 	checkClose(extract->coordinates[ 0][0], 2.5000e-01, TOLERANCE);	checkClose(extract->coordinates[ 0][1], 2.5000e-01, TOLERANCE);	checkClose(extract->coordinates[ 0][2], 2.5000e-01, TOLERANCE);
@@ -237,7 +237,7 @@ TestCase(GridDataExtractorWithWellTest) {
 	checkEqual(extract->wells.size()     ,  1u);
 
 	checkEqual(extract->regions[0].elementsOnRegion.size() , 2772u);
-	checkEqual(extract->regions[0].elementsOnRegion.front(),    0 );
+	checkEqual(extract->regions[0].elementBegin,    0 );
 	checkEqual(extract->regions[0].elementsOnRegion.back() , 2771 );
 }
 

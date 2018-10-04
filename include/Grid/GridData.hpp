@@ -8,20 +8,23 @@
 #include <BoostInterface/SharedPointer.hpp>
 
 struct BoundaryData {
-	std::vector<int> facetsOnBoundary;
-	std::vector<int> vertices;
 	std::string	name;
+	int facetBegin;
+	int facetEnd;
+	std::vector<int> vertices;
 };
 
 struct RegionData {
-	std::vector<int> elementsOnRegion;
 	std::string	name;
+	int elementBegin;
+	int elementEnd;
 };
 
 struct WellData {
-	std::vector<int> linesOnWell;
-	std::vector<int> vertices;
 	std::string	name;
+	int lineBegin;
+	int lineEnd;
+	std::vector<int> vertices;
 };
 
 struct GridData {
