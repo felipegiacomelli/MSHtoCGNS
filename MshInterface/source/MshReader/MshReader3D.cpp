@@ -105,8 +105,8 @@ void MshReader3D::addRegions() {
 
 void MshReader3D::addBoundaries() {
 	for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
-		this->gridData->boundaries[i].facetBegin = this->boundaryFacets[i].front();
-		this->gridData->boundaries[i].facetEnd   = this->boundaryFacets[i].back() + 1;
+		this->gridData->boundaries[i].facetBegin = this->facets[this->boundaryFacets[i].front()].back();
+		this->gridData->boundaries[i].facetEnd   = this->facets[this->boundaryFacets[i].back() ].back() + 1;
 		for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
 			int index = this->boundaryFacets[i][j];
 			int type  = this->facets[index][0];

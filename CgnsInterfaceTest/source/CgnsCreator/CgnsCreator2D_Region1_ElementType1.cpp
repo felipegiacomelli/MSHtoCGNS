@@ -81,12 +81,8 @@ TestCase(Geometry) {
 
 	check(region.name == std::string("Geometry"));
 
-	auto elementsOnRegion = region.elementsOnRegion;
-	checkEqual(elementsOnRegion.size(), 4u);
-	checkEqual(elementsOnRegion[0], 0);
-	checkEqual(elementsOnRegion[1], 1);
-	checkEqual(elementsOnRegion[2], 2);
-	checkEqual(elementsOnRegion[3], 3);
+	checkEqual(region.elementBegin, 0);
+	checkEqual(region.elementEnd, 4);
 }
 
 TestCase(Boundaries) {

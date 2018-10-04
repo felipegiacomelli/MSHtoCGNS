@@ -64,12 +64,8 @@ TestCase(Geometry) {
 
 	check(region.name == std::string("Geometry"));
 
-	auto elementsOnRegion = region.elementsOnRegion;
-	checkEqual(elementsOnRegion.size(), 4u);
-	checkEqual(elementsOnRegion[0], 0);
-	checkEqual(elementsOnRegion[1], 1);
-	checkEqual(elementsOnRegion[2], 2);
-	checkEqual(elementsOnRegion[3], 3);
+	checkEqual(region.elementBegin, 0);
+	checkEqual(region.elementEnd, 4);
 }
 
 TestCase(Boundaries) {
@@ -81,10 +77,8 @@ TestCase(West) {
 
 	check(boundary.name == std::string("West"));
 
-	auto facetsOnBoundary = boundary.facetsOnBoundary;
-	checkEqual(facetsOnBoundary.size(), 2u);
-	checkEqual(facetsOnBoundary[0], 4);
-	checkEqual(facetsOnBoundary[1], 5);
+	checkEqual(boundary.facetBegin, 4);
+	checkEqual(boundary.facetEnd, 5);
 
 	auto vertices = boundary.vertices;
 	checkEqual(vertices.size(), 3u);
@@ -98,10 +92,8 @@ TestCase(East) {
 
 	check(boundary.name == std::string("East"));
 
-	auto facetsOnBoundary = boundary.facetsOnBoundary;
-	checkEqual(facetsOnBoundary.size(), 2u);
-	checkEqual(facetsOnBoundary[0], 6);
-	checkEqual(facetsOnBoundary[1], 7);
+	checkEqual(boundary.facetBegin, 6);
+	checkEqual(boundary.facetEnd, 7);
 
 	auto vertices = boundary.vertices;
 	checkEqual(vertices.size(), 3u);
@@ -115,10 +107,8 @@ TestCase(South) {
 
 	check(boundary.name == std::string("South"));
 
-	auto facetsOnBoundary = boundary.facetsOnBoundary;
-	checkEqual(facetsOnBoundary.size(), 2u);
-	checkEqual(facetsOnBoundary[0], 8);
-	checkEqual(facetsOnBoundary[1], 9);
+	checkEqual(boundary.facetBegin, 8);
+	checkEqual(boundary.facetEnd, 9);
 
 	auto vertices = boundary.vertices;
 	checkEqual(vertices.size(), 3u);
@@ -132,10 +122,8 @@ TestCase(North) {
 
 	check(boundary.name == std::string("North"));
 
-	auto facetsOnBoundary = boundary.facetsOnBoundary;
-	checkEqual(facetsOnBoundary.size(), 2u);
-	checkEqual(facetsOnBoundary[0], 10);
-	checkEqual(facetsOnBoundary[1], 11);
+	checkEqual(boundary.facetBegin, 10);
+	checkEqual(boundary.facetEnd, 11);
 
 	auto vertices = boundary.vertices;
 	checkEqual(vertices.size(), 3u);
