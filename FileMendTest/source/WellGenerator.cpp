@@ -65,16 +65,8 @@ TestCase(WellGeneratorTest) {
 
 	auto well = this->gridData->wells[0];
 	checkEqual(well.name, std::string("LINE_INJECTOR_WEST"));
-	checkEqual(well.linesOnWell.size(), 9u);
-	checkEqual(well.linesOnWell[0], 50253);
-	checkEqual(well.linesOnWell[1], 50254);
-	checkEqual(well.linesOnWell[2], 50255);
-	checkEqual(well.linesOnWell[3], 50256);
-	checkEqual(well.linesOnWell[4], 50257);
-	checkEqual(well.linesOnWell[5], 50258);
-	checkEqual(well.linesOnWell[6], 50259);
-	checkEqual(well.linesOnWell[7], 50260);
-	checkEqual(well.linesOnWell[8], 50261);
+	checkEqual(well.lineBegin, 50253);
+	checkEqual(well.lineEnd  , 50262);
 	checkEqual(well.vertices.size(), 10u);
 	checkEqual(well.vertices[0], 7858);
 	checkEqual(well.vertices[1], 7865);
@@ -89,16 +81,8 @@ TestCase(WellGeneratorTest) {
 
 	well = this->gridData->wells[1];
 	checkEqual(well.name, std::string("LINE_INJECTOR_EAST"));
-	checkEqual(well.linesOnWell.size(), 9u);
-	checkEqual(well.linesOnWell[0], 50262);
-	checkEqual(well.linesOnWell[1], 50263);
-	checkEqual(well.linesOnWell[2], 50264);
-	checkEqual(well.linesOnWell[3], 50265);
-	checkEqual(well.linesOnWell[4], 50266);
-	checkEqual(well.linesOnWell[5], 50267);
-	checkEqual(well.linesOnWell[6], 50268);
-	checkEqual(well.linesOnWell[7], 50269);
-	checkEqual(well.linesOnWell[8], 50270);
+	checkEqual(well.lineBegin, 50262);
+	checkEqual(well.lineEnd  , 50271);
 	checkEqual(well.vertices.size(), 10u);
 	checkEqual(well.vertices[0], 8684);
 	checkEqual(well.vertices[1], 8685);
@@ -113,26 +97,8 @@ TestCase(WellGeneratorTest) {
 
 	well = this->gridData->wells[2];
 	checkEqual(well.name, std::string("LINE_WELL"));
-	checkEqual(well.linesOnWell.size(), 19u);
-	checkEqual(well.linesOnWell[ 0], 50271);
-	checkEqual(well.linesOnWell[ 1], 50272);
-	checkEqual(well.linesOnWell[ 2], 50273);
-	checkEqual(well.linesOnWell[ 3], 50274);
-	checkEqual(well.linesOnWell[ 4], 50275);
-	checkEqual(well.linesOnWell[ 5], 50276);
-	checkEqual(well.linesOnWell[ 6], 50277);
-	checkEqual(well.linesOnWell[ 7], 50278);
-	checkEqual(well.linesOnWell[ 8], 50279);
-	checkEqual(well.linesOnWell[ 9], 50280);
-	checkEqual(well.linesOnWell[10], 50281);
-	checkEqual(well.linesOnWell[11], 50282);
-	checkEqual(well.linesOnWell[12], 50283);
-	checkEqual(well.linesOnWell[13], 50284);
-	checkEqual(well.linesOnWell[14], 50285);
-	checkEqual(well.linesOnWell[15], 50286);
-	checkEqual(well.linesOnWell[16], 50287);
-	checkEqual(well.linesOnWell[17], 50288);
-	checkEqual(well.linesOnWell[18], 50289);
+	checkEqual(well.lineBegin, 50271);
+	checkEqual(well.lineEnd  , 50289);
 	checkEqual(well.vertices.size(), 20u);
 	checkEqual(well.vertices[ 0], 8817);
 	checkEqual(well.vertices[ 1], 8818);
