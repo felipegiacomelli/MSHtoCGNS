@@ -82,7 +82,7 @@ void GridDataExtractor::extractRegions() {
 		auto region(*iterator);
 
 		auto regionBegin = this->elementConnectivities.begin() + region.elementBegin;
-		auto regionEnd = this->elementConnectivities.begin() + region.elementsOnRegion.back() + 1;
+		auto regionEnd = this->elementConnectivities.begin() + region.elementEnd;
 
 		std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), this->localIndex);
 
@@ -153,7 +153,7 @@ void GridDataExtractor::extractBoundaries() {
 		this->original->boundaries.erase(iterator);
 
 		auto boundaryBegin = this->elementConnectivities.begin() + boundary.facetBegin;
-		auto boundaryEnd = this->elementConnectivities.begin() + boundary.facetsOnBoundary.back() + 1;
+		auto boundaryEnd = this->elementConnectivities.begin() + boundary.facetEnd;
 
 		std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), this->localIndex);
 
@@ -190,8 +190,8 @@ void GridDataExtractor::extractWells() {
 			throw std::runtime_error("GridDataExtractor: There is no well " + name + " in gridData");
 		auto well(*iterator);
 
-		auto wellBegin = this->elementConnectivities.begin() + well.linesOnWell.front();
-		auto wellEnd = this->elementConnectivities.begin() + well.linesOnWell.back() + 1;
+		auto wellBegin = this->elementConnectivities.begin() + well.lineBegin;
+		auto wellEnd = this->elementConnectivities.begin() + well.lineEnd;
 
 		std::iota(well.linesOnWell.begin(), well.linesOnWell.end(), this->localIndex);
 

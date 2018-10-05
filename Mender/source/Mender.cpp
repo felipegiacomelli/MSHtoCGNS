@@ -202,7 +202,7 @@ void printGridDataInformation(GridDataShared gridData) {
 
 	std::cout << std::endl << "\t\tnumberOfWells: " << gridData->wells.size();
 	for (auto well : gridData->wells)
-		std::cout << std::endl << "\t\t\t" << std::setw(20) << std::left << well.name     << ": " << std::setw(6) << std::right << well.linesOnWell.front()       << " - " << well.linesOnWell.back()       << " | " << well.linesOnWell.size();
+		std::cout << std::endl << "\t\t\t" << std::setw(20) << std::left << well.name     << ": " << std::setw(6) << std::right << well.lineBegin       << " - " << well.linesOnWell.back()       << " | " << well.linesOnWell.size();
 
 	std::cout << std::endl << std::endl;
 }

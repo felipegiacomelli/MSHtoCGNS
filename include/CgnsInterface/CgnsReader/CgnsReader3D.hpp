@@ -10,7 +10,7 @@ class CgnsReader3D : public CgnsReader {
 	private:
 		void readCoordinates() override;
 		void readSections() override;
-		void addWell(std::string&& name, int elementStart, int numberOfElements);
+		void addWell(std::string&& name, int elementStart, int elementEnd);
 };
 
 #endif

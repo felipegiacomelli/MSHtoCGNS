@@ -30,15 +30,13 @@ void CgnsReader2D::readSections() {
 		ElementType_t elementType;
 		int elementStart, elementEnd;
 		int lastBoundaryElement, parentFlag;
-		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd,
-								&lastBoundaryElement, &parentFlag))
+		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag))
 			throw std::runtime_error("CgnsReader2D: Could not read section");
-		int numberOfElements = elementEnd - elementStart + 1;
 
 		if (elementType == MIXED || elementType == TRI_3 || elementType == QUAD_4)
-			this->addRegion(std::string(this->buffer), elementStart, numberOfElements);
+			this->addRegion(std::string(this->buffer), elementStart, elementEnd + 1);
 		else if (elementType == BAR_2)
-			this->addBoundary(std::string(this->buffer), elementStart, numberOfElements);
+			this->addBoundary(std::string(this->buffer), elementStart, elementEnd + 1);
 
 		int size;
 		if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
@@ -51,6 +49,8 @@ void CgnsReader2D::readSections() {
 		int numberOfVertices;
 		if (cg_npe(elementType, &numberOfVertices))
 			throw std::runtime_error("CgnsReader2D: Could not read element number of vertices");
+
+		int numberOfElements = elementEnd - elementStart + 1;
 
 		switch (elementType) {
 			case MIXED : {

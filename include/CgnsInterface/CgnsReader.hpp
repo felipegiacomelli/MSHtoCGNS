@@ -27,8 +27,8 @@ class CgnsReader {
 		void readNumberOfBoundaries();
 		virtual void readCoordinates() = 0;
 		virtual void readSections() = 0;
-		void addRegion(std::string&& name, int elementStart, int numberOfElements);
-		void addBoundary(std::string&& name, int elementStart, int numberOfElements);
+		void addRegion(std::string&& name, int elementStart, int elementEnd);
+		void addBoundary(std::string&& name, int elementStart, int elementEnd);
 		virtual void readBoundaries();
 		int readSolutionIndex(std::string solutionName);
 

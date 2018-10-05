@@ -94,19 +94,19 @@ void CgnsReader::readBoundaries() {
 	}
 }
 
-void CgnsReader::addRegion(std::string&& name, int elementStart, int numberOfElements) {
+void CgnsReader::addRegion(std::string&& name, int elementStart, int elementEnd) {
 	RegionData region;
 	region.name = name;
-	region.elementsOnRegion.resize(numberOfElements);
-	std::iota(region.elementsOnRegion.begin(), region.elementsOnRegion.end(), elementStart - 1);
+	region.elementBegin = elementStart;
+	region.elementEnd = elementEnd;
 	this->gridData->regions.emplace_back(std::move(region));
 }
 
-void CgnsReader::addBoundary(std::string&& name, int elementStart, int numberOfElements) {
+void CgnsReader::addBoundary(std::string&& name, int elementStart, int elementEnd) {
 	BoundaryData boundary;
 	boundary.name = name;
-	boundary.facetsOnBoundary.resize(numberOfElements);
-	std::iota(boundary.facetsOnBoundary.begin(), boundary.facetsOnBoundary.end(), elementStart - 1);
+	boundary.facetBegin = elementStart;
+	boundary.facetEnd = elementEnd;
 	this->gridData->boundaries.emplace_back(std::move(boundary));
 }
 

@@ -117,7 +117,7 @@ void MultipleBasesCgnsCreator3D::writeRegions() {
 	for (auto region : this->gridData->regions) {
 
 		auto regionBegin = this->globalConnectivities.begin() + region.elementBegin;
-		auto regionEnd = this->globalConnectivities.begin() + region.elementsOnRegion.back() + 1;
+		auto regionEnd = this->globalConnectivities.begin() + region.elementEnd;
 	 	this->elementEnd += (regionEnd - regionBegin);
 
 	 	ElementType_t elementType = ElementType_t(0);
@@ -183,7 +183,7 @@ void MultipleBasesCgnsCreator3D::writeBoundaries() {
 	for (auto boundary : this->gridData->boundaries) {
 
 		auto boundaryBegin = this->globalConnectivities.begin() + boundary.facetBegin;
-		auto boundaryEnd = this->globalConnectivities.begin() + boundary.facetsOnBoundary.back() + 1;
+		auto boundaryEnd = this->globalConnectivities.begin() + boundary.facetEnd;
 		this->elementEnd = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
 
 		ElementType_t elementType;
@@ -236,8 +236,8 @@ void MultipleBasesCgnsCreator3D::writeBoundaries() {
 void MultipleBasesCgnsCreator3D::writeWells() {
 	for (auto& well : this->gridData->wells) {
 
-		auto wellBegin = this->globalConnectivities.cbegin() + well.linesOnWell.front();
-		auto wellEnd = this->globalConnectivities.cbegin() + well.linesOnWell.back() + 1;
+		auto wellBegin = this->globalConnectivities.cbegin() + well.lineBegin;
+		auto wellEnd = this->globalConnectivities.cbegin() + well.lineEnd;
 		this->elementEnd = this->elementStart + (wellEnd - wellBegin) - 1;
 
 		std::vector<int> connectivities;

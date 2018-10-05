@@ -61,7 +61,7 @@ void CgnsCreator2D::writeRegions() {
 	for (auto region = this->gridData->regions.cbegin(); region != this->gridData->regions.cend(); region++) {
 
 		auto regionBegin = this->globalConnectivities.begin() + region->elementBegin;
-		auto regionEnd = this->globalConnectivities.begin() + region->elementsOnRegion.back() + 1;
+		auto regionEnd = this->globalConnectivities.begin() + region->elementEnd;
 	 	this->elementEnd += (regionEnd - regionBegin);
 
 	 	ElementType_t elementType;
@@ -115,7 +115,7 @@ void CgnsCreator2D::writeBoundaries() {
 	for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
 
 		auto boundaryBegin = this->globalConnectivities.cbegin() + boundary->facetBegin;
-		auto boundaryEnd = this->globalConnectivities.cbegin() + boundary->facetsOnBoundary.back() + 1;
+		auto boundaryEnd = this->globalConnectivities.cbegin() + boundary->facetEnd;
 		this->elementEnd = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
 
 		std::vector<int> connectivities;
