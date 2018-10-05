@@ -78,7 +78,7 @@ TestCase(West) {
 	check(boundary.name == std::string("West"));
 
 	checkEqual(boundary.facetBegin, 4);
-	checkEqual(boundary.facetEnd, 5);
+	checkEqual(boundary.facetEnd, 6);
 
 	auto vertices = boundary.vertices;
 	checkEqual(vertices.size(), 3u);
@@ -93,7 +93,7 @@ TestCase(East) {
 	check(boundary.name == std::string("East"));
 
 	checkEqual(boundary.facetBegin, 6);
-	checkEqual(boundary.facetEnd, 7);
+	checkEqual(boundary.facetEnd, 8);
 
 	auto vertices = boundary.vertices;
 	checkEqual(vertices.size(), 3u);
@@ -108,7 +108,7 @@ TestCase(South) {
 	check(boundary.name == std::string("South"));
 
 	checkEqual(boundary.facetBegin, 8);
-	checkEqual(boundary.facetEnd, 9);
+	checkEqual(boundary.facetEnd, 10);
 
 	auto vertices = boundary.vertices;
 	checkEqual(vertices.size(), 3u);
@@ -123,7 +123,7 @@ TestCase(North) {
 	check(boundary.name == std::string("North"));
 
 	checkEqual(boundary.facetBegin, 10);
-	checkEqual(boundary.facetEnd, 11);
+	checkEqual(boundary.facetEnd, 12);
 
 	auto vertices = boundary.vertices;
 	checkEqual(vertices.size(), 3u);

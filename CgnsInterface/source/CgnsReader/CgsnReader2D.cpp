@@ -34,9 +34,9 @@ void CgnsReader2D::readSections() {
 			throw std::runtime_error("CgnsReader2D: Could not read section");
 
 		if (elementType == MIXED || elementType == TRI_3 || elementType == QUAD_4)
-			this->addRegion(std::string(this->buffer), elementStart, elementEnd + 1);
+			this->addRegion(std::string(this->buffer), elementStart - 1, elementEnd);
 		else if (elementType == BAR_2)
-			this->addBoundary(std::string(this->buffer), elementStart, elementEnd + 1);
+			this->addBoundary(std::string(this->buffer), elementStart - 1, elementEnd);
 
 		int size;
 		if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))

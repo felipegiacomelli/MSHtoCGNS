@@ -48,15 +48,15 @@ void CgnsReader3D::readSections() {
 
 		if (elementType == MIXED)
 			if (ElementType_t(connectivities[0]) == TETRA_4 || ElementType_t(connectivities[0]) == HEXA_8 || ElementType_t(connectivities[0]) == PENTA_6 || ElementType_t(connectivities[0]) == PYRA_5)
-				this->addRegion(std::string(this->buffer), elementStart, elementEnd + 1);
+				this->addRegion(std::string(this->buffer), elementStart - 1, elementEnd);
 			else
-				this->addBoundary(std::string(this->buffer), elementStart, elementEnd + 1);
+				this->addBoundary(std::string(this->buffer), elementStart - 1, elementEnd);
 		else if (elementType == TETRA_4 || elementType == HEXA_8 || elementType == PENTA_6 || elementType == PYRA_5)
-				this->addRegion(std::string(this->buffer), elementStart, elementEnd + 1);
+				this->addRegion(std::string(this->buffer), elementStart - 1, elementEnd);
 		else if (elementType == TRI_3 || elementType == QUAD_4)
-			this->addBoundary(std::string(this->buffer), elementStart, elementEnd + 1);
+			this->addBoundary(std::string(this->buffer), elementStart - 1, elementEnd);
 		else if (elementType == BAR_2)
-			this->addWell(std::string(this->buffer), elementStart, elementEnd + 1);
+			this->addWell(std::string(this->buffer), elementStart - 1, elementEnd);
 
 		int numberOfVertices;
 		if (cg_npe(elementType, &numberOfVertices))
