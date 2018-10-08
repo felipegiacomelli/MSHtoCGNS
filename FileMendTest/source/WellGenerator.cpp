@@ -98,7 +98,7 @@ TestCase(WellGeneratorTest) {
 	well = this->gridData->wells[2];
 	checkEqual(well.name, std::string("LINE_WELL"));
 	checkEqual(well.lineBegin, 50271);
-	checkEqual(well.lineEnd  , 50289);
+	checkEqual(well.lineEnd  , 50290);
 	checkEqual(well.vertices.size(), 20u);
 	checkEqual(well.vertices[ 0], 8817);
 	checkEqual(well.vertices[ 1], 8818);

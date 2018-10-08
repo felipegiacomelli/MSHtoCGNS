@@ -110,8 +110,6 @@ void WellGenerator::defineQuantities() {
 		if (std::find(this->prisms[i].cbegin(), this->prisms[i].cend(), this->currentIndex) != this->prisms[i].cend())
 			wellStartPrisms.insert(i);
 
-	printf("\n\n\t\t%i\n\n", int(wellStartPrisms.size()));
-
 	this->numberOfPrisms = this->prisms.size();
 	this->numberOfElementsPerSection = wellStartPrisms.size();
 	this->numberOfSegments = this->numberOfPrisms / this->numberOfElementsPerSection;
