@@ -1,8 +1,8 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Downloads/msh_to_cgns/siger_test/input/siger_test.cgns",
-        "output" : "/home/felipe/Downloads/msh_to_cgns/siger_test/"
+        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/CgnsInterface/3D-Region1-Mixed/12523v_57072e.cgns",
+        "output" : "/home/felipe/Downloads/msh_to_cgns/mender/"
     },
 
     "ScriptWellGenerator" :
@@ -10,10 +10,19 @@
     	"wellRegions" :
 		[
 			{
-				"regionName": "BODY_WELL",
-				"wellStart": [-80.0, 60.0, 0.0],
+				"regionName": "WELL_BODY",
+				"wellStart": [20.0, 125.0, 50.0],
 				"wellName": "LINE_WELL"
 			}
 		]
+    },
+
+    "ScriptGridDataExtractor" :
+    {
+        "regions" : ["WELL_BODY"],
+
+        "boundaries" : [],
+
+        "wells" : ["LINE_WELL"]
     }
 }

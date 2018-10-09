@@ -1,5 +1,4 @@
 #include <MshInterface/MshReader/MshReader3D.hpp>
-#include <Utilities/Print.hpp>
 
 MshReader3D::MshReader3D(std::string filePath) : MshReader(filePath) {
 	this->gridData->dimension = 3;

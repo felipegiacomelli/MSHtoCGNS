@@ -37,7 +37,7 @@ int main() {
 	std::cout << std::endl << "\tGrid path: " << inputPath.string();
 	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
-	printGridDataInformation(gridData);
+	printGridDataInformation(gridData, "original");
 	printf("\t#############################\n\n");
 
 	GridDataExtractor gridDataExtractor(gridData, std::string(SCRIPT_DIRECTORY) + "ScriptGridDataExtractor.json");
@@ -45,7 +45,7 @@ int main() {
 	std::vector<GridDataShared> gridDatas{gridData, gridDataExtractor.extract};
 	std::vector<std::string> baseNames{"Rock", "Reservoir"};
 
-	printGridDataInformation(gridDatas.back());
+	printGridDataInformation(gridDatas.back(), "reservoir");
 	printf("\t#############################\n");
 
 	start = std::chrono::steady_clock::now();

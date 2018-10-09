@@ -25,7 +25,7 @@ int main() {
 	std::cout << std::endl << "\tGrid path: " << inputPath;
 	std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
-	printGridDataInformation(gridData);
+	// printGridDataInformation(gridData);
 
 		std::array<double, 3> wellStart{0.5, 0.5, 0.0};
 		int wellDirection = 2;
@@ -64,7 +64,7 @@ int main() {
 	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
 	std::cout << std::endl << "\tOutput file location       : " << creator.getFileName() << std::endl << std::endl;
 
-	printGridDataInformation(gridData);
+	// printGridDataInformation(gridData);
 	printWellsInformation(gridData);
 
 	return 0;
