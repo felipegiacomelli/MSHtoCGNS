@@ -1,7 +1,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Downloads/heart/original/Grid.cgns",
-        "output" : "/home/felipe/Downloads/heart/"
+        "input"  : "/home/felipe/Downloads/msh_to_cgns/heart/original/Grid.cgns",
+        "output" : "/home/felipe/Downloads/msh_to_cgns/heart/"
     }
 }

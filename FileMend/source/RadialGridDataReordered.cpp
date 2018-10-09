@@ -17,28 +17,28 @@ RadialGridDataReordered::RadialGridDataReordered(GridDataShared gridData) : grid
 
 void RadialGridDataReordered::checkGridData() {
 	if (this->gridData->dimension != 3)
-		throw std::runtime_error("WellGenerator: gridData dimension must be 3 and not " + std::to_string(this->gridData->dimension));
+		throw std::runtime_error("RadialGridDataReordered: gridData dimension must be 3 and not " + std::to_string(this->gridData->dimension));
 
 	if (this->gridData->tetrahedronConnectivity.size() != 0u)
-		throw std::runtime_error("WellGenerator: gridData tetrahedronConnectivity size must be 0 and not " + std::to_string(this->gridData->tetrahedronConnectivity.size()));
+		throw std::runtime_error("RadialGridDataReordered: gridData tetrahedronConnectivity size must be 0 and not " + std::to_string(this->gridData->tetrahedronConnectivity.size()));
 
 	if (this->gridData->hexahedronConnectivity.size() == 0u)
-		throw std::runtime_error("WellGenerator: gridData hexahedronConnectivity size must not be 0");
+		throw std::runtime_error("RadialGridDataReordered: gridData hexahedronConnectivity size must not be 0");
 
 	if (this->gridData->prismConnectivity.size() == 0u)
-		throw std::runtime_error("WellGenerator: gridData prismConnectivity size must not be 0");
+		throw std::runtime_error("RadialGridDataReordered: gridData prismConnectivity size must not be 0");
 
 	if (this->gridData->pyramidConnectivity.size() != 0u)
-		throw std::runtime_error("WellGenerator: gridData pyramidConnectivity size must be 0 and not " + std::to_string(this->gridData->pyramidConnectivity.size()));
+		throw std::runtime_error("RadialGridDataReordered: gridData pyramidConnectivity size must be 0 and not " + std::to_string(this->gridData->pyramidConnectivity.size()));
 
 	if (this->gridData->lineConnectivity.size() == 0u)
-		throw std::runtime_error("WellGenerator: gridData lineConnectivity size must not be 0");
+		throw std::runtime_error("RadialGridDataReordered: gridData lineConnectivity size must not be 0");
 
 	if (this->gridData->regions.size() != 1u)
-		throw std::runtime_error("WellGenerator: gridData regions size must be 1 and not " + std::to_string(this->gridData->regions.size()));
+		throw std::runtime_error("RadialGridDataReordered: gridData regions size must be 1 and not " + std::to_string(this->gridData->regions.size()));
 
 	if (this->gridData->wells.size() != 1u)
-		throw std::runtime_error("WellGenerator: gridData wells size must be 1 and not " + std::to_string(this->gridData->wells.size()));
+		throw std::runtime_error("RadialGridDataReordered: gridData wells size must be 1 and not " + std::to_string(this->gridData->wells.size()));
 }
 
 void RadialGridDataReordered::defineQuantities() {
@@ -48,12 +48,12 @@ void RadialGridDataReordered::defineQuantities() {
 	this->numberOfHexahedronsPerSegment = this->gridData->hexahedronConnectivity.size() / this->numberOfSegments;
 	this->numberOfHexahedronsPerRadius = this->numberOfHexahedronsPerSegment / this->numberOfPrismsPerSegment;
 
-	printf("\n\tnumberOfSegments             : %i", numberOfSegments);
+	printf("\n\tnumberOfSegments             : %i", this->numberOfSegments);
 	printf("\n\tnumberOfPrisms               : %i", int(this->gridData->prismConnectivity.size()));
 	printf("\n\tnumberOfHexahedrons          : %i", int(this->gridData->hexahedronConnectivity.size()));
-	printf("\n\tnumberOfPrismsPerSegment     : %i", numberOfPrismsPerSegment);
-	printf("\n\tnumberOfHexahedronsPerSegment: %i", numberOfHexahedronsPerSegment);
-	printf("\n\tnumberOfHexahedronsPerRadius : %i", numberOfHexahedronsPerRadius);
+	printf("\n\tnumberOfPrismsPerSegment     : %i", this->numberOfPrismsPerSegment);
+	printf("\n\tnumberOfHexahedronsPerSegment: %i", this->numberOfHexahedronsPerSegment);
+	printf("\n\tnumberOfHexahedronsPerRadius : %i", this->numberOfHexahedronsPerRadius);
 	printf("\n\n");
 }
 

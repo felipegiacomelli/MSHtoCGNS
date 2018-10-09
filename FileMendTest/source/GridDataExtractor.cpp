@@ -37,29 +37,29 @@ TestCase(GridDataExtractorTest) {
 	checkEqual(this->gridData->regions.size()   ,  2u);
 	checkEqual(this->gridData->wells.size()     ,  0u);
 
-	checkEqual(this->gridData->boundaries[0].facetBegin, 72 );
-	checkEqual(this->gridData->boundaries[0].facetEnd , 88 );
+	checkEqual(this->gridData->boundaries[0].facetBegin, 72);
+	checkEqual(this->gridData->boundaries[0].facetEnd  , 88);
 
-	checkEqual(this->gridData->boundaries[1].facetBegin, 88 );
-	checkEqual(this->gridData->boundaries[1].facetEnd , 104 );
+	checkEqual(this->gridData->boundaries[1].facetBegin,  88);
+	checkEqual(this->gridData->boundaries[1].facetEnd  , 104);
 
-	checkEqual(this->gridData->boundaries[2].facetBegin, 104 );
-	checkEqual(this->gridData->boundaries[2].facetEnd , 120 );
+	checkEqual(this->gridData->boundaries[2].facetBegin, 104);
+	checkEqual(this->gridData->boundaries[2].facetEnd  , 120);
 
-	checkEqual(this->gridData->boundaries[3].facetBegin, 120 );
-	checkEqual(this->gridData->boundaries[3].facetEnd , 136 );
+	checkEqual(this->gridData->boundaries[3].facetBegin, 120);
+	checkEqual(this->gridData->boundaries[3].facetEnd  , 136);
 
-	checkEqual(this->gridData->boundaries[4].facetBegin, 136 );
-	checkEqual(this->gridData->boundaries[4].facetEnd , 152 );
+	checkEqual(this->gridData->boundaries[4].facetBegin, 136);
+	checkEqual(this->gridData->boundaries[4].facetEnd  , 152);
 
-	checkEqual(this->gridData->boundaries[5].facetBegin, 152 );
-	checkEqual(this->gridData->boundaries[5].facetEnd , 168 );
+	checkEqual(this->gridData->boundaries[5].facetBegin, 152);
+	checkEqual(this->gridData->boundaries[5].facetEnd  , 168);
 
-	checkEqual(this->gridData->regions[0].elementBegin,  0 );
-	checkEqual(this->gridData->regions[0].elementEnd  , 64 );
+	checkEqual(this->gridData->regions[0].elementBegin,  0);
+	checkEqual(this->gridData->regions[0].elementEnd  , 64);
 
-	checkEqual(this->gridData->regions[1].elementBegin, 64 );
-	checkEqual(this->gridData->regions[1].elementEnd  , 72 );
+	checkEqual(this->gridData->regions[1].elementBegin, 64);
+	checkEqual(this->gridData->regions[1].elementEnd  , 72);
 
 	GridDataShared extract = gridDataExtractor.extract;
 
@@ -79,26 +79,26 @@ TestCase(GridDataExtractorTest) {
 	checkEqual(extract->regions.size()   ,  1u);
 	checkEqual(extract->wells.size()     ,  0u);
 
-	checkEqual(extract->boundaries[0].facetBegin,  8 );
-	checkEqual(extract->boundaries[0].facetEnd , 12 );
+	checkEqual(extract->boundaries[0].facetBegin,  8);
+	checkEqual(extract->boundaries[0].facetEnd  , 12);
 
-	checkEqual(extract->boundaries[1].facetBegin, 12 );
-	checkEqual(extract->boundaries[1].facetEnd , 16 );
+	checkEqual(extract->boundaries[1].facetBegin, 12);
+	checkEqual(extract->boundaries[1].facetEnd  , 16);
 
-	checkEqual(extract->boundaries[2].facetBegin, 16 );
-	checkEqual(extract->boundaries[2].facetEnd , 20 );
+	checkEqual(extract->boundaries[2].facetBegin, 16);
+	checkEqual(extract->boundaries[2].facetEnd  , 20);
 
-	checkEqual(extract->boundaries[3].facetBegin, 20 );
-	checkEqual(extract->boundaries[3].facetEnd , 24 );
+	checkEqual(extract->boundaries[3].facetBegin, 20);
+	checkEqual(extract->boundaries[3].facetEnd  , 24);
 
-	checkEqual(extract->boundaries[4].facetBegin, 24 );
-	checkEqual(extract->boundaries[4].facetEnd , 28 );
+	checkEqual(extract->boundaries[4].facetBegin, 24);
+	checkEqual(extract->boundaries[4].facetEnd  , 28);
 
-	checkEqual(extract->boundaries[5].facetBegin, 28 );
-	checkEqual(extract->boundaries[5].facetEnd , 32 );
+	checkEqual(extract->boundaries[5].facetBegin, 28);
+	checkEqual(extract->boundaries[5].facetEnd  , 32);
 
-	checkEqual(extract->regions[0].elementBegin, 0 );
-	checkEqual(extract->regions[0].elementEnd  , 8 );
+	checkEqual(extract->regions[0].elementBegin, 0);
+	checkEqual(extract->regions[0].elementEnd  , 8);
 
 	checkClose(extract->coordinates[ 0][0], 2.5000e-01, TOLERANCE);	checkClose(extract->coordinates[ 0][1], 2.5000e-01, TOLERANCE);	checkClose(extract->coordinates[ 0][2], 2.5000e-01, TOLERANCE);
 	checkClose(extract->coordinates[ 1][0], 7.5000e-01, TOLERANCE);	checkClose(extract->coordinates[ 1][1], 2.5000e-01, TOLERANCE);	checkClose(extract->coordinates[ 1][2], 2.5000e-01, TOLERANCE);

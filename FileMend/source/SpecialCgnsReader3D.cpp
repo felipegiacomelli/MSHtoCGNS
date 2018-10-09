@@ -47,7 +47,8 @@ void SpecialCgnsReader3D::readSections() {
 			continue;
 
 		int numberOfElements = elementEnd - elementStart + 1;
-		elementStart = gridData->tetrahedronConnectivity.size() + gridData->hexahedronConnectivity.size() + gridData->prismConnectivity.size() + gridData->pyramidConnectivity.size() + gridData->triangleConnectivity.size() + gridData->quadrangleConnectivity.size() + gridData->lineConnectivity.size();
+		elementStart = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size() + this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
+		elementEnd = elementStart + numberOfElements;
 
 		int size;
 		if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
@@ -59,13 +60,13 @@ void SpecialCgnsReader3D::readSections() {
 
 		if (elementType == MIXED)
 			if (ElementType_t(connectivities[0]) == TETRA_4 || ElementType_t(connectivities[0]) == HEXA_8 || ElementType_t(connectivities[0]) == PENTA_6 || ElementType_t(connectivities[0]) == PYRA_5)
-				this->addRegion(std::string(this->buffer), elementStart + 1, elementEnd);
+				this->addRegion(std::string(this->buffer), elementStart, elementEnd);
 			else
-				this->addBoundary(std::string(this->buffer), elementStart + 1, elementEnd);
+				this->addBoundary(std::string(this->buffer), elementStart, elementEnd);
 		else if (elementType == TETRA_4 || elementType == HEXA_8 || elementType == PENTA_6 || elementType == PYRA_5)
-				this->addRegion(std::string(this->buffer), elementStart + 1, elementEnd);
+				this->addRegion(std::string(this->buffer), elementStart, elementEnd);
 		else if (elementType == TRI_3 || elementType == QUAD_4)
-			this->addBoundary(std::string(this->buffer), elementStart + 1, elementEnd);
+			this->addBoundary(std::string(this->buffer), elementStart, elementEnd);
 
 		int numberOfVertices;
 		if (cg_npe(elementType, &numberOfVertices))

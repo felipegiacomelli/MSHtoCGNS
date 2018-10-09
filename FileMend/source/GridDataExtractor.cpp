@@ -84,6 +84,26 @@ void GridDataExtractor::extractRegions() {
 		auto regionBegin = this->elementConnectivities.begin() + region.elementBegin;
 		auto regionEnd = this->elementConnectivities.begin() + region.elementEnd;
 
+		printf("\n\n\tbegin:%i \t end:%i \t total: %i\n", region.elementBegin, region.elementEnd, region.elementEnd - region.elementBegin);
+
+		if (this->original->tetrahedronConnectivity.size() > 0u)
+			printf("\n\n\t tetra begin:%i \t tetra end:%i", int(this->original->tetrahedronConnectivity.front().back()), int(this->original->tetrahedronConnectivity.back().back()));
+
+		if (this->original->hexahedronConnectivity.size() > 0u)
+			printf("\n\n\t hexa begin:%i \t hexa end:%i", int(this->original->hexahedronConnectivity.front().back()), int(this->original->hexahedronConnectivity.back().back()));
+
+		if (this->original->prismConnectivity.size() > 0u)
+			printf("\n\n\t prism begin:%i \t prism end:%i", int(this->original->prismConnectivity.front().back()), int(this->original->prismConnectivity.back().back()));
+
+		if (this->original->pyramidConnectivity.size() > 0u)
+			printf("\n\n\t pyra begin:%i \t pyra end:%i", int(this->original->pyramidConnectivity.front().back()), int(this->original->pyramidConnectivity.back().back()));
+
+		if (this->original->triangleConnectivity.size() > 0u)
+			printf("\n\n\t tri begin:%i \t tri end:%i", int(this->original->triangleConnectivity.front().back()), int(this->original->triangleConnectivity.back().back()));
+
+		if (this->original->quadrangleConnectivity.size() > 0u)
+			printf("\n\n\t quad begin:%i \t quad end:%i\n\n", int(this->original->quadrangleConnectivity.front().back()), int(this->original->quadrangleConnectivity.back().back()));
+
 		for (auto element = regionBegin; element != regionEnd; element++) {
 
 			for (auto vertex  : *element)
@@ -122,6 +142,7 @@ void GridDataExtractor::extractRegions() {
 
 		region.elementBegin = regionBegin->back();
 		region.elementEnd = (regionEnd - 1)->back() + 1;
+		// region.elementEnd = regionEnd->back();
 
 		this->extract->regions.emplace_back(region);
 	}
