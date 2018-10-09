@@ -1,10 +1,12 @@
 #include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
 #include <cgnslib.h>
 
-CgnsReader3D::CgnsReader3D(std::string filePath) : CgnsReader(filePath) {
-	this->readCoordinates();
-	this->readSections();
-	this->readBoundaries();
+CgnsReader3D::CgnsReader3D(std::string filePath, bool readInConstructor) : CgnsReader(filePath) {
+	if (readInConstructor) {
+		this->readCoordinates();
+		this->readSections();
+		this->readBoundaries();
+	}
 }
 
 void CgnsReader3D::readCoordinates() {
@@ -73,7 +75,7 @@ void CgnsReader3D::readSections() {
 					for (int k = 0; k < numberOfVertices; ++k)
 						element[k] = connectivities[position+1+k] - 1;
 					element.emplace_back(elementStart - 1 + e);
-					switch(connectivities[position]) {
+					switch (connectivities[position]) {
 						case TETRA_4: {
 							std::array<int, 5> tetrahedron;
 							std::copy_n(std::begin(element), 5, std::begin(tetrahedron));

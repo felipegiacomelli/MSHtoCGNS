@@ -7,16 +7,16 @@ CgnsReader::CgnsReader(std::string filePath) : filePath(filePath) {
 	this->readZone();
 	this->readNumberOfSections();
 	this->readNumberOfBoundaries();
-	this->gridData = MakeShared<GridData>();
-	this->gridData->dimension = this->cellDimension;
+	this->createGridData();
 }
 
 void CgnsReader::checkFile() {
     boost::filesystem::path input(this->filePath);
 	if (!boost::filesystem::exists(input.parent_path()))
-		throw std::runtime_error("CgnsReader: The parent path " + input.parent_path().string() + " does not exist");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + ": The parent path " + input.parent_path().string() + " does not exist");
 
 	if (!boost::filesystem::exists(this->filePath))
+		// throw std::runtime_error(__PRETTY_FUNCTION__ + ": The parent path " + input.parent_path().string() + " does not exist");
 		throw std::runtime_error("CgnsReader: There is no file in the given path");
 
 	int fileType;
@@ -71,6 +71,11 @@ void CgnsReader::readNumberOfSections() {
 void CgnsReader::readNumberOfBoundaries() {
 	if (cg_nbocos(this->fileIndex, this->baseIndex, this->zoneIndex, &this->numberOfBoundaries))
 		throw std::runtime_error("CgnsReader: Could not read number of boundaries");
+}
+
+void CgnsReader::createGridData() {
+	this->gridData = MakeShared<GridData>();
+	this->gridData->dimension = this->cellDimension;
 }
 
 void CgnsReader::readBoundaries() {

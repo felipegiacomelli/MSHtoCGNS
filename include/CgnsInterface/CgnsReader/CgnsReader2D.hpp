@@ -5,9 +5,9 @@
 
 class CgnsReader2D : public CgnsReader {
 	public:
-		CgnsReader2D(std::string filePath);
+		CgnsReader2D(std::string filePath, bool readInConstructor = true);
 
-	private:
+	protected:
 		void readCoordinates() override;
 		void readSections() override;
 };

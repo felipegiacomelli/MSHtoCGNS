@@ -3,7 +3,7 @@
 #include <Utilities/Output.hpp>
 #include <Utilities/Print.hpp>
 #include <Grid/GridData.hpp>
-#include <FileMend/SpecialCgnsReader3D.hpp>
+#include <FileMend/CgnsReader/SpecialCgnsReader3D.hpp>
 #include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
 #include <FileMend/WellGenerator.hpp>
 #include <FileMend/GridDataExtractor.hpp>
@@ -33,7 +33,8 @@ void applyRatio(GridDataShared gridData, const double& ratio) {
 
 int main(int argc, char** argv) {
 	if (argc > 1) {
-		runWithScript();
+		if (std::stoi(argv[1]) == 1)
+			runWithScript();
 		return 0;
 	}
 
@@ -169,5 +170,3 @@ void runWithScript() {
 	std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
 	std::cout << std::endl << "\tOutput file location       : " << creator.getFileName() << std::endl << std::endl;
 }
-
-

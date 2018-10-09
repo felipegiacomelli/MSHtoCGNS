@@ -5,9 +5,9 @@
 
 class CgnsReader3D : public CgnsReader {
 	public:
-		CgnsReader3D(std::string filePath);
+		CgnsReader3D(std::string filePath, bool readInConstructor = true);
 
-	private:
+	protected:
 		void readCoordinates() override;
 		void readSections() override;
 		void addWell(std::string&& name, int elementStart, int elementEnd);

@@ -39,7 +39,7 @@ void MshReader2D::readPhysicalEntities() {
 
 	std::vector<int> regionsIndices, boundaryIndices;
 	for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
-		switch(entitiesTypes[i]) {
+		switch (entitiesTypes[i]) {
 			case 0: {
 				boundaryIndices.push_back(entitiesIndices[i]);
 				break;

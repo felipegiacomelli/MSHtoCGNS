@@ -1,10 +1,12 @@
 #include <CgnsInterface/CgnsReader/CgnsReader2D.hpp>
 #include <cgnslib.h>
 
-CgnsReader2D::CgnsReader2D(std::string filePath) : CgnsReader(filePath) {
-	this->readCoordinates();
-	this->readSections();
-	this->readBoundaries();
+CgnsReader2D::CgnsReader2D(std::string filePath, bool readInConstructor) : CgnsReader(filePath) {
+	if (readInConstructor) {
+		this->readCoordinates();
+		this->readSections();
+		this->readBoundaries();
+	}
 }
 
 void CgnsReader2D::readCoordinates() {
@@ -61,7 +63,7 @@ void CgnsReader2D::readSections() {
 					for (int k = 0; k < numberOfVertices; ++k)
 						element[k] = connectivities[position+1+k] - 1;
 					element.emplace_back(elementStart - 1 + e);
-					switch(connectivities[position]) {
+					switch (connectivities[position]) {
 						case TRI_3: {
 							std::array<int, 4> triangle;
 							std::copy_n(std::begin(element), 4, std::begin(triangle));

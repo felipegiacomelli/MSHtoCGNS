@@ -1,5 +1,5 @@
 #include <BoostInterface/Test.hpp>
-#include <FileMend/SpecialCgnsReader3D.hpp>
+#include <FileMend/CgnsReader/SpecialCgnsReader3D.hpp>
 #include <FileMend/WellGenerator.hpp>
 
 struct WellGeneratorFixture {

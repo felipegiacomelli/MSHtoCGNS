@@ -1,33 +1,10 @@
-#include <FileMend/SpecialCgnsReader3D.hpp>
+#include <FileMend/CgnsReader/SpecialCgnsReader3D.hpp>
 #include <cgnslib.h>
 
-SpecialCgnsReader3D::SpecialCgnsReader3D(std::string filePath) : CgnsReader(filePath) {
+SpecialCgnsReader3D::SpecialCgnsReader3D(std::string filePath) : CgnsReader3D(filePath, false) {
 	this->readCoordinates();
 	this->readSections();
 	this->readBoundaries();
-}
-
-void SpecialCgnsReader3D::readCoordinates() {
-	int one = 1;
-
-	std::vector<double> coordinatesX(this->sizes[0]);
-	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, this->sizes, &coordinatesX[0]))
-		throw std::runtime_error("SpecialCgnsReader3D: Could not read CoordinateX");
-
-	std::vector<double> coordinatesY(this->sizes[0]);
-	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, this->sizes, &coordinatesY[0]))
-		throw std::runtime_error("SpecialCgnsReader3D: Could not read CoordinateY");
-
-	std::vector<double> coordinatesZ(this->sizes[0]);
-	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateZ", RealDouble, &one, this->sizes, &coordinatesZ[0]))
-		throw std::runtime_error("SpecialCgnsReader3D: Could not read CoordinateZ");
-
-	this->gridData->coordinates.resize(this->sizes[0], std::array<double, 3>());
-	for (int i = 0; i < this->sizes[0]; i++) {
-		this->gridData->coordinates[i][0] = coordinatesX[i];
-		this->gridData->coordinates[i][1] = coordinatesY[i];
-		this->gridData->coordinates[i][2] = coordinatesZ[i];
-	}
 }
 
 void SpecialCgnsReader3D::readSections() {
@@ -80,8 +57,8 @@ void SpecialCgnsReader3D::readSections() {
 					std::vector<int> element(numberOfVertices);
 					for (int k = 0; k < numberOfVertices; ++k)
 						element[k] = connectivities[position+1+k] - 1;
-					element.emplace_back(elementStart - 1 + e);
-					switch(connectivities[position]) {
+					element.emplace_back(elementStart + e);
+					switch (connectivities[position]) {
 						case TETRA_4: {
 							std::array<int, 5> tetrahedron;
 							std::copy_n(std::begin(element), 5, std::begin(tetrahedron));
@@ -128,7 +105,7 @@ void SpecialCgnsReader3D::readSections() {
 					std::array<int, 5> tetrahedron;
 					for (int k = 0; k < numberOfVertices; k++)
 						tetrahedron[k] = connectivities[e*numberOfVertices+k] - 1;
-					tetrahedron.back() = (elementStart - 1 + e);
+					tetrahedron.back() = (elementStart + e);
 					this->gridData->tetrahedronConnectivity.emplace_back(std::move(tetrahedron));
 				}
 				break;
@@ -138,7 +115,7 @@ void SpecialCgnsReader3D::readSections() {
 					std::array<int, 9> hexahedron;
 					for (int k = 0; k < numberOfVertices; k++)
 						hexahedron[k] = connectivities[e*numberOfVertices+k] - 1;
-					hexahedron.back() = (elementStart - 1 + e);
+					hexahedron.back() = (elementStart + e);
 					this->gridData->hexahedronConnectivity.emplace_back(std::move(hexahedron));
 				}
 				break;
@@ -148,7 +125,7 @@ void SpecialCgnsReader3D::readSections() {
 					std::array<int, 7> prism;
 					for (int k = 0; k < numberOfVertices; k++)
 						prism[k] = connectivities[e*numberOfVertices+k] - 1;
-					prism.back() = (elementStart - 1 + e);
+					prism.back() = (elementStart + e);
 					this->gridData->prismConnectivity.emplace_back(std::move(prism));
 				}
 				break;
@@ -158,7 +135,7 @@ void SpecialCgnsReader3D::readSections() {
 					std::array<int, 6> pyramid;
 					for (int k = 0; k < numberOfVertices; k++)
 						pyramid[k] = connectivities[e*numberOfVertices+k] - 1;
-					pyramid.back() = (elementStart - 1 + e);
+					pyramid.back() = (elementStart + e);
 					this->gridData->pyramidConnectivity.emplace_back(std::move(pyramid));
 				}
 				break;
@@ -168,7 +145,7 @@ void SpecialCgnsReader3D::readSections() {
 					std::array<int, 4> triangle;
 					for (int k = 0; k < numberOfVertices; k++)
 						triangle[k] = connectivities[e*numberOfVertices+k] - 1;
-					triangle.back() = (elementStart - 1 + e);
+					triangle.back() = (elementStart + e);
 					this->gridData->triangleConnectivity.emplace_back(std::move(triangle));
 				}
 				break;
@@ -178,7 +155,7 @@ void SpecialCgnsReader3D::readSections() {
 					std::array<int, 5> quadrangle;
 					for (int k = 0; k < numberOfVertices; k++)
 						quadrangle[k] = connectivities[e*numberOfVertices+k] - 1;
-					quadrangle.back() = (elementStart - 1 + e);
+					quadrangle.back() = (elementStart + e);
 					this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));
 				}
 				break;

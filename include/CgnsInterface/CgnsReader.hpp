@@ -25,6 +25,7 @@ class CgnsReader {
 		void readZone();
 		void readNumberOfSections();
 		void readNumberOfBoundaries();
+		void createGridData();
 		virtual void readCoordinates() = 0;
 		virtual void readSections() = 0;
 		void addRegion(std::string&& name, int elementStart, int elementEnd);

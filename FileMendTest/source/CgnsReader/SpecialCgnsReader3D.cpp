@@ -1,12 +1,12 @@
 #include <BoostInterface/Test.hpp>
-#include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
+#include <FileMend/CgnsReader/SpecialCgnsReader3D.hpp>
 
 #define TOLERANCE 1e-12
 
 struct Region1_Mixed_3D_Cgns {
 	Region1_Mixed_3D_Cgns() {
-		CgnsReader3D cgnsReader3D(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/3D-Region1-Mixed/12523v_57072e.cgns");
-		this->gridData = cgnsReader3D.gridData;
+		SpecialCgnsReader3D specialCgnsReader3D(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/3D-Region1-Mixed/12523v_57072e.cgns");
+		this->gridData = specialCgnsReader3D.gridData;
 	}
 
 	~Region1_Mixed_3D_Cgns() = default;
@@ -24,10 +24,10 @@ TestCase(CgnsReader3DTest) {
 	checkEqual(this->gridData->pyramidConnectivity.size(), 948u);
 	checkEqual(this->gridData->triangleConnectivity.size(), 2862u);
 	checkEqual(this->gridData->quadrangleConnectivity.size(), 24u);
-	checkEqual(this->gridData->lineConnectivity.size(), 77u);
+	checkEqual(this->gridData->lineConnectivity.size(), 0u);
 	checkEqual(this->gridData->boundaries.size(), 6u);
 	checkEqual(this->gridData->regions.size(), 2u);
-	checkEqual(this->gridData->wells.size(), 1u);
+	checkEqual(this->gridData->wells.size(), 0u);
 
 	auto tetrahedron = this->gridData->tetrahedronConnectivity.front();
 	checkEqual(tetrahedron[0], 12522); checkEqual(tetrahedron[1],  187); checkEqual(tetrahedron[2], 8793); checkEqual(tetrahedron[3], 3980);
@@ -42,7 +42,6 @@ TestCase(CgnsReader3DTest) {
 	checkEqual(hexahedron.back(), 54300);
 
 	hexahedron = this->gridData->hexahedronConnectivity.back();
-	checkEqual(hexahedron[0], 8689); checkEqual(hexahedron[1], 8690); checkEqual(hexahedron[2], 8692); checkEqual(hexahedron[3], 8691); checkEqual(hexahedron[4], 8693); checkEqual(hexahedron[5], 8694); checkEqual(hexahedron[6], 8696); checkEqual(hexahedron[7], 8695);
 	checkEqual(hexahedron.back(), 56147);
 
 	auto prism = this->gridData->prismConnectivity.front();
@@ -76,14 +75,6 @@ TestCase(CgnsReader3DTest) {
 	quadrangle = this->gridData->quadrangleConnectivity.back();
 	checkEqual(quadrangle[0], 8811); 	checkEqual(quadrangle[1], 8889); 	checkEqual(quadrangle[2], 8891); 	checkEqual(quadrangle[3], 8813);
 	checkEqual(quadrangle.back(), 59957);
-
-	auto line = this->gridData->lineConnectivity.front();
-	checkEqual(line[0], 9056); checkEqual(line[1], 9069);
-	checkEqual(line.back(), 59958);
-
-	line = this->gridData->lineConnectivity.back();
-	checkEqual(line[0], 9069); checkEqual(line[1], 9250);
-	checkEqual(line.back(), 60034);
 }
 
 TestSuiteEnd()
