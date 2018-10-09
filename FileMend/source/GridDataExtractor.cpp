@@ -29,7 +29,7 @@ GridDataExtractor::GridDataExtractor(GridDataShared original, boost::property_tr
 
 void GridDataExtractor::checkGridData() {
 	if (this->original->dimension != 3)
-		throw std::runtime_error("WellGenerator: original dimension must be 3 and not " + std::to_string(this->original->dimension));
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - original dimension must be 3 and not " + std::to_string(this->original->dimension));
 }
 
 void GridDataExtractor::readScript() {
@@ -78,7 +78,7 @@ void GridDataExtractor::extractRegions() {
 
 		auto iterator(std::find_if(this->original->regions.cbegin(),this->original->regions.cend(), [=](auto r){return r.name == name;}));
 		if (iterator == this->original->regions.cend())
-			throw std::runtime_error("GridDataExtractor: There is no region " + name + " in gridData");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no region " + name + " in gridData");
 		auto region(*iterator);
 
 		auto regionBegin = this->elementConnectivities.begin() + region.elementBegin;
@@ -153,7 +153,7 @@ void GridDataExtractor::extractBoundaries() {
 
 		auto iterator(std::find_if(this->original->boundaries.cbegin(),this->original->boundaries.cend(), [=](auto b){return b.name == name;}));
 		if (iterator == this->original->boundaries.cend())
-			throw std::runtime_error("GridDataExtractor: There is no boundary " + name + " in gridData");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no boundary " + name + " in gridData");
 		auto boundary(*iterator);
 
 		std::vector<int> deleteIndices;
@@ -210,7 +210,7 @@ void GridDataExtractor::extractWells() {
 
 		auto iterator(std::find_if(this->original->wells.cbegin(),this->original->wells.cend(), [=](auto w){return w.name == name;}));
 		if (iterator == this->original->wells.cend())
-			throw std::runtime_error("GridDataExtractor: There is no well " + name + " in gridData");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no well " + name + " in gridData");
 		auto well(*iterator);
 
 		auto wellBegin = this->elementConnectivities.begin() + well.lineBegin;

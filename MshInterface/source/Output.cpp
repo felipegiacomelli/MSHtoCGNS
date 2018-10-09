@@ -52,7 +52,7 @@ void output(GridDataShared gridData, std::string fileName) {
 			break;
 		}
 		default:
-			throw std::runtime_error("IO/Output: GridData dimension must be either 2 or 3");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - GridData dimension must be either 2 or 3");
 	}
 
 

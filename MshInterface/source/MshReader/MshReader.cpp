@@ -8,13 +8,13 @@ MshReader::MshReader(std::string filePath) : filePath(filePath) {
 void MshReader::checkFile() {
     boost::filesystem::path input(this->filePath);
 	if (!boost::filesystem::exists(input.parent_path()))
-		throw std::runtime_error("MshReader: The parent path does not exist");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path does not exist");
 
 	if (!boost::filesystem::exists(this->filePath))
-		throw std::runtime_error("MshReader: There is no file in the given path");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no file in the given path");
 
 	if (input.extension() != ".msh")
-		throw std::runtime_error("MshReader: The file extension is not .msh");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The file extension is not .msh");
 
 	this->file = std::ifstream(this->filePath.c_str());
 }
@@ -25,7 +25,7 @@ void MshReader::readNodes() {
 	while (strcmp(this->buffer, "$Nodes") && !this->file.eof())
 		this->file >> this->buffer;
 	if (this->file.eof())
-		throw std::runtime_error("MshReader: There is no Node data in the grid file");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no Node data in the grid file");
 
 	this->file >> numberOfVertices;
 	this->gridData->coordinates.resize(numberOfVertices, std::array<double, 3>());
@@ -58,7 +58,7 @@ void MshReader::readConnectivities() {
 	this->connectivities.erase(this->connectivities.begin());
 
 	if (connectivities[0][2] != 1)
-		throw std::runtime_error("MshReader: Elements must have exactly 2 tags");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Elements must have exactly 2 tags");
 
 	for (unsigned i = 0; i < this->connectivities.size(); i++) {
 		this->connectivities[i].erase(this->connectivities[i].begin()    );

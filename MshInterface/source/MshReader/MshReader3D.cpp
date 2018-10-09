@@ -20,7 +20,7 @@ void MshReader3D::readPhysicalEntities() {
 	while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof())
 		this->file >> this->buffer;
 	if (this->file.eof())
-		throw std::runtime_error("MshReader3D: There is no Physical Entities data in the grid file");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no Physical Entities data in the grid file");
 
 	this->file >> this->numberOfPhysicalEntities;
 	std::vector<int> entitiesTypes;
@@ -50,7 +50,7 @@ void MshReader3D::readPhysicalEntities() {
 				break;
 			}
 			default:
-				throw std::runtime_error("MshReader3Ds: Physical entity " + std::to_string(entitiesTypes[i]) + " not supported");
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Physical entity " + std::to_string(entitiesTypes[i]) + " not supported");
 		}
 	}
 
@@ -97,7 +97,7 @@ void MshReader3D::addRegions() {
 					break;
 				}
 				default:
-					throw std::runtime_error("MshReader3D: Non supported element found");
+					throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Non supported element found");
 			}
 		}
 	}
@@ -125,7 +125,7 @@ void MshReader3D::addBoundaries() {
 					break;
 				}
 				default:
-					throw std::runtime_error("MshReader3D: Non supported element found");
+					throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Non supported element found");
 			}
 		}
 	}

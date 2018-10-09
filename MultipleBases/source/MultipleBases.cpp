@@ -29,7 +29,7 @@ int main() {
 		gridData = reader.gridData;
 	}
 	else
-		throw std::runtime_error("MultipleBases: file extension " + inputPath.extension().string() + " not supported");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - file extension " + inputPath.extension().string() + " not supported");
 
 	auto end = std::chrono::steady_clock::now();
 

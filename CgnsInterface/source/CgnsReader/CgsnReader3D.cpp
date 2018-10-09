@@ -14,15 +14,15 @@ void CgnsReader3D::readCoordinates() {
 
 	std::vector<double> coordinatesX(this->sizes[0]);
 	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, this->sizes, &coordinatesX[0]))
-		throw std::runtime_error("CgnsReader3D: Could not read CoordinateX");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read CoordinateX");
 
 	std::vector<double> coordinatesY(this->sizes[0]);
 	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, this->sizes, &coordinatesY[0]))
-		throw std::runtime_error("CgnsReader3D: Could not read CoordinateY");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read CoordinateY");
 
 	std::vector<double> coordinatesZ(this->sizes[0]);
 	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateZ", RealDouble, &one, this->sizes, &coordinatesZ[0]))
-		throw std::runtime_error("CgnsReader3D: Could not read CoordinateZ");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read CoordinateZ");
 
 	this->gridData->coordinates.resize(this->sizes[0], std::array<double, 3>());
 	for (int i = 0; i < this->sizes[0]; i++) {
@@ -38,15 +38,15 @@ void CgnsReader3D::readSections() {
 		int elementStart, elementEnd;
 		int lastBoundaryElement, parentFlag;
 		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag))
-			throw std::runtime_error("CgnsReader3D: Could not read section");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section");
 
 		int size;
 		if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
-			throw std::runtime_error("CgnsReader3D: Could not read element data size");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element data size");
 
 		std::vector<int> connectivities(size);
 		if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], nullptr))
-			throw std::runtime_error("CgnsReader3D: Could not read section elements");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section elements");
 
 		if (elementType == MIXED)
 			if (ElementType_t(connectivities[0]) == TETRA_4 || ElementType_t(connectivities[0]) == HEXA_8 || ElementType_t(connectivities[0]) == PENTA_6 || ElementType_t(connectivities[0]) == PYRA_5)
@@ -62,7 +62,7 @@ void CgnsReader3D::readSections() {
 
 		int numberOfVertices;
 		if (cg_npe(elementType, &numberOfVertices))
-			throw std::runtime_error("CgnsReader3D: Could not read element number of vertices");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element number of vertices");
 
 		int numberOfElements = elementEnd - elementStart + 1;
 
@@ -188,7 +188,7 @@ void CgnsReader3D::readSections() {
 				break;
 			}
 			default:
-				throw std::runtime_error("CgnsReader3D: Section " + std::string(this->buffer) + " element type " + std::to_string(elementType) + " not supported");
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Section " + std::string(this->buffer) + " element type " + std::to_string(elementType) + " not supported");
 		}
 	}
 }

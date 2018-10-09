@@ -13,7 +13,7 @@ void SpecialCgnsReader3D::readSections() {
 		int elementStart, elementEnd;
 		int lastBoundaryElement, parentFlag;
 		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag))
-			throw std::runtime_error("SpecialCgnsReader3D: Could not read section");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section");
 
 		std::string sectionName(this->buffer);
 		if (sectionName.substr(sectionName.length() - 3) == "_1D")
@@ -29,11 +29,11 @@ void SpecialCgnsReader3D::readSections() {
 
 		int size;
 		if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
-			throw std::runtime_error("SpecialCgnsReader3D: Could not read element data size");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element data size");
 
 		std::vector<int> connectivities(size);
 		if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], nullptr))
-			throw std::runtime_error("SpecialCgnsReader3D: Could not read section elements");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section elements");
 
 		if (elementType == MIXED)
 			if (ElementType_t(connectivities[0]) == TETRA_4 || ElementType_t(connectivities[0]) == HEXA_8 || ElementType_t(connectivities[0]) == PENTA_6 || ElementType_t(connectivities[0]) == PYRA_5)
@@ -47,7 +47,7 @@ void SpecialCgnsReader3D::readSections() {
 
 		int numberOfVertices;
 		if (cg_npe(elementType, &numberOfVertices))
-			throw std::runtime_error("SpecialCgnsReader3D: Could not read element number of vertices");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element number of vertices");
 
 		switch (elementType) {
 			case MIXED : {
@@ -161,7 +161,7 @@ void SpecialCgnsReader3D::readSections() {
 				break;
 			}
 			default:
-				throw std::runtime_error("SpecialCgnsReader3D: Section " + std::string(this->buffer) + " element type " + std::to_string(elementType) + " not supported");
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Section " + std::string(this->buffer) + " element type " + std::to_string(elementType) + " not supported");
 		}
 	}
 }
@@ -174,19 +174,19 @@ void SpecialCgnsReader3D::readBoundaries() {
 		int NormalIndex, ndataset;
 		DataType_t NormalDataType;
 		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &boundaryConditionType, &pointSetType, &numberOfVertices, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset))
-			throw std::runtime_error("SpecialCgnsReader3D: Could not read boundary information");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read boundary information");
 
 		if (cg_goto(this->fileIndex, this->baseIndex, "Zone_t", this->zoneIndex, "ZoneBC_t", 1, "BC_t", boundaryIndex, nullptr))
-			throw std::runtime_error("SpecialCgnsReader3D: Could go to boundary condition " + std::to_string(boundaryIndex));
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could go to boundary condition " + std::to_string(boundaryIndex));
 
 		if (cg_famname_read(this->buffer))
-			throw std::runtime_error("SpecialCgnsReader3D: Could not read boundary condition " + std::to_string(boundaryIndex) + " family name");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read boundary condition " + std::to_string(boundaryIndex) + " family name");
 
 		auto boundary = std::find_if(this->gridData->boundaries.begin(), this->gridData->boundaries.end(), [this](auto b){return b.name == std::string(this->buffer);});
 		if (boundary != this->gridData->boundaries.end()) {
 			std::vector<int> vertices(numberOfVertices);
 			if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, &vertices[0], nullptr))
-				throw std::runtime_error("SpecialCgnsReader3D: Could not read boundary " + std::to_string(boundaryIndex));
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read boundary " + std::to_string(boundaryIndex));
 
 			std::transform(vertices.cbegin(), vertices.cend(), std::back_inserter(boundary->vertices), [](auto x){return x - 1;});
 		}

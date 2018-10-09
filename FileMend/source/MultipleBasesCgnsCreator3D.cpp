@@ -38,7 +38,7 @@ void MultipleBasesCgnsCreator3D::initialize() {
 
 void MultipleBasesCgnsCreator3D::checkDimension() {
 	if (this->gridData->dimension != 3)
-		throw std::runtime_error("MultipleBasesCgnsCreator3D: gridData dimension must be equal to 3 and not " + std::to_string(this->gridData->dimension));
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData dimension must be equal to 3 and not " + std::to_string(this->gridData->dimension));
 }
 
 void MultipleBasesCgnsCreator3D::setDimensions() {
@@ -60,13 +60,13 @@ void MultipleBasesCgnsCreator3D::writeCoordinates() {
 	}
 
 	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateX", &coordinatesX[0], &this->coordinateIndex))
-		throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not write CoordinateX");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write CoordinateX");
 
 	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateY", &coordinatesY[0], &this->coordinateIndex))
-		throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not write CoordinateY");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write CoordinateY");
 
 	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateZ", &coordinatesZ[0], &this->coordinateIndex))
-		throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not write CoordinateZ");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write CoordinateZ");
 }
 
 void MultipleBasesCgnsCreator3D::writeSections() {
@@ -137,13 +137,13 @@ void MultipleBasesCgnsCreator3D::writeRegions() {
 			append(regionBegin, regionEnd, std::back_inserter(connectivities));
 
 			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndex))
-				throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not write element section " + std::to_string(this->sectionIndex));
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write element section " + std::to_string(this->sectionIndex));
 
 			this->elementStart = this->elementEnd + 1;
 		}
 		else {
 			if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
-				throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not partial write element section " + std::to_string(this->sectionIndex));
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write element section " + std::to_string(this->sectionIndex));
 
 			for (auto element = regionBegin; element != regionEnd; element++) {
 				switch (element->size()) {
@@ -164,7 +164,7 @@ void MultipleBasesCgnsCreator3D::writeRegions() {
 						break;
 					}
 					default:
-						throw std::runtime_error("CgnsCreator3D: Element type not supported");
+						throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Element type not supported");
 				}
 			}
 
@@ -172,7 +172,7 @@ void MultipleBasesCgnsCreator3D::writeRegions() {
 			append(regionBegin, regionEnd, std::back_inserter(connectivities));
 
 			if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->elementEnd, &connectivities[0]))
-					throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
+					throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
 
 			this->elementStart = this->elementEnd + 1;
 		}
@@ -199,13 +199,13 @@ void MultipleBasesCgnsCreator3D::writeBoundaries() {
 			append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
 
 			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndex))
-				throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not write facet section " + std::to_string(this->sectionIndex));
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write facet section " + std::to_string(this->sectionIndex));
 
 			this->elementStart = this->elementEnd + 1;
 		}
 		else {
 			if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
-				throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not partial write facet section " + std::to_string(this->sectionIndex));
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write facet section " + std::to_string(this->sectionIndex));
 
 			for (auto facet = boundaryBegin; facet != boundaryEnd; facet++) {
 				switch (facet->size()) {
@@ -218,7 +218,7 @@ void MultipleBasesCgnsCreator3D::writeBoundaries() {
 						break;
 					}
 					default:
-						throw std::runtime_error("CgnsCreator3D: Facet type not supported");
+						throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Facet type not supported");
 				}
 			}
 
@@ -226,7 +226,7 @@ void MultipleBasesCgnsCreator3D::writeBoundaries() {
 			append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
 
 			if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->elementEnd, &connectivities[0]))
-					throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not write facet " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
+					throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write facet " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
 
 			this->elementStart = this->elementEnd + 1;
 		}
@@ -244,7 +244,7 @@ void MultipleBasesCgnsCreator3D::writeWells() {
 		append(wellBegin, wellEnd, std::back_inserter(connectivities));
 
 		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, well.name.c_str(), BAR_2, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndex))
-			throw std::runtime_error("MultipleBasesCgnsCreator3D: Could not write well section " + std::to_string(this->sectionIndex));
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write well section " + std::to_string(this->sectionIndex));
 
 		this->elementStart = this->elementEnd + 1;
 	}

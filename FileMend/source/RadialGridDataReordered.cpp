@@ -17,28 +17,28 @@ RadialGridDataReordered::RadialGridDataReordered(GridDataShared gridData) : grid
 
 void RadialGridDataReordered::checkGridData() {
 	if (this->gridData->dimension != 3)
-		throw std::runtime_error("RadialGridDataReordered: gridData dimension must be 3 and not " + std::to_string(this->gridData->dimension));
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData dimension must be 3 and not " + std::to_string(this->gridData->dimension));
 
 	if (this->gridData->tetrahedronConnectivity.size() != 0u)
-		throw std::runtime_error("RadialGridDataReordered: gridData tetrahedronConnectivity size must be 0 and not " + std::to_string(this->gridData->tetrahedronConnectivity.size()));
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData tetrahedronConnectivity size must be 0 and not " + std::to_string(this->gridData->tetrahedronConnectivity.size()));
 
 	if (this->gridData->hexahedronConnectivity.size() == 0u)
-		throw std::runtime_error("RadialGridDataReordered: gridData hexahedronConnectivity size must not be 0");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData hexahedronConnectivity size must not be 0");
 
 	if (this->gridData->prismConnectivity.size() == 0u)
-		throw std::runtime_error("RadialGridDataReordered: gridData prismConnectivity size must not be 0");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData prismConnectivity size must not be 0");
 
 	if (this->gridData->pyramidConnectivity.size() != 0u)
-		throw std::runtime_error("RadialGridDataReordered: gridData pyramidConnectivity size must be 0 and not " + std::to_string(this->gridData->pyramidConnectivity.size()));
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData pyramidConnectivity size must be 0 and not " + std::to_string(this->gridData->pyramidConnectivity.size()));
 
 	if (this->gridData->lineConnectivity.size() == 0u)
-		throw std::runtime_error("RadialGridDataReordered: gridData lineConnectivity size must not be 0");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData lineConnectivity size must not be 0");
 
 	if (this->gridData->regions.size() != 1u)
-		throw std::runtime_error("RadialGridDataReordered: gridData regions size must be 1 and not " + std::to_string(this->gridData->regions.size()));
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData regions size must be 1 and not " + std::to_string(this->gridData->regions.size()));
 
 	if (this->gridData->wells.size() != 1u)
-		throw std::runtime_error("RadialGridDataReordered: gridData wells size must be 1 and not " + std::to_string(this->gridData->wells.size()));
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData wells size must be 1 and not " + std::to_string(this->gridData->wells.size()));
 }
 
 void RadialGridDataReordered::defineQuantities() {

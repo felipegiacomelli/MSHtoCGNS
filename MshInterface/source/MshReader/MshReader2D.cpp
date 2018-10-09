@@ -19,7 +19,7 @@ void MshReader2D::readPhysicalEntities() {
 	while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof())
 		this->file >> this->buffer;
 	if (this->file.eof())
-		throw std::runtime_error("MshReader2D: There is no Physical Entities data in the grid file");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no Physical Entities data in the grid file");
 
 	this->file >> this->numberOfPhysicalEntities;
 	std::vector<int> entitiesTypes;
@@ -49,7 +49,7 @@ void MshReader2D::readPhysicalEntities() {
 				break;
 			}
 			default:
-				throw std::runtime_error("MshReader2D: Non supported physical entity found");
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Non supported physical entity found");
 		}
 	}
 
@@ -96,7 +96,7 @@ void MshReader2D::addRegions() {
 					break;
 				}
 				default:
-					throw std::runtime_error("MshReader2D: Non supported element found");
+					throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Non supported element found");
 			}
 		}
 	}
@@ -118,7 +118,7 @@ void MshReader2D::addBoundaries() {
 					break;
 				}
 				default:
-					throw std::runtime_error("MshReader2D: Non supported facet found");
+					throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Non supported facet found");
 			}
 		}
 	}

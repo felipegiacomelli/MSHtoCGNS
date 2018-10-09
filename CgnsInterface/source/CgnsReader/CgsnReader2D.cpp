@@ -14,11 +14,11 @@ void CgnsReader2D::readCoordinates() {
 
 	std::vector<double> coordinatesX(this->sizes[0]);
 	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, this->sizes, &coordinatesX[0]))
-		throw std::runtime_error("CgnsReader2D: Could not read CoordinateX");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read CoordinateX");
 
 	std::vector<double> coordinatesY(this->sizes[0]);
 	if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, this->sizes, &coordinatesY[0]))
-		throw std::runtime_error("CgnsReader2D: Could not read CoordinateY");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read CoordinateY");
 
 	this->gridData->coordinates.resize(this->sizes[0], std::array<double, 3>());
 	for (int i = 0; i < this->sizes[0]; i++) {
@@ -33,7 +33,7 @@ void CgnsReader2D::readSections() {
 		int elementStart, elementEnd;
 		int lastBoundaryElement, parentFlag;
 		if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag))
-			throw std::runtime_error("CgnsReader2D: Could not read section");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section");
 
 		if (elementType == MIXED || elementType == TRI_3 || elementType == QUAD_4)
 			this->addRegion(std::string(this->buffer), elementStart - 1, elementEnd);
@@ -42,15 +42,15 @@ void CgnsReader2D::readSections() {
 
 		int size;
 		if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
-			throw std::runtime_error("CgnsReader2D: Could not read element data size");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element data size");
 
 		std::vector<int> connectivities(size);
 		if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], nullptr))
-			throw std::runtime_error("CgnsReader2D: Could not read section elements");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section elements");
 
 		int numberOfVertices;
 		if (cg_npe(elementType, &numberOfVertices))
-			throw std::runtime_error("CgnsReader2D: Could not read element number of vertices");
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element number of vertices");
 
 		int numberOfElements = elementEnd - elementStart + 1;
 
@@ -112,7 +112,7 @@ void CgnsReader2D::readSections() {
 				break;
 			}
 			default:
-				throw std::runtime_error("CgnsReader2D: Section element type not supported");
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Section element type not supported");
 		}
 	}
 }

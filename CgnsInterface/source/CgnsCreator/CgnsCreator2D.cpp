@@ -10,7 +10,7 @@ CgnsCreator2D::CgnsCreator2D(GridDataShared gridData, std::string folderPath) : 
 
 void CgnsCreator2D::checkDimension() {
 	if (this->gridData->dimension != 2)
-		throw std::runtime_error("CgnsCreator2D: gridData dimension must be equal to 2 and not " + std::to_string(this->gridData->dimension));
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData dimension must be equal to 2 and not " + std::to_string(this->gridData->dimension));
 }
 
 void CgnsCreator2D::setDimensions() {
@@ -30,10 +30,10 @@ void CgnsCreator2D::writeCoordinates() {
 	}
 
 	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateX", &coordinatesX[0], &this->coordinateIndex))
-		throw std::runtime_error("CgnsCreator2D: Could not write CoordinateX");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write CoordinateX");
 
 	if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateY", &coordinatesY[0], &this->coordinateIndex))
-		throw std::runtime_error("CgnsCreator2D: Could not write CoordinateY");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write CoordinateY");
 }
 
 void CgnsCreator2D::buildGlobalConnectivities() {
@@ -77,13 +77,13 @@ void CgnsCreator2D::writeRegions() {
 			append(regionBegin, regionEnd, std::back_inserter(connectivities));
 
 			if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, region->name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndex))
-				throw std::runtime_error("CgnsCreator2D: Could not write element section " + std::to_string(this->sectionIndex));
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write element section " + std::to_string(this->sectionIndex));
 
 			this->elementStart = this->elementEnd + 1;
 		}
 		else {
 			if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region->name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
-				throw std::runtime_error("CgnsCreator2D: Could not partial write element section " + std::to_string(this->sectionIndex));
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write element section " + std::to_string(this->sectionIndex));
 
 			for (auto element = regionBegin; element != regionEnd; element++) {
 				switch (element->size()) {
@@ -96,7 +96,7 @@ void CgnsCreator2D::writeRegions() {
 						break;
 					}
 					default:
-						throw std::runtime_error("SpecialCgnsCreator3D: Element type not supported");
+						throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Element type not supported");
 				}
 			}
 
@@ -104,7 +104,7 @@ void CgnsCreator2D::writeRegions() {
 			append(regionBegin, regionEnd, std::back_inserter(connectivities));
 
 			if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->elementEnd, &connectivities[0]))
-					throw std::runtime_error("CgnsCreator2D: Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
+					throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
 
 			this->elementStart = this->elementEnd + 1;
 		}
@@ -122,7 +122,7 @@ void CgnsCreator2D::writeBoundaries() {
 		append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
 
 		if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary->name.c_str(), BAR_2, this->elementStart, this->elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndex))
-			throw std::runtime_error("CgnsCreator2D: Could not write facet section " + std::to_string(this->sectionIndex));
+			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write facet section " + std::to_string(this->sectionIndex));
 
 		this->elementStart = this->elementEnd + 1;
 	}

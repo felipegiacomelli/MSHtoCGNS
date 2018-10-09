@@ -7,7 +7,7 @@ CgnsWriter::CgnsWriter(std::string filePath, std::string solutionLocation) : fil
 	else if (solutionLocation == std::string("CellCenter"))
 		this->gridLocation = 3;
 	else
-		throw std::runtime_error("CgnsWriter: Solution location must be either Vertex or CellCenter");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Solution location must be either Vertex or CellCenter");
 
 	this->checkFile();
 	this->readBase();
@@ -17,47 +17,47 @@ CgnsWriter::CgnsWriter(std::string filePath, std::string solutionLocation) : fil
 void CgnsWriter::checkFile() {
     boost::filesystem::path input(this->filePath);
 	if (!boost::filesystem::exists(input.parent_path()))
-		throw std::runtime_error("CgnsWriter: The parent path does not exist");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path does not exist");
 
 	if (!boost::filesystem::exists(this->filePath))
-		throw std::runtime_error("CgnsWriter: There is no file in the given path");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no file in the given path");
 
 	if (cg_open(this->filePath.c_str(), CG_MODE_MODIFY, &this->fileIndex))
-		throw std::runtime_error("CgnsWriter: Could not open the file " + this->filePath);
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not open the file " + this->filePath);
 
 	float version;
 	if (cg_version(this->fileIndex, &version))
-		throw std::runtime_error("CgnsWriter: Could read file version");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could read file version");
 
 	if (version <= 3.10)
-		throw std::runtime_error("CgnsReader: File version (" + std::to_string(version) + ") is older than 3.11");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - File version (" + std::to_string(version) + ") is older than 3.11");
 }
 
 void CgnsWriter::readBase() {
 	if (cg_nbases(this->fileIndex, &this->baseIndex))
-		throw std::runtime_error("CgnsWriter: Could not read number of bases");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of bases");
 
 	if (this->baseIndex != 1)
-		throw std::runtime_error("CgnsWriter: The CGNS file has more than one base");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has more than one base");
 }
 
 void CgnsWriter::readZone() {
 	if (cg_nzones(this->fileIndex, this->baseIndex, &this->zoneIndex))
-		throw std::runtime_error("CgnsWriter: Could not read number of zones");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of zones");
 
 	if (this->zoneIndex != 1)
-		throw std::runtime_error("CgnsWriter: The CGNS file has more than one zone");
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has more than one zone");
 }
 
 void CgnsWriter::writePermanentSolution(std::string solutionName) {
 	if (cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), GridLocation_t(this->gridLocation), &this->permanentSolutionIndex))
-		throw std::runtime_error("CgnsWriter: Could not write permanent solution " + solutionName);
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write permanent solution " + solutionName);
 }
 
 
 void CgnsWriter::writePermanentField(std::string fieldName, const std::vector<double>& fieldValues){
 	if (cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->permanentSolutionIndex, RealDouble, fieldName.c_str(), &fieldValues[0], &this->permanentFieldIndex))
-		throw std::runtime_error("CgnsWriter: Could not write field " + fieldName);
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write field " + fieldName);
 }
 
 void CgnsWriter::writeTransientSolution(const double& timeInstant) {
