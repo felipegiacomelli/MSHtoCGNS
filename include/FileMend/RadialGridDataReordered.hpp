@@ -43,6 +43,7 @@ class RadialGridDataReordered {
 		void copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron);
 		void copyPrism(std::vector<std::array<int, 7>>::iterator prism);
 		void addVertices();
+		void findVerticesOnPlane(const std::array<double, 3>& normal, const double& d);
 		void addVertex(std::vector<std::pair<int, std::array<double, 3>>>::iterator vertex);
 		void fixIndices();
 		void copyVertices();

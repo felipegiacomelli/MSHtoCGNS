@@ -125,37 +125,24 @@ void RadialGridDataReordered::addVertices() {
 		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[0][1]];
 
 		std::array<double, 3> normal;
-		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<double>());
+		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<>());
 
-		double d = std::inner_product(first.begin(), first.end(), normal.begin(), 0.0);
-
-		for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();)
-			if (std::abs(std::inner_product(coordinate->second.cbegin(), coordinate->second.cend(), normal.begin(), -d)) < this->tolerance)
-				this->addVertex(coordinate);
-			else
-				coordinate++;
+		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(first.begin(), first.end(), normal.begin(), 0.0));
 	}
 
 	for (int s = 1; s < this->numberOfSegments; s++) {
 		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[s-1][0]];
 		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[s-1][1]];
-		std::array<double, 3> temporary;
-		std::transform(first.begin(), first.end(), last.begin(), temporary.begin(), std::minus<double>());
+
+		std::array<double, 3> normal;
+		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<>());
 
 		first = this->gridData->coordinates[this->gridData->lineConnectivity[s][0]];
 		last  = this->gridData->coordinates[this->gridData->lineConnectivity[s][1]];
-		std::array<double, 3> normal;
-		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<double>());
 
-		std::transform(temporary.begin(), temporary.end(), normal.begin(), normal.begin(), std::plus<double>());
+		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<>());
 
-		double d = -1.0 * std::inner_product(first.begin(), first.end(), normal.begin(), 0.0);
-
-		for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();)
-			if (std::abs(std::inner_product(coordinate->second.cbegin(), coordinate->second.cend(), normal.begin(), d)) < this->tolerance)
-				this->addVertex(coordinate);
-			else
-				coordinate++;
+		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(first.begin(), first.end(), normal.begin(), 0.0));
 	}
 
 	{
@@ -163,16 +150,18 @@ void RadialGridDataReordered::addVertices() {
 		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[this->numberOfSegments-1][1]];
 
 		std::array<double, 3> normal;
-		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<double>());
+		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<>());
 
-		double d = -1.0 * std::inner_product(last.begin(), last.end(), normal.begin(), 0.0);
+		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(last.begin(), last.end(), normal.begin(), 0.0));
+	}
+}
 
-		for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();)
-			if (std::abs(std::inner_product(coordinate->second.cbegin(), coordinate->second.cend(), normal.begin(), d)) < this->tolerance)
-				this->addVertex(coordinate);
-			else
-				coordinate++;
-		}
+void RadialGridDataReordered::findVerticesOnPlane(const std::array<double, 3>& normal, const double& d) {
+	for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();)
+		if (std::abs(std::inner_product(coordinate->second.cbegin(), coordinate->second.cend(), normal.begin(), d)) < this->tolerance)
+			this->addVertex(coordinate);
+		else
+			coordinate++;
 }
 
 void RadialGridDataReordered::addVertex(std::vector<std::pair<int, std::array<double, 3>>>::iterator vertex) {

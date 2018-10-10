@@ -51,37 +51,62 @@ TestCase(RadialGridDataReorderTest) {
 	for (int i = 0; i < 9; i++)
 		checkEqual(final->lineConnectivity[i].back(), 324 + i);
 
-	for (int i = 0; i < 37; i++)
-		checkSmall(final->coordinates[i][2], TOLERANCE);
+	for (int i = 0; i < 37; i++) {
+		checkSmall(final->coordinates[37 * 0 + i][2], TOLERANCE);
+		checkClose(final->coordinates[37 * 1 + i][2], 5.5555555, TOLERANCE);
+		checkClose(final->coordinates[37 * 2 + i][2], 11.111111, TOLERANCE);
+		checkClose(final->coordinates[37 * 3 + i][2], 16.666666, TOLERANCE);
+		checkClose(final->coordinates[37 * 4 + i][2], 22.222222, TOLERANCE);
+		checkClose(final->coordinates[37 * 5 + i][2], 27.777777, TOLERANCE);
+		checkClose(final->coordinates[37 * 6 + i][2], 33.333333, TOLERANCE);
+		checkClose(final->coordinates[37 * 7 + i][2], 38.888888, TOLERANCE);
+		checkClose(final->coordinates[37 * 8 + i][2], 44.444444, TOLERANCE);
+		checkClose(final->coordinates[37 * 9 + i][2], 49.999999, TOLERANCE);
+	}
 
-	for (int i = 37; i < 74; i++)
-		checkClose(final->coordinates[i][2], 5.5555555, TOLERANCE);
+	for (auto i = 0; i < 37; i++) {
+		bool x = std::abs(final->coordinates[i][0] -final->coordinates[37 + i][0]) < 1e-2;
+		bool y = std::abs(final->coordinates[i][1] -final->coordinates[37 + i][1]) < 1e-2;
 
-	for (int i = 74; i < 111; i++)
-		checkClose(final->coordinates[i][2], 11.111111, TOLERANCE);
+		std::cout << std::setprecision(5) << std::scientific << "\t\t";
 
-	for (int i = 111; i < 148; i++)
-		checkClose(final->coordinates[i][2], 16.666666, TOLERANCE);
+		if (x)
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[i][0];
+		else
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << final->coordinates[i][0] << "\033[0m";
 
-	for (int i = 148; i < 185; i++)
-		checkClose(final->coordinates[i][2], 22.222222, TOLERANCE);
+		if (y)
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[i][1];
+		else
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << final->coordinates[i][1] << "\033[0m";
 
-	for (int i = 185; i < 222; i++)
-		checkClose(final->coordinates[i][2], 27.777777, TOLERANCE);
+		std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[i][2];
 
-	for (int i = 222; i < 259; i++)
-		checkClose(final->coordinates[i][2], 33.333333, TOLERANCE);
 
-	for (int i = 259; i < 296; i++)
-		checkClose(final->coordinates[i][2], 38.888888, TOLERANCE);
+		std::cout << std::setprecision(5) << std::scientific << "\t\t";
 
-	for (int i = 296; i < 333; i++)
-		checkClose(final->coordinates[i][2], 44.444444, TOLERANCE);
+		if (x)
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[37+i][0];
+		else
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << final->coordinates[37+i][0] << "\033[0m";
 
-	for (int i = 333; i < 370; i++)
-		checkClose(final->coordinates[i][2], 49.999999, TOLERANCE);
+		if (y)
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[37+i][1];
+		else
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << final->coordinates[37+i][1] << "\033[0m";
+
+		std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[37+i][2];
+
+		std::cout << std::endl;
+	}
+
+	std::cout << std::endl << std::endl;
 
 	for (int i = 0; i < 37; i++) {
+		auto d(std::inner_product(final->coordinates[37 * 0 + i].cbegin(), final->coordinates[37 * 0 + i].cend(), final->coordinates[37 * 1 + i].cbegin(), 0.0, std::plus<>(), [](auto a, auto b){return (a-b)*(a-b);}));
+
+		std::cout << "\t" << std::sqrt(d) << std::endl;
+
 		checkClose(std::abs(final->coordinates[37 * 0 + i][2] - final->coordinates[37 *  1 + i][2]), 5.5555555555555554e+00, TOLERANCE);
 		checkClose(std::abs(final->coordinates[37 * 1 + i][2] - final->coordinates[37 *  2 + i][2]), 5.5555555555555554e+00, TOLERANCE);
 		checkClose(std::abs(final->coordinates[37 * 2 + i][2] - final->coordinates[37 *  3 + i][2]), 5.5555555555555536e+00, TOLERANCE);
