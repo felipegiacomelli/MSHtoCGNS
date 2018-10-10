@@ -48,12 +48,12 @@ void RadialGridDataReordered::defineQuantities() {
 	this->numberOfHexahedronsPerSegment = this->gridData->hexahedronConnectivity.size() / this->numberOfSegments;
 	this->numberOfHexahedronsPerRadius = this->numberOfHexahedronsPerSegment / this->numberOfPrismsPerSegment;
 
-	printf("\n\tnumberOfSegments             : %i", this->numberOfSegments);
-	printf("\n\tnumberOfPrisms               : %i", int(this->gridData->prismConnectivity.size()));
-	printf("\n\tnumberOfHexahedrons          : %i", int(this->gridData->hexahedronConnectivity.size()));
-	printf("\n\tnumberOfPrismsPerSegment     : %i", this->numberOfPrismsPerSegment);
-	printf("\n\tnumberOfHexahedronsPerSegment: %i", this->numberOfHexahedronsPerSegment);
-	printf("\n\tnumberOfHexahedronsPerRadius : %i", this->numberOfHexahedronsPerRadius);
+	printf("\n\tnumberOfSegments             : %4i", this->numberOfSegments);
+	printf("\n\tnumberOfPrisms               : %4i", int(this->gridData->prismConnectivity.size()));
+	printf("\n\tnumberOfHexahedrons          : %4i", int(this->gridData->hexahedronConnectivity.size()));
+	printf("\n\tnumberOfPrismsPerSegment     : %4i", this->numberOfPrismsPerSegment);
+	printf("\n\tnumberOfHexahedronsPerSegment: %4i", this->numberOfHexahedronsPerSegment);
+	printf("\n\tnumberOfHexahedronsPerRadius : %4i", this->numberOfHexahedronsPerRadius);
 	printf("\n\n");
 }
 
@@ -121,38 +121,44 @@ void RadialGridDataReordered::copyHexahedron(std::vector<std::array<int, 9>>::it
 
 void RadialGridDataReordered::addVertices() {
 	{
-		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[0][0]];
-		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[0][1]];
+		this->addVertex(std::find_if(this->coordinates.begin(),this->coordinates.end(), [=](const auto& a){return a.first == this->gridData->lineConnectivity.front()[0];}));
+
+		auto first = this->gridData->coordinates[this->gridData->lineConnectivity.front()[0]];
+		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity.front()[1]];
 
 		std::array<double, 3> normal;
-		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<>());
+		std::transform(first.cbegin(), first.cend(), last.cbegin(), normal.begin(), std::minus<>());
 
-		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(first.begin(), first.end(), normal.begin(), 0.0));
+		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(first.cbegin(), first.cend(), normal.begin(), 0.0));
 	}
 
 	for (int s = 1; s < this->numberOfSegments; s++) {
+		this->addVertex(std::find_if(this->coordinates.begin(),this->coordinates.end(), [=](const auto& a){return a.first == this->gridData->lineConnectivity[s][0];}));
+
 		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[s-1][0]];
 		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[s-1][1]];
 
 		std::array<double, 3> normal;
-		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<>());
+		std::transform(first.cbegin(), first.cend(), last.cbegin(), normal.begin(), std::minus<>());
 
 		first = this->gridData->coordinates[this->gridData->lineConnectivity[s][0]];
 		last  = this->gridData->coordinates[this->gridData->lineConnectivity[s][1]];
 
-		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<>());
+		std::transform(first.cbegin(), first.cend(), last.cbegin(), normal.begin(), std::minus<>());
 
-		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(first.begin(), first.end(), normal.begin(), 0.0));
+		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(first.cbegin(), first.cend(), normal.begin(), 0.0));
 	}
 
 	{
-		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[this->numberOfSegments-1][0]];
-		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[this->numberOfSegments-1][1]];
+		this->addVertex(std::find_if(this->coordinates.begin(),this->coordinates.end(), [=](const auto& a){return a.first == this->gridData->lineConnectivity.back()[1];}));
+
+		auto first = this->gridData->coordinates[this->gridData->lineConnectivity.back()[0]];
+		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity.back()[1]];
 
 		std::array<double, 3> normal;
-		std::transform(first.begin(), first.end(), last.begin(), normal.begin(), std::minus<>());
+		std::transform(first.cbegin(), first.cend(), last.cbegin(), normal.begin(), std::minus<>());
 
-		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(last.begin(), last.end(), normal.begin(), 0.0));
+		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(last.cbegin(), last.cend(), normal.begin(), 0.0));
 	}
 }
 

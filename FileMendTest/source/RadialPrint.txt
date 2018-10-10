@@ -13,6 +13,43 @@ RadialGridDataReordered::~RadialGridDataReordered() {
 	printf("\tcoordinates: %i\n", int(this->coordinates.size()));
 }
 
+	for (auto i = 0; i < 37; i++) {
+		bool x = std::abs(final->coordinates[i][0] -final->coordinates[37 + i][0]) < 1e-2;
+		bool y = std::abs(final->coordinates[i][1] -final->coordinates[37 + i][1]) < 1e-2;
+
+		std::cout << std::setprecision(5) << std::scientific << "\t\t";
+
+		if (x)
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[i][0];
+		else
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << final->coordinates[i][0] << "\033[0m";
+
+		if (y)
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[i][1];
+		else
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << final->coordinates[i][1] << "\033[0m";
+
+		std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[i][2];
+
+
+		std::cout << std::setprecision(5) << std::scientific << "\t\t";
+
+		if (x)
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[37+i][0];
+		else
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << final->coordinates[37+i][0] << "\033[0m";
+
+		if (y)
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[37+i][1];
+		else
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << final->coordinates[37+i][1] << "\033[0m";
+
+		std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[37+i][2];
+
+		std::cout << std::endl;
+	}
+
+
 		// std::cout << "\tsegment \033[1;31m" << s << "\033[0m: " << this->final->lineConnectivity[s][0] << " - " << this->final->lineConnectivity[s][1] << std::endl;
 
 		// printf("\n\t\tprismIndices (%i): ", int(this->final->prismConnectivity.size() / (s+1)));
