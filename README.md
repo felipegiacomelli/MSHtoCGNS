@@ -74,17 +74,17 @@ Where dimension specifies the msh grid's dimension.
 Simulation results may be easily visualised.
 
 <p float="left">
-	<img src="Zeta/Images/Pressure.jpg"  alt="gmsh" height=150 width=250  />
-	<img src="Zeta/Images/VelocityX.jpg" alt="gmsh" height=150 width=250  />
-	<img src="Zeta/Images/VelocityY.jpg" alt="gmsh" height=150 width=250  />
+	<img src="Zeta/Images/2D/Pressure.jpg"  alt="gmsh" height=150 width=250  />
+	<img src="Zeta/Images/2D/VelocityX.jpg" alt="gmsh" height=150 width=250  />
+	<img src="Zeta/Images/2D/VelocityY.jpg" alt="gmsh" height=150 width=250  />
 </p>
 
 <p float="left">
-	<img src="Zeta/Images/Pressure.jpg"  alt="gmsh" height=150 width=250  />
-	<img src="Zeta/Images/VelocityX.jpg" alt="gmsh" height=150 width=250  />
+	<img src="Zeta/Images/3D/DisplacementZ-first.png"  alt="gmsh" height=150 width=250  />
+	<img src="Zeta/Images/3D/DisplacementZ-last.png" alt="gmsh" height=150 width=250  />
 </p>
 
 <p float="left">
-	<img src="Zeta/Images/Pressure.jpg"  alt="gmsh" height=150 width=250  />
-	<img src="Zeta/Images/VelocityX.jpg" alt="gmsh" height=150 width=250  />
+	<img src="Zeta/Images/3D/Pressure-first.png"  alt="gmsh" height=150 width=250  />
+	<img src="Zeta/Images/3D/Pressure-last.png" alt="gmsh" height=150 width=250  />
 </p>
