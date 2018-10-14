@@ -74,7 +74,17 @@ Where dimension specifies the msh grid's dimension.
 Simulation results may be easily visualised.
 
 <p float="left">
-	<img src="Zeta/Images/Pressure.jpg" alt="gmsh" height=150 width=250  />
+	<img src="Zeta/Images/Pressure.jpg"  alt="gmsh" height=150 width=250  />
 	<img src="Zeta/Images/VelocityX.jpg" alt="gmsh" height=150 width=250  />
 	<img src="Zeta/Images/VelocityY.jpg" alt="gmsh" height=150 width=250  />
+</p>
+
+<p float="left">
+	<img src="Zeta/Images/Pressure.jpg"  alt="gmsh" height=150 width=250  />
+	<img src="Zeta/Images/VelocityX.jpg" alt="gmsh" height=150 width=250  />
+</p>
+
+<p float="left">
+	<img src="Zeta/Images/Pressure.jpg"  alt="gmsh" height=150 width=250  />
+	<img src="Zeta/Images/VelocityX.jpg" alt="gmsh" height=150 width=250  />
 </p>
