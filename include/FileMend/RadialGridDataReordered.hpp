@@ -25,6 +25,10 @@ bool hasElements(InputIt cbegin, InputIt cend, const std::array<int, 4>& facetCo
 	return close;
 }
 
+double calculateDistance(const std::array<double, 3>& a, const std::array<double, 3>& b) {
+	return std::sqrt(std::inner_product(a.cbegin(), a.cend(), b.cbegin(), 0.0, std::plus<>(), [](auto c, auto d){return (c-d)*(c-d);}));
+}
+
 class RadialGridDataReordered {
 	public:
 		RadialGridDataReordered(GridDataShared gridData);
@@ -44,6 +48,8 @@ class RadialGridDataReordered {
 		void copyPrism(std::vector<std::array<int, 7>>::iterator prism);
 		void addVertices();
 		void findVerticesOnPlane(const std::array<double, 3>& normal, const double& d);
+		bool isCoordinateOnPlane(const std::array<double, 3>& coordinate, const std::array<double, 3>& normal, const double& d);
+		bool checkDistance(const std::array<double, 3>& a);
 		void addVertex(std::vector<std::pair<int, std::array<double, 3>>>::iterator vertex);
 		void fixIndices();
 		void copyVertices();
@@ -56,6 +62,7 @@ class RadialGridDataReordered {
 		int numberOfPrismsPerSegment;
 		int numberOfHexahedronsPerSegment;
 		int numberOfHexahedronsPerRadius;
+		int numberOfVerticesPerSection;
 
 		std::vector<std::pair<int, std::array<double, 3>>> coordinates;
 		std::vector<std::array<int, 9>> hexahedra;
@@ -65,6 +72,8 @@ class RadialGridDataReordered {
 
 		int vertexShift = 0;
 		int elementShift = 0;
+		int segmentNumber = 0;
+		double segmentLength;
 };
 
 #endif

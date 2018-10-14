@@ -47,6 +47,7 @@ void RadialGridDataReordered::defineQuantities() {
 	this->numberOfPrismsPerSegment = this->gridData->prismConnectivity.size() / this->numberOfSegments;
 	this->numberOfHexahedronsPerSegment = this->gridData->hexahedronConnectivity.size() / this->numberOfSegments;
 	this->numberOfHexahedronsPerRadius = this->numberOfHexahedronsPerSegment / this->numberOfPrismsPerSegment;
+	this->numberOfVerticesPerSection = this->gridData->coordinates.size() / (this->gridData->lineConnectivity.size()+1);
 
 	printf("\n\tnumberOfSegments             : %4i", this->numberOfSegments);
 	printf("\n\tnumberOfPrisms               : %4i", int(this->gridData->prismConnectivity.size()));
@@ -54,6 +55,7 @@ void RadialGridDataReordered::defineQuantities() {
 	printf("\n\tnumberOfPrismsPerSegment     : %4i", this->numberOfPrismsPerSegment);
 	printf("\n\tnumberOfHexahedronsPerSegment: %4i", this->numberOfHexahedronsPerSegment);
 	printf("\n\tnumberOfHexahedronsPerRadius : %4i", this->numberOfHexahedronsPerRadius);
+	printf("\n\tnumberOfVerticesPerSection   : %4i", this->numberOfVerticesPerSection);
 	printf("\n\n");
 }
 
@@ -130,6 +132,7 @@ void RadialGridDataReordered::addVertices() {
 		std::transform(first.cbegin(), first.cend(), last.cbegin(), normal.begin(), std::minus<>());
 
 		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(first.cbegin(), first.cend(), normal.begin(), 0.0));
+		this->segmentNumber++;
 	}
 
 	for (int s = 1; s < this->numberOfSegments; s++) {
@@ -137,6 +140,7 @@ void RadialGridDataReordered::addVertices() {
 
 		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[s-1][0]];
 		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[s-1][1]];
+		this->segmentLength = std::sqrt(std::inner_product(first.cbegin(), first.cend(), last.cbegin(), 0.0, std::plus<>(), [](const auto& a, const auto& b){return (a-b)*(a-b);}));
 
 		std::array<double, 3> normal;
 		std::transform(first.cbegin(), first.cend(), last.cbegin(), normal.begin(), std::minus<>());
@@ -147,6 +151,7 @@ void RadialGridDataReordered::addVertices() {
 		std::transform(first.cbegin(), first.cend(), last.cbegin(), normal.begin(), std::minus<>());
 
 		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(first.cbegin(), first.cend(), normal.begin(), 0.0));
+		this->segmentNumber++;
 	}
 
 	{
@@ -154,20 +159,39 @@ void RadialGridDataReordered::addVertices() {
 
 		auto first = this->gridData->coordinates[this->gridData->lineConnectivity.back()[0]];
 		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity.back()[1]];
+		this->segmentLength = std::sqrt(std::inner_product(first.cbegin(), first.cend(), last.cbegin(), 0.0, std::plus<>(), [](const auto& a, const auto& b){return (a-b)*(a-b);}));
 
 		std::array<double, 3> normal;
 		std::transform(first.cbegin(), first.cend(), last.cbegin(), normal.begin(), std::minus<>());
 
 		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(last.cbegin(), last.cend(), normal.begin(), 0.0));
+		this->segmentNumber++;
 	}
 }
 
 void RadialGridDataReordered::findVerticesOnPlane(const std::array<double, 3>& normal, const double& d) {
 	for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();)
-		if (std::abs(std::inner_product(coordinate->second.cbegin(), coordinate->second.cend(), normal.begin(), d)) < this->tolerance)
-			this->addVertex(coordinate);
+		if (this->isCoordinateOnPlane(coordinate->second, normal, d))
+			if (this->checkDistance(coordinate->second))
+				this->addVertex(coordinate);
+			else
+				coordinate++;
 		else
 			coordinate++;
+}
+
+bool RadialGridDataReordered::isCoordinateOnPlane(const std::array<double, 3>& coordinate, const std::array<double, 3>& normal, const double& d) {
+	return std::abs(std::inner_product(coordinate.cbegin(), coordinate.cend(), normal.begin(), d)) < this->tolerance;
+}
+
+bool RadialGridDataReordered::checkDistance(const std::array<double, 3>& a) {
+	if (this->vertices.size() < unsigned(this->numberOfVerticesPerSection))
+		return true;
+
+	int shift = this->vertices.size() - this->segmentNumber * this->numberOfVerticesPerSection;
+	auto b = this->gridData->coordinates[this->vertices[shift + (this->segmentNumber-1)*this->numberOfVerticesPerSection]];
+
+	return calculateDistance(a, b) - this->segmentLength < this->tolerance;
 }
 
 void RadialGridDataReordered::addVertex(std::vector<std::pair<int, std::array<double, 3>>>::iterator vertex) {
