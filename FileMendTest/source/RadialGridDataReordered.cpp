@@ -96,6 +96,39 @@ TestCase(RadialGridDataReorderTest) {
 		std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(6) << std::fixed << final->coordinates.front()[2];
 		std::cout << std::endl << std::endl;
 
+		for (auto element = final->triangleConnectivity.cbegin(); element < final->triangleConnectivity.cbegin() + 12; element++) {
+			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
+					std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+
+		for (auto element = final->prismConnectivity.cbegin(); element < final->prismConnectivity.cbegin() + 12; element++) {
+			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
+				if (hasElement(boundary.vertices.cbegin(), boundary.vertices.cend(), *v))
+					std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
+				else
+					std::cout << "\t" << std::setw(4) << std::right << *v;
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+
+		for (int i = 0; i < 6; i++) {
+			std::cout << "\t" << std::setw(4) << std::right << final->prismConnectivity.front()[i] << " : ";
+			std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(6) << std::fixed << final->coordinates[final->prismConnectivity.front()[i]][0];
+			std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(6) << std::fixed << final->coordinates[final->prismConnectivity.front()[i]][1];
+			std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(6) << std::fixed << final->coordinates[final->prismConnectivity.front()[i]][2];
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+
+		for (auto element = final->quadrangleConnectivity.cbegin(); element < final->quadrangleConnectivity.cbegin() + 12; element++) {
+			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
+					std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+
 		for (auto element = final->hexahedronConnectivity.cbegin(); element < final->hexahedronConnectivity.cbegin() + 24; element++) {
 			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
 				if (hasElement(boundary.vertices.cbegin(), boundary.vertices.cend(), *v))
@@ -114,25 +147,6 @@ TestCase(RadialGridDataReorderTest) {
 			std::cout << std::endl;
 		}
 
-		std::cout << std::endl;
-
-		for (auto element = final->prismConnectivity.cbegin(); element < final->prismConnectivity.cbegin() + 12; element++) {
-			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
-				if (hasElement(boundary.vertices.cbegin(), boundary.vertices.cend(), *v))
-					std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
-				else
-					std::cout << "\t" << std::setw(4) << std::right << *v;
-			std::cout << std::endl;
-		}
-
-		std::cout << std::endl;
-		for (int i = 0; i < 6; i++) {
-			std::cout << "\t" << std::setw(4) << std::right << final->prismConnectivity.front()[i] << " : ";
-			std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(6) << std::fixed << final->coordinates[final->prismConnectivity.front()[i]][0];
-			std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(6) << std::fixed << final->coordinates[final->prismConnectivity.front()[i]][1];
-			std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(6) << std::fixed << final->coordinates[final->prismConnectivity.front()[i]][2];
-			std::cout << std::endl;
-		}
 
 		std::cout << std::endl;
 	}
