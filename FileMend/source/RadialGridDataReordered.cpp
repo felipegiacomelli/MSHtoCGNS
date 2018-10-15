@@ -10,6 +10,7 @@ RadialGridDataReordered::RadialGridDataReordered(GridDataShared gridData) : grid
 	this->reorder();
 	this->addVertices();
 	this->copyVertices();
+	this->copyBoundaries();
 	this->copyRegions();
 	this->copyWells();
 	this->fixIndices();
@@ -210,6 +211,12 @@ void RadialGridDataReordered::copyVertices() {
 		this->final->coordinates.emplace_back(this->gridData->coordinates[vertex]);
 }
 
+void RadialGridDataReordered::copyBoundaries() {
+	this->final->boundaries = this->gridData->boundaries;
+	this->final->triangleConnectivity = this->gridData->triangleConnectivity;
+	this->final->quadrangleConnectivity = this->gridData->quadrangleConnectivity;
+}
+
 void RadialGridDataReordered::copyRegions() {
 	this->final->regions = this->gridData->regions;
 }
@@ -246,6 +253,10 @@ void RadialGridDataReordered::fixIndices() {
 
 	for (auto& vertex : this->final->wells[0].vertices)
 		vertex = originalToFinal[vertex];
+
+	for (auto& boundary : this->final->boundaries)
+		for (auto& vertex : boundary.vertices)
+			vertex = originalToFinal[vertex];
 
 	for (int s = 0; s < this->numberOfSegments; s++) {
 		for (int h = 0; h < this->numberOfHexahedronsPerSegment; h++)

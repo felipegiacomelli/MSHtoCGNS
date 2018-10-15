@@ -53,6 +53,7 @@ class RadialGridDataReordered {
 		void addVertex(std::vector<std::pair<int, std::array<double, 3>>>::iterator vertex);
 		void fixIndices();
 		void copyVertices();
+		void copyBoundaries();
 		void copyRegions();
 		void copyWells();
 
