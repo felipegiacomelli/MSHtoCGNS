@@ -12,10 +12,6 @@ struct RadialGridDataReorderFixture {
 		this->gridData = reader.gridData;
 	}
 
-	double distance(const std::array<double, 3>& a, const std::array<double, 3>& b) {
-		return std::sqrt(std::inner_product(a.cbegin(), a.cend(), b.cbegin(), 0.0, std::plus<>(), [](auto a, auto b){return (a-b)*(a-b);}));
-	}
-
 	std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/RadialGridDataReordered/370v_324e.cgns";
 	GridDataShared gridData;
 };
@@ -80,15 +76,15 @@ TestCase(RadialGridDataReorderTest) {
 		checkClose(std::abs(final->coordinates[37 * 7 + i][2] - final->coordinates[37 *  8 + i][2]), 5.5555538601345447e+00, TOLERANCE);
 		checkClose(std::abs(final->coordinates[37 * 8 + i][2] - final->coordinates[37 *  9 + i][2]), 5.5555572509765625e+00, TOLERANCE);
 
-		checkClose(this->distance(final->coordinates[37 * 0 + i], final->coordinates[37 *  1 + i]), 5.5555555555555554e+00, TOLERANCE);
-		checkClose(this->distance(final->coordinates[37 * 1 + i], final->coordinates[37 *  2 + i]), 5.5555555555555554e+00, TOLERANCE);
-		checkClose(this->distance(final->coordinates[37 * 2 + i], final->coordinates[37 *  3 + i]), 5.5555555555555536e+00, TOLERANCE);
-		checkClose(this->distance(final->coordinates[37 * 3 + i], final->coordinates[37 *  4 + i]), 5.5555555555555571e+00, TOLERANCE);
-		checkClose(this->distance(final->coordinates[37 * 4 + i], final->coordinates[37 *  5 + i]), 5.5555555555555571e+00, TOLERANCE);
-		checkClose(this->distance(final->coordinates[37 * 5 + i], final->coordinates[37 *  6 + i]), 5.5555555555555500e+00, TOLERANCE);
-		checkClose(this->distance(final->coordinates[37 * 6 + i], final->coordinates[37 *  7 + i]), 5.5555555555555642e+00, TOLERANCE);
-		checkClose(this->distance(final->coordinates[37 * 7 + i], final->coordinates[37 *  8 + i]), 5.5555538601345447e+00, TOLERANCE);
-		checkClose(this->distance(final->coordinates[37 * 8 + i], final->coordinates[37 *  9 + i]), 5.5555572509765625e+00, TOLERANCE);
+		checkClose(calculateDistance(final->coordinates[37 * 0 + i], final->coordinates[37 *  1 + i]), 5.5555555555555554e+00, TOLERANCE);
+		checkClose(calculateDistance(final->coordinates[37 * 1 + i], final->coordinates[37 *  2 + i]), 5.5555555555555554e+00, TOLERANCE);
+		checkClose(calculateDistance(final->coordinates[37 * 2 + i], final->coordinates[37 *  3 + i]), 5.5555555555555536e+00, TOLERANCE);
+		checkClose(calculateDistance(final->coordinates[37 * 3 + i], final->coordinates[37 *  4 + i]), 5.5555555555555571e+00, TOLERANCE);
+		checkClose(calculateDistance(final->coordinates[37 * 4 + i], final->coordinates[37 *  5 + i]), 5.5555555555555571e+00, TOLERANCE);
+		checkClose(calculateDistance(final->coordinates[37 * 5 + i], final->coordinates[37 *  6 + i]), 5.5555555555555500e+00, TOLERANCE);
+		checkClose(calculateDistance(final->coordinates[37 * 6 + i], final->coordinates[37 *  7 + i]), 5.5555555555555642e+00, TOLERANCE);
+		checkClose(calculateDistance(final->coordinates[37 * 7 + i], final->coordinates[37 *  8 + i]), 5.5555538601345447e+00, TOLERANCE);
+		checkClose(calculateDistance(final->coordinates[37 * 8 + i], final->coordinates[37 *  9 + i]), 5.5555572509765625e+00, TOLERANCE);
 	}
 }
 

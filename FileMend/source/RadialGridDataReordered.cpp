@@ -31,6 +31,12 @@ void RadialGridDataReordered::checkGridData() {
 	if (this->gridData->pyramidConnectivity.size() != 0u)
 		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData pyramidConnectivity size must be 0 and not " + std::to_string(this->gridData->pyramidConnectivity.size()));
 
+	if (this->gridData->triangleConnectivity.size() == 0u)
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData triangleConnectivity size must not be 0");
+
+	if (this->gridData->quadrangleConnectivity.size() == 0u)
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData quadrangleConnectivity size must not be 0");
+
 	if (this->gridData->lineConnectivity.size() == 0u)
 		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData lineConnectivity size must not be 0");
 
@@ -224,6 +230,14 @@ void RadialGridDataReordered::fixIndices() {
 
 	for (auto& prism : this->final->prismConnectivity)
 		for (auto vertex = prism.begin(); vertex != prism.end() - 1; vertex++)
+			*vertex = originalToFinal[*vertex];
+
+	for (auto& triangle : this->final->triangleConnectivity)
+		for (auto vertex = triangle.begin(); vertex != triangle.end() - 1; vertex++)
+			*vertex = originalToFinal[*vertex];
+
+	for (auto& quadrangle : this->final->quadrangleConnectivity)
+		for (auto vertex = quadrangle.begin(); vertex != quadrangle.end() - 1; vertex++)
 			*vertex = originalToFinal[*vertex];
 
 	for (auto& line : this->final->lineConnectivity)
