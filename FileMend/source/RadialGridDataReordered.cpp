@@ -41,6 +41,9 @@ void RadialGridDataReordered::checkGridData() {
 	if (this->gridData->lineConnectivity.size() == 0u)
 		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData lineConnectivity size must not be 0");
 
+	if (this->gridData->boundaries.size() < 1u)
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData boundaries size must be at least 1 and not " + std::to_string(this->gridData->boundaries.size()));
+
 	if (this->gridData->regions.size() != 1u)
 		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData regions size must be 1 and not " + std::to_string(this->gridData->regions.size()));
 
