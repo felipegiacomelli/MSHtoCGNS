@@ -16,6 +16,16 @@ bool hasElement(InputIt cbegin, InputIt cend, const int& element) {
 }
 
 template<class InputIt>
+bool hasElements(InputIt setBegin, InputIt setEnd, InputIt elementBegin, InputIt elementEnd) {
+	bool close = true;
+
+	for (auto vertex = elementBegin; vertex != elementEnd; vertex++)
+		close &= hasElement(setBegin, setEnd, *vertex);
+
+	return close;
+}
+
+template<class InputIt>
 bool hasElements(InputIt cbegin, InputIt cend, const std::array<int, 4>& facetConnectivity) {
 	bool close = true;
 
@@ -35,13 +45,14 @@ class RadialGridDataReordered {
 
 		~RadialGridDataReordered() = default;
 
-		GridDataShared final;
+		GridDataShared reordered;
 
 		double tolerance = 1e-4;
 
 	private:
 		void checkGridData();
 		void defineQuantities();
+		void createReordered();
 		void copyData();
 		void reorder();
 		void copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron);
@@ -53,9 +64,6 @@ class RadialGridDataReordered {
 		void addVertex(std::vector<std::pair<int, std::array<double, 3>>>::iterator vertex);
 		void fixIndices();
 		void copyVertices();
-		void copyBoundaries();
-		void copyRegions();
-		void copyWells();
 
 		GridDataShared gridData;
 

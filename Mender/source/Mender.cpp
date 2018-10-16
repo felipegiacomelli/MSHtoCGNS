@@ -10,9 +10,9 @@
 #include <FileMend/RadialGridDataReordered.hpp>
 #include <FileMend/MultipleBasesCgnsCreator3D.hpp>
 
-void renameZones(GridDataShared gridData, boost::property_tree::ptree) {
+// void renameZones(GridDataShared gridData, boost::property_tree::ptree) {
 
-}
+// }
 
 void createSingleRegion(GridDataShared gridData, std::string regionName) {
 	RegionData region;

@@ -14,57 +14,57 @@ RadialGridDataReordered::~RadialGridDataReordered() {
 }
 
 	for (auto i = 0; i < 37; i++) {
-		bool x = std::abs(final->coordinates[i][0] -final->coordinates[37 + i][0]) < 1e-2;
-		bool y = std::abs(final->coordinates[i][1] -final->coordinates[37 + i][1]) < 1e-2;
+		bool x = std::abs(reordered->coordinates[i][0] -reordered->coordinates[37 + i][0]) < 1e-2;
+		bool y = std::abs(reordered->coordinates[i][1] -reordered->coordinates[37 + i][1]) < 1e-2;
 
 		std::cout << std::setprecision(5) << std::scientific << "\t\t";
 
 		if (x)
-			std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[i][0];
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << reordered->coordinates[i][0];
 		else
-			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << final->coordinates[i][0] << "\033[0m";
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << reordered->coordinates[i][0] << "\033[0m";
 
 		if (y)
-			std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[i][1];
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << reordered->coordinates[i][1];
 		else
-			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << final->coordinates[i][1] << "\033[0m";
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << reordered->coordinates[i][1] << "\033[0m";
 
-		std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[i][2];
+		std::cout << std::setfill(' ') << std::setw(12) << std::right << reordered->coordinates[i][2];
 
 
 		std::cout << std::setprecision(5) << std::scientific << "\t\t";
 
 		if (x)
-			std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[37+i][0];
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << reordered->coordinates[37+i][0];
 		else
-			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << final->coordinates[37+i][0] << "\033[0m";
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << reordered->coordinates[37+i][0] << "\033[0m";
 
 		if (y)
-			std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[37+i][1];
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << reordered->coordinates[37+i][1];
 		else
-			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << final->coordinates[37+i][1] << "\033[0m";
+			std::cout << std::setfill(' ') << std::setw(12) << std::right << "\033[1;31m" << reordered->coordinates[37+i][1] << "\033[0m";
 
-		std::cout << std::setfill(' ') << std::setw(12) << std::right << final->coordinates[37+i][2];
+		std::cout << std::setfill(' ') << std::setw(12) << std::right << reordered->coordinates[37+i][2];
 
 		std::cout << std::endl;
 	}
 
 
-		// std::cout << "\tsegment \033[1;31m" << s << "\033[0m: " << this->final->lineConnectivity[s][0] << " - " << this->final->lineConnectivity[s][1] << std::endl;
+		// std::cout << "\tsegment \033[1;31m" << s << "\033[0m: " << this->reordered->lineConnectivity[s][0] << " - " << this->reordered->lineConnectivity[s][1] << std::endl;
 
-		// printf("\n\t\tprismIndices (%i): ", int(this->final->prismConnectivity.size() / (s+1)));
+		// printf("\n\t\tprismIndices (%i): ", int(this->reordered->prismConnectivity.size() / (s+1)));
 		// for (int i = 0; i < this->numberOfPrismsPerSegment; i++)
-		// 	std::cout << this->final->prismConnectivity[s*this->numberOfPrismsPerSegment+i].back() << ", ";;
+		// 	std::cout << this->reordered->prismConnectivity[s*this->numberOfPrismsPerSegment+i].back() << ", ";;
 
-		// printf("\n\t\thexahIndices (%i): ", int(this->final->hexahedronConnectivity.size() / (s+1)));
+		// printf("\n\t\thexahIndices (%i): ", int(this->reordered->hexahedronConnectivity.size() / (s+1)));
 		// for (int i = 0; i < this->numberOfHexahedronsPerSegment; i++)
-		// 	std::cout << this->final->hexahedronConnectivity[s*this->numberOfHexahedronsPerSegment+i].back() << ", ";
+		// 	std::cout << this->reordered->hexahedronConnectivity[s*this->numberOfHexahedronsPerSegment+i].back() << ", ";
 
 		// printf("\n\n");
 
 	for (int i = 0; i < 24; i++) {
 		std::cout << "\t";
-		for (auto v : final->hexahedronConnectivity[i])
+		for (auto v : reordered->hexahedronConnectivity[i])
 			std::cout << "\t" << v;
 		std::cout << std::endl;
 	}
@@ -73,7 +73,7 @@ RadialGridDataReordered::~RadialGridDataReordered() {
 
 	for (int i = 0; i < 12; i++) {
 		std::cout << "\t";
-		for (auto v : final->prismConnectivity[i])
+		for (auto v : reordered->prismConnectivity[i])
 			std::cout << "\t" << v;
 		std::cout << std::endl;
 	}
@@ -82,7 +82,7 @@ RadialGridDataReordered::~RadialGridDataReordered() {
 
 	for (int i = 0; i < 9; i++) {
 		std::cout << "\t";
-		for (auto v : final->lineConnectivity[i])
+		for (auto v : reordered->lineConnectivity[i])
 			std::cout << "\t" << v;
 		std::cout << std::endl;
 	}
@@ -91,7 +91,7 @@ RadialGridDataReordered::~RadialGridDataReordered() {
 
 	for (int i = 0; i < 37; i++) {
 		std::cout << "\t";
-		for (auto v : final->coordinates[i])
+		for (auto v : reordered->coordinates[i])
 			std::cout << "\t" << std::scientific << std::setprecision(16) << v;
 		std::cout << std::endl;
 	}
@@ -100,7 +100,7 @@ RadialGridDataReordered::~RadialGridDataReordered() {
 
 	for (int i = 37; i < 74; i++) {
 		std::cout << "\t";
-		for (auto v : final->coordinates[i])
+		for (auto v : reordered->coordinates[i])
 			std::cout << "\t" << std::scientific << std::setprecision(16) << v;
 		std::cout << std::endl;
 	}
@@ -109,7 +109,7 @@ RadialGridDataReordered::~RadialGridDataReordered() {
 
 	for (int i = 74; i < 111; i++) {
 		std::cout << "\t";
-		for (auto v : final->coordinates[i])
+		for (auto v : reordered->coordinates[i])
 			std::cout << "\t" << std::scientific << std::setprecision(16) << v;
 		std::cout << std::endl;
 	}
@@ -118,7 +118,7 @@ RadialGridDataReordered::~RadialGridDataReordered() {
 
 	for (int i = 333; i < 370; i++) {
 		std::cout << "\t";
-		for (auto v : final->coordinates[i])
+		for (auto v : reordered->coordinates[i])
 			std::cout << "\t" << std::scientific << std::setprecision(16) << v;
 		std::cout << std::endl;
 	}

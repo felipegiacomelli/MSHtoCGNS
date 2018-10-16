@@ -1,19 +1,16 @@
 #include <FileMend/RadialGridDataReordered.hpp>
+#include <Utilities/Print.hpp>
 #include <cgnslib.h>
 
 RadialGridDataReordered::RadialGridDataReordered(GridDataShared gridData) : gridData(gridData) {
 	this->checkGridData();
 	this->defineQuantities();
+	this->createReordered();
 	this->copyData();
-	this->final = MakeShared<GridData>();
-	this->final->dimension = 3;
 	this->reorder();
-	this->addVertices();
-	this->copyVertices();
-	this->copyBoundaries();
-	this->copyRegions();
-	this->copyWells();
-	this->fixIndices();
+	// this->addVertices();
+	// this->copyVertices();
+	// this->fixIndices();
 }
 
 void RadialGridDataReordered::checkGridData() {
@@ -42,13 +39,27 @@ void RadialGridDataReordered::checkGridData() {
 		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData lineConnectivity size must not be 0");
 
 	if (this->gridData->boundaries.size() < 1u)
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData boundaries size must be at least 1 and not " + std::to_string(this->gridData->boundaries.size()));
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData boundaries size must be at least 1");
 
 	if (this->gridData->regions.size() != 1u)
 		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData regions size must be 1 and not " + std::to_string(this->gridData->regions.size()));
 
 	if (this->gridData->wells.size() != 1u)
 		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData wells size must be 1 and not " + std::to_string(this->gridData->wells.size()));
+}
+
+void RadialGridDataReordered::createReordered() {
+	this->reordered = MakeShared<GridData>();
+	this->reordered->dimension = this->gridData->dimension;
+
+	this->reordered->triangleConnectivity = this->gridData->triangleConnectivity;
+	this->reordered->quadrangleConnectivity = this->gridData->quadrangleConnectivity;
+
+	this->reordered->boundaries = this->gridData->boundaries;
+
+	this->reordered->regions = this->gridData->regions;
+
+	this->reordered->wells = this->gridData->wells;
 }
 
 void RadialGridDataReordered::defineQuantities() {
@@ -83,51 +94,123 @@ void RadialGridDataReordered::copyData() {
 }
 
 void RadialGridDataReordered::reorder() {
-	for (int s = 0; s < this->numberOfSegments; s++) {
-		this->final->lineConnectivity.push_back(this->gridData->lineConnectivity[s]);
+	{
+		auto boundary = *std::find_if(this->gridData->boundaries.cbegin(), this->gridData->boundaries.cend(), [=](auto b){return hasElement(b.vertices.cbegin(), b.vertices.cend(), this->gridData->lineConnectivity.front()[0]);});
+		std::cout << std::endl << "\t" + boundary.name << std::endl << std::endl;
 
-		for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
-			if (hasElement(prism->cbegin(), prism->cend()-1, this->final->lineConnectivity[s].front()))
-				this->copyPrism(prism);
-			else
-				prism++;
+		std::cout << "\t" << std::setw(4) << std::right << this->gridData->lineConnectivity.front()[0] << std::endl << "\t";
 
-		for (int p = 0; p < this->numberOfPrismsPerSegment; p++) {
-			auto prism = this->final->prismConnectivity[s*this->numberOfPrismsPerSegment+p];
-			auto line = this->final->lineConnectivity[s];
-			std::array<int, 4> firstFacet;
-			std::copy_if(prism.cbegin(), prism.cend()-1, firstFacet.begin(), [=](auto& p){return p != line[0] && p != line[1];});
+		for (auto vertex : boundary.vertices)
+			std::cout << std::setw(4) << std::right << vertex;
 
-			for (auto hexa = this->hexahedra.begin(); hexa != this->hexahedra.end();)
-				if (hasElements(hexa->cbegin(), hexa->cend()-1, firstFacet))
-					this->copyHexahedron(hexa);
-				else
-					hexa++;
+		std::vector<std::array<int, 4>> triangles;
+		for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++)
+			if (i->back() >= boundary.facetBegin && i->back() < boundary.facetEnd)
+				triangles.emplace_back(*i);
 
-			for (int h = 0; h < this->numberOfHexahedronsPerRadius-1; h++) {
-				auto hexahedron = this->final->hexahedronConnectivity.back();
-				std::array<int, 4> lastFacet;
-				std::copy_if(hexahedron.cbegin(), hexahedron.cend()-1, lastFacet.begin(), [=](auto& p){return !hasElement(firstFacet.cbegin(), firstFacet.cend(), p);});
+		std::vector<std::array<int, 5>> quadrangles;
+		for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++)
+			if (i->back() >= boundary.facetBegin && i->back() < boundary.facetEnd)
+				quadrangles.emplace_back(*i);
 
+		// printf("\n\n");
+		// print(triangles.cbegin(), triangles.cend(), "triangles " + std::to_string(triangles.size()));
+		// print(quadrangles.cbegin(), quadrangles.cend(), "quadrangles " + std::to_string(quadrangles.size()));
+
+		std::vector<std::array<int, 7>> PRISMS;
+		std::vector<std::array<int, 9>> HEXAHEDRA;
+
+	for (int s = 0; s < this->numberOfSegments; s++)
+	{
+		for (auto triangle = triangles.begin(); triangle != triangles.end(); triangle++)
+				for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
+					if (hasElements(prism->cbegin(), prism->cend()-1, triangle->cbegin(), triangle->cend()-1)) {
+						PRISMS.emplace_back(*prism);
+
+						std::stable_sort(prism->begin(), prism->end()-1);
+						std::stable_sort(triangle->begin(), triangle->end()-1);
+						std::array<int, 4> difference = *triangle;
+						std::set_difference(prism->begin(), prism->end()-1, triangle->begin(), triangle->end()-1, difference.begin());
+						*triangle = difference;
+
+						this->prisms.erase(prism);
+						break;
+					}
+					else
+						prism++;
+
+			for (auto quadrangle = quadrangles.begin(); quadrangle != quadrangles.end(); quadrangle++)
 				for (auto hexa = this->hexahedra.begin(); hexa != this->hexahedra.end();)
-					if (hasElements(hexa->cbegin(), hexa->cend()-1, lastFacet))
-						this->copyHexahedron(hexa);
+					if (hasElements(hexa->cbegin(), hexa->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
+						HEXAHEDRA.emplace_back(*hexa);
+
+						std::stable_sort(hexa->begin(), hexa->end()-1);
+						std::stable_sort(quadrangle->begin(), quadrangle->end()-1);
+						std::array<int, 5> difference = *quadrangle;
+						std::set_difference(hexa->begin(), hexa->end()-1, quadrangle->begin(), quadrangle->end()-1, difference.begin());
+						*quadrangle = difference;
+
+						this->hexahedra.erase(hexa);
+						break;
+					}
 					else
 						hexa++;
-
-				firstFacet = lastFacet;
-			}
 		}
+
+		printf("\n\n");
+		// print(triangles.cbegin(), triangles.cend(), "triangles " + std::to_string(triangles.size()));
+		print(PRISMS.cbegin(), PRISMS.cend(), "PRISMS " + std::to_string(PRISMS.size()));
+		// print(quadrangles.cbegin(), quadrangles.cend(), "quadrangles " + std::to_string(quadrangles.size()));
+		print(HEXAHEDRA.cbegin(), HEXAHEDRA.cend(), "HEXAHEDRA " + std::to_string(HEXAHEDRA.size()));
+
+		printf("\n######################\n");
 	}
+
+	// for (int s = 0; s < this->numberOfSegments; s++) {
+	// 	this->reordered->lineConnectivity.push_back(this->gridData->lineConnectivity[s]);
+
+	// 	for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
+	// 		if (hasElement(prism->cbegin(), prism->cend()-1, this->reordered->lineConnectivity[s].front()))
+	// 			this->copyPrism(prism);
+	// 		else
+	// 			prism++;
+
+	// 	for (int p = 0; p < this->numberOfPrismsPerSegment; p++) {
+	// 		auto prism = this->reordered->prismConnectivity[s*this->numberOfPrismsPerSegment+p];
+	// 		auto line = this->reordered->lineConnectivity[s];
+	// 		std::array<int, 4> firstFacet;
+	// 		std::copy_if(prism.cbegin(), prism.cend()-1, firstFacet.begin(), [=](auto& p){return p != line[0] && p != line[1];});
+
+	// 		for (auto hexa = this->hexahedra.begin(); hexa != this->hexahedra.end();)
+	// 			if (hasElements(hexa->cbegin(), hexa->cend()-1, firstFacet))
+	// 				this->copyHexahedron(hexa);
+	// 			else
+	// 				hexa++;
+
+	// 		for (int h = 0; h < this->numberOfHexahedronsPerRadius-1; h++) {
+	// 			auto hexahedron = this->reordered->hexahedronConnectivity.back();
+	// 			std::array<int, 4> lastFacet;
+	// 			std::copy_if(hexahedron.cbegin(), hexahedron.cend()-1, lastFacet.begin(), [=](auto& p){return !hasElement(firstFacet.cbegin(), firstFacet.cend(), p);});
+
+	// 			for (auto hexa = this->hexahedra.begin(); hexa != this->hexahedra.end();)
+	// 				if (hasElements(hexa->cbegin(), hexa->cend()-1, lastFacet))
+	// 					this->copyHexahedron(hexa);
+	// 				else
+	// 					hexa++;
+
+	// 			firstFacet = lastFacet;
+	// 		}
+	// 	}
+	// }
 }
 
 void RadialGridDataReordered::copyPrism(std::vector<std::array<int, 7>>::iterator prism) {
-	this->final->prismConnectivity.push_back(this->gridData->prismConnectivity[prism->back()]);
+	this->reordered->prismConnectivity.push_back(this->gridData->prismConnectivity[prism->back()]);
 	prism = this->prisms.erase(prism);
 }
 
 void RadialGridDataReordered::copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron) {
-	this->final->hexahedronConnectivity.push_back(this->gridData->hexahedronConnectivity[hexahedron->back()]);
+	this->reordered->hexahedronConnectivity.push_back(this->gridData->hexahedronConnectivity[hexahedron->back()]);
 	hexahedron = this->hexahedra.erase(hexahedron);
 }
 
@@ -211,21 +294,7 @@ void RadialGridDataReordered::addVertex(std::vector<std::pair<int, std::array<do
 
 void RadialGridDataReordered::copyVertices() {
 	for (auto vertex : this->vertices)
-		this->final->coordinates.emplace_back(this->gridData->coordinates[vertex]);
-}
-
-void RadialGridDataReordered::copyBoundaries() {
-	this->final->boundaries = this->gridData->boundaries;
-	this->final->triangleConnectivity = this->gridData->triangleConnectivity;
-	this->final->quadrangleConnectivity = this->gridData->quadrangleConnectivity;
-}
-
-void RadialGridDataReordered::copyRegions() {
-	this->final->regions = this->gridData->regions;
-}
-
-void RadialGridDataReordered::copyWells() {
-	this->final->wells = this->gridData->wells;
+		this->reordered->coordinates.emplace_back(this->gridData->coordinates[vertex]);
 }
 
 void RadialGridDataReordered::fixIndices() {
@@ -234,41 +303,41 @@ void RadialGridDataReordered::fixIndices() {
 	for (auto vertex : this->vertices)
 		originalToFinal[vertex] = index++;
 
-	for (auto& hexahedron : this->final->hexahedronConnectivity)
+	for (auto& hexahedron : this->reordered->hexahedronConnectivity)
 		for (auto vertex = hexahedron.begin(); vertex != hexahedron.end() - 1; vertex++)
 			*vertex = originalToFinal[*vertex];
 
-	for (auto& prism : this->final->prismConnectivity)
+	for (auto& prism : this->reordered->prismConnectivity)
 		for (auto vertex = prism.begin(); vertex != prism.end() - 1; vertex++)
 			*vertex = originalToFinal[*vertex];
 
-	for (auto& triangle : this->final->triangleConnectivity)
+	for (auto& triangle : this->reordered->triangleConnectivity)
 		for (auto vertex = triangle.begin(); vertex != triangle.end() - 1; vertex++)
 			*vertex = originalToFinal[*vertex];
 
-	for (auto& quadrangle : this->final->quadrangleConnectivity)
+	for (auto& quadrangle : this->reordered->quadrangleConnectivity)
 		for (auto vertex = quadrangle.begin(); vertex != quadrangle.end() - 1; vertex++)
 			*vertex = originalToFinal[*vertex];
 
-	for (auto& line : this->final->lineConnectivity)
+	for (auto& line : this->reordered->lineConnectivity)
 		for (auto vertex = line.begin(); vertex != line.end() - 1; vertex++)
 			*vertex = originalToFinal[*vertex];
 
-	for (auto& vertex : this->final->wells[0].vertices)
+	for (auto& vertex : this->reordered->wells[0].vertices)
 		vertex = originalToFinal[vertex];
 
-	for (auto& boundary : this->final->boundaries)
+	for (auto& boundary : this->reordered->boundaries)
 		for (auto& vertex : boundary.vertices)
 			vertex = originalToFinal[vertex];
 
 	for (int s = 0; s < this->numberOfSegments; s++) {
 		for (int h = 0; h < this->numberOfHexahedronsPerSegment; h++)
-			this->final->hexahedronConnectivity[s * this->numberOfHexahedronsPerSegment + h].back() = this->elementShift++;
+			this->reordered->hexahedronConnectivity[s * this->numberOfHexahedronsPerSegment + h].back() = this->elementShift++;
 
 		for (int p = 0; p < this->numberOfPrismsPerSegment; p++)
-			this->final->prismConnectivity[s * this->numberOfPrismsPerSegment + p].back() = this->elementShift++;
+			this->reordered->prismConnectivity[s * this->numberOfPrismsPerSegment + p].back() = this->elementShift++;
 	}
 
 	for (int s = 0; s < this->numberOfSegments; s++)
-		this->final->lineConnectivity[s].back() = this->elementShift++;
+		this->reordered->lineConnectivity[s].back() = this->elementShift++;
 }
