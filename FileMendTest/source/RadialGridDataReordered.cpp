@@ -21,6 +21,8 @@ FixtureTestSuite(RadialGridDataReorderSuite, RadialGridDataReorderFixture)
 TestCase(RadialGridDataReorderTest) {
 	RadialGridDataReordered radialGridDataReordered(this->gridData);
 
+	printGridDataInformation(this->gridData, "gD");
+
 	// auto reordered = radialGridDataReordered.reordered;
 
 	// checkEqual(reordered->coordinates.size(), 370u);

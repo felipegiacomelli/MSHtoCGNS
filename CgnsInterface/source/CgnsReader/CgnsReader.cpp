@@ -132,7 +132,7 @@ int CgnsReader::readSolutionIndex(std::string solutionName) {
 	return solutionIndex;
 }
 
-std::vector<double> CgnsReader::readField(const int& solutionIndex, std::string fieldName) {
+std::vector<double> CgnsReader::readField(int solutionIndex, std::string fieldName) {
 	int dataDimension, solutionEnd;
 	if (cg_sol_size(this->fileIndex, this->baseIndex, this->zoneIndex, solutionIndex, &dataDimension, &solutionEnd))
 		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read solution " + std::to_string(solutionIndex));

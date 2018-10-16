@@ -11,7 +11,7 @@
 #include <Grid/GridData.hpp>
 
 template<class InputIt>
-bool hasElement(InputIt cbegin, InputIt cend, const int& element) {
+bool hasElement(InputIt cbegin, InputIt cend, int element) {
 	return std::find(cbegin, cend, element) != cend;
 }
 
@@ -29,7 +29,7 @@ template<class InputIt>
 bool hasElements(InputIt cbegin, InputIt cend, const std::array<int, 4>& facetConnectivity) {
 	bool close = true;
 
-	for (const int& vertex : facetConnectivity)
+	for (int vertex : facetConnectivity)
 		close &= hasElement(cbegin, cend, vertex);
 
 	return close;
@@ -62,6 +62,7 @@ class RadialGridDataReordered {
 		bool isCoordinateOnPlane(const std::array<double, 3>& coordinate, const std::array<double, 3>& normal, const double& d);
 		bool checkDistance(const std::array<double, 3>& a);
 		void addVertex(std::vector<std::pair<int, std::array<double, 3>>>::iterator vertex);
+		void addVertex(int handle);
 		void fixIndices();
 		void copyVertices();
 
