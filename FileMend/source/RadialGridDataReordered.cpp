@@ -38,8 +38,8 @@ void RadialGridDataReordered::checkGridData() {
 	if (this->gridData->lineConnectivity.size() == 0u)
 		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData lineConnectivity size must not be 0");
 
-	if (this->gridData->boundaries.size() < 1u)
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData boundaries size must be at least 1");
+	if (this->gridData->boundaries.size() != 3u)
+		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData boundaries size must be 1 and not " + std::to_string(this->gridData->boundaries.size()));
 
 	if (this->gridData->regions.size() != 1u)
 		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData regions size must be 1 and not " + std::to_string(this->gridData->regions.size()));
@@ -116,9 +116,6 @@ void RadialGridDataReordered::reorder() {
 	// print(triangles.cbegin(), triangles.cend(), "triangles " + std::to_string(triangles.size()));
 	// print(quadrangles.cbegin(), quadrangles.cend(), "quadrangles " + std::to_string(quadrangles.size()));
 
-	std::vector<std::array<int, 7>> PRISMS;
-	std::vector<std::array<int, 9>> HEXAHEDRA;
-
 	for (int s = 0; s < this->numberOfSegments + 1; s++) {
 
 		for (auto triangle = triangles.begin(); triangle != triangles.end(); triangle++) {
@@ -127,7 +124,6 @@ void RadialGridDataReordered::reorder() {
 
 			for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
 				if (hasElements(prism->cbegin(), prism->cend()-1, triangle->cbegin(), triangle->cend()-1)) {
-					PRISMS.emplace_back(*prism);
 
 					std::stable_sort(prism->begin(), prism->end()-1);
 					std::stable_sort(triangle->begin(), triangle->end()-1);
@@ -135,6 +131,7 @@ void RadialGridDataReordered::reorder() {
 					std::set_difference(prism->begin(), prism->end()-1, triangle->begin(), triangle->end()-1, difference.begin());
 					*triangle = difference;
 
+					this->reordered->prismConnectivity.push_back(this->gridData->prismConnectivity[prism->back()]);
 					this->prisms.erase(prism);
 					break;
 				}
@@ -146,30 +143,30 @@ void RadialGridDataReordered::reorder() {
 				for (auto vertex = quadrangle->cbegin(); vertex != quadrangle->cend()-1; vertex++)
 					this->addVertex(*vertex);
 
-				for (auto hexa = this->hexahedra.begin(); hexa != this->hexahedra.end();)
-					if (hasElements(hexa->cbegin(), hexa->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
-						HEXAHEDRA.emplace_back(*hexa);
+				for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
+					if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
 
-						std::stable_sort(hexa->begin(), hexa->end()-1);
+						std::stable_sort(hexahedron->begin(), hexahedron->end()-1);
 						std::stable_sort(quadrangle->begin(), quadrangle->end()-1);
 						std::array<int, 5> difference = *quadrangle;
-						std::set_difference(hexa->begin(), hexa->end()-1, quadrangle->begin(), quadrangle->end()-1, difference.begin());
+						std::set_difference(hexahedron->begin(), hexahedron->end()-1, quadrangle->begin(), quadrangle->end()-1, difference.begin());
 						*quadrangle = difference;
 
-						this->hexahedra.erase(hexa);
+						this->reordered->hexahedronConnectivity.push_back(this->gridData->hexahedronConnectivity[hexahedron->back()]);
+						this->hexahedra.erase(hexahedron);
 						break;
 					}
 					else
-						hexa++;
+						hexahedron++;
 			}
 
 		}
 
 		printf("\n\n");
 		// print(triangles.cbegin(), triangles.cend(), "triangles " + std::to_string(triangles.size()));
-		print(PRISMS.cbegin(), PRISMS.cend(), "PRISMS " + std::to_string(PRISMS.size()));
+		print(this->reordered->prismConnectivity.cbegin(), this->reordered->prismConnectivity.cend(), "PRISMS " + std::to_string(this->reordered->prismConnectivity.size()));
 		// print(quadrangles.cbegin(), quadrangles.cend(), "quadrangles " + std::to_string(quadrangles.size()));
-		print(HEXAHEDRA.cbegin(), HEXAHEDRA.cend(), "HEXAHEDRA " + std::to_string(HEXAHEDRA.size()));
+		print(this->reordered->hexahedronConnectivity.cbegin(), this->reordered->hexahedronConnectivity.cend(), "HEXAHEDRA " + std::to_string(this->reordered->hexahedronConnectivity.size()));
 
 		printf("\n\tnumberOfPrisms               : %4i", int(this->prisms.size()));
 		printf("\n\tnumberOfHexahedrons          : %4i", int(this->hexahedra.size()));

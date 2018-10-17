@@ -10,8 +10,8 @@
 #include <BoostInterface/PropertyTree.hpp>
 #include <Grid/GridData.hpp>
 
-template<class InputIt>
-bool hasElement(InputIt cbegin, InputIt cend, int element) {
+template<class InputIt, class T>
+bool hasElement(InputIt cbegin, InputIt cend, T element) {
 	return std::find(cbegin, cend, element) != cend;
 }
 
