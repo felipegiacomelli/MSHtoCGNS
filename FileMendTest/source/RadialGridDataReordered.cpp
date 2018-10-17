@@ -6,6 +6,10 @@
 
 #define TOLERANCE 1e-4
 
+double calculateDistance(std::array<double, 3> a, std::array<double, 3> b) {
+	return std::sqrt(std::inner_product(a.cbegin(), a.cend(), b.cbegin(), 0.0, std::plus<>(), [](auto c, auto d){return (c-d)*(c-d);}));
+}
+
 struct RadialGridDataReorderFixture {
 	RadialGridDataReorderFixture() {
 		CgnsReader3D reader(this->inputPath);
@@ -23,23 +27,23 @@ TestCase(RadialGridDataReorderTest) {
 
 	printGridDataInformation(this->gridData, "gD");
 
-	// auto reordered = radialGridDataReordered.reordered;
+	auto reordered = radialGridDataReordered.reordered;
 
-	// checkEqual(reordered->coordinates.size(), 370u);
+	checkEqual(reordered->coordinates.size(), 370u);
 
-	// checkEqual(reordered->tetrahedronConnectivity.size(),   0u);
-	// checkEqual(reordered->hexahedronConnectivity.size() , 216u);
-	// checkEqual(reordered->prismConnectivity.size()      , 108u);
-	// checkEqual(reordered->pyramidConnectivity.size()    ,   0u);
+	checkEqual(reordered->tetrahedronConnectivity.size(),   0u);
+	checkEqual(reordered->hexahedronConnectivity.size() , 216u);
+	checkEqual(reordered->prismConnectivity.size()      , 108u);
+	checkEqual(reordered->pyramidConnectivity.size()    ,   0u);
 
-	// checkEqual(reordered->triangleConnectivity.size()  ,  24u);
-	// checkEqual(reordered->quadrangleConnectivity.size(), 156u);
+	checkEqual(reordered->triangleConnectivity.size()  ,  24u);
+	checkEqual(reordered->quadrangleConnectivity.size(), 156u);
 
-	// checkEqual(reordered->lineConnectivity.size(), 9u);
+	checkEqual(reordered->lineConnectivity.size(), 9u);
 
-	// checkEqual(reordered->boundaries.size(),  3u);
-	// checkEqual(reordered->regions.size()   ,  1u);
-	// checkEqual(reordered->wells.size()     ,  1u);
+	checkEqual(reordered->boundaries.size(),  3u);
+	checkEqual(reordered->regions.size()   ,  1u);
+	checkEqual(reordered->wells.size()     ,  1u);
 
 	// for (int i = 0; i < 9; i++) {
 	// 	int shift = 36 * i;
@@ -54,40 +58,40 @@ TestCase(RadialGridDataReorderTest) {
 	// for (int i = 0; i < 9; i++)
 	// 	checkEqual(reordered->lineConnectivity[i].back(), 324 + i);
 
-	// for (int i = 0; i < 37; i++) {
-	// 	checkSmall(reordered->coordinates[37 * 0 + i][2], TOLERANCE);
-	// 	checkClose(reordered->coordinates[37 * 1 + i][2], 5.5555555, TOLERANCE);
-	// 	checkClose(reordered->coordinates[37 * 2 + i][2], 11.111111, TOLERANCE);
-	// 	checkClose(reordered->coordinates[37 * 3 + i][2], 16.666666, TOLERANCE);
-	// 	checkClose(reordered->coordinates[37 * 4 + i][2], 22.222222, TOLERANCE);
-	// 	checkClose(reordered->coordinates[37 * 5 + i][2], 27.777777, TOLERANCE);
-	// 	checkClose(reordered->coordinates[37 * 6 + i][2], 33.333333, TOLERANCE);
-	// 	checkClose(reordered->coordinates[37 * 7 + i][2], 38.888888, TOLERANCE);
-	// 	checkClose(reordered->coordinates[37 * 8 + i][2], 44.444444, TOLERANCE);
-	// 	checkClose(reordered->coordinates[37 * 9 + i][2], 49.999999, TOLERANCE);
-	// }
+	for (int i = 0; i < 37; i++) {
+		checkSmall(reordered->coordinates[37 * 0 + i][2], TOLERANCE);
+		checkClose(reordered->coordinates[37 * 1 + i][2], 5.5555555, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 2 + i][2], 11.111111, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 3 + i][2], 16.666666, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 4 + i][2], 22.222222, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 5 + i][2], 27.777777, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 6 + i][2], 33.333333, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 7 + i][2], 38.888888, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 8 + i][2], 44.444444, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 9 + i][2], 49.999999, TOLERANCE);
+	}
 
-	// for (int i = 0; i < 37; i++) {
-	// 	checkClose(std::abs(reordered->coordinates[37 * 0 + i][2] - reordered->coordinates[37 *  1 + i][2]), 5.5555555555555554e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 1 + i][2] - reordered->coordinates[37 *  2 + i][2]), 5.5555555555555554e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 2 + i][2] - reordered->coordinates[37 *  3 + i][2]), 5.5555555555555536e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 3 + i][2] - reordered->coordinates[37 *  4 + i][2]), 5.5555555555555571e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 4 + i][2] - reordered->coordinates[37 *  5 + i][2]), 5.5555555555555571e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 5 + i][2] - reordered->coordinates[37 *  6 + i][2]), 5.5555555555555500e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 6 + i][2] - reordered->coordinates[37 *  7 + i][2]), 5.5555555555555642e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 7 + i][2] - reordered->coordinates[37 *  8 + i][2]), 5.5555538601345447e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 8 + i][2] - reordered->coordinates[37 *  9 + i][2]), 5.5555572509765625e+00, TOLERANCE);
+	for (int i = 0; i < 37; i++) {
+		checkClose(std::abs(reordered->coordinates[37 * 0 + i][2] - reordered->coordinates[37 *  1 + i][2]), 5.5555555555555554e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 1 + i][2] - reordered->coordinates[37 *  2 + i][2]), 5.5555555555555554e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 2 + i][2] - reordered->coordinates[37 *  3 + i][2]), 5.5555555555555536e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 3 + i][2] - reordered->coordinates[37 *  4 + i][2]), 5.5555555555555571e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 4 + i][2] - reordered->coordinates[37 *  5 + i][2]), 5.5555555555555571e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 5 + i][2] - reordered->coordinates[37 *  6 + i][2]), 5.5555555555555500e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 6 + i][2] - reordered->coordinates[37 *  7 + i][2]), 5.5555555555555642e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 7 + i][2] - reordered->coordinates[37 *  8 + i][2]), 5.5555538601345447e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 8 + i][2] - reordered->coordinates[37 *  9 + i][2]), 5.5555572509765625e+00, TOLERANCE);
 
-	// 	checkClose(calculateDistance(reordered->coordinates[37 * 0 + i], reordered->coordinates[37 *  1 + i]), 5.5555555555555554e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(reordered->coordinates[37 * 1 + i], reordered->coordinates[37 *  2 + i]), 5.5555555555555554e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(reordered->coordinates[37 * 2 + i], reordered->coordinates[37 *  3 + i]), 5.5555555555555536e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(reordered->coordinates[37 * 3 + i], reordered->coordinates[37 *  4 + i]), 5.5555555555555571e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(reordered->coordinates[37 * 4 + i], reordered->coordinates[37 *  5 + i]), 5.5555555555555571e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(reordered->coordinates[37 * 5 + i], reordered->coordinates[37 *  6 + i]), 5.5555555555555500e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(reordered->coordinates[37 * 6 + i], reordered->coordinates[37 *  7 + i]), 5.5555555555555642e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(reordered->coordinates[37 * 7 + i], reordered->coordinates[37 *  8 + i]), 5.5555538601345447e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(reordered->coordinates[37 * 8 + i], reordered->coordinates[37 *  9 + i]), 5.5555572509765625e+00, TOLERANCE);
-	// }
+		// checkClose(calculateDistance(reordered->coordinates[37 * 0 + i], reordered->coordinates[37 *  1 + i]), 5.5555555555555554e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 1 + i], reordered->coordinates[37 *  2 + i]), 5.5555555555555554e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 2 + i], reordered->coordinates[37 *  3 + i]), 5.5555555555555536e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 3 + i], reordered->coordinates[37 *  4 + i]), 5.5555555555555571e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 4 + i], reordered->coordinates[37 *  5 + i]), 5.5555555555555571e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 5 + i], reordered->coordinates[37 *  6 + i]), 5.5555555555555500e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 6 + i], reordered->coordinates[37 *  7 + i]), 5.5555555555555642e+00, TOLERANCE);
+		// checkClose(calculateDistance(reordered->coordinates[37 * 7 + i], reordered->coordinates[37 *  8 + i]), 5.5555538601345447e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 8 + i], reordered->coordinates[37 *  9 + i]), 5.5555572509765625e+00, TOLERANCE);
+	}
 
 
 	// {

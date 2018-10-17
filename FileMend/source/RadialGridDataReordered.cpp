@@ -8,8 +8,7 @@ RadialGridDataReordered::RadialGridDataReordered(GridDataShared gridData) : grid
 	this->createReordered();
 	this->copyData();
 	this->reorder();
-	// this->addVertices();
-	// this->copyVertices();
+	this->copyVertices();
 	// this->fixIndices();
 }
 
@@ -54,6 +53,7 @@ void RadialGridDataReordered::createReordered() {
 
 	this->reordered->triangleConnectivity = this->gridData->triangleConnectivity;
 	this->reordered->quadrangleConnectivity = this->gridData->quadrangleConnectivity;
+	this->reordered->lineConnectivity = this->gridData->lineConnectivity;
 
 	this->reordered->boundaries = this->gridData->boundaries;
 
@@ -175,6 +175,11 @@ void RadialGridDataReordered::reorder() {
 		printf("\n######################\n");
 }
 
+void RadialGridDataReordered::addVertex(int handle) {
+	if (!hasElement(this->vertices.cbegin(), this->vertices.cend(), handle))
+		this->vertices.push_back(handle);
+}
+
 void RadialGridDataReordered::copyPrism(std::vector<std::array<int, 7>>::iterator prism) {
 	this->reordered->prismConnectivity.push_back(this->gridData->prismConnectivity[prism->back()]);
 	prism = this->prisms.erase(prism);
@@ -183,89 +188,6 @@ void RadialGridDataReordered::copyPrism(std::vector<std::array<int, 7>>::iterato
 void RadialGridDataReordered::copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron) {
 	this->reordered->hexahedronConnectivity.push_back(this->gridData->hexahedronConnectivity[hexahedron->back()]);
 	hexahedron = this->hexahedra.erase(hexahedron);
-}
-
-void RadialGridDataReordered::addVertices() {
-	{
-		this->addVertex(std::find_if(this->coordinates.begin(),this->coordinates.end(), [=](const auto& a){return a.first == this->gridData->lineConnectivity.front()[0];}));
-
-		auto first = this->gridData->coordinates[this->gridData->lineConnectivity.front()[0]];
-		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity.front()[1]];
-
-		std::array<double, 3> normal;
-		std::transform(first.cbegin(), first.cend(), last.cbegin(), normal.begin(), std::minus<>());
-
-		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(first.cbegin(), first.cend(), normal.begin(), 0.0));
-		this->segmentNumber++;
-	}
-
-	for (int s = 1; s < this->numberOfSegments; s++) {
-		this->addVertex(std::find_if(this->coordinates.begin(),this->coordinates.end(), [=](const auto& a){return a.first == this->gridData->lineConnectivity[s][0];}));
-
-		auto first = this->gridData->coordinates[this->gridData->lineConnectivity[s-1][0]];
-		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity[s-1][1]];
-		this->segmentLength = std::sqrt(std::inner_product(first.cbegin(), first.cend(), last.cbegin(), 0.0, std::plus<>(), [](const auto& a, const auto& b){return (a-b)*(a-b);}));
-
-		std::array<double, 3> normal;
-		std::transform(first.cbegin(), first.cend(), last.cbegin(), normal.begin(), std::minus<>());
-
-		first = this->gridData->coordinates[this->gridData->lineConnectivity[s][0]];
-		last  = this->gridData->coordinates[this->gridData->lineConnectivity[s][1]];
-
-		std::transform(first.cbegin(), first.cend(), last.cbegin(), normal.begin(), std::minus<>());
-
-		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(first.cbegin(), first.cend(), normal.begin(), 0.0));
-		this->segmentNumber++;
-	}
-
-	{
-		this->addVertex(std::find_if(this->coordinates.begin(),this->coordinates.end(), [=](const auto& a){return a.first == this->gridData->lineConnectivity.back()[1];}));
-
-		auto first = this->gridData->coordinates[this->gridData->lineConnectivity.back()[0]];
-		auto last  = this->gridData->coordinates[this->gridData->lineConnectivity.back()[1]];
-		this->segmentLength = std::sqrt(std::inner_product(first.cbegin(), first.cend(), last.cbegin(), 0.0, std::plus<>(), [](const auto& a, const auto& b){return (a-b)*(a-b);}));
-
-		std::array<double, 3> normal;
-		std::transform(first.cbegin(), first.cend(), last.cbegin(), normal.begin(), std::minus<>());
-
-		this->findVerticesOnPlane(normal, -1.0 * std::inner_product(last.cbegin(), last.cend(), normal.begin(), 0.0));
-		this->segmentNumber++;
-	}
-}
-
-void RadialGridDataReordered::findVerticesOnPlane(const std::array<double, 3>& normal, const double& d) {
-	for (auto coordinate = this->coordinates.begin(); coordinate != this->coordinates.end();)
-		if (this->isCoordinateOnPlane(coordinate->second, normal, d))
-			if (this->checkDistance(coordinate->second))
-				this->addVertex(coordinate);
-			else
-				coordinate++;
-		else
-			coordinate++;
-}
-
-bool RadialGridDataReordered::isCoordinateOnPlane(const std::array<double, 3>& coordinate, const std::array<double, 3>& normal, const double& d) {
-	return std::abs(std::inner_product(coordinate.cbegin(), coordinate.cend(), normal.begin(), d)) < this->tolerance;
-}
-
-bool RadialGridDataReordered::checkDistance(const std::array<double, 3>& a) {
-	if (this->vertices.size() < unsigned(this->numberOfVerticesPerSection))
-		return true;
-
-	int shift = this->vertices.size() - this->segmentNumber * this->numberOfVerticesPerSection;
-	auto b = this->gridData->coordinates[this->vertices[shift + (this->segmentNumber-1)*this->numberOfVerticesPerSection]];
-
-	return calculateDistance(a, b) - this->segmentLength < this->tolerance;
-}
-
-void RadialGridDataReordered::addVertex(int handle) {
-	if (!hasElement(this->vertices.cbegin(), this->vertices.cend(), handle))
-		this->vertices.push_back(handle);
-}
-
-void RadialGridDataReordered::addVertex(std::vector<std::pair<int, std::array<double, 3>>>::iterator vertex) {
-	this->vertices.push_back(vertex->first);
-	vertex = this->coordinates.erase(vertex);
 }
 
 void RadialGridDataReordered::copyVertices() {
