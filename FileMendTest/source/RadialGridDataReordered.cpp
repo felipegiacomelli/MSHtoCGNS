@@ -58,18 +58,18 @@ TestCase(RadialGridDataReorderTest) {
 	// for (int i = 0; i < 9; i++)
 	// 	checkEqual(reordered->lineConnectivity[i].back(), 324 + i);
 
-	for (int i = 0; i < 37; i++) {
-		checkSmall(reordered->coordinates[37 * 0 + i][2], TOLERANCE);
-		checkClose(reordered->coordinates[37 * 1 + i][2], 5.5555555, TOLERANCE);
-		checkClose(reordered->coordinates[37 * 2 + i][2], 11.111111, TOLERANCE);
-		checkClose(reordered->coordinates[37 * 3 + i][2], 16.666666, TOLERANCE);
-		checkClose(reordered->coordinates[37 * 4 + i][2], 22.222222, TOLERANCE);
-		checkClose(reordered->coordinates[37 * 5 + i][2], 27.777777, TOLERANCE);
-		checkClose(reordered->coordinates[37 * 6 + i][2], 33.333333, TOLERANCE);
-		checkClose(reordered->coordinates[37 * 7 + i][2], 38.888888, TOLERANCE);
-		checkClose(reordered->coordinates[37 * 8 + i][2], 44.444444, TOLERANCE);
-		checkClose(reordered->coordinates[37 * 9 + i][2], 49.999999, TOLERANCE);
-	}
+	// for (int i = 0; i < 37; i++) {
+		// checkSmall(reordered->coordinates[37 * 0 + i][2], TOLERANCE);
+		// checkClose(reordered->coordinates[37 * 1 + i][2], 5.5555555, TOLERANCE);
+		// checkClose(reordered->coordinates[37 * 2 + i][2], 11.111111, TOLERANCE);
+		// checkClose(reordered->coordinates[37 * 3 + i][2], 16.666666, TOLERANCE);
+		// checkClose(reordered->coordinates[37 * 4 + i][2], 22.222222, TOLERANCE);
+		// checkClose(reordered->coordinates[37 * 5 + i][2], 27.777777, TOLERANCE);
+		// checkClose(reordered->coordinates[37 * 6 + i][2], 33.333333, TOLERANCE);
+		// checkClose(reordered->coordinates[37 * 7 + i][2], 38.888888, TOLERANCE);
+		// checkClose(reordered->coordinates[37 * 8 + i][2], 44.444444, TOLERANCE);
+		// checkClose(reordered->coordinates[37 * 9 + i][2], 49.999999, TOLERANCE);
+	// }
 
 	// for (int i = 0; i < 37; i++) {
 	// 	checkClose(std::abs(reordered->coordinates[37 * 0 + i][2] - reordered->coordinates[37 *  1 + i][2]), 5.5555555555555554e+00, TOLERANCE);
@@ -133,38 +133,38 @@ TestCase(RadialGridDataReorderTest) {
 	// checkClose(calculateDistance(reordered->coordinates[35], reordered->coordinates[37 + 35]), 5.5555555555555554e+00, TOLERANCE);
 	// checkClose(calculateDistance(reordered->coordinates[36], reordered->coordinates[37 + 36]), 5.5555555555555554e+00, TOLERANCE);
 
-	{
+	// {
 		// std::vector<std::vector<int>> a{{ 0, 37 +  0}, { 2, 37 +  2}, {13, 37 + 13}, {14, 37 + 14}, {27, 37 + 27}, {28, 37 + 28}, {29, 37 + 29}, {30, 37 + 30}, {31, 37 + 31}, {32, 37 + 32}, {33, 37 + 33}, {34, 37 + 34}, {35, 37 + 35}, {36, 37 + 36}};
-		std::vector<std::vector<int>> a{{1, 37 + 1}, {2, 37 + 2}, {13, 37 + 13}, {14, 37 + 14}, {15, 37 + 15}, {16, 37 + 16}};
-		std::cout << std::endl;
-		for (auto row : a) {
-			for (auto col : row) {
-				std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(4) << std::fixed << reordered->coordinates[col][0];
-				std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(4) << std::fixed << reordered->coordinates[col][1];
-				std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(4) << std::fixed << reordered->coordinates[col][2];
-				std::cout << std::endl;
-			}
-			std::cout << std::endl;
-		}
+		// std::vector<std::vector<int>> a{{1, 37 + 1}, {2, 37 + 2}, {13, 37 + 13}, {14, 37 + 14}, {15, 37 + 15}, {16, 37 + 16}};
+		// std::cout << std::endl;
+		// for (auto row : a) {
+		// 	for (auto col : row) {
+		// 		std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(4) << std::fixed << reordered->coordinates[col][0];
+		// 		std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(4) << std::fixed << reordered->coordinates[col][1];
+		// 		std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(4) << std::fixed << reordered->coordinates[col][2];
+		// 		std::cout << std::endl;
+		// 	}
+		// 	std::cout << std::endl;
+		// }
 
-		auto boundary = *std::find_if(reordered->boundaries.cbegin(),reordered->boundaries.cend(), [](const auto& b){return b.name == std::string("BOUNDARY_BOTTOM");});
+		// auto boundary = *std::find_if(reordered->boundaries.cbegin(),reordered->boundaries.cend(), [](const auto& b){return b.name == std::string("BOUNDARY_BOTTOM");});
 
-		for (auto element = reordered->triangleConnectivity.cbegin(); element < reordered->triangleConnectivity.cbegin() + 12; element++) {
-			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
-					std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
-			std::cout << std::endl;
-		}
-		std::cout << std::endl;
+		// for (auto element = reordered->triangleConnectivity.cbegin(); element < reordered->triangleConnectivity.cbegin() + 12; element++) {
+		// 	for (auto v = element->cbegin(); v < element->cend() - 1; v++)
+		// 			std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
+		// 	std::cout << std::endl;
+		// }
+		// std::cout << std::endl;
 
-		for (auto element = reordered->prismConnectivity.cbegin(); element < reordered->prismConnectivity.cbegin() + 12; element++) {
-			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
-				if (hasElement(boundary.vertices.cbegin(), boundary.vertices.cend(), *v))
-					std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
-				else
-					std::cout << "\t" << std::setw(4) << std::right << *v;
-			std::cout << std::endl;
-		}
-		std::cout << std::endl;
+		// for (auto element = reordered->prismConnectivity.cbegin(); element < reordered->prismConnectivity.cbegin() + 12; element++) {
+		// 	for (auto v = element->cbegin(); v < element->cend() - 1; v++)
+		// 		if (hasElement(boundary.vertices.cbegin(), boundary.vertices.cend(), *v))
+		// 			std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
+		// 		else
+		// 			std::cout << "\t" << std::setw(4) << std::right << *v;
+		// 	std::cout << std::endl;
+		// }
+		// std::cout << std::endl;
 
 		// for (int i = 0; i < 6; i++) {
 		// 	std::cout << "\t" << std::setw(4) << std::right << reordered->prismConnectivity.front()[i] << " : ";
@@ -175,22 +175,22 @@ TestCase(RadialGridDataReorderTest) {
 		// }
 		// std::cout << std::endl;
 
-		for (auto element = reordered->quadrangleConnectivity.cbegin() + 108; element < reordered->quadrangleConnectivity.cbegin() + 132; element++) {
-			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
-					std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
-			std::cout << std::endl;
-		}
-		std::cout << std::endl;
+		// for (auto element = reordered->quadrangleConnectivity.cbegin() + 108; element < reordered->quadrangleConnectivity.cbegin() + 132; element++) {
+		// 	for (auto v = element->cbegin(); v < element->cend() - 1; v++)
+		// 			std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
+		// 	std::cout << std::endl;
+		// }
+		// std::cout << std::endl;
 
-		for (auto element = reordered->hexahedronConnectivity.cbegin(); element < reordered->hexahedronConnectivity.cbegin() + 24; element++) {
-			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
-				if (hasElement(boundary.vertices.cbegin(), boundary.vertices.cend(), *v))
-					std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
-				else
-					std::cout << "\t" << std::setw(4) << std::right << *v;
-			std::cout << std::endl;
-		}
-		std::cout << std::endl;
+		// for (auto element = reordered->hexahedronConnectivity.cbegin(); element < reordered->hexahedronConnectivity.cbegin() + 24; element++) {
+		// 	for (auto v = element->cbegin(); v < element->cend() - 1; v++)
+		// 		if (hasElement(boundary.vertices.cbegin(), boundary.vertices.cend(), *v))
+		// 			std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
+		// 		else
+		// 			std::cout << "\t" << std::setw(4) << std::right << *v;
+		// 	std::cout << std::endl;
+		// }
+		// std::cout << std::endl;
 
 
 		// std::cout << std::endl << std::endl << "##### GD ######" << std::endl;
@@ -211,7 +211,7 @@ TestCase(RadialGridDataReorderTest) {
 		// 	std::cout << std::endl;
 		// }
 		// std::cout << std::endl;
-	}
+	// }
 
 	// {
 	// 	auto boundary = *std::find_if(reordered->boundaries.cbegin(),reordered->boundaries.cend(), [](const auto& b){return b.name == std::string("BOUNDARY_TOP");});

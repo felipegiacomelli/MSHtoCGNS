@@ -52,7 +52,7 @@ class RadialGridDataReordered {
 		void copyData();
 		void reorder();
 		void addVertex(int handle);
-		void addVertexAndHandle(std::pair<int, int>&& vertexAndHandle);
+		void addVertexAndHandle(std::pair<int, int>&& firstVertexAndHandle, std::pair<int, int>&& secondVertexAndHandle);
 		void copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron);
 		void copyPrism(std::vector<std::array<int, 7>>::iterator prism);
 		void fixIndices();
@@ -75,8 +75,6 @@ class RadialGridDataReordered {
 
 		int vertexShift = 0;
 		int elementShift = 0;
-		int segmentNumber = 0;
-		double segmentLength;
 };
 
 #endif

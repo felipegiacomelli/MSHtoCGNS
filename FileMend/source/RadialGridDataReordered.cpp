@@ -9,7 +9,7 @@ RadialGridDataReordered::RadialGridDataReordered(GridDataShared gridData) : grid
 	this->copyData();
 	this->reorder();
 	this->copyVertices();
-	this->fixIndices();
+	// this->fixIndices();
 }
 
 void RadialGridDataReordered::checkGridData() {
@@ -106,81 +106,129 @@ void RadialGridDataReordered::reorder() {
 		if (i->back() >= boundary.facetBegin && i->back() < boundary.facetEnd)
 			quadrangles.emplace_back(*i);
 
-	// printf("\n\n");
-	// print(triangles.cbegin(), triangles.cend(), "triangles " + std::to_string(triangles.size()));
-	// print(quadrangles.cbegin(), quadrangles.cend(), "quadrangles " + std::to_string(quadrangles.size()));
+	for (int s = 0; s < this->numberOfSegments; s++) {
+	// int s = 0; {
+		for (auto triangle = triangles.begin(); triangle != triangles.end(); triangle++)
+			for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
+				if (hasElements(prism->cbegin(), prism->cend()-1, triangle->cbegin(), triangle->cend()-1)) {
+					// MakeShared<IntVector>(IntVector{0, 2, 1})
+					// MakeShared<IntVector>(IntVector{3, 4, 5})
+					// MakeShared<IntVector>(IntVector{0, 3, 5, 2})
+					// MakeShared<IntVector>(IntVector{0, 1, 4, 3})
+					// MakeShared<IntVector>(IntVector{1, 2, 5, 4})
 
-	for (int s = 0; s < this->numberOfSegments + 1; s++) {
+					this->addVertexAndHandle(std::make_pair((*prism)[0], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[3], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*prism)[2], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[4], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*prism)[1], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[5], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 
-			for (auto triangle = triangles.begin(); triangle != triangles.end(); triangle++) {
+					(*triangle)[0] = (*prism)[3];
+					(*triangle)[1] = (*prism)[4];
+					(*triangle)[2] = (*prism)[5];
 
-				for (auto vertex = triangle->begin(); vertex != triangle->end()-1; vertex++)
-					this->addVertex(*vertex);
+					this->reordered->prismConnectivity.push_back(this->gridData->prismConnectivity[prism->back()]);
+					this->prisms.erase(prism);
+					break;
+				}
+				else
+					prism++;
 
-				for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
-					if (hasElements(prism->cbegin(), prism->cend()-1, triangle->cbegin(), triangle->cend()-1)) {
-						this->addVertex((*prism)[0]);
-						this->addVertex((*prism)[2]);
-						this->addVertex((*prism)[1]);
-						(*triangle)[0] = (*prism)[3];
-						(*triangle)[1] = (*prism)[4];
-						(*triangle)[2] = (*prism)[5];
-						this->reordered->prismConnectivity.push_back(this->gridData->prismConnectivity[prism->back()]);
-						this->prisms.erase(prism);
-						break;
-					}
-					else
-						prism++;
-			}
+		for (auto quadrangle = quadrangles.begin(); quadrangle != quadrangles.end(); quadrangle++)
+			for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
+				if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
+					// MakeShared<IntVector>(IntVector{0, 3, 2, 1})
+					// MakeShared<IntVector>(IntVector{0, 4, 7, 3})
+					// MakeShared<IntVector>(IntVector{0, 1, 5, 4})
+					// MakeShared<IntVector>(IntVector{4, 5, 6, 7})
+					// MakeShared<IntVector>(IntVector{1, 2, 6, 5})
+					// MakeShared<IntVector>(IntVector{2, 3, 7, 6})
 
-			for (auto quadrangle = quadrangles.begin(); quadrangle != quadrangles.end(); quadrangle++) {
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[0], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[2], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[1], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[3], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[5], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[7], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[4], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[6], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 
-				for (auto vertex = quadrangle->cbegin(); vertex != quadrangle->cend()-1; vertex++)
-					this->addVertex(*vertex);
+					(*quadrangle)[0] = (*hexahedron)[2];
+					(*quadrangle)[1] = (*hexahedron)[3];
+					(*quadrangle)[2] = (*hexahedron)[7];
+					(*quadrangle)[3] = (*hexahedron)[6];
 
-				for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
-					if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
-						this->addVertex((*hexahedron)[0]);
-						this->addVertex((*hexahedron)[1]);
-						this->addVertex((*hexahedron)[5]);
-						this->addVertex((*hexahedron)[4]);
-						(*quadrangle)[0] = (*hexahedron)[2];
-						(*quadrangle)[1] = (*hexahedron)[3];
-						(*quadrangle)[2] = (*hexahedron)[7];
-						(*quadrangle)[3] = (*hexahedron)[6];
-						this->reordered->hexahedronConnectivity.push_back(this->gridData->hexahedronConnectivity[hexahedron->back()]);
-						this->hexahedra.erase(hexahedron);
-						break;
-					}
-					else
-						hexahedron++;
-			}
+					this->reordered->hexahedronConnectivity.push_back(this->gridData->hexahedronConnectivity[hexahedron->back()]);
+					this->hexahedra.erase(hexahedron);
+					break;
+				}
+				else
+					hexahedron++;
+
+		this->vertexShift = 0;
 	}
 
-		// MakeShared<IntVector>(IntVector{0, 3, 2, 1}),
-		// MakeShared<IntVector>(IntVector{0, 4, 7, 3}),
-		// MakeShared<IntVector>(IntVector{0, 1, 5, 4}),
-		// MakeShared<IntVector>(IntVector{4, 5, 6, 7}),
-		// MakeShared<IntVector>(IntVector{1, 2, 6, 5}),
-		// MakeShared<IntVector>(IntVector{2, 3, 7, 6})
+	for (int s = 0; s < this->numberOfSegments; s++) {
+		for (auto triangle = triangles.begin(); triangle != triangles.end(); triangle++)
+			for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
+				if (hasElements(prism->cbegin(), prism->cend()-1, triangle->cbegin(), triangle->cend()-1)) {
+					// MakeShared<IntVector>(IntVector{0, 2, 1})
+					// MakeShared<IntVector>(IntVector{3, 4, 5})
+					// MakeShared<IntVector>(IntVector{0, 3, 5, 2})
+					// MakeShared<IntVector>(IntVector{0, 1, 4, 3})
+					// MakeShared<IntVector>(IntVector{1, 2, 5, 4})
 
-		// MakeShared<IntVector>(IntVector{0, 2, 1}),
-		// MakeShared<IntVector>(IntVector{3, 4, 5}),
-		// MakeShared<IntVector>(IntVector{0, 3, 5, 2}),
-		// MakeShared<IntVector>(IntVector{0, 1, 4, 3}),
-		// MakeShared<IntVector>(IntVector{1, 2, 5, 4})
+					this->addVertexAndHandle(std::make_pair((*prism)[0], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[3], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*prism)[2], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[4], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*prism)[1], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[5], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 
-		printf("\n\n");
-		// print(triangles.cbegin(), triangles.cend(), "triangles " + std::to_string(triangles.size()));
-		// print(this->reordered->prismConnectivity.cbegin(), this->reordered->prismConnectivity.cend(), "PRISMS " + std::to_string(this->reordered->prismConnectivity.size()));
-		// print(quadrangles.cbegin(), quadrangles.cend(), "quadrangles " + std::to_string(quadrangles.size()));
-		// print(this->reordered->hexahedronConnectivity.cbegin(), this->reordered->hexahedronConnectivity.cend(), "HEXAHEDRA " + std::to_string(this->reordered->hexahedronConnectivity.size()));
+					(*triangle)[0] = (*prism)[3];
+					(*triangle)[1] = (*prism)[4];
+					(*triangle)[2] = (*prism)[5];
 
-		printf("\n\tnumberOfPrisms               : %4i", int(this->prisms.size()));
-		printf("\n\tnumberOfHexahedrons          : %4i", int(this->hexahedra.size()));
-		printf("\n\tnumberOfVertices             : %4i", int(this->vertices.size()));
+					this->reordered->prismConnectivity.push_back(this->gridData->prismConnectivity[prism->back()]);
+					this->prisms.erase(prism);
+					break;
+				}
+				else
+					prism++;
 
-		printf("\n\n\t###################################\n\n");
+		for (auto quadrangle = quadrangles.begin(); quadrangle != quadrangles.end(); quadrangle++)
+			for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
+				if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
+					// MakeShared<IntVector>(IntVector{0, 3, 2, 1})
+					// MakeShared<IntVector>(IntVector{0, 4, 7, 3})
+					// MakeShared<IntVector>(IntVector{0, 1, 5, 4})
+					// MakeShared<IntVector>(IntVector{4, 5, 6, 7})
+					// MakeShared<IntVector>(IntVector{1, 2, 6, 5})
+					// MakeShared<IntVector>(IntVector{2, 3, 7, 6})
+
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[0], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[2], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[1], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[3], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[5], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[7], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[4], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[6], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+
+					(*quadrangle)[0] = (*hexahedron)[2];
+					(*quadrangle)[1] = (*hexahedron)[3];
+					(*quadrangle)[2] = (*hexahedron)[7];
+					(*quadrangle)[3] = (*hexahedron)[6];
+
+					this->reordered->hexahedronConnectivity.push_back(this->gridData->hexahedronConnectivity[hexahedron->back()]);
+					this->hexahedra.erase(hexahedron);
+					break;
+				}
+				else
+					hexahedron++;
+
+		this->vertexShift = 0;
+	}
+
+	printf("\n\n");
+	// print(triangles.cbegin(), triangles.cend(), "triangles " + std::to_string(triangles.size()));
+	// print(this->reordered->prismConnectivity.cbegin(), this->reordered->prismConnectivity.cend(), "PRISMS " + std::to_string(this->reordered->prismConnectivity.size()));
+	// print(quadrangles.cbegin(), quadrangles.cend(), "quadrangles " + std::to_string(quadrangles.size()));
+	// print(this->reordered->hexahedronConnectivity.cbegin(), this->reordered->hexahedronConnectivity.cend(), "HEXAHEDRA " + std::to_string(this->reordered->hexahedronConnectivity.size()));
+
+	printf("\n\tnumberOfPrisms               : %4i", int(this->reordered->prismConnectivity.size()));
+	printf("\n\tnumberOfHexahedrons          : %4i", int(this->reordered->hexahedronConnectivity.size()));
+	printf("\n\tnumberOfVertices             : %4i", int(this->verticesAndHandles.size()));
+	printf("\n\tvertexShift                  : %4i", int(this->vertexShift));
+
+	printf("\n\n\t###################################\n\n");
 }
 
 void RadialGridDataReordered::addVertex(int handle) {
@@ -188,9 +236,21 @@ void RadialGridDataReordered::addVertex(int handle) {
 		this->vertices.push_back(handle);
 }
 
-void RadialGridDataReordered::addVertexAndHandle(std::pair<int, int>&& vertexAndHandle) {
-	if (!hasElement(this->verticesAndHandles.cbegin(), this->verticesAndHandles.cend(), vertexAndHandle))
-		this->verticesAndHandles.push_back(vertexAndHandle);
+void RadialGridDataReordered::addVertexAndHandle(std::pair<int, int>&& firstVertexAndHandle, std::pair<int, int>&& secondVertexAndHandle) {
+	bool hasFirstVertexAndHandle = false;
+	if (std::find_if(this->verticesAndHandles.cbegin(), this->verticesAndHandles.cend(), [=](auto vh){return vh.first == firstVertexAndHandle.first;}) == this->verticesAndHandles.cend()) {
+		this->verticesAndHandles.push_back(firstVertexAndHandle);
+		hasFirstVertexAndHandle = true;
+	}
+
+	bool hasSecondVertexAndHandle = false;
+	if (std::find_if(this->verticesAndHandles.cbegin(), this->verticesAndHandles.cend(), [=](auto vh){return vh.first == secondVertexAndHandle.first;}) == this->verticesAndHandles.cend()) {
+		this->verticesAndHandles.push_back(secondVertexAndHandle);
+		hasSecondVertexAndHandle = true;
+	}
+
+	if (hasFirstVertexAndHandle && hasSecondVertexAndHandle)
+		this->vertexShift++;
 }
 
 void RadialGridDataReordered::copyPrism(std::vector<std::array<int, 7>>::iterator prism) {
@@ -204,15 +264,32 @@ void RadialGridDataReordered::copyHexahedron(std::vector<std::array<int, 9>>::it
 }
 
 void RadialGridDataReordered::copyVertices() {
-	for (auto vertex : this->vertices)
-		this->reordered->coordinates.emplace_back(this->gridData->coordinates[vertex]);
+	// for (auto vertex : this->vertices)
+		// this->reordered->coordinates.emplace_back(this->gridData->coordinates[vertex]);
+	std::stable_sort(this->verticesAndHandles.begin(), this->verticesAndHandles.end(), [](auto a, auto b) {return a.second < b.second;});
+	for (auto vertex : this->verticesAndHandles)
+		this->reordered->coordinates.emplace_back(this->gridData->coordinates[vertex.first]);
+
+	std::cout << std::endl << "\thandles" << std::endl;
+
+	for (auto i = 0; i < 9; i++) {
+		int shift = i * this->numberOfVerticesPerSection;
+		for (auto j = 0; j < 37; j++) {
+			std::cout << "\t" << std::setw(4) << std::right << shift + j << " : " << std::setw(4) << std::right << verticesAndHandles[shift + j].first << " - " << std::setw(4) << std::right << verticesAndHandles[shift + j].second << std::endl;
+		}
+		std::cout << std::endl;
+	}
+
+	std::cout << std::endl;
 }
 
 void RadialGridDataReordered::fixIndices() {
 	std::unordered_map<int, int> originalToFinal;
-	int index = 0;
-	for (auto vertex : this->vertices)
-		originalToFinal[vertex] = index++;
+	// int index = 0;
+	// for (auto vertex : this->vertices)
+		// originalToFinal[vertex] = index++;
+	for (auto vertexAndHandle : this->verticesAndHandles)
+		originalToFinal[vertexAndHandle.first] = vertexAndHandle.second;
 
 	for (auto& hexahedron : this->reordered->hexahedronConnectivity)
 		for (auto vertex = hexahedron.begin(); vertex != hexahedron.end() - 1; vertex++)
