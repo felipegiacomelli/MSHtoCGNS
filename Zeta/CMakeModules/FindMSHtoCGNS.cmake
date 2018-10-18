@@ -15,7 +15,7 @@ else ()
 	find_library (MSHtoCGNS_LIBRARY_DIR CgnsInterface.a ${MSHtoCGNS_DIR}/libs)
 endif()
 
-set (MSHtoCGNS_COMPONENTS BoostInterface CgnsInterface IO MSHtoCGNS)
+set (MSHtoCGNS_COMPONENTS BoostInterface CgnsInterface MshInterface MSHtoCGNS)
 
 set (MSHtoCGNS_FOUND FALSE)
 if (MSHtoCGNS_INCLUDE_DIR)
