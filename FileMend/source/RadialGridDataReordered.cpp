@@ -112,27 +112,10 @@ void RadialGridDataReordered::reorder() {
 
 	for (int s = 0; s < this->numberOfSegments + 1; s++) {
 
-		if (s != 0) {
 			for (auto triangle = triangles.begin(); triangle != triangles.end(); triangle++) {
 
 				for (auto vertex = triangle->begin(); vertex != triangle->end()-1; vertex++)
 					this->addVertex(*vertex);
-
-				for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
-					if (hasElements(prism->cbegin(), prism->cend()-1, triangle->cbegin(), triangle->cend()-1)) {
-						(*triangle)[0] = (*prism)[3];
-						(*triangle)[1] = (*prism)[4];
-						(*triangle)[2] = (*prism)[5];
-						this->reordered->prismConnectivity.push_back(this->gridData->prismConnectivity[prism->back()]);
-						this->prisms.erase(prism);
-						break;
-					}
-					else
-						prism++;
-			}
-		}
-		else {
-			for (auto triangle = triangles.begin(); triangle != triangles.end(); triangle++) {
 
 				for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
 					if (hasElements(prism->cbegin(), prism->cend()-1, triangle->cbegin(), triangle->cend()-1)) {
@@ -149,30 +132,11 @@ void RadialGridDataReordered::reorder() {
 					else
 						prism++;
 			}
-		}
 
-		if (s != 0) {
 			for (auto quadrangle = quadrangles.begin(); quadrangle != quadrangles.end(); quadrangle++) {
 
 				for (auto vertex = quadrangle->cbegin(); vertex != quadrangle->cend()-1; vertex++)
 					this->addVertex(*vertex);
-
-				for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
-					if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
-						(*quadrangle)[0] = (*hexahedron)[2];
-						(*quadrangle)[1] = (*hexahedron)[3];
-						(*quadrangle)[2] = (*hexahedron)[7];
-						(*quadrangle)[3] = (*hexahedron)[6];
-						this->reordered->hexahedronConnectivity.push_back(this->gridData->hexahedronConnectivity[hexahedron->back()]);
-						this->hexahedra.erase(hexahedron);
-						break;
-					}
-					else
-						hexahedron++;
-			}
-		}
-		else {
-			for (auto quadrangle = quadrangles.begin(); quadrangle != quadrangles.end(); quadrangle++) {
 
 				for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
 					if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
@@ -191,7 +155,6 @@ void RadialGridDataReordered::reorder() {
 					else
 						hexahedron++;
 			}
-		}
 	}
 
 		// MakeShared<IntVector>(IntVector{0, 3, 2, 1}),
