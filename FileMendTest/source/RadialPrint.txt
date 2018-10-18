@@ -1,3 +1,17 @@
+					// MakeShared<IntVector>(IntVector{0, 2, 1})
+					// MakeShared<IntVector>(IntVector{3, 4, 5})
+					// MakeShared<IntVector>(IntVector{0, 3, 5, 2})
+					// MakeShared<IntVector>(IntVector{0, 1, 4, 3})
+					// MakeShared<IntVector>(IntVector{1, 2, 5, 4})
+
+					// MakeShared<IntVector>(IntVector{0, 3, 2, 1})
+					// MakeShared<IntVector>(IntVector{0, 4, 7, 3})
+					// MakeShared<IntVector>(IntVector{0, 1, 5, 4})
+					// MakeShared<IntVector>(IntVector{4, 5, 6, 7})
+					// MakeShared<IntVector>(IntVector{1, 2, 6, 5})
+					// MakeShared<IntVector>(IntVector{2, 3, 7, 6})
+
+
 	// std::ofstream outputFile("ScriptWellGenerator.json");
 	// std::stringstream ss;
 	// boost::property_tree::json_parser::write_json(ss, propertyTree);

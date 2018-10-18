@@ -25,16 +25,6 @@ bool hasElements(InputIt setBegin, InputIt setEnd, InputIt elementBegin, InputIt
 	return close;
 }
 
-template<class InputIt>
-bool hasElements(InputIt cbegin, InputIt cend, const std::array<int, 4>& facetConnectivity) {
-	bool close = true;
-
-	for (int vertex : facetConnectivity)
-		close &= hasElement(cbegin, cend, vertex);
-
-	return close;
-}
-
 class RadialGridDataReordered {
 	public:
 		RadialGridDataReordered(GridDataShared gridData);
@@ -53,6 +43,7 @@ class RadialGridDataReordered {
 		void reorder();
 		void addVertex(int handle);
 		void addVertexAndHandle(std::pair<int, int>&& firstVertexAndHandle, std::pair<int, int>&& secondVertexAndHandle);
+		void addVertexAndHandle(std::pair<int, int>&& vertexAndHandle);
 		void copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron);
 		void copyPrism(std::vector<std::array<int, 7>>::iterator prism);
 		void fixIndices();
@@ -66,7 +57,6 @@ class RadialGridDataReordered {
 		int numberOfHexahedronsPerRadius;
 		int numberOfVerticesPerSection;
 
-		std::vector<std::pair<int, std::array<double, 3>>> coordinates;
 		std::vector<std::array<int, 9>> hexahedra;
 		std::vector<std::array<int, 7>> prisms;
 

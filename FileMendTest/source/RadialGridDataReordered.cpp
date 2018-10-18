@@ -58,42 +58,42 @@ TestCase(RadialGridDataReorderTest) {
 	// for (int i = 0; i < 9; i++)
 	// 	checkEqual(reordered->lineConnectivity[i].back(), 324 + i);
 
-	// for (int i = 0; i < 37; i++) {
-		// checkSmall(reordered->coordinates[37 * 0 + i][2], TOLERANCE);
-		// checkClose(reordered->coordinates[37 * 1 + i][2], 5.5555555, TOLERANCE);
-		// checkClose(reordered->coordinates[37 * 2 + i][2], 11.111111, TOLERANCE);
-		// checkClose(reordered->coordinates[37 * 3 + i][2], 16.666666, TOLERANCE);
-		// checkClose(reordered->coordinates[37 * 4 + i][2], 22.222222, TOLERANCE);
-		// checkClose(reordered->coordinates[37 * 5 + i][2], 27.777777, TOLERANCE);
-		// checkClose(reordered->coordinates[37 * 6 + i][2], 33.333333, TOLERANCE);
-		// checkClose(reordered->coordinates[37 * 7 + i][2], 38.888888, TOLERANCE);
-		// checkClose(reordered->coordinates[37 * 8 + i][2], 44.444444, TOLERANCE);
-		// checkClose(reordered->coordinates[37 * 9 + i][2], 49.999999, TOLERANCE);
-	// }
+	for (int i = 0; i < 37; i++) {
+		checkSmall(reordered->coordinates[37 * 0 + i][2], TOLERANCE);
+		checkClose(reordered->coordinates[37 * 1 + i][2], 5.5555555, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 2 + i][2], 11.111111, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 3 + i][2], 16.666666, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 4 + i][2], 22.222222, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 5 + i][2], 27.777777, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 6 + i][2], 33.333333, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 7 + i][2], 38.888888, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 8 + i][2], 44.444444, TOLERANCE);
+		checkClose(reordered->coordinates[37 * 9 + i][2], 49.999999, TOLERANCE);
+	}
 
-	// for (int i = 0; i < 37; i++) {
-	// 	checkClose(std::abs(reordered->coordinates[37 * 0 + i][2] - reordered->coordinates[37 *  1 + i][2]), 5.5555555555555554e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 1 + i][2] - reordered->coordinates[37 *  2 + i][2]), 5.5555555555555554e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 2 + i][2] - reordered->coordinates[37 *  3 + i][2]), 5.5555555555555536e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 3 + i][2] - reordered->coordinates[37 *  4 + i][2]), 5.5555555555555571e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 4 + i][2] - reordered->coordinates[37 *  5 + i][2]), 5.5555555555555571e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 5 + i][2] - reordered->coordinates[37 *  6 + i][2]), 5.5555555555555500e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 6 + i][2] - reordered->coordinates[37 *  7 + i][2]), 5.5555555555555642e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 7 + i][2] - reordered->coordinates[37 *  8 + i][2]), 5.5555538601345447e+00, TOLERANCE);
-	// 	checkClose(std::abs(reordered->coordinates[37 * 8 + i][2] - reordered->coordinates[37 *  9 + i][2]), 5.5555572509765625e+00, TOLERANCE);
-	// }
+	for (int i = 0; i < 37; i++) {
+		checkClose(std::abs(reordered->coordinates[37 * 0 + i][2] - reordered->coordinates[37 *  1 + i][2]), 5.5555555555555554e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 1 + i][2] - reordered->coordinates[37 *  2 + i][2]), 5.5555555555555554e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 2 + i][2] - reordered->coordinates[37 *  3 + i][2]), 5.5555555555555536e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 3 + i][2] - reordered->coordinates[37 *  4 + i][2]), 5.5555555555555571e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 4 + i][2] - reordered->coordinates[37 *  5 + i][2]), 5.5555555555555571e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 5 + i][2] - reordered->coordinates[37 *  6 + i][2]), 5.5555555555555500e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 6 + i][2] - reordered->coordinates[37 *  7 + i][2]), 5.5555555555555642e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 7 + i][2] - reordered->coordinates[37 *  8 + i][2]), 5.5555538601345447e+00, TOLERANCE);
+		checkClose(std::abs(reordered->coordinates[37 * 8 + i][2] - reordered->coordinates[37 *  9 + i][2]), 5.5555572509765625e+00, TOLERANCE);
+	}
 
-	// for (int i = 0; i < 37; i++) {
-	// checkClose(calculateDistance(reordered->coordinates[37 * 0 + i], reordered->coordinates[37 *  1 + i]), 5.5555555555555554e+00, TOLERANCE);
-	// checkClose(calculateDistance(reordered->coordinates[37 * 1 + i], reordered->coordinates[37 *  2 + i]), 5.5555555555555554e+00, TOLERANCE);
-	// checkClose(calculateDistance(reordered->coordinates[37 * 2 + i], reordered->coordinates[37 *  3 + i]), 5.5555555555555536e+00, TOLERANCE);
-	// checkClose(calculateDistance(reordered->coordinates[37 * 3 + i], reordered->coordinates[37 *  4 + i]), 5.5555555555555571e+00, TOLERANCE);
-	// checkClose(calculateDistance(reordered->coordinates[37 * 4 + i], reordered->coordinates[37 *  5 + i]), 5.5555555555555571e+00, TOLERANCE);
-	// checkClose(calculateDistance(reordered->coordinates[37 * 5 + i], reordered->coordinates[37 *  6 + i]), 5.5555555555555500e+00, TOLERANCE);
-	// checkClose(calculateDistance(reordered->coordinates[37 * 6 + i], reordered->coordinates[37 *  7 + i]), 5.5555555555555642e+00, TOLERANCE);
-	// checkClose(calculateDistance(reordered->coordinates[37 * 7 + i], reordered->coordinates[37 *  8 + i]), 5.5555538601345447e+00, TOLERANCE);
-	// checkClose(calculateDistance(reordered->coordinates[37 * 8 + i], reordered->coordinates[37 *  9 + i]), 5.5555572509765625e+00, TOLERANCE);
-	// }
+	for (int i = 0; i < 37; i++) {
+		// checkClose(calculateDistance(reordered->coordinates[37 * 0 + i], reordered->coordinates[37 *  1 + i]), 5.5555555555555554e+00, TOLERANCE);
+		// checkClose(calculateDistance(reordered->coordinates[37 * 1 + i], reordered->coordinates[37 *  2 + i]), 5.5555555555555554e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 2 + i], reordered->coordinates[37 *  3 + i]), 5.5555555555555536e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 3 + i], reordered->coordinates[37 *  4 + i]), 5.5555555555555571e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 4 + i], reordered->coordinates[37 *  5 + i]), 5.5555555555555571e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 5 + i], reordered->coordinates[37 *  6 + i]), 5.5555555555555500e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 6 + i], reordered->coordinates[37 *  7 + i]), 5.5555555555555642e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 7 + i], reordered->coordinates[37 *  8 + i]), 5.5555538601345447e+00, TOLERANCE);
+		checkClose(calculateDistance(reordered->coordinates[37 * 8 + i], reordered->coordinates[37 *  9 + i]), 5.5555572509765625e+00, TOLERANCE);
+	}
 
 	// checkClose(calculateDistance(reordered->coordinates[ 0], reordered->coordinates[37 +  0]), 5.5555555555555554e+00, TOLERANCE);
 	// checkClose(calculateDistance(reordered->coordinates[ 1], reordered->coordinates[37 +  1]), 5.5555555555555554e+00, TOLERANCE);
@@ -133,68 +133,96 @@ TestCase(RadialGridDataReorderTest) {
 	// checkClose(calculateDistance(reordered->coordinates[35], reordered->coordinates[37 + 35]), 5.5555555555555554e+00, TOLERANCE);
 	// checkClose(calculateDistance(reordered->coordinates[36], reordered->coordinates[37 + 36]), 5.5555555555555554e+00, TOLERANCE);
 
-	// {
+	// checkClose(calculateDistance(reordered->coordinates[37 +  0], reordered->coordinates[74 +  0]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 +  1], reordered->coordinates[74 +  1]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 +  2], reordered->coordinates[74 +  2]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 +  3], reordered->coordinates[74 +  3]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 +  4], reordered->coordinates[74 +  4]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 +  5], reordered->coordinates[74 +  5]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 +  6], reordered->coordinates[74 +  6]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 +  7], reordered->coordinates[74 +  7]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 +  8], reordered->coordinates[74 +  8]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 +  9], reordered->coordinates[74 +  9]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 10], reordered->coordinates[74 + 10]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 11], reordered->coordinates[74 + 11]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 12], reordered->coordinates[74 + 12]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 13], reordered->coordinates[74 + 13]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 14], reordered->coordinates[74 + 14]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 15], reordered->coordinates[74 + 15]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 16], reordered->coordinates[74 + 16]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 17], reordered->coordinates[74 + 17]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 18], reordered->coordinates[74 + 18]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 19], reordered->coordinates[74 + 19]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 20], reordered->coordinates[74 + 20]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 21], reordered->coordinates[74 + 21]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 22], reordered->coordinates[74 + 22]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 23], reordered->coordinates[74 + 23]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 24], reordered->coordinates[74 + 24]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 25], reordered->coordinates[74 + 25]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 26], reordered->coordinates[74 + 26]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 27], reordered->coordinates[74 + 27]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 28], reordered->coordinates[74 + 28]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 29], reordered->coordinates[74 + 29]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 30], reordered->coordinates[74 + 30]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 31], reordered->coordinates[74 + 31]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 32], reordered->coordinates[74 + 32]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 33], reordered->coordinates[74 + 33]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 34], reordered->coordinates[74 + 34]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 35], reordered->coordinates[74 + 35]), 5.5555555555555554e+00, TOLERANCE);
+	// checkClose(calculateDistance(reordered->coordinates[37 + 36], reordered->coordinates[74 + 36]), 5.5555555555555554e+00, TOLERANCE);
+
+	{
 		// std::vector<std::vector<int>> a{{ 0, 37 +  0}, { 2, 37 +  2}, {13, 37 + 13}, {14, 37 + 14}, {27, 37 + 27}, {28, 37 + 28}, {29, 37 + 29}, {30, 37 + 30}, {31, 37 + 31}, {32, 37 + 32}, {33, 37 + 33}, {34, 37 + 34}, {35, 37 + 35}, {36, 37 + 36}};
 		// std::vector<std::vector<int>> a{{1, 37 + 1}, {2, 37 + 2}, {13, 37 + 13}, {14, 37 + 14}, {15, 37 + 15}, {16, 37 + 16}};
 		// std::cout << std::endl;
 		// for (auto row : a) {
-		// 	for (auto col : row) {
-		// 		std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(4) << std::fixed << reordered->coordinates[col][0];
-		// 		std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(4) << std::fixed << reordered->coordinates[col][1];
-		// 		std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(4) << std::fixed << reordered->coordinates[col][2];
+		// for (auto i = 1; i < 37; i++) {
+		// 	for (auto j = 0; j < 38; j+=37) {
+		// 		std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(4) << std::fixed << reordered->coordinates[i+j][0];
+		// 		std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(4) << std::fixed << reordered->coordinates[i+j][1];
+		// 		std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(4) << std::fixed << reordered->coordinates[i+j][2];
 		// 		std::cout << std::endl;
 		// 	}
 		// 	std::cout << std::endl;
 		// }
 
-		// auto boundary = *std::find_if(reordered->boundaries.cbegin(),reordered->boundaries.cend(), [](const auto& b){return b.name == std::string("BOUNDARY_BOTTOM");});
+		auto boundary = *std::find_if(reordered->boundaries.cbegin(),reordered->boundaries.cend(), [](const auto& b){return b.name == std::string("BOUNDARY_BOTTOM");});
 
-		// for (auto element = reordered->triangleConnectivity.cbegin(); element < reordered->triangleConnectivity.cbegin() + 12; element++) {
-		// 	for (auto v = element->cbegin(); v < element->cend() - 1; v++)
-		// 			std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
-		// 	std::cout << std::endl;
-		// }
-		// std::cout << std::endl;
+		for (auto element = reordered->triangleConnectivity.cbegin(); element < reordered->triangleConnectivity.cbegin() + 12; element++) {
+			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
+					std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
 
-		// for (auto element = reordered->prismConnectivity.cbegin(); element < reordered->prismConnectivity.cbegin() + 12; element++) {
-		// 	for (auto v = element->cbegin(); v < element->cend() - 1; v++)
-		// 		if (hasElement(boundary.vertices.cbegin(), boundary.vertices.cend(), *v))
-		// 			std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
-		// 		else
-		// 			std::cout << "\t" << std::setw(4) << std::right << *v;
-		// 	std::cout << std::endl;
-		// }
-		// std::cout << std::endl;
+		for (auto element = reordered->prismConnectivity.cbegin(); element < reordered->prismConnectivity.cbegin() + 12; element++) {
+			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
+				if (hasElement(boundary.vertices.cbegin(), boundary.vertices.cend(), *v))
+					std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
+				else
+					std::cout << "\t" << std::setw(4) << std::right << *v;
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
 
-		// for (int i = 0; i < 6; i++) {
-		// 	std::cout << "\t" << std::setw(4) << std::right << reordered->prismConnectivity.front()[i] << " : ";
-		// 	std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(6) << std::fixed << reordered->coordinates[reordered->prismConnectivity.front()[i]][0];
-		// 	std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(6) << std::fixed << reordered->coordinates[reordered->prismConnectivity.front()[i]][1];
-		// 	std::cout << "\t" << std::setfill(' ') << std::setw(12) << std::right << std::setprecision(6) << std::fixed << reordered->coordinates[reordered->prismConnectivity.front()[i]][2];
-		// 	std::cout << std::endl;
-		// }
-		// std::cout << std::endl;
+		for (auto element = reordered->quadrangleConnectivity.cbegin() + 108; element < reordered->quadrangleConnectivity.cbegin() + 132; element++) {
+			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
+					std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
 
-		// for (auto element = reordered->quadrangleConnectivity.cbegin() + 108; element < reordered->quadrangleConnectivity.cbegin() + 132; element++) {
-		// 	for (auto v = element->cbegin(); v < element->cend() - 1; v++)
-		// 			std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
-		// 	std::cout << std::endl;
-		// }
-		// std::cout << std::endl;
-
-		// for (auto element = reordered->hexahedronConnectivity.cbegin(); element < reordered->hexahedronConnectivity.cbegin() + 24; element++) {
-		// 	for (auto v = element->cbegin(); v < element->cend() - 1; v++)
-		// 		if (hasElement(boundary.vertices.cbegin(), boundary.vertices.cend(), *v))
-		// 			std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
-		// 		else
-		// 			std::cout << "\t" << std::setw(4) << std::right << *v;
-		// 	std::cout << std::endl;
-		// }
-		// std::cout << std::endl;
-
+		for (auto element = reordered->hexahedronConnectivity.cbegin(); element < reordered->hexahedronConnectivity.cbegin() + 24; element++) {
+			for (auto v = element->cbegin(); v < element->cend() - 1; v++)
+				if (hasElement(boundary.vertices.cbegin(), boundary.vertices.cend(), *v))
+					std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
+				else
+					std::cout << "\t" << std::setw(4) << std::right << *v;
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
 
 		// std::cout << std::endl << std::endl << "##### GD ######" << std::endl;
-
 		// for (auto element = gridData->quadrangleConnectivity.cbegin() + 108; element < gridData->quadrangleConnectivity.cbegin() + 132; element++) {
 		// 	for (auto v = element->cbegin(); v < element->cend() - 1; v++)
 		// 			std::cout << "\t" << "\033[1;31m" << std::setw(4) << std::right  << *v << "\033[0m";
@@ -211,7 +239,7 @@ TestCase(RadialGridDataReorderTest) {
 		// 	std::cout << std::endl;
 		// }
 		// std::cout << std::endl;
-	// }
+	}
 
 	// {
 	// 	auto boundary = *std::find_if(reordered->boundaries.cbegin(),reordered->boundaries.cend(), [](const auto& b){return b.name == std::string("BOUNDARY_TOP");});
