@@ -41,7 +41,7 @@ class RadialGridDataReordered {
 		void createReordered();
 		void copyData();
 		void reorder();
-		void addVertexAndHandle(std::pair<int, int>&& firstVertexAndHandle, std::pair<int, int>&& secondVertexAndHandle);
+		void buildFirstSection();
 		void addVertexAndHandle(std::pair<int, int>&& vertexAndHandle);
 		void updateTriangle(std::vector<std::array<int, 7>>::iterator prism, std::vector<std::array<int, 4>>::iterator triangle);
 		void updateQuadrangle(std::vector<std::array<int, 9>>::iterator hexahedron, std::vector<std::array<int, 5>>::iterator quadrangle);
