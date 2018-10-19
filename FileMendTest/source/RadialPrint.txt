@@ -1,4 +1,24 @@
-					// MakeShared<IntVector>(IntVector{0, 2, 1})
+
+
+
+	printf("\n\tnumberOfSegments             : %4i", this->numberOfSegments);
+	printf("\n\tnumberOfPrisms               : %4i", int(this->gridData->prismConnectivity.size()));
+	printf("\n\tnumberOfHexahedrons          : %4i", int(this->gridData->hexahedronConnectivity.size()));
+	printf("\n\tnumberOfPrismsPerSegment     : %4i", this->numberOfPrismsPerSegment);
+	printf("\n\tnumberOfHexahedronsPerSegment: %4i", this->numberOfHexahedronsPerSegment);
+	printf("\n\tnumberOfHexahedronsPerRadius : %4i", this->numberOfHexahedronsPerRadius);
+	printf("\n\tnumberOfVerticesPerSection   : %4i", this->numberOfVerticesPerSection);
+	printf("\n\n");
+
+
+	printf("\n\n");
+	printf("\n\tnumberOfPrisms               : %4i", int(this->reordered->prismConnectivity.size()));
+	printf("\n\tnumberOfHexahedrons          : %4i", int(this->reordered->hexahedronConnectivity.size()));
+	printf("\n\tnumberOfVertices             : %4i", int(this->vertices.size()));
+	printf("\n\tvertexShift                  : %4i", int(this->vertexShift));
+
+	printf("\n\n\t###################################\n\n");
+						// MakeShared<IntVector>(IntVector{0, 2, 1})
 					// MakeShared<IntVector>(IntVector{3, 4, 5})
 					// MakeShared<IntVector>(IntVector{0, 3, 5, 2})
 					// MakeShared<IntVector>(IntVector{0, 1, 4, 3})

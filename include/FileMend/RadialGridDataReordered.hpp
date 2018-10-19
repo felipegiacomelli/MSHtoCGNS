@@ -11,7 +11,7 @@
 #include <Grid/GridData.hpp>
 
 template<class InputIt, class T>
-bool hasElement(InputIt cbegin, InputIt cend, T element) {
+bool hasElement(InputIt cbegin, InputIt cend, const T& element) {
 	return std::find(cbegin, cend, element) != cend;
 }
 
@@ -42,15 +42,16 @@ class RadialGridDataReordered {
 		void copyData();
 		void reorder();
 		void buildFirstSection();
-		void addVertexAndHandle(std::pair<int, int>&& vertexAndHandle);
+		void addVertex(int vertex, int section);
 		void updateTriangle(std::vector<std::array<int, 7>>::iterator prism, std::vector<std::array<int, 4>>::iterator triangle);
 		void updateQuadrangle(std::vector<std::array<int, 9>>::iterator hexahedron, std::vector<std::array<int, 5>>::iterator quadrangle);
 		void copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron);
 		void copyPrism(std::vector<std::array<int, 7>>::iterator prism);
+		void copyVertices();
 		void fixVerticesIndices();
 		void fixElementIndices();
 		void fixFacetIndices();
-		void copyVertices();
+		void fixLineIndices();
 
 		GridDataShared gridData;
 
@@ -65,11 +66,12 @@ class RadialGridDataReordered {
 		std::vector<std::array<int, 4>> triangles;
 		std::vector<std::array<int, 5>> quadrangles;
 
-		std::vector<std::pair<int, int>> verticesAndHandles;
+		std::vector<std::pair<int, int>> vertices;
 
 		int vertexShift = 0;
 		int elementShift = 0;
-		int facetShift = 0;
+		int facetShift;
+		int lineShift;
 };
 
 #endif
