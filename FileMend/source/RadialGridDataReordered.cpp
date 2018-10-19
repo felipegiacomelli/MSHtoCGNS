@@ -90,82 +90,66 @@ void RadialGridDataReordered::copyData() {
 	this->prisms = this->gridData->prismConnectivity;
 	for (auto i = 0u; i < this->prisms.size(); i++)
 		this->prisms[i].back() = i;
+
+	auto b = *std::find_if(this->gridData->boundaries.cbegin(), this->gridData->boundaries.cend(), [=](auto b){return hasElement(b.vertices.cbegin(), b.vertices.cend(), this->gridData->lineConnectivity.front()[0]);});
+
+	for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++)
+		if (i->back() >= b.facetBegin && i->back() < b.facetEnd)
+			this->triangles.emplace_back(*i);
+
+	for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++)
+		if (i->back() >= b.facetBegin && i->back() < b.facetEnd)
+			this->quadrangles.emplace_back(*i);
 }
 
 void RadialGridDataReordered::reorder() {
-	auto boundary = *std::find_if(this->gridData->boundaries.cbegin(), this->gridData->boundaries.cend(), [=](auto b){return hasElement(b.vertices.cbegin(), b.vertices.cend(), this->gridData->lineConnectivity.front()[0]);});
+	for (auto triangle = this->triangles.begin(); triangle != this->triangles.end(); triangle++)
+		for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
+			if (hasElements(prism->cbegin(), prism->cend()-1, triangle->cbegin(), triangle->cend()-1)) {
+				this->addVertexAndHandle(std::make_pair((*prism)[0], this->vertexShift), std::make_pair((*prism)[3], this->numberOfVerticesPerSection + this->vertexShift));
+				this->addVertexAndHandle(std::make_pair((*prism)[1], this->vertexShift), std::make_pair((*prism)[4], this->numberOfVerticesPerSection + this->vertexShift));
+				this->addVertexAndHandle(std::make_pair((*prism)[2], this->vertexShift), std::make_pair((*prism)[5], this->numberOfVerticesPerSection + this->vertexShift));
 
-	std::vector<std::array<int, 4>> triangles;
-	for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++)
-		if (i->back() >= boundary.facetBegin && i->back() < boundary.facetEnd)
-			triangles.emplace_back(*i);
+				this->updateTriangle(prism, triangle);
+				this->copyPrism(prism);
+				break;
+			}
+			else
+				prism++;
 
-	std::vector<std::array<int, 5>> quadrangles;
-	for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++)
-		if (i->back() >= boundary.facetBegin && i->back() < boundary.facetEnd)
-			quadrangles.emplace_back(*i);
+	for (auto quadrangle = this->quadrangles.begin(); quadrangle != this->quadrangles.end(); quadrangle++)
+		for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
+			if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
+				this->addVertexAndHandle(std::make_pair((*hexahedron)[0], this->vertexShift), std::make_pair((*hexahedron)[3], this->numberOfVerticesPerSection + this->vertexShift));
+				this->addVertexAndHandle(std::make_pair((*hexahedron)[1], this->vertexShift), std::make_pair((*hexahedron)[2], this->numberOfVerticesPerSection + this->vertexShift));
+				this->addVertexAndHandle(std::make_pair((*hexahedron)[5], this->vertexShift), std::make_pair((*hexahedron)[6], this->numberOfVerticesPerSection + this->vertexShift));
+				this->addVertexAndHandle(std::make_pair((*hexahedron)[4], this->vertexShift), std::make_pair((*hexahedron)[7], this->numberOfVerticesPerSection + this->vertexShift));
 
-	{
-		int s = 0;
-		for (auto triangle = triangles.begin(); triangle != triangles.end(); triangle++)
-			for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
-				if (hasElements(prism->cbegin(), prism->cend()-1, triangle->cbegin(), triangle->cend()-1)) {
-					this->addVertexAndHandle(std::make_pair((*prism)[0], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[3], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-					this->addVertexAndHandle(std::make_pair((*prism)[1], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[4], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-					this->addVertexAndHandle(std::make_pair((*prism)[2], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[5], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-
-					(*triangle)[0] = (*prism)[3];
-					(*triangle)[1] = (*prism)[4];
-					(*triangle)[2] = (*prism)[5];
-
-					this->copyPrism(prism);
-					break;
-				}
-				else
-					prism++;
-
-		for (auto quadrangle = quadrangles.begin(); quadrangle != quadrangles.end(); quadrangle++)
-			for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
-				if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
-
-					this->addVertexAndHandle(std::make_pair((*hexahedron)[0], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[3], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-					this->addVertexAndHandle(std::make_pair((*hexahedron)[1], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[2], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-					this->addVertexAndHandle(std::make_pair((*hexahedron)[5], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[6], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-					this->addVertexAndHandle(std::make_pair((*hexahedron)[4], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[7], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-
-					(*quadrangle)[0] = (*hexahedron)[2];
-					(*quadrangle)[1] = (*hexahedron)[3];
-					(*quadrangle)[2] = (*hexahedron)[7];
-					(*quadrangle)[3] = (*hexahedron)[6];
-
-					this->copyHexahedron(hexahedron);
-					break;
-				}
-				else
-					hexahedron++;
-	}
+				this->updateQuadrangle(hexahedron, quadrangle);
+				this->copyHexahedron(hexahedron);
+				break;
+			}
+			else
+				hexahedron++;
 
 	for (int s = 1; s < this->numberOfSegments; s++) {
 		this->vertexShift = 0;
 
-		for (auto triangle = triangles.begin(); triangle != triangles.end(); triangle++)
+		for (auto triangle = this->triangles.begin(); triangle != this->triangles.end(); triangle++)
 			for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
 				if (hasElements(prism->cbegin(), prism->cend()-1, triangle->cbegin(), triangle->cend()-1)) {
 					this->addVertexAndHandle(std::make_pair((*prism)[3], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 					this->addVertexAndHandle(std::make_pair((*prism)[4], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 					this->addVertexAndHandle(std::make_pair((*prism)[5], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 
-					(*triangle)[0] = (*prism)[3];
-					(*triangle)[1] = (*prism)[4];
-					(*triangle)[2] = (*prism)[5];
-
+					this->updateTriangle(prism, triangle);
 					this->copyPrism(prism);
 					break;
 				}
 				else
 					prism++;
 
-		for (auto quadrangle = quadrangles.begin(); quadrangle != quadrangles.end(); quadrangle++)
+		for (auto quadrangle = this->quadrangles.begin(); quadrangle != this->quadrangles.end(); quadrangle++)
 			for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
 				if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
 					this->addVertexAndHandle(std::make_pair((*hexahedron)[3], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
@@ -173,11 +157,7 @@ void RadialGridDataReordered::reorder() {
 					this->addVertexAndHandle(std::make_pair((*hexahedron)[6], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 					this->addVertexAndHandle(std::make_pair((*hexahedron)[7], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 
-					(*quadrangle)[0] = (*hexahedron)[2];
-					(*quadrangle)[1] = (*hexahedron)[3];
-					(*quadrangle)[2] = (*hexahedron)[7];
-					(*quadrangle)[3] = (*hexahedron)[6];
-
+					this->updateQuadrangle(hexahedron, quadrangle);
 					this->copyHexahedron(hexahedron);
 					break;
 				}
@@ -208,6 +188,19 @@ void RadialGridDataReordered::addVertexAndHandle(std::pair<int, int>&& vertexAnd
 		this->verticesAndHandles.push_back(vertexAndHandle);
 		this->vertexShift++;
 	}
+}
+
+void RadialGridDataReordered::updateTriangle(std::vector<std::array<int, 7>>::iterator prism, std::vector<std::array<int, 4>>::iterator triangle) {
+	(*triangle)[0] = (*prism)[3];
+	(*triangle)[1] = (*prism)[4];
+	(*triangle)[2] = (*prism)[5];
+}
+
+void RadialGridDataReordered::updateQuadrangle(std::vector<std::array<int, 9>>::iterator hexahedron, std::vector<std::array<int, 5>>::iterator quadrangle) {
+	(*quadrangle)[0] = (*hexahedron)[2];
+	(*quadrangle)[1] = (*hexahedron)[3];
+	(*quadrangle)[2] = (*hexahedron)[7];
+	(*quadrangle)[3] = (*hexahedron)[6];
 }
 
 void RadialGridDataReordered::copyPrism(std::vector<std::array<int, 7>>::iterator prism) {
