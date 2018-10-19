@@ -9,7 +9,9 @@ RadialGridDataReordered::RadialGridDataReordered(GridDataShared gridData) : grid
 	this->copyData();
 	this->reorder();
 	this->copyVertices();
-	this->fixIndices();
+	this->fixVerticesIndices();
+	this->fixElementIndices();
+	this->fixFacetIndices();
 }
 
 void RadialGridDataReordered::checkGridData() {
@@ -109,8 +111,8 @@ void RadialGridDataReordered::reorder() {
 			for (auto prism = this->prisms.begin(); prism != this->prisms.end();)
 				if (hasElements(prism->cbegin(), prism->cend()-1, triangle->cbegin(), triangle->cend()-1)) {
 					this->addVertexAndHandle(std::make_pair((*prism)[0], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[3], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-					this->addVertexAndHandle(std::make_pair((*prism)[2], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[4], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-					this->addVertexAndHandle(std::make_pair((*prism)[1], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[5], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*prism)[1], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[4], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*prism)[2], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*prism)[5], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 
 					(*triangle)[0] = (*prism)[3];
 					(*triangle)[1] = (*prism)[4];
@@ -126,10 +128,10 @@ void RadialGridDataReordered::reorder() {
 			for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
 				if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
 
-					this->addVertexAndHandle(std::make_pair((*hexahedron)[0], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[2], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-					this->addVertexAndHandle(std::make_pair((*hexahedron)[1], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[3], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-					this->addVertexAndHandle(std::make_pair((*hexahedron)[5], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[7], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-					this->addVertexAndHandle(std::make_pair((*hexahedron)[4], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[6], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[0], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[3], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[1], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[2], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[5], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[6], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[4], s * this->numberOfVerticesPerSection + this->vertexShift), std::make_pair((*hexahedron)[7], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 
 					(*quadrangle)[0] = (*hexahedron)[2];
 					(*quadrangle)[1] = (*hexahedron)[3];
@@ -166,10 +168,10 @@ void RadialGridDataReordered::reorder() {
 		for (auto quadrangle = quadrangles.begin(); quadrangle != quadrangles.end(); quadrangle++)
 			for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
 				if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
-					this->addVertexAndHandle(std::make_pair((*hexahedron)[2], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 					this->addVertexAndHandle(std::make_pair((*hexahedron)[3], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
-					this->addVertexAndHandle(std::make_pair((*hexahedron)[7], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[2], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 					this->addVertexAndHandle(std::make_pair((*hexahedron)[6], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
+					this->addVertexAndHandle(std::make_pair((*hexahedron)[7], (s+1) * this->numberOfVerticesPerSection + this->vertexShift));
 
 					(*quadrangle)[0] = (*hexahedron)[2];
 					(*quadrangle)[1] = (*hexahedron)[3];
@@ -190,11 +192,6 @@ void RadialGridDataReordered::reorder() {
 	printf("\n\tvertexShift                  : %4i", int(this->vertexShift));
 
 	printf("\n\n\t###################################\n\n");
-}
-
-void RadialGridDataReordered::addVertex(int handle) {
-	if (!hasElement(this->vertices.cbegin(), this->vertices.cend(), handle))
-		this->vertices.push_back(handle);
 }
 
 void RadialGridDataReordered::addVertexAndHandle(std::pair<int, int>&& firstVertexAndHandle, std::pair<int, int>&& secondVertexAndHandle) {
@@ -228,29 +225,28 @@ void RadialGridDataReordered::copyVertices() {
 	for (auto vertex : this->verticesAndHandles)
 		this->reordered->coordinates.emplace_back(this->gridData->coordinates[vertex.first]);
 
-
-	std::cout << std::endl << "\thandles : " << std::endl;
-	for (auto i = 0; i < 10; i++) {
-		int shift = i * this->numberOfVerticesPerSection;
-		for (auto j = 0; j < 37; j++) {
-			std::cout << "\t" << std::setw(4) << std::right << shift + j << " : " << std::setw(4) << std::right << this->verticesAndHandles[shift + j].first << " - " << std::setw(4) << std::right << this->verticesAndHandles[shift + j].second;
-			std::cout << std::endl;
-		}
-		std::cout << std::endl;
-	}
-	std::cout << std::endl;
+	// std::cout << std::endl << "\thandles : " << std::endl;
+	// for (auto i = 0; i < 10; i++) {
+	// 	int shift = i * this->numberOfVerticesPerSection;
+	// 	for (auto j = 0; j < 37; j++) {
+	// 		std::cout << "\t" << std::setw(4) << std::right << shift + j << " : " << std::setw(4) << std::right << this->verticesAndHandles[shift + j].first << " - " << std::setw(4) << std::right << this->verticesAndHandles[shift + j].second;
+	// 		std::cout << std::endl;
+	// 	}
+	// 	std::cout << std::endl;
+	// }
+	// std::cout << std::endl;
 
 	// std::vector<std::array<int, 2>> fuck;
 	// for (std::size_t i = 0; i < this->verticesAndHandles.size(); ++i)
 	// 	for (std::size_t j = i + 1; j < this->verticesAndHandles.size(); ++j)
 	// 		if (this->verticesAndHandles[i].first == this->verticesAndHandles[j].first)
-	// 			fuck.push_back(std::array<int, 2>{i, j});
+	// 			fuck.push_back(std::array<int, 2>{int(i), int(j)});
 
 	// for (auto f : fuck)
 	// 	std::cout << "\t" << f[2] << "\t" << f[1] << " : " << this->verticesAndHandles[f[0]].first << "\t" << this->verticesAndHandles[f[1]].first << std::endl << std::endl;
 }
 
-void RadialGridDataReordered::fixIndices() {
+void RadialGridDataReordered::fixVerticesIndices() {
 	std::unordered_map<int, int> originalToFinal;
 	for (auto vertexAndHandle : this->verticesAndHandles)
 		originalToFinal[vertexAndHandle.first] = vertexAndHandle.second;
@@ -281,17 +277,25 @@ void RadialGridDataReordered::fixIndices() {
 	for (auto& boundary : this->reordered->boundaries)
 		for (auto& vertex : boundary.vertices)
 			vertex = originalToFinal[vertex];
+}
 
+void RadialGridDataReordered::fixElementIndices() {
 	for (int s = 0; s < this->numberOfSegments; s++) {
-
 		for (int p = 0; p < this->numberOfPrismsPerSegment; p++)
 			this->reordered->prismConnectivity[s * this->numberOfPrismsPerSegment + p].back() = this->elementShift++;
-
 		for (int h = 0; h < this->numberOfHexahedronsPerSegment; h++)
 			this->reordered->hexahedronConnectivity[s * this->numberOfHexahedronsPerSegment + h].back() = this->elementShift++;
-
 	}
-
 	for (int s = 0; s < this->numberOfSegments; s++)
 		this->reordered->lineConnectivity[s].back() = this->elementShift++;
+}
+
+void RadialGridDataReordered::fixFacetIndices() {
+// 	for (auto& triangle : this->reordered->triangleConnectivity)
+// 		for (auto vertex = triangle.begin(); vertex != triangle.end() - 1; vertex++)
+// 			*vertex = originalToFinal[*vertex];
+
+// 	for (auto& quadrangle : this->reordered->quadrangleConnectivity)
+// 		for (auto vertex = quadrangle.begin(); vertex != quadrangle.end() - 1; vertex++)
+// 			*vertex = originalToFinal[*vertex];
 }
