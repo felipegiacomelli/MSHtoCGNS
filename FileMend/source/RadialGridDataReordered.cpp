@@ -232,56 +232,62 @@ void RadialGridDataReordered::fixFacetIndices() {
 	this->facetShift = this->elementShift;
 
 	// cylinder surface
-	BoundaryData boundary;
-	for (auto b : this->gridData->boundaries)
-		if (!hasElement(b.vertices.cbegin(), b.vertices.cend(), this->gridData->lineConnectivity.front()[0]) && !hasElement(b.vertices.cbegin(), b.vertices.cend(), this->gridData->lineConnectivity.back()[1]))
+	auto boundary = this->reordered->boundaries.end();
+	for (auto b = this->reordered->boundaries.begin(); b != this->reordered->boundaries.end(); b++)
+		if (!hasElement(b->vertices.cbegin(), b->vertices.cend(), this->reordered->lineConnectivity.front()[0]) && !hasElement(b->vertices.cbegin(), b->vertices.cend(), this->reordered->lineConnectivity.back()[1]))
 			boundary = b;
 
 	for (auto i = this->reordered->quadrangleConnectivity.cbegin(); i != this->reordered->quadrangleConnectivity.cend(); i++)
-		if (i->back() >= boundary.facetBegin && i->back() < boundary.facetEnd)
+		if (i->back() >= boundary->facetBegin && i->back() < boundary->facetEnd)
 			this->quadrangles.emplace_back(*i);
 
+	boundary->facetBegin = this->facetShift;
 	for (int segment = 0; segment < this->numberOfSegments; segment++) {
 		for (auto i = this->quadrangles.begin(); i != this->quadrangles.end(); i++)
 			if (*std::min_element(i->cbegin(), i->cend()-1) >=  segment * this->numberOfVerticesPerSection && *std::max_element(i->cbegin(), i->cend()-1) < (segment+2) * this->numberOfVerticesPerSection)
 				i->back() = this->facetShift++;
 	}
+	boundary->facetEnd = this->facetShift;
 
 	std::stable_sort(this->quadrangles.begin(), this->quadrangles.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
 
 	// first lid
-	for (auto b : this->gridData->boundaries)
-		if (hasElement(b.vertices.cbegin(), b.vertices.cend(), this->gridData->lineConnectivity.front()[0]))
+	for (auto b = this->reordered->boundaries.begin(); b != this->reordered->boundaries.end(); b++)
+		if (hasElement(b->vertices.cbegin(), b->vertices.cend(), this->reordered->lineConnectivity.front()[0]))
 			boundary = b;
 
+	boundary->facetBegin = this->facetShift;
 	for (auto i = this->reordered->triangleConnectivity.cbegin(); i != this->reordered->triangleConnectivity.cend(); i++)
-		if (i->back() >= boundary.facetBegin && i->back() < boundary.facetEnd) {
+		if (i->back() >= boundary->facetBegin && i->back() < boundary->facetEnd) {
 			this->triangles.emplace_back(*i);
 			this->triangles.back().back() = this->facetShift++;
 		}
 
 	for (auto i = this->reordered->quadrangleConnectivity.cbegin(); i != this->reordered->quadrangleConnectivity.cend(); i++)
-		if (i->back() >= boundary.facetBegin && i->back() < boundary.facetEnd) {
+		if (i->back() >= boundary->facetBegin && i->back() < boundary->facetEnd) {
 			this->quadrangles.emplace_back(*i);
 			this->quadrangles.back().back() = this->facetShift++;
 		}
+	boundary->facetEnd = this->facetShift;
 
 	// last lid
-	for (auto b : this->gridData->boundaries)
-		if (hasElement(b.vertices.cbegin(), b.vertices.cend(), this->gridData->lineConnectivity.back()[1]))
+	for (auto b = this->reordered->boundaries.begin(); b != this->reordered->boundaries.end(); b++)
+		if (hasElement(b->vertices.cbegin(), b->vertices.cend(), this->reordered->lineConnectivity.back()[1]))
 			boundary = b;
 
+	boundary->facetBegin = this->facetShift;
 	for (auto i = this->reordered->triangleConnectivity.cbegin(); i != this->reordered->triangleConnectivity.cend(); i++)
-		if (i->back() >= boundary.facetBegin && i->back() < boundary.facetEnd) {
+		if (i->back() >= boundary->facetBegin && i->back() < boundary->facetEnd) {
 			this->triangles.emplace_back(*i);
 			this->triangles.back().back() = this->facetShift++;
 		}
 
 	for (auto i = this->reordered->quadrangleConnectivity.cbegin(); i != this->reordered->quadrangleConnectivity.cend(); i++)
-		if (i->back() >= boundary.facetBegin && i->back() < boundary.facetEnd) {
+		if (i->back() >= boundary->facetBegin && i->back() < boundary->facetEnd) {
 			this->quadrangles.emplace_back(*i);
 			this->quadrangles.back().back() = this->facetShift++;
 		}
+	boundary->facetEnd = this->facetShift;
 
 	this->reordered->quadrangleConnectivity = std::move(this->quadrangles);
 	this->reordered->triangleConnectivity = std::move(this->triangles);
@@ -289,6 +295,8 @@ void RadialGridDataReordered::fixFacetIndices() {
 
 void RadialGridDataReordered::fixLineIndices() {
 	this->lineShift = this->facetShift;
+	this->reordered->wells[0].lineBegin = this->lineShift;
 	for (int s = 0; s < this->numberOfSegments; s++)
 		this->reordered->lineConnectivity[s].back() = this->lineShift++;
+	this->reordered->wells[0].lineEnd = this->lineShift;
 }
