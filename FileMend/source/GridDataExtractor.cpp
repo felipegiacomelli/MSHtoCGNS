@@ -5,7 +5,7 @@ GridDataExtractor::GridDataExtractor(GridDataShared original, std::string gridDa
 	boost::property_tree::read_json(gridDataExtractorScript, this->propertyTree);
 	this->readScript();
 	this->buildElementConnectivities();
-	this->extract = MakeShared<GridData>();
+	this->extract = boost::make_shared<GridData>();
 	this->extract->dimension = 3;
 	this->extractRegions();
 	this->extractBoundaries();
@@ -18,7 +18,7 @@ GridDataExtractor::GridDataExtractor(GridDataShared original, boost::property_tr
 	this->checkGridData();
 	this->readScript();
 	this->buildElementConnectivities();
-	this->extract = MakeShared<GridData>();
+	this->extract = boost::make_shared<GridData>();
 	this->extract->dimension = 3;
 	this->extractRegions();
 	this->extractBoundaries();

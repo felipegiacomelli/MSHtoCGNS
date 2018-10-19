@@ -73,7 +73,7 @@ void CgnsReader::readNumberOfBoundaries() {
 }
 
 void CgnsReader::createGridData() {
-	this->gridData = MakeShared<GridData>();
+	this->gridData = boost::make_shared<GridData>();
 	this->gridData->dimension = this->cellDimension;
 }
 

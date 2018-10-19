@@ -4,7 +4,6 @@
 #include <vector>
 #include <array>
 #include <string>
-#include <BoostInterface/UniquePointer.hpp>
 #include <BoostInterface/SharedPointer.hpp>
 
 struct BoundaryData {
@@ -45,7 +44,6 @@ struct GridData {
 	std::vector<WellData> wells;
 };
 
-using GridDataShared = SharedPointer<GridData>;
-using GridDataUnique = UniquePointer<GridData>;
+using GridDataShared = boost::shared_ptr<GridData>;
 
 #endif

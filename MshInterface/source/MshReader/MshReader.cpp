@@ -2,7 +2,7 @@
 
 MshReader::MshReader(std::string filePath) : filePath(filePath) {
 	this->checkFile();
-	this->gridData = MakeShared<GridData>();
+	this->gridData = boost::make_shared<GridData>();
 }
 
 void MshReader::checkFile() {

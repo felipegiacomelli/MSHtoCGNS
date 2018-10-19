@@ -50,7 +50,7 @@ void RadialGridDataReordered::checkGridData() {
 }
 
 void RadialGridDataReordered::createReordered() {
-	this->reordered = MakeShared<GridData>();
+	this->reordered = boost::make_shared<GridData>();
 	this->reordered->dimension = this->gridData->dimension;
 
 	this->reordered->triangleConnectivity = this->gridData->triangleConnectivity;
