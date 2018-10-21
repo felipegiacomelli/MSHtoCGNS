@@ -170,8 +170,7 @@ void SpecialCgnsReader3D::readBoundaries() {
 	for (int boundaryIndex = 1; boundaryIndex <= this->numberOfBoundaries; boundaryIndex++) {
 		BCType_t boundaryConditionType;
 		PointSetType_t pointSetType;
-		int numberOfVertices, NormalListSize;
-		int NormalIndex, ndataset;
+		int numberOfVertices, NormalIndex, NormalListSize, ndataset;
 		DataType_t NormalDataType;
 		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &boundaryConditionType, &pointSetType, &numberOfVertices, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset))
 			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read boundary information");
