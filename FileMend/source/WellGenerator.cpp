@@ -31,10 +31,8 @@ void WellGenerator::readScript() {
 		this->wellGeneratorDatum.back().regionName = wellRegion.second.get<std::string>("regionName");
 
 		int index = 0;
-		for (const auto& coordinate : wellRegion.second.get_child("wellStart")) {
-    		this->wellGeneratorDatum.back().wellStart[index] = coordinate.second.get_value<double>();
-    		index++;
-		}
+		for (const auto& coordinate : wellRegion.second.get_child("wellStart"))
+    		this->wellGeneratorDatum.back().wellStart[index++] = coordinate.second.get_value<double>();
 
 		this->wellGeneratorDatum.back().wellName = wellRegion.second.get<std::string>("wellName");
     }

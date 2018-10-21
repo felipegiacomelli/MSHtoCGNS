@@ -249,4 +249,12 @@ void GridDataExtractor::fixIndices() {
 	for (auto& line : this->extract->lineConnectivity)
 		for (auto vertex = line.begin(); vertex != line.end() - 1; vertex++)
 			*vertex = originalToExtract[*vertex];
+
+	for (auto& well : this->extract->wells)
+		for (auto& vertex : well.vertices)
+			vertex = originalToExtract[vertex];
+
+	for (auto& boundary : this->extract->boundaries)
+		for (auto& vertex : boundary.vertices)
+			vertex = originalToExtract[vertex];
 }
