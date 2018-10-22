@@ -1,5 +1,5 @@
-#ifndef RADIAL_GRID_DATA_REORDERED
-#define RADIAL_GRID_DATA_REORDERED
+#ifndef RADIAL_GRID_DATA_REORDERED_HPP
+#define RADIAL_GRID_DATA_REORDERED_HPP
 
 #include <set>
 #include <algorithm>
@@ -7,23 +7,8 @@
 #include <unordered_map>
 
 #include <BoostInterface/Filesystem.hpp>
-#include <BoostInterface/PropertyTree.hpp>
+#include <Utilities/Algorithm.hpp>
 #include <Grid/GridData.hpp>
-
-template<class InputIt, class T>
-bool hasElement(InputIt cbegin, InputIt cend, const T& element) {
-	return std::find(cbegin, cend, element) != cend;
-}
-
-template<class InputIt>
-bool hasElements(InputIt setBegin, InputIt setEnd, InputIt elementBegin, InputIt elementEnd) {
-	bool close = true;
-
-	for (auto vertex = elementBegin; vertex != elementEnd; vertex++)
-		close &= hasElement(setBegin, setEnd, *vertex);
-
-	return close;
-}
 
 class RadialGridDataReordered {
 	public:

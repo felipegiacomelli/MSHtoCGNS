@@ -1,5 +1,5 @@
-#ifndef RADIAL_GRID_DATA_REORDERED
-#define RADIAL_GRID_DATA_REORDERED
+#ifndef SEGMENT_GRID_EXTRACTOR_HPP
+#define SEGMENT_GRID_EXTRACTOR_HPP
 
 #include <set>
 #include <algorithm>
@@ -7,14 +7,14 @@
 #include <unordered_map>
 
 #include <BoostInterface/Filesystem.hpp>
-#include <BoostInterface/PropertyTree.hpp>
+#include <Utilities/Algorithm.hpp>
 #include <Grid/GridData.hpp>
 
-class RadialGridDataReordered {
+class SegmentGridExtractor {
 	public:
-		RadialGridDataReordered(boost::shared_ptr<GridData> gridData);
+		SegmentGridExtractor(boost::shared_ptr<GridData> gridData);
 
-		~RadialGridDataReordered() = default;
+		~SegmentGridExtractor() = default;
 
 		boost::shared_ptr<GridData> reordered;
 

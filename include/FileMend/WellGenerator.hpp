@@ -1,5 +1,5 @@
-#ifndef WELL_GENERATOR_HPP
-#define WELL_GENERATOR_HPP
+#ifndef WELL_GENERATOR_HPP_HPP
+#define WELL_GENERATOR_HPP_HPP
 
 #include <set>
 #include <algorithm>

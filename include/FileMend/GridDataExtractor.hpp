@@ -1,5 +1,5 @@
-#ifndef GRID_DATA_EXTRACTOR
-#define GRID_DATA_EXTRACTOR
+#ifndef GRID_DATA_EXTRACTOR_HPP
+#define GRID_DATA_EXTRACTOR_HPP
 
 #include <set>
 #include <algorithm>

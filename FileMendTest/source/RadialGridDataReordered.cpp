@@ -6,23 +6,23 @@
 
 #define TOLERANCE 1e-4
 
-double calculateDistance(std::array<double, 3> a, std::array<double, 3> b) {
-	return std::sqrt(std::inner_product(a.cbegin(), a.cend(), b.cbegin(), 0.0, std::plus<>(), [](auto c, auto d){return (c-d)*(c-d);}));
-}
-
-struct RadialGridDataReorderFixture {
-	RadialGridDataReorderFixture() {
+struct RadialGridDataReorderedFixture {
+	RadialGridDataReorderedFixture() {
 		CgnsReader3D reader(this->inputPath);
 		this->gridData = reader.gridData;
+	}
+
+	double calculateDistance(std::array<double, 3> a, std::array<double, 3> b) {
+		return std::sqrt(std::inner_product(a.cbegin(), a.cend(), b.cbegin(), 0.0, std::plus<>(), [](auto c, auto d){return (c-d)*(c-d);}));
 	}
 
 	std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/RadialGridDataReordered/370v_324e.cgns";
 	boost::shared_ptr<GridData> gridData;
 };
 
-FixtureTestSuite(RadialGridDataReorderSuite, RadialGridDataReorderFixture)
+FixtureTestSuite(RadialGridDataReorderedSuite, RadialGridDataReorderedFixture)
 
-TestCase(RadialGridDataReorderTest) {
+TestCase(RadialGridDataReorderedTest) {
 	RadialGridDataReordered radialGridDataReordered(this->gridData);
 
 	auto reordered = radialGridDataReordered.reordered;
@@ -108,15 +108,15 @@ TestCase(RadialGridDataReorderTest) {
 	}
 
 	for (int i = 0; i < 37; i++) {
-		checkClose(calculateDistance(reordered->coordinates[37 * 0 + i], reordered->coordinates[37 *  1 + i]), 5.5555555555555554e+00, TOLERANCE);
-		checkClose(calculateDistance(reordered->coordinates[37 * 1 + i], reordered->coordinates[37 *  2 + i]), 5.5555555555555554e+00, TOLERANCE);
-		checkClose(calculateDistance(reordered->coordinates[37 * 2 + i], reordered->coordinates[37 *  3 + i]), 5.5555555555555536e+00, TOLERANCE);
-		checkClose(calculateDistance(reordered->coordinates[37 * 3 + i], reordered->coordinates[37 *  4 + i]), 5.5555555555555571e+00, TOLERANCE);
-		checkClose(calculateDistance(reordered->coordinates[37 * 4 + i], reordered->coordinates[37 *  5 + i]), 5.5555555555555571e+00, TOLERANCE);
-		checkClose(calculateDistance(reordered->coordinates[37 * 5 + i], reordered->coordinates[37 *  6 + i]), 5.5555555555555500e+00, TOLERANCE);
-		checkClose(calculateDistance(reordered->coordinates[37 * 6 + i], reordered->coordinates[37 *  7 + i]), 5.5555555555555642e+00, TOLERANCE);
-		checkClose(calculateDistance(reordered->coordinates[37 * 7 + i], reordered->coordinates[37 *  8 + i]), 5.5555538601345447e+00, TOLERANCE);
-		checkClose(calculateDistance(reordered->coordinates[37 * 8 + i], reordered->coordinates[37 *  9 + i]), 5.5555572509765625e+00, TOLERANCE);
+		checkClose(this->calculateDistance(reordered->coordinates[37 * 0 + i], reordered->coordinates[37 *  1 + i]), 5.5555555555555554e+00, TOLERANCE);
+		checkClose(this->calculateDistance(reordered->coordinates[37 * 1 + i], reordered->coordinates[37 *  2 + i]), 5.5555555555555554e+00, TOLERANCE);
+		checkClose(this->calculateDistance(reordered->coordinates[37 * 2 + i], reordered->coordinates[37 *  3 + i]), 5.5555555555555536e+00, TOLERANCE);
+		checkClose(this->calculateDistance(reordered->coordinates[37 * 3 + i], reordered->coordinates[37 *  4 + i]), 5.5555555555555571e+00, TOLERANCE);
+		checkClose(this->calculateDistance(reordered->coordinates[37 * 4 + i], reordered->coordinates[37 *  5 + i]), 5.5555555555555571e+00, TOLERANCE);
+		checkClose(this->calculateDistance(reordered->coordinates[37 * 5 + i], reordered->coordinates[37 *  6 + i]), 5.5555555555555500e+00, TOLERANCE);
+		checkClose(this->calculateDistance(reordered->coordinates[37 * 6 + i], reordered->coordinates[37 *  7 + i]), 5.5555555555555642e+00, TOLERANCE);
+		checkClose(this->calculateDistance(reordered->coordinates[37 * 7 + i], reordered->coordinates[37 *  8 + i]), 5.5555538601345447e+00, TOLERANCE);
+		checkClose(this->calculateDistance(reordered->coordinates[37 * 8 + i], reordered->coordinates[37 *  9 + i]), 5.5555572509765625e+00, TOLERANCE);
 	}
 }
 
