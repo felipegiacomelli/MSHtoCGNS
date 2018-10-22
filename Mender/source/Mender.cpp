@@ -10,11 +10,11 @@
 #include <FileMend/RadialGridDataReordered.hpp>
 #include <FileMend/MultipleBasesCgnsCreator3D.hpp>
 
-// void renameZones(GridDataShared gridData, boost::property_tree::ptree) {
+// void renameZones(boost::shared_ptr<GridData> gridData, boost::property_tree::ptree) {
 
 // }
 
-void createSingleRegion(GridDataShared gridData, std::string regionName) {
+void createSingleRegion(boost::shared_ptr<GridData> gridData, std::string regionName) {
 	RegionData region;
 	region.name = regionName;
 	region.elementBegin = 0;
@@ -23,7 +23,7 @@ void createSingleRegion(GridDataShared gridData, std::string regionName) {
 	gridData->regions.emplace_back(std::move(region));
 }
 
-void applyRatio(GridDataShared gridData, const double& ratio) {
+void applyRatio(boost::shared_ptr<GridData> gridData, const double& ratio) {
 	for (auto& coordinate: gridData->coordinates)
 		for (auto& position : coordinate)
 			position *= ratio;
@@ -37,7 +37,7 @@ int main() {
 
 	auto start = std::chrono::steady_clock::now();
 	SpecialCgnsReader3D reader(inputPath);
-	GridDataShared gridData = reader.gridData;
+	boost::shared_ptr<GridData> gridData = reader.gridData;
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> elapsedSeconds = end - start;
 	std::cout << std::endl << "\tGrid path: " << inputPath;
@@ -74,7 +74,7 @@ int main() {
 
 	printGridDataInformation(gridData, "\033[1;31m gridData after well generation \033[0m");
 
-	GridDataShared radialGridData;
+	boost::shared_ptr<GridData> radialGridData;
 	if (menderScript.get_child_optional("ScriptGridDataExtractor")) {
 		// boost::property_tree::ptree propertyTree;
 

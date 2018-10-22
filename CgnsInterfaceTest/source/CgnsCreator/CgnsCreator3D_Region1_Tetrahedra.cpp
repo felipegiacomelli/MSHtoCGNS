@@ -23,7 +23,7 @@ struct Region1_Tetrahedra_3D {
 	};
 
 	std::string filePath;
-	GridDataShared gridData;
+	boost::shared_ptr<GridData> gridData;
 	int fileIndex;
 	char name[100];
 	ElementType_t type;

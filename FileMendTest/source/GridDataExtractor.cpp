@@ -12,7 +12,7 @@ struct GridDataExtractorFixture {
 	}
 
 	std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractor/4x4x4_2x2x2.msh";
-	GridDataShared gridData;
+	boost::shared_ptr<GridData> gridData;
 	std::string wellGeneratorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractor/ScriptGridDataExtractor.json";
 };
 
@@ -61,7 +61,7 @@ TestCase(GridDataExtractorTest) {
 	checkEqual(this->gridData->regions[1].elementBegin, 64);
 	checkEqual(this->gridData->regions[1].elementEnd  , 72);
 
-	GridDataShared extract = gridDataExtractor.extract;
+	boost::shared_ptr<GridData> extract = gridDataExtractor.extract;
 
 	checkEqual(extract->coordinates.size(), 27u);
 
@@ -194,7 +194,7 @@ struct GridDataExtractorWithWellFixture {
 	}
 
 	std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractorWithWell/12523v_57072e.cgns";
-	GridDataShared gridData;
+	boost::shared_ptr<GridData> gridData;
 	std::string wellGeneratorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractorWithWell/ScriptGridDataExtractor.json";
 };
 
@@ -203,7 +203,7 @@ FixtureTestSuite(GridDataExtractorWithWellSuite, GridDataExtractorWithWellFixtur
 TestCase(GridDataExtractorWithWellTest) {
 	GridDataExtractor gridDataExtractor(this->gridData, this->wellGeneratorScript);
 
-	GridDataShared extract = gridDataExtractor.extract;
+	boost::shared_ptr<GridData> extract = gridDataExtractor.extract;
 
 	checkEqual(extract->coordinates.size(), 2886u);
 

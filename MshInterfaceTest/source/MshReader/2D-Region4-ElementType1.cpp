@@ -11,7 +11,7 @@ struct Region4_ElementType1_2D_Msh {
 
 	~Region4_ElementType1_2D_Msh() = default;
 
-	GridDataShared gridData;
+	boost::shared_ptr<GridData> gridData;
 };
 
 FixtureTestSuite(ReadMsh_Region4_ElementType1_2D, Region4_ElementType1_2D_Msh)

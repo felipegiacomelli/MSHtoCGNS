@@ -23,7 +23,7 @@ struct CgnsCreator2DFixture_Region1_ElementType1 {
 	};
 
 	std::string filePath;
-	GridDataShared gridData;
+	boost::shared_ptr<GridData> gridData;
 	int fileIndex;
 	char name[100];
 	ElementType_t type;

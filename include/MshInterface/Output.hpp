@@ -15,6 +15,6 @@ void output(InputIt cbegin, InputIt cend, std::ofstream& file) {
 	}
 }
 
-void output(GridDataShared gridData, std::string fileName);
+void output(boost::shared_ptr<GridData> gridData, std::string fileName);
 
 #endif

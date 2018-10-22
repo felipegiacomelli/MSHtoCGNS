@@ -1,7 +1,7 @@
 #include <FileMend/RadialGridDataReordered.hpp>
 #include <cgnslib.h>
 
-RadialGridDataReordered::RadialGridDataReordered(GridDataShared gridData) : gridData(gridData) {
+RadialGridDataReordered::RadialGridDataReordered(boost::shared_ptr<GridData> gridData) : gridData(gridData) {
 	this->checkGridData();
 	this->defineQuantities();
 	this->createReordered();

@@ -10,21 +10,6 @@
 #include <BoostInterface/PropertyTree.hpp>
 #include <Grid/GridData.hpp>
 
-template<class InputIt, class T>
-bool hasElement(InputIt cbegin, InputIt cend, const T& element) {
-	return std::find(cbegin, cend, element) != cend;
-}
-
-template<class InputIt>
-bool hasElements(InputIt setBegin, InputIt setEnd, InputIt elementBegin, InputIt elementEnd) {
-	bool close = true;
-
-	for (auto vertex = elementBegin; vertex != elementEnd; vertex++)
-		close &= hasElement(setBegin, setEnd, *vertex);
-
-	return close;
-}
-
 class RadialGridDataReordered {
 	public:
 		RadialGridDataReordered(boost::shared_ptr<GridData> gridData);

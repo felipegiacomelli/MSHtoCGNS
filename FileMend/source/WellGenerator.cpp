@@ -1,13 +1,13 @@
 #include <FileMend/WellGenerator.hpp>
 
-WellGenerator::WellGenerator(GridDataShared gridData, std::string wellGeneratorScript) : gridData(gridData) {
+WellGenerator::WellGenerator(boost::shared_ptr<GridData> gridData, std::string wellGeneratorScript) : gridData(gridData) {
 	this->checkGridData();
 	boost::property_tree::read_json(wellGeneratorScript, this->propertyTree);
 	this->readScript();
 	this->generateWells();
 }
 
-WellGenerator::WellGenerator(GridDataShared gridData, boost::property_tree::ptree propertyTree) : gridData(gridData), propertyTree(propertyTree) {
+WellGenerator::WellGenerator(boost::shared_ptr<GridData> gridData, boost::property_tree::ptree propertyTree) : gridData(gridData), propertyTree(propertyTree) {
 	this->checkGridData();
 	this->readScript();
 	this->generateWells();

@@ -11,7 +11,7 @@ struct Region1_Mixed_3D_Cgns {
 
 	~Region1_Mixed_3D_Cgns() = default;
 
-	GridDataShared gridData;
+	boost::shared_ptr<GridData> gridData;
 };
 
 FixtureTestSuite(ReadCgns_Region1_Mixed_3D, Region1_Mixed_3D_Cgns)

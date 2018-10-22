@@ -17,7 +17,7 @@ struct RadialGridDataReorderFixture {
 	}
 
 	std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/RadialGridDataReordered/370v_324e.cgns";
-	GridDataShared gridData;
+	boost::shared_ptr<GridData> gridData;
 };
 
 FixtureTestSuite(RadialGridDataReorderSuite, RadialGridDataReorderFixture)

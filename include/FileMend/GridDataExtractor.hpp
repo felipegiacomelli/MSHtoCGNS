@@ -18,13 +18,13 @@ struct GridDataExtractorData {
 
 class GridDataExtractor {
 	public:
-		GridDataExtractor(GridDataShared original, std::string gridDataExtractorScript);
+		GridDataExtractor(boost::shared_ptr<GridData> original, std::string gridDataExtractorScript);
 
-		GridDataExtractor(GridDataShared original, boost::property_tree::ptree propertyTree);
+		GridDataExtractor(boost::shared_ptr<GridData> original, boost::property_tree::ptree propertyTree);
 
 		~GridDataExtractor() = default;
 
-		GridDataShared extract;
+		boost::shared_ptr<GridData> extract;
 
 	private:
 		void checkGridData();
@@ -36,7 +36,7 @@ class GridDataExtractor {
 		void extractVertices();
 		void fixIndices();
 
-		GridDataShared original;
+		boost::shared_ptr<GridData> original;
 		boost::property_tree::ptree propertyTree;
 
 		std::vector<GridDataExtractorData> gridDataExtractorDatum;

@@ -30,7 +30,7 @@ void print(InputIt cbegin, InputIt cend, std::string&& message) {
 	std::cout << std::endl;
 }
 
-void printGridDataInformation(GridDataShared gD, std::string message) {
+void printGridDataInformation(boost::shared_ptr<GridData> gD, std::string message) {
 	std::cout << std::endl << "\t" << message << std::endl;
 
 	int numberOfElements = gD->tetrahedronConnectivity.size() + gD->hexahedronConnectivity.size() + gD->prismConnectivity.size() + gD->pyramidConnectivity.size();

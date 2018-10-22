@@ -11,7 +11,7 @@ struct Region1_ElementType2_2D_Cgns {
 
 	~Region1_ElementType2_2D_Cgns() = default;
 
-	GridDataShared gridData;
+	boost::shared_ptr<GridData> gridData;
 };
 
 FixtureTestSuite(ReadCgns_Region1_ElementType2_2D, Region1_ElementType2_2D_Cgns)

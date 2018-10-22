@@ -16,7 +16,7 @@ class MshReader {
 
 		virtual ~MshReader() = default;
 
-		GridDataShared gridData;
+		boost::shared_ptr<GridData> gridData;
 
 	protected:
 		void checkFile();

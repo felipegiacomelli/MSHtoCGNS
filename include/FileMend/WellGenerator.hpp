@@ -20,9 +20,9 @@ struct WellGeneratorData {
 
 class WellGenerator {
 	public:
-		WellGenerator(GridDataShared gridData, std::string wellGeneratorScript);
+		WellGenerator(boost::shared_ptr<GridData> gridData, std::string wellGeneratorScript);
 
-		WellGenerator(GridDataShared gridData, boost::property_tree::ptree propertyTree);
+		WellGenerator(boost::shared_ptr<GridData> gridData, boost::property_tree::ptree propertyTree);
 
 		~WellGenerator() = default;
 
@@ -35,7 +35,7 @@ class WellGenerator {
 		void defineQuantities();
 		bool isClose(const std::array<double, 3>& coordinate, const std::array<double, 3>& referencePoint);
 
-		GridDataShared gridData;
+		boost::shared_ptr<GridData> gridData;
 		boost::property_tree::ptree propertyTree;
 
 		std::vector<WellGeneratorData> wellGeneratorDatum;

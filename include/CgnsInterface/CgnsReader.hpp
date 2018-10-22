@@ -15,7 +15,7 @@ class CgnsReader {
 		int readNumberOfTimeSteps();
 		std::vector<double> readTimeInstants();
 
-		GridDataShared gridData;
+		boost::shared_ptr<GridData> gridData;
 
 		virtual ~CgnsReader();
 

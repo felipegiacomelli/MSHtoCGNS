@@ -11,7 +11,7 @@ struct Region1_Hexahedra_3D_Cgns {
 
 	~Region1_Hexahedra_3D_Cgns() = default;
 
-	GridDataShared gridData;
+	boost::shared_ptr<GridData> gridData;
 };
 
 FixtureTestSuite(ReadCgns_Region1_Hexahedra_3D, Region1_Hexahedra_3D_Cgns)

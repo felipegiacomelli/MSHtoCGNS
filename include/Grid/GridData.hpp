@@ -44,6 +44,4 @@ struct GridData {
 	std::vector<WellData> wells;
 };
 
-using GridDataShared = boost::shared_ptr<GridData>;
-
 #endif

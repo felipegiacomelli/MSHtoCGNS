@@ -9,7 +9,7 @@
 
 class CgnsCreator {
 	public:
-		CgnsCreator(GridDataShared gridData, std::string folderPath);
+		CgnsCreator(boost::shared_ptr<GridData> gridData, std::string folderPath);
 
 		std::string getFileName() const;
 
@@ -29,7 +29,7 @@ class CgnsCreator {
 		virtual void writeBoundaries() = 0;
 		void writeBoundaryConditions();
 
-		GridDataShared gridData;
+		boost::shared_ptr<GridData> gridData;
 		std::string folderPath, baseName, zoneName, fileName;
 		int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
 		int sizes[3];

@@ -19,7 +19,7 @@ int main() {
 
 	auto start = std::chrono::steady_clock::now();
 
-	GridDataShared gridData;
+	boost::shared_ptr<GridData> gridData;
 	if (inputPath.extension() == std::string(".msh")) {
 		MshReader3D reader(inputPath.string());
 		gridData = reader.gridData;
@@ -42,7 +42,7 @@ int main() {
 
 	GridDataExtractor gridDataExtractor(gridData, std::string(SCRIPT_DIRECTORY) + "ScriptGridDataExtractor.json");
 
-	std::vector<GridDataShared> gridDatas{gridData, gridDataExtractor.extract};
+	std::vector<boost::shared_ptr<GridData>> gridDatas{gridData, gridDataExtractor.extract};
 	std::vector<std::string> baseNames{"Rock", "Reservoir"};
 
 	printGridDataInformation(gridDatas.back(), "reservoir");

@@ -7,7 +7,7 @@
 #include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
 #include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
 
-void printWellsInformation(GridDataShared gridData);
+void printWellsInformation(boost::shared_ptr<GridData> gridData);
 
 bool isClose(const std::array<double, 3>& coordinate, const std::array<double, 3>& wellStart, int wellDirection);
 
@@ -19,7 +19,7 @@ int main() {
 
 	auto start = std::chrono::steady_clock::now();
 	CgnsReader3D reader(inputPath);
-	GridDataShared gridData = reader.gridData;
+	boost::shared_ptr<GridData> gridData = reader.gridData;
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> elapsedSeconds = end - start;
 	std::cout << std::endl << "\tGrid path: " << inputPath;
@@ -80,7 +80,7 @@ bool isClose(const std::array<double, 3>& coordinate, const std::array<double, 3
 	return close;
 }
 
-void printWellsInformation(GridDataShared gridData) {
+void printWellsInformation(boost::shared_ptr<GridData> gridData) {
 	std::cout << std::endl << "\tWell: " << gridData->wells.front().name << std::endl;
 
 	std::cout << std::endl << "\t\tLines " << std::endl;

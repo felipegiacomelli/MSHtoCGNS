@@ -1,6 +1,6 @@
 #include <FileMend/GridDataExtractor.hpp>
 
-GridDataExtractor::GridDataExtractor(GridDataShared original, std::string gridDataExtractorScript) : original(original) {
+GridDataExtractor::GridDataExtractor(boost::shared_ptr<GridData> original, std::string gridDataExtractorScript) : original(original) {
 	this->checkGridData();
 	boost::property_tree::read_json(gridDataExtractorScript, this->propertyTree);
 	this->readScript();
@@ -14,7 +14,7 @@ GridDataExtractor::GridDataExtractor(GridDataShared original, std::string gridDa
 	this->fixIndices();
 }
 
-GridDataExtractor::GridDataExtractor(GridDataShared original, boost::property_tree::ptree propertyTree) : original(original), propertyTree(propertyTree) {
+GridDataExtractor::GridDataExtractor(boost::shared_ptr<GridData> original, boost::property_tree::ptree propertyTree) : original(original), propertyTree(propertyTree) {
 	this->checkGridData();
 	this->readScript();
 	this->buildElementConnectivities();

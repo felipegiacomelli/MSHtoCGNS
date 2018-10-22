@@ -1,6 +1,6 @@
 #include <MshInterface/Output.hpp>
 
-void output(GridDataShared gridData, std::string fileName) {
+void output(boost::shared_ptr<GridData> gridData, std::string fileName) {
 	std::ofstream file(fileName, std::ofstream::out);
 
 	file << std::endl << "### Coordinates - " << gridData->coordinates.size() << std::endl;
