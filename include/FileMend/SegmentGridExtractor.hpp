@@ -16,27 +16,26 @@ class SegmentGridExtractor {
 
 		~SegmentGridExtractor() = default;
 
-		boost::shared_ptr<GridData> reordered;
+		boost::shared_ptr<GridData> segmentGrid;
 
 		double tolerance = 1e-4;
 
 	private:
 		void checkGridData();
 		void defineQuantities();
-		void createReordered();
-		void copyData();
-		void reorder();
-		void buildFirstSection();
-		void addVertex(int vertex, int section);
-		void updateTriangle(std::vector<std::array<int, 7>>::iterator prism, std::vector<std::array<int, 4>>::iterator triangle);
-		void updateQuadrangle(std::vector<std::array<int, 9>>::iterator hexahedron, std::vector<std::array<int, 5>>::iterator quadrangle);
-		void copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron);
-		void copyPrism(std::vector<std::array<int, 7>>::iterator prism);
-		void copyVertices();
-		void fixVerticesIndices();
-		void fixElementIndices();
-		void fixFacetIndices();
-		void fixLineIndices();
+		void createSegmentGrid();
+		void copyElements();
+		void copyFacets();
+		// void buildFirstSection();
+		// void addVertex(int vertex, int section);
+		// void updateTriangle(std::vector<std::array<int, 7>>::iterator prism, std::vector<std::array<int, 4>>::iterator triangle);
+		// void updateQuadrangle(std::vector<std::array<int, 9>>::iterator hexahedron, std::vector<std::array<int, 5>>::iterator quadrangle);
+		// void copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron);
+		// void copyPrism(std::vector<std::array<int, 7>>::iterator prism);
+		// void copyVertices();
+		// void fixBoundaries();
+		// void fixRegion();
+		// void fixWell();
 
 		boost::shared_ptr<GridData> gridData;
 

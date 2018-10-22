@@ -49,6 +49,14 @@ void RadialGridDataReordered::checkGridData() {
 		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData wells size must be 1 and not " + std::to_string(this->gridData->wells.size()));
 }
 
+void RadialGridDataReordered::defineQuantities() {
+	this->numberOfSegments = this->gridData->lineConnectivity.size();
+	this->numberOfPrismsPerSegment = this->gridData->prismConnectivity.size() / this->numberOfSegments;
+	this->numberOfHexahedronsPerSegment = this->gridData->hexahedronConnectivity.size() / this->numberOfSegments;
+	this->numberOfHexahedronsPerRadius = this->numberOfHexahedronsPerSegment / this->numberOfPrismsPerSegment;
+	this->numberOfVerticesPerSection = this->gridData->coordinates.size() / (this->gridData->lineConnectivity.size()+1);
+}
+
 void RadialGridDataReordered::createReordered() {
 	this->reordered = boost::make_shared<GridData>();
 	this->reordered->dimension = this->gridData->dimension;
@@ -62,14 +70,6 @@ void RadialGridDataReordered::createReordered() {
 	this->reordered->regions = this->gridData->regions;
 
 	this->reordered->wells = this->gridData->wells;
-}
-
-void RadialGridDataReordered::defineQuantities() {
-	this->numberOfSegments = this->gridData->lineConnectivity.size();
-	this->numberOfPrismsPerSegment = this->gridData->prismConnectivity.size() / this->numberOfSegments;
-	this->numberOfHexahedronsPerSegment = this->gridData->hexahedronConnectivity.size() / this->numberOfSegments;
-	this->numberOfHexahedronsPerRadius = this->numberOfHexahedronsPerSegment / this->numberOfPrismsPerSegment;
-	this->numberOfVerticesPerSection = this->gridData->coordinates.size() / (this->gridData->lineConnectivity.size()+1);
 }
 
 void RadialGridDataReordered::copyData() {
