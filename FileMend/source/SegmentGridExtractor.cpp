@@ -5,6 +5,7 @@ SegmentGridExtractor::SegmentGridExtractor(boost::shared_ptr<GridData> gridData)
 	this->checkGridData();
 	this->createSegmentGrid();
 	this->defineQuantities();
+	this->copyVertices();
 	this->copyElements();
 	this->copyFacets();
 	// this->reorder();
@@ -61,14 +62,16 @@ void SegmentGridExtractor::createSegmentGrid() {
 	this->segmentGrid = boost::make_shared<GridData>();
 	this->segmentGrid->dimension = this->gridData->dimension;
 
-	// this->segmentGrid->quadrangleConnectivity = this->gridData->quadrangleConnectivity;
-	// this->segmentGrid->lineConnectivity = this->gridData->lineConnectivity;
-
 	this->segmentGrid->boundaries = this->gridData->boundaries;
 
 	this->segmentGrid->regions = this->gridData->regions;
 
 	this->segmentGrid->wells = this->gridData->wells;
+}
+
+void SegmentGridExtractor::copyVertices() {
+	for (int vertex = 0; vertex < 2 * this->numberOfVerticesPerSection; vertex++)
+		this->segmentGrid->coordinates.emplace_back(this->gridData->coordinates[vertex]);
 }
 
 void SegmentGridExtractor::copyElements() {
@@ -85,9 +88,8 @@ void SegmentGridExtractor::copyFacets() {
 	for (int quadrangle = 0; quadrangle < this->numberOfPrismsPerSegment; quadrangle++)
 		this->segmentGrid->quadrangleConnectivity.emplace_back(this->gridData->quadrangleConnectivity[quadrangle]);
 
-	for (int quadrangle = this->numberOfPrismsPerSegment * this->numberOfSegments; quadrangle < int(this->gridData->hexahedronConnectivity.size()); quadrangle++)
+	for (int quadrangle = this->numberOfPrismsPerSegment * this->numberOfSegments; quadrangle < int(this->gridData->quadrangleConnectivity.size()); quadrangle++)
 		this->segmentGrid->quadrangleConnectivity.emplace_back(this->gridData->quadrangleConnectivity[quadrangle]);
-
 }
 
 // void SegmentGridExtractor::reorder() {
@@ -174,12 +176,6 @@ void SegmentGridExtractor::copyFacets() {
 // void SegmentGridExtractor::copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron) {
 // 	this->segmentGrid->hexahedronConnectivity.push_back(this->gridData->hexahedronConnectivity[hexahedron->back()]);
 // 	hexahedron = this->hexahedra.erase(hexahedron);
-// }
-
-// void SegmentGridExtractor::copyVertices() {
-// 	std::stable_sort(this->vertices.begin(), this->vertices.end(), [](auto a, auto b) {return a.second < b.second;});
-// 	for (auto vertex : this->vertices)
-// 		this->segmentGrid->coordinates.emplace_back(this->gridData->coordinates[vertex.first]);
 // }
 
 // void SegmentGridExtractor::fixBoundaries() {

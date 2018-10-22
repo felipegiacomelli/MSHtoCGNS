@@ -24,6 +24,7 @@ class SegmentGridExtractor {
 		void checkGridData();
 		void defineQuantities();
 		void createSegmentGrid();
+		void copyVertices();
 		void copyElements();
 		void copyFacets();
 		// void buildFirstSection();

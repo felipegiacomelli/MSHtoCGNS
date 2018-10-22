@@ -26,15 +26,15 @@ TestCase(SegmentGridExtractorTest) {
 
 	auto segmentGrid = radialGridDataReordered.segmentGrid;
 
-	// checkEqual(segmentGrid->coordinates.size(), 370u);
+	checkEqual(segmentGrid->coordinates.size(), 74u);
 
-	// checkEqual(segmentGrid->tetrahedronConnectivity.size(),   0u);
-	// checkEqual(segmentGrid->hexahedronConnectivity.size() , 216u);
-	// checkEqual(segmentGrid->prismConnectivity.size()      , 108u);
-	// checkEqual(segmentGrid->pyramidConnectivity.size()    ,   0u);
+	checkEqual(segmentGrid->tetrahedronConnectivity.size(),  0u);
+	checkEqual(segmentGrid->hexahedronConnectivity.size() , 24u);
+	checkEqual(segmentGrid->prismConnectivity.size()      , 12u);
+	checkEqual(segmentGrid->pyramidConnectivity.size()    ,  0u);
 
-	// checkEqual(segmentGrid->triangleConnectivity.size()  ,  24u);
-	// checkEqual(segmentGrid->quadrangleConnectivity.size(), 156u);
+	checkEqual(segmentGrid->triangleConnectivity.size()  , 24u);
+	checkEqual(segmentGrid->quadrangleConnectivity.size(), 60u);
 
 	// checkEqual(segmentGrid->lineConnectivity.size(), 9u);
 
