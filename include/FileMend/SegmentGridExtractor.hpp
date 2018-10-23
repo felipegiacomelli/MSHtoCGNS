@@ -27,14 +27,8 @@ class SegmentGridExtractor {
 		void copyVertices();
 		void copyElements();
 		void copyFacets();
-		// void buildFirstSection();
-		// void addVertex(int vertex, int section);
-		// void updateTriangle(std::vector<std::array<int, 7>>::iterator prism, std::vector<std::array<int, 4>>::iterator triangle);
-		// void updateQuadrangle(std::vector<std::array<int, 9>>::iterator hexahedron, std::vector<std::array<int, 5>>::iterator quadrangle);
-		// void copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron);
-		// void copyPrism(std::vector<std::array<int, 7>>::iterator prism);
-		// void copyVertices();
-		// void fixBoundaries();
+		void copyLine();
+		void fixBoundaries();
 		// void fixRegion();
 		// void fixWell();
 
@@ -46,17 +40,8 @@ class SegmentGridExtractor {
 		int numberOfHexahedronsPerRadius;
 		int numberOfVerticesPerSection;
 
-		std::vector<std::array<int, 9>> hexahedra;
-		std::vector<std::array<int, 7>> prisms;
-		std::vector<std::array<int, 4>> triangles;
-		std::vector<std::array<int, 5>> quadrangles;
-
-		std::vector<std::pair<int, int>> vertices;
-
 		int vertexShift = 0;
 		int elementShift = 0;
-		int facetShift;
-		int lineShift;
 };
 
 #endif

@@ -36,7 +36,7 @@ TestCase(SegmentGridExtractorTest) {
 	checkEqual(segmentGrid->triangleConnectivity.size()  , 24u);
 	checkEqual(segmentGrid->quadrangleConnectivity.size(), 60u);
 
-	// checkEqual(segmentGrid->lineConnectivity.size(), 9u);
+	checkEqual(segmentGrid->lineConnectivity.size(), 1u);
 
 	// checkEqual(segmentGrid->boundaries.size(),  3u);
 	// checkEqual(segmentGrid->regions.size()   ,  1u);
