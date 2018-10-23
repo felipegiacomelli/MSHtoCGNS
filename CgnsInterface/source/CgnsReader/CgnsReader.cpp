@@ -77,7 +77,23 @@ void CgnsReader::createGridData() {
 	this->gridData->dimension = this->cellDimension;
 }
 
-void CgnsReader::readBoundaries() {
+void CgnsReader::addRegion(std::string&& name, int elementStart, int elementEnd) {
+	RegionData region;
+	region.name = name;
+	region.elementBegin = elementStart;
+	region.elementEnd = elementEnd;
+	this->gridData->regions.emplace_back(std::move(region));
+}
+
+void CgnsReader::addBoundary(std::string&& name, int elementStart, int elementEnd) {
+	BoundaryData boundary;
+	boundary.name = name;
+	boundary.facetBegin = elementStart;
+	boundary.facetEnd = elementEnd;
+	this->gridData->boundaries.emplace_back(std::move(boundary));
+}
+
+void CgnsReader::readBoundaryConditions() {
 	for (int boundaryIndex = 1; boundaryIndex <= this->numberOfBoundaries; boundaryIndex++) {
 		BCType_t boundaryConditionType;
 		PointSetType_t pointSetType;
@@ -101,22 +117,6 @@ void CgnsReader::readBoundaries() {
 			std::transform(vertices.cbegin(), vertices.cend(), std::back_inserter(boundary->vertices), [](auto x){return x - 1;});
 		}
 	}
-}
-
-void CgnsReader::addRegion(std::string&& name, int elementStart, int elementEnd) {
-	RegionData region;
-	region.name = name;
-	region.elementBegin = elementStart;
-	region.elementEnd = elementEnd;
-	this->gridData->regions.emplace_back(std::move(region));
-}
-
-void CgnsReader::addBoundary(std::string&& name, int elementStart, int elementEnd) {
-	BoundaryData boundary;
-	boundary.name = name;
-	boundary.facetBegin = elementStart;
-	boundary.facetEnd = elementEnd;
-	this->gridData->boundaries.emplace_back(std::move(boundary));
 }
 
 int CgnsReader::readSolutionIndex(std::string solutionName) {

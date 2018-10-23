@@ -5,7 +5,7 @@ CgnsReader2D::CgnsReader2D(std::string filePath, bool readInConstructor) : CgnsR
 	if (readInConstructor) {
 		this->readCoordinates();
 		this->readSections();
-		this->readBoundaries();
+		this->readBoundaryConditions();
 	}
 }
 

@@ -4,7 +4,7 @@
 SpecialCgnsReader3D::SpecialCgnsReader3D(std::string filePath) : CgnsReader3D(filePath, false) {
 	this->readCoordinates();
 	this->readSections();
-	this->readBoundaries();
+	this->readBoundaryConditions();
 }
 
 void SpecialCgnsReader3D::readSections() {

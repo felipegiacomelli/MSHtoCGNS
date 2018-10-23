@@ -29,6 +29,36 @@ TestCase(CgnsReader3DTest) {
 	checkEqual(this->gridData->regions.size(), 2u);
 	checkEqual(this->gridData->wells.size(), 1u);
 
+	auto boundary = this->gridData->boundaries[0];
+	checkEqual(boundary.facetBegin, 57072);
+	checkEqual(boundary.facetEnd  , 57286);
+	checkEqual(boundary.vertices.size(), 135u);
+
+	boundary = this->gridData->boundaries[1];
+	checkEqual(boundary.facetBegin, 57286);
+	checkEqual(boundary.facetEnd  , 57492);
+	checkEqual(boundary.vertices.size(), 131u);
+
+	boundary = this->gridData->boundaries[2];
+	checkEqual(boundary.facetBegin, 57492);
+	checkEqual(boundary.facetEnd  , 57704);
+	checkEqual(boundary.vertices.size(), 134u);
+
+	boundary = this->gridData->boundaries[3];
+	checkEqual(boundary.facetBegin, 57704);
+	checkEqual(boundary.facetEnd  , 57916);
+	checkEqual(boundary.vertices.size(), 134u);
+
+	boundary = this->gridData->boundaries[4];
+	checkEqual(boundary.facetBegin, 57916);
+	checkEqual(boundary.facetEnd  , 58858);
+	checkEqual(boundary.vertices.size(), 516u);
+
+	boundary = this->gridData->boundaries[5];
+	checkEqual(boundary.facetBegin, 58858);
+	checkEqual(boundary.facetEnd  , 59958);
+	checkEqual(boundary.vertices.size(), 607u);
+
 	auto tetrahedron = this->gridData->tetrahedronConnectivity.front();
 	checkEqual(tetrahedron[0], 12522); checkEqual(tetrahedron[1],  187); checkEqual(tetrahedron[2], 8793); checkEqual(tetrahedron[3], 3980);
 	checkEqual(tetrahedron.back(), 0);
