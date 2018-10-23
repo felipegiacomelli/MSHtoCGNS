@@ -9,9 +9,9 @@ SegmentGridExtractor::SegmentGridExtractor(boost::shared_ptr<GridData> gridData)
 	this->copyElements();
 	this->copyFacets();
 	this->copyLine();
+	this->fixRegion();
 	this->fixBoundaries();
-	// this->fixRegion();
-	// this->fixWell();
+	this->fixWell();
 }
 
 void SegmentGridExtractor::checkGridData() {
@@ -54,9 +54,7 @@ void SegmentGridExtractor::defineQuantities() {
 	this->numberOfPrismsPerSegment = this->gridData->prismConnectivity.size() / this->numberOfSegments;
 	this->numberOfHexahedronsPerSegment = this->gridData->hexahedronConnectivity.size() / this->numberOfSegments;
 	this->numberOfHexahedronsPerRadius = this->numberOfHexahedronsPerSegment / this->numberOfPrismsPerSegment;
-	this->numberOfVerticesPerSection = this->gridData->coordinates.size() / (this->gridData->lineConnectivity.size()+1);
-
-	this->elementShift = this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
+	this->numberOfVerticesPerSection = this->gridData->coordinates.size() / (this->gridData->lineConnectivity.size() + 1);
 }
 
 void SegmentGridExtractor::createSegmentGrid() {
@@ -76,25 +74,53 @@ void SegmentGridExtractor::copyVertices() {
 }
 
 void SegmentGridExtractor::copyElements() {
-	for (int prism = 0; prism < this->numberOfPrismsPerSegment; prism++)
+	for (int prism = 0; prism < this->numberOfPrismsPerSegment; prism++) {
 		this->segmentGrid->prismConnectivity.emplace_back(this->gridData->prismConnectivity[prism]);
+		this->segmentGrid->prismConnectivity[prism].back() = this->elementShift++;
+	}
 
-	for (int hexahedron = 0; hexahedron < this->numberOfHexahedronsPerSegment; hexahedron++)
+	for (int hexahedron = 0; hexahedron < this->numberOfHexahedronsPerSegment; hexahedron++) {
 		this->segmentGrid->hexahedronConnectivity.emplace_back(this->gridData->hexahedronConnectivity[hexahedron]);
+		this->segmentGrid->hexahedronConnectivity[hexahedron].back() = this->elementShift++;
+	}
 }
 
 void SegmentGridExtractor::copyFacets() {
-	this->segmentGrid->triangleConnectivity = this->gridData->triangleConnectivity;
-
-	for (int quadrangle = 0; quadrangle < this->numberOfPrismsPerSegment; quadrangle++)
+	for (int quadrangle = 0; quadrangle < this->numberOfPrismsPerSegment; quadrangle++) {
 		this->segmentGrid->quadrangleConnectivity.emplace_back(this->gridData->quadrangleConnectivity[quadrangle]);
+		this->segmentGrid->quadrangleConnectivity[quadrangle].back() = this->elementShift++;
+	}
 
-	for (int quadrangle = this->numberOfPrismsPerSegment * this->numberOfSegments; quadrangle < int(this->gridData->quadrangleConnectivity.size()); quadrangle++)
+	for (int triangle = 0; triangle < this->numberOfPrismsPerSegment; triangle++) {
+		this->segmentGrid->triangleConnectivity.emplace_back(this->gridData->triangleConnectivity[triangle]);
+		this->segmentGrid->triangleConnectivity[triangle].back() = this->elementShift++;
+	}
+
+	for (int quadrangle = this->numberOfPrismsPerSegment * this->numberOfSegments; quadrangle < this->numberOfPrismsPerSegment * this->numberOfSegments + this->numberOfHexahedronsPerSegment; quadrangle++) {
 		this->segmentGrid->quadrangleConnectivity.emplace_back(this->gridData->quadrangleConnectivity[quadrangle]);
+		this->segmentGrid->quadrangleConnectivity.back().back() = this->elementShift++;
+	}
+
+	for (int triangle = this->numberOfPrismsPerSegment; triangle < 2 * this->numberOfPrismsPerSegment; triangle++) {
+		this->segmentGrid->triangleConnectivity.emplace_back(this->gridData->triangleConnectivity[triangle]);
+		this->segmentGrid->triangleConnectivity[triangle].back() = this->elementShift++;
+	}
+
+	for (int quadrangle = this->numberOfPrismsPerSegment * this->numberOfSegments + this->numberOfHexahedronsPerSegment; quadrangle < int(this->gridData->quadrangleConnectivity.size()); quadrangle++) {
+		this->segmentGrid->quadrangleConnectivity.emplace_back(this->gridData->quadrangleConnectivity[quadrangle]);
+		this->segmentGrid->quadrangleConnectivity.back().back() = this->elementShift++;
+	}
 }
 
 void SegmentGridExtractor::copyLine() {
 	this->segmentGrid->lineConnectivity.emplace_back(this->gridData->lineConnectivity[0]);
+	this->segmentGrid->lineConnectivity[0].back() = this->elementShift++;
+}
+
+void SegmentGridExtractor::fixRegion() {
+	this->elementShift = this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
+	this->segmentGrid->regions[0].elementBegin = 0;
+	this->segmentGrid->regions[0].elementEnd = this->elementShift;
 }
 
 void SegmentGridExtractor::fixBoundaries() {
@@ -102,7 +128,7 @@ void SegmentGridExtractor::fixBoundaries() {
 	auto boundary = this->segmentGrid->boundaries.begin();
 	boundary->facetBegin = this->elementShift;
 	boundary->facetEnd = boundary->facetBegin + this->numberOfPrismsPerSegment;
-	std::remove_if(boundary->vertices.begin(), boundary->vertices.end(), [=](auto v){return v >= 2 * this->numberOfVerticesPerSection;});
+	boundary->vertices.erase(std::remove_if(boundary->vertices.begin(), boundary->vertices.end(), [=](auto v){return v >= 2 * this->numberOfVerticesPerSection;}), boundary->vertices.end());
 
 	// first lid
 	boundary = this->segmentGrid->boundaries.begin() + 1;
@@ -111,7 +137,7 @@ void SegmentGridExtractor::fixBoundaries() {
 
 	// last lid
 	boundary = this->segmentGrid->boundaries.begin() + 2;
-	boundary->facetBegin = this->elementShift + this->numberOfPrismsPerSegment + 2 * (this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment);
+	boundary->facetBegin = this->elementShift + this->numberOfPrismsPerSegment + this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
 	boundary->facetEnd = boundary->facetBegin + this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
 
 	std::stable_sort(boundary->vertices.begin(), boundary->vertices.end());
@@ -121,4 +147,19 @@ void SegmentGridExtractor::fixBoundaries() {
 		lastToSecond[vertex] = this->numberOfVerticesPerSection + shift++;
 		vertex = lastToSecond[vertex];
 	}
+
+	for (auto triangle = this->gridData->triangleConnectivity.begin(); triangle != this->gridData->triangleConnectivity.end(); triangle++)
+		if (triangle->back() >= boundary->facetBegin && triangle->back() < boundary->facetEnd)
+			for (auto vertex = triangle->begin(); vertex != triangle->end() - 1; vertex++)
+				*vertex = lastToSecond[*vertex];
+
+	for (auto quadrangle = this->gridData->quadrangleConnectivity.begin(); quadrangle != this->gridData->quadrangleConnectivity.end(); quadrangle++)
+		if (quadrangle->back() >= boundary->facetBegin && quadrangle->back() < boundary->facetEnd)
+			for (auto vertex = quadrangle->begin(); vertex != quadrangle->end() - 1; vertex++)
+				*vertex = lastToSecond[*vertex];
+}
+
+void SegmentGridExtractor::fixWell() {
+	this->segmentGrid->wells[0].lineBegin = this->segmentGrid->boundaries[2].facetEnd;
+	this->segmentGrid->wells[0].lineEnd = this->segmentGrid->wells[0].lineBegin + 1;
 }

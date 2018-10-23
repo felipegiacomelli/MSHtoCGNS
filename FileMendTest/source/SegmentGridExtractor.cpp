@@ -1,14 +1,17 @@
 #include <BoostInterface/Test.hpp>
 #include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
 #include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
+#include <FileMend/RadialGridDataReordered.hpp>
 #include <FileMend/SegmentGridExtractor.hpp>
+#include <Utilities/Print.hpp>
 
 #define TOLERANCE 1e-4
 
 struct SegmentGridExtractorFixture {
 	SegmentGridExtractorFixture() {
 		CgnsReader3D reader(this->inputPath);
-		this->gridData = reader.gridData;
+		RadialGridDataReordered radialGridDataReordered(reader.gridData);
+		this->gridData = radialGridDataReordered.reordered;
 	}
 
 	double calculateDistance(std::array<double, 3> a, std::array<double, 3> b) {
@@ -22,9 +25,9 @@ struct SegmentGridExtractorFixture {
 FixtureTestSuite(SegmentGridExtractorSuite, SegmentGridExtractorFixture)
 
 TestCase(SegmentGridExtractorTest) {
-	SegmentGridExtractor radialGridDataReordered(this->gridData);
+	SegmentGridExtractor segmentGridExtractor(this->gridData);
 
-	auto segmentGrid = radialGridDataReordered.segmentGrid;
+	auto segmentGrid = segmentGridExtractor.segmentGrid;
 
 	checkEqual(segmentGrid->coordinates.size(), 74u);
 
@@ -38,85 +41,62 @@ TestCase(SegmentGridExtractorTest) {
 
 	checkEqual(segmentGrid->lineConnectivity.size(), 1u);
 
-	// checkEqual(segmentGrid->boundaries.size(),  3u);
-	// checkEqual(segmentGrid->regions.size()   ,  1u);
-	// checkEqual(segmentGrid->wells.size()     ,  1u);
+	checkEqual(segmentGrid->boundaries.size(),  3u);
+	checkEqual(segmentGrid->regions.size()   ,  1u);
+	checkEqual(segmentGrid->wells.size()     ,  1u);
 
-	// checkEqual(segmentGrid->boundaries[0].facetBegin, 324);
-	// checkEqual(segmentGrid->boundaries[0].facetEnd  , 432);
+	auto boundary = segmentGrid->boundaries[0];
+	checkEqual(boundary.facetBegin, 36);
+	checkEqual(boundary.facetEnd  , 48);
+	checkEqual(boundary.vertices.size(), 24u);
+	check(std::all_of(boundary.vertices.cbegin(), boundary.vertices.cend(), [=](auto v){return v >= 0 && v < 74;}));
 
-	// checkEqual(segmentGrid->boundaries[1].facetBegin, 432);
-	// checkEqual(segmentGrid->boundaries[1].facetEnd  , 468);
+	boundary = segmentGrid->boundaries[1];
+	checkEqual(boundary.facetBegin, 48);
+	checkEqual(boundary.facetEnd  , 84);
+	checkEqual(boundary.vertices.size(), 37u);
+	check(std::all_of(boundary.vertices.cbegin(), boundary.vertices.cend(), [=](auto v){return v >= 0 && v < 37;}));
 
-	// checkEqual(segmentGrid->boundaries[2].facetBegin, 468);
-	// checkEqual(segmentGrid->boundaries[2].facetEnd  , 504);
+	boundary = segmentGrid->boundaries[2];
+	checkEqual(boundary.facetBegin,  84);
+	checkEqual(boundary.facetEnd  , 120);
+	checkEqual(boundary.vertices.size(), 37u);
+	check(std::all_of(boundary.vertices.cbegin(), boundary.vertices.cend(), [=](auto v){return v >= 37 && v < 74;}));
 
-	// checkEqual(segmentGrid->wells[0].lineBegin, 504);
-	// checkEqual(segmentGrid->wells[0].lineEnd  , 513);
+	checkEqual(segmentGrid->wells[0].lineBegin, 120);
+	checkEqual(segmentGrid->wells[0].lineEnd  , 121);
 
-	// for (int i = 0; i < 9; i++) {
-	// 	int shift = 36 * i;
+	for (int j = 0; j < 12; j++)
+		checkEqual(segmentGrid->prismConnectivity[j].back(), j);
 
-	// 	for (int j = 0; j < 12; j++)
-	// 		checkEqual(segmentGrid->prismConnectivity[12*i + j].back(), shift++);
+	for (int j = 0; j < 24; j++)
+		checkEqual(segmentGrid->hexahedronConnectivity[j].back(), 12 + j);
 
-	// 	for (int j = 0; j < 24; j++)
-	// 		checkEqual(segmentGrid->hexahedronConnectivity[24*i + j].back(), shift++);
-	// }
+	for (int j = 0; j < 12; j++)
+		checkEqual(segmentGrid->quadrangleConnectivity[j].back(), 36 + j);
 
-	// for (int i = 0; i < 108; i++) {
-	// 	checkEqual(segmentGrid->quadrangleConnectivity[i].back(), 324 + i);
-	// }
+	for (int j = 0; j < 12; j++) {
+		checkEqual(segmentGrid->triangleConnectivity[j     ].back(), 48 + j);
+		checkEqual(segmentGrid->triangleConnectivity[j + 12].back(), 84 + j);
+	}
 
-	// for (int i = 0; i < 12; i++) {
-	// 	checkEqual(segmentGrid->triangleConnectivity[i     ].back(), 432 + i);
-	// 	checkEqual(segmentGrid->triangleConnectivity[i + 12].back(), 468 + i);
-	// }
+	for (int j = 0; j < 24; j++) {
+		checkEqual(segmentGrid->quadrangleConnectivity[j + 12].back(), 60 + j);
+		checkEqual(segmentGrid->quadrangleConnectivity[j + 36].back(), 96 + j);
+	}
 
-	// for (int i = 0; i < 24; i++) {
-	// 	checkEqual(segmentGrid->quadrangleConnectivity[i + 108].back(), 444 + i);
-	// 	checkEqual(segmentGrid->quadrangleConnectivity[i + 132].back(), 480 + i);
-	// }
+	checkEqual(segmentGrid->lineConnectivity[0].back(), 120);
 
-	// for (int i = 0; i < 9; i++)
-	// 	checkEqual(segmentGrid->lineConnectivity[i].back(), 504 + i);
+	for (int j = 0; j < 37; j++) {
+		checkSmall(segmentGrid->coordinates[37 * 0 + j][2], TOLERANCE);
+		checkClose(segmentGrid->coordinates[37 * 1 + j][2], 5.5555555, TOLERANCE);
+	}
 
-	// for (int i = 0; i < 37; i++) {
-	// 	checkSmall(segmentGrid->coordinates[37 * 0 + i][2], TOLERANCE);
-	// 	checkClose(segmentGrid->coordinates[37 * 1 + i][2], 5.5555555, TOLERANCE);
-	// 	checkClose(segmentGrid->coordinates[37 * 2 + i][2], 11.111111, TOLERANCE);
-	// 	checkClose(segmentGrid->coordinates[37 * 3 + i][2], 16.666666, TOLERANCE);
-	// 	checkClose(segmentGrid->coordinates[37 * 4 + i][2], 22.222222, TOLERANCE);
-	// 	checkClose(segmentGrid->coordinates[37 * 5 + i][2], 27.777777, TOLERANCE);
-	// 	checkClose(segmentGrid->coordinates[37 * 6 + i][2], 33.333333, TOLERANCE);
-	// 	checkClose(segmentGrid->coordinates[37 * 7 + i][2], 38.888888, TOLERANCE);
-	// 	checkClose(segmentGrid->coordinates[37 * 8 + i][2], 44.444444, TOLERANCE);
-	// 	checkClose(segmentGrid->coordinates[37 * 9 + i][2], 49.999999, TOLERANCE);
-	// }
+	for (int j = 0; j < 37; j++)
+		checkClose(std::abs(segmentGrid->coordinates[37 * 0 + j][2] - segmentGrid->coordinates[37 *  1 + j][2]), 5.5555555555555554e+00, TOLERANCE);
 
-	// for (int i = 0; i < 37; i++) {
-	// 	checkClose(std::abs(segmentGrid->coordinates[37 * 0 + i][2] - segmentGrid->coordinates[37 *  1 + i][2]), 5.5555555555555554e+00, TOLERANCE);
-	// 	checkClose(std::abs(segmentGrid->coordinates[37 * 1 + i][2] - segmentGrid->coordinates[37 *  2 + i][2]), 5.5555555555555554e+00, TOLERANCE);
-	// 	checkClose(std::abs(segmentGrid->coordinates[37 * 2 + i][2] - segmentGrid->coordinates[37 *  3 + i][2]), 5.5555555555555536e+00, TOLERANCE);
-	// 	checkClose(std::abs(segmentGrid->coordinates[37 * 3 + i][2] - segmentGrid->coordinates[37 *  4 + i][2]), 5.5555555555555571e+00, TOLERANCE);
-	// 	checkClose(std::abs(segmentGrid->coordinates[37 * 4 + i][2] - segmentGrid->coordinates[37 *  5 + i][2]), 5.5555555555555571e+00, TOLERANCE);
-	// 	checkClose(std::abs(segmentGrid->coordinates[37 * 5 + i][2] - segmentGrid->coordinates[37 *  6 + i][2]), 5.5555555555555500e+00, TOLERANCE);
-	// 	checkClose(std::abs(segmentGrid->coordinates[37 * 6 + i][2] - segmentGrid->coordinates[37 *  7 + i][2]), 5.5555555555555642e+00, TOLERANCE);
-	// 	checkClose(std::abs(segmentGrid->coordinates[37 * 7 + i][2] - segmentGrid->coordinates[37 *  8 + i][2]), 5.5555538601345447e+00, TOLERANCE);
-	// 	checkClose(std::abs(segmentGrid->coordinates[37 * 8 + i][2] - segmentGrid->coordinates[37 *  9 + i][2]), 5.5555572509765625e+00, TOLERANCE);
-	// }
-
-	// for (int i = 0; i < 37; i++) {
-	// 	checkClose(calculateDistance(segmentGrid->coordinates[37 * 0 + i], segmentGrid->coordinates[37 *  1 + i]), 5.5555555555555554e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(segmentGrid->coordinates[37 * 1 + i], segmentGrid->coordinates[37 *  2 + i]), 5.5555555555555554e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(segmentGrid->coordinates[37 * 2 + i], segmentGrid->coordinates[37 *  3 + i]), 5.5555555555555536e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(segmentGrid->coordinates[37 * 3 + i], segmentGrid->coordinates[37 *  4 + i]), 5.5555555555555571e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(segmentGrid->coordinates[37 * 4 + i], segmentGrid->coordinates[37 *  5 + i]), 5.5555555555555571e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(segmentGrid->coordinates[37 * 5 + i], segmentGrid->coordinates[37 *  6 + i]), 5.5555555555555500e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(segmentGrid->coordinates[37 * 6 + i], segmentGrid->coordinates[37 *  7 + i]), 5.5555555555555642e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(segmentGrid->coordinates[37 * 7 + i], segmentGrid->coordinates[37 *  8 + i]), 5.5555538601345447e+00, TOLERANCE);
-	// 	checkClose(calculateDistance(segmentGrid->coordinates[37 * 8 + i], segmentGrid->coordinates[37 *  9 + i]), 5.5555572509765625e+00, TOLERANCE);
-	// }
+	for (int j = 0; j < 37; j++)
+		checkClose(calculateDistance(segmentGrid->coordinates[37 * 0 + j], segmentGrid->coordinates[37 *  1 + j]), 5.5555555555555554e+00, TOLERANCE);
 }
 
 TestSuiteEnd()

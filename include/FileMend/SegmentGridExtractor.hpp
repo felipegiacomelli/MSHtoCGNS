@@ -28,9 +28,9 @@ class SegmentGridExtractor {
 		void copyElements();
 		void copyFacets();
 		void copyLine();
+		void fixRegion();
 		void fixBoundaries();
-		// void fixRegion();
-		// void fixWell();
+		void fixWell();
 
 		boost::shared_ptr<GridData> gridData;
 
