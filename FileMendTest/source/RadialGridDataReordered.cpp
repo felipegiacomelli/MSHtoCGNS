@@ -53,6 +53,8 @@ TestCase(RadialGridDataReorderedTest) {
 	checkEqual(reordered->wells[0].lineBegin, 504);
 	checkEqual(reordered->wells[0].lineEnd  , 513);
 	checkEqual(reordered->wells[0].vertices.size(), 10u);
+	for (int j = 0; j < 10; j++)
+		checkEqual(reordered->wells[0].vertices[j], j * 37);
 
 	for (int i = 0; i < 9; i++) {
 		int shift = 36 * i;

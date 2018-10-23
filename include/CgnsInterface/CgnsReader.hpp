@@ -4,7 +4,7 @@
 #include <BoostInterface/Filesystem.hpp>
 #include <Grid/GridData.hpp>
 #include <string>
-#include <numeric>
+#include <set>
 
 class CgnsReader {
 	public:

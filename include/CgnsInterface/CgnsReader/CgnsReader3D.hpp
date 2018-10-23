@@ -11,6 +11,7 @@ class CgnsReader3D : public CgnsReader {
 		void readCoordinates() override;
 		void readSections() override;
 		void addWell(std::string&& name, int elementStart, int elementEnd);
+		void findWellVertices();
 };
 
 #endif

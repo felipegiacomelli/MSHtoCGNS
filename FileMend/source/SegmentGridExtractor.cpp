@@ -163,5 +163,5 @@ void SegmentGridExtractor::fixBoundaries() {
 void SegmentGridExtractor::fixWell() {
 	this->segmentGrid->wells[0].lineBegin = this->segmentGrid->boundaries[2].facetEnd;
 	this->segmentGrid->wells[0].lineEnd = this->segmentGrid->wells[0].lineBegin + 1;
-	// this->segmentGrid->wells[0].vertices = this->segmentGrid->wells[0].lineBegin + 1;
+	this->segmentGrid->wells[0].vertices = std::vector<int>{this->segmentGrid->lineConnectivity[0][0], this->segmentGrid->lineConnectivity[0][1]};
 }

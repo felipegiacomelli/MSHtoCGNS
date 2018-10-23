@@ -29,6 +29,14 @@ TestCase(CgnsReader3DTest) {
 	checkEqual(this->gridData->regions.size(), 2u);
 	checkEqual(this->gridData->wells.size(), 1u);
 
+	auto region = this->gridData->regions[0];
+	checkEqual(region.elementBegin, 0);
+	checkEqual(region.elementEnd  , 54300);
+
+	region = this->gridData->regions[1];
+	checkEqual(region.elementBegin, 54300);
+	checkEqual(region.elementEnd  , 57072);
+
 	auto boundary = this->gridData->boundaries[0];
 	checkEqual(boundary.facetBegin, 57072);
 	checkEqual(boundary.facetEnd  , 57286);
@@ -58,6 +66,11 @@ TestCase(CgnsReader3DTest) {
 	checkEqual(boundary.facetBegin, 58858);
 	checkEqual(boundary.facetEnd  , 59958);
 	checkEqual(boundary.vertices.size(), 607u);
+
+	auto well = this->gridData->wells[0];
+	checkEqual(well.lineBegin, 59958);
+	checkEqual(well.lineEnd  , 60035);
+	checkEqual(well.vertices.size(), 78u);
 
 	auto tetrahedron = this->gridData->tetrahedronConnectivity.front();
 	checkEqual(tetrahedron[0], 12522); checkEqual(tetrahedron[1],  187); checkEqual(tetrahedron[2], 8793); checkEqual(tetrahedron[3], 3980);

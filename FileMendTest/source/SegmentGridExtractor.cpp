@@ -65,7 +65,9 @@ TestCase(SegmentGridExtractorTest) {
 
 	checkEqual(segmentGrid->wells[0].lineBegin, 120);
 	checkEqual(segmentGrid->wells[0].lineEnd  , 121);
-	checkEqual(segmentGrid->wells[0].vertices.size(), 10u);
+	checkEqual(segmentGrid->wells[0].vertices.size(), 2u);
+	checkEqual(segmentGrid->wells[0].vertices[0],  0);
+	checkEqual(segmentGrid->wells[0].vertices[1], 37);
 
 	for (int j = 0; j < 12; j++)
 		checkEqual(segmentGrid->prismConnectivity[j].back(), j);

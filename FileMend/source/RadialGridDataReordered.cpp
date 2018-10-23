@@ -209,12 +209,15 @@ void RadialGridDataReordered::fixVerticesIndices() {
 		for (auto vertex = line.begin(); vertex != line.end() - 1; vertex++)
 			*vertex = originalToFinal[*vertex];
 
-	for (auto& vertex : this->reordered->wells[0].vertices)
-		vertex = originalToFinal[vertex];
-
-	for (auto& boundary : this->reordered->boundaries)
+	for (auto& boundary : this->reordered->boundaries) {
 		for (auto& vertex : boundary.vertices)
 			vertex = originalToFinal[vertex];
+		std::stable_sort(boundary.vertices.begin(), boundary.vertices.end());
+	}
+
+	for (auto& vertex : this->reordered->wells[0].vertices)
+		vertex = originalToFinal[vertex];
+	std::stable_sort(this->reordered->wells[0].vertices.begin(), this->reordered->wells[0].vertices.end());
 }
 
 void RadialGridDataReordered::fixElementIndices() {

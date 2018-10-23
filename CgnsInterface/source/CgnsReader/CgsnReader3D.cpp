@@ -6,6 +6,7 @@ CgnsReader3D::CgnsReader3D(std::string filePath, bool readInConstructor) : CgnsR
 		this->readCoordinates();
 		this->readSections();
 		this->readBoundaryConditions();
+		this->findWellVertices();
 	}
 }
 
@@ -199,4 +200,14 @@ void CgnsReader3D::addWell(std::string&& name, int elementStart, int elementEnd)
 	well.lineBegin = elementStart;
 	well.lineEnd = elementEnd;
 	this->gridData->wells.emplace_back(std::move(well));
+}
+
+void CgnsReader3D::findWellVertices() {
+	for (auto& well : this->gridData->wells) {
+		std::set<int> vertices;
+		for (const auto& line : this->gridData->lineConnectivity)
+			if (line.back() >= well.lineBegin && line.back() < well.lineEnd)
+				vertices.insert(line.cbegin(), line.cend() - 1);
+		well.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
+	}
 }

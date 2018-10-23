@@ -112,7 +112,7 @@ void CgnsReader::readBoundaryConditions() {
 		if (boundary != this->gridData->boundaries.end()) {
 			std::vector<int> vertices(numberOfVertices);
 			if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, &vertices[0], nullptr))
-				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read boundary " + std::to_string(boundaryIndex));
+				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read boundary condition" + std::to_string(boundaryIndex));
 
 			std::transform(vertices.cbegin(), vertices.cend(), std::back_inserter(boundary->vertices), [](auto x){return x - 1;});
 		}
