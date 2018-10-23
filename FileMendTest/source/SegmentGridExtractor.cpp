@@ -87,6 +87,12 @@ TestCase(SegmentGridExtractorTest) {
 
 	checkEqual(segmentGrid->lineConnectivity[0].back(), 120);
 
+	for (int j = 0; j < 12; j++)
+		check(std::all_of(segmentGrid->triangleConnectivity[j + 12].cbegin(), segmentGrid->triangleConnectivity[j + 12].cend() - 1, [=](auto v){return v >= 37 && v < 74;}));
+
+	for (int j = 0; j < 24; j++)
+		check(std::all_of(segmentGrid->quadrangleConnectivity[j + 36].cbegin(), segmentGrid->quadrangleConnectivity[j + 36].cend() - 1, [=](auto v){return v >= 37 && v < 74;}));
+
 	for (int j = 0; j < 37; j++) {
 		checkSmall(segmentGrid->coordinates[37 * 0 + j][2], TOLERANCE);
 		checkClose(segmentGrid->coordinates[37 * 1 + j][2], 5.5555555, TOLERANCE);

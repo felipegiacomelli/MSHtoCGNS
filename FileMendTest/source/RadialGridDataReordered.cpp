@@ -1,6 +1,5 @@
 #include <BoostInterface/Test.hpp>
 #include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
-#include <CgnsInterface/CgnsCreator/CgnsCreator3D.hpp>
 #include <FileMend/RadialGridDataReordered.hpp>
 
 #define TOLERANCE 1e-4

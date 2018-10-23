@@ -134,13 +134,14 @@ void SegmentGridExtractor::fixBoundaries() {
 	boundary = this->segmentGrid->boundaries.begin() + 1;
 	boundary->facetBegin = this->elementShift + this->numberOfPrismsPerSegment;
 	boundary->facetEnd = boundary->facetBegin + this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
+	std::stable_sort(boundary->vertices.begin(), boundary->vertices.end());
 
 	// last lid
 	boundary = this->segmentGrid->boundaries.begin() + 2;
 	boundary->facetBegin = this->elementShift + this->numberOfPrismsPerSegment + this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
 	boundary->facetEnd = boundary->facetBegin + this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
-
 	std::stable_sort(boundary->vertices.begin(), boundary->vertices.end());
+
 	std::unordered_map<int, int> lastToSecond;
 	int shift = 0;
 	for (auto& vertex : boundary->vertices) {
@@ -148,12 +149,12 @@ void SegmentGridExtractor::fixBoundaries() {
 		vertex = lastToSecond[vertex];
 	}
 
-	for (auto triangle = this->gridData->triangleConnectivity.begin(); triangle != this->gridData->triangleConnectivity.end(); triangle++)
+	for (auto triangle = this->segmentGrid->triangleConnectivity.begin(); triangle != this->segmentGrid->triangleConnectivity.end(); triangle++)
 		if (triangle->back() >= boundary->facetBegin && triangle->back() < boundary->facetEnd)
 			for (auto vertex = triangle->begin(); vertex != triangle->end() - 1; vertex++)
 				*vertex = lastToSecond[*vertex];
 
-	for (auto quadrangle = this->gridData->quadrangleConnectivity.begin(); quadrangle != this->gridData->quadrangleConnectivity.end(); quadrangle++)
+	for (auto quadrangle = this->segmentGrid->quadrangleConnectivity.begin(); quadrangle != this->segmentGrid->quadrangleConnectivity.end(); quadrangle++)
 		if (quadrangle->back() >= boundary->facetBegin && quadrangle->back() < boundary->facetEnd)
 			for (auto vertex = quadrangle->begin(); vertex != quadrangle->end() - 1; vertex++)
 				*vertex = lastToSecond[*vertex];
