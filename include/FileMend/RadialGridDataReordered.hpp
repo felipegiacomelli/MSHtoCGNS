@@ -24,6 +24,7 @@ class RadialGridDataReordered {
 		void checkGridData();
 		void defineQuantities();
 		void createReordered();
+		void reorderBoundaries();
 		void copyData();
 		void reorder();
 		void buildFirstSection();
@@ -55,8 +56,6 @@ class RadialGridDataReordered {
 
 		int vertexShift = 0;
 		int elementShift = 0;
-		int facetShift;
-		int lineShift;
 };
 
 #endif

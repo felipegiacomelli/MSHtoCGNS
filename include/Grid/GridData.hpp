@@ -6,17 +6,17 @@
 #include <string>
 #include <BoostInterface/SharedPointer.hpp>
 
+struct RegionData {
+	std::string	name;
+	int elementBegin;
+	int elementEnd;
+};
+
 struct BoundaryData {
 	std::string	name;
 	int facetBegin;
 	int facetEnd;
 	std::vector<int> vertices;
-};
-
-struct RegionData {
-	std::string	name;
-	int elementBegin;
-	int elementEnd;
 };
 
 struct WellData {
