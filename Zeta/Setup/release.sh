@@ -2,6 +2,7 @@
 
 export SETUP_DIRECTORY=$PWD
 export LIBRARY_INSTALL_DIRECTORY=$PWD/../Libraries
+export BUILD_TYPE="Release"
 
 cd ..
 
@@ -21,7 +22,7 @@ cd $SETUP_DIRECTORY
 	cd $LIBRARY
 	cd src
 	./../src/configure --without-fortran --disable-cgnstools --enable-shared \
-	                   --disable-debug --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY
+	                   --disable-debug --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY/$BUILD_TYPE
 	make -j 4
 	make install
 
@@ -36,22 +37,30 @@ cd $SETUP_DIRECTORY
 	COMPRESSED_LIBRARY=$LIBRARY.tar.gz
 	VARIANT="release"
 
-	wget $DOWNLOAD_LINK -O $COMPRESSED_LIBRARY
+	if [ ! -d "$LIBRARY" ]; then
+		if [ ! -f "$COMPRESSED_LIBRARY" ]; then
+			wget $DOWNLOAD_LINK -O $COMPRESSED_LIBRARY
+			tar -x -z -f $COMPRESSED_LIBRARY
+			mv boost_1_67_0 $LIBRARY
+		else
+			tar -x -z -f $COMPRESSED_LIBRARY
+			mv boost_1_67_0 $LIBRARY
+		fi
+	fi
 
 	tar -x -z -f $COMPRESSED_LIBRARY
 	mv boost_1_67_0 $LIBRARY
 	cd $LIBRARY
 	./bootstrap.sh --with-libraries=system,filesystem,test \
-				   --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY
+				   --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY/$BUILD_TYPE
 
 	./b2 	variant=$VARIANT \
 			--cxxflags=-fPIC \
 			link=shared runtime-link=shared \
 			threading=multi \
 			-j 4			\
-		 	--prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY install
+		 	--prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY/$BUILD_TYPE install
 
 if [ $? -eq 0 ]; then
 	rm -rf $SETUP_DIRECTORY/boost-1.67.0
-	rm -rf $SETUP_DIRECTORY/boost-1.67.0.tar.gz
 fi
