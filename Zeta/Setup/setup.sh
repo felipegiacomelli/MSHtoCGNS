@@ -7,7 +7,7 @@ export BUILD_TYPE="Debug"
 cd ..
 
 if [ ! -d Libraries ]; then
-	mkdir Libraries
+    mkdir Libraries
 fi
 
 cd $SETUP_DIRECTORY

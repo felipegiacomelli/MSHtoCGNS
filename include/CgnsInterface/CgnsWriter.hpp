@@ -4,33 +4,33 @@
 #include <BoostInterface/Filesystem.hpp>
 
 class CgnsWriter {
-	public:
-		CgnsWriter() = default;
-		CgnsWriter(std::string filePath, std::string solutionLocation);
+    public:
+        CgnsWriter() = default;
+        CgnsWriter(std::string filePath, std::string solutionLocation);
 
-		void writePermanentSolution(std::string solutionName);
-		void writePermanentField(std::string scalarFieldName, const std::vector<double>& fieldValues);
+        void writePermanentSolution(std::string solutionName);
+        void writePermanentField(std::string scalarFieldName, const std::vector<double>& fieldValues);
 
-		void writeTransientSolution(const double& timeInstant);
-		void writeTransientField(const std::vector<double>& fieldValues, std::string fieldName);
+        void writeTransientSolution(const double& timeInstant);
+        void writeTransientField(const std::vector<double>& fieldValues, std::string fieldName);
 
-		void finalizeTransient();
+        void finalizeTransient();
 
-		virtual ~CgnsWriter();
+        virtual ~CgnsWriter();
 
-	private:
-		void initialize();
-		void checkFile();
-		void readBase();
-		void readZone();
+    private:
+        void initialize();
+        void checkFile();
+        void readBase();
+        void readZone();
 
-		std::string filePath;
-		int gridLocation;
-		int fileIndex, baseIndex, zoneIndex;
-		int permanentSolutionIndex, permanentFieldIndex;
-		std::vector<int> solutionIndices, fieldsIndices;
-		std::vector<double> timeInstants;
-		bool isFinalized;
+        std::string filePath;
+        int gridLocation;
+        int fileIndex, baseIndex, zoneIndex;
+        int permanentSolutionIndex, permanentFieldIndex;
+        std::vector<int> solutionIndices, fieldsIndices;
+        std::vector<double> timeInstants;
+        bool isFinalized;
 };
 
 #endif

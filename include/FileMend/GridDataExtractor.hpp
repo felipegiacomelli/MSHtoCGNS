@@ -11,38 +11,38 @@
 #include <Grid/GridData.hpp>
 
 struct GridDataExtractorData {
-	std::vector<std::string> regions;
-	std::vector<std::string> boundaries;
-	std::vector<std::string> wells;
+    std::vector<std::string> regions;
+    std::vector<std::string> boundaries;
+    std::vector<std::string> wells;
 };
 
 class GridDataExtractor {
-	public:
-		GridDataExtractor(boost::shared_ptr<GridData> original, std::string gridDataExtractorScript);
+    public:
+        GridDataExtractor(boost::shared_ptr<GridData> original, std::string gridDataExtractorScript);
 
-		GridDataExtractor(boost::shared_ptr<GridData> original, boost::property_tree::ptree propertyTree);
+        GridDataExtractor(boost::shared_ptr<GridData> original, boost::property_tree::ptree propertyTree);
 
-		~GridDataExtractor() = default;
+        ~GridDataExtractor() = default;
 
-		boost::shared_ptr<GridData> extract;
+        boost::shared_ptr<GridData> extract;
 
-	private:
-		void checkGridData();
-		void readScript();
-		void buildElementConnectivities();
-		void extractRegions();
-		void extractBoundaries();
-		void extractWells();
-		void extractVertices();
-		void fixIndices();
+    private:
+        void checkGridData();
+        void readScript();
+        void buildElementConnectivities();
+        void extractRegions();
+        void extractBoundaries();
+        void extractWells();
+        void extractVertices();
+        void fixIndices();
 
-		boost::shared_ptr<GridData> original;
-		boost::property_tree::ptree propertyTree;
+        boost::shared_ptr<GridData> original;
+        boost::property_tree::ptree propertyTree;
 
-		std::vector<GridDataExtractorData> gridDataExtractorDatum;
-		std::vector<std::vector<int>> elementConnectivities;
-		std::set<int> vertices;
-		int localIndex = 0;
+        std::vector<GridDataExtractorData> gridDataExtractorDatum;
+        std::vector<std::vector<int>> elementConnectivities;
+        std::set<int> vertices;
+        int localIndex = 0;
 };
 
 #endif

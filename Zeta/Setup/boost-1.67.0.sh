@@ -6,14 +6,14 @@ COMPRESSED_LIBRARY=$LIBRARY.tar.gz
 VARIANT=`echo ${BUILD_TYPE,,}`
 
 if [ ! -d "$LIBRARY" ]; then
-	if [ ! -f "$COMPRESSED_LIBRARY" ]; then
-		wget $DOWNLOAD_LINK -O $COMPRESSED_LIBRARY
-		tar -x -z -f $COMPRESSED_LIBRARY
-		mv boost_1_67_0 $LIBRARY
-	else
-		tar -x -z -f $COMPRESSED_LIBRARY
-		mv boost_1_67_0 $LIBRARY
-	fi
+    if [ ! -f "$COMPRESSED_LIBRARY" ]; then
+        wget $DOWNLOAD_LINK -O $COMPRESSED_LIBRARY
+        tar -x -z -f $COMPRESSED_LIBRARY
+        mv boost_1_67_0 $LIBRARY
+    else
+        tar -x -z -f $COMPRESSED_LIBRARY
+        mv boost_1_67_0 $LIBRARY
+    fi
 fi
 
 cd $LIBRARY

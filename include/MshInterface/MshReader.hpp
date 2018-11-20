@@ -11,31 +11,31 @@
 #include <Utilities/Vector.hpp>
 
 class MshReader {
-	public:
-		MshReader(std::string filePath);
+    public:
+        MshReader(std::string filePath);
 
-		virtual ~MshReader() = default;
+        virtual ~MshReader() = default;
 
-		boost::shared_ptr<GridData> gridData;
+        boost::shared_ptr<GridData> gridData;
 
-	protected:
-		void checkFile();
-		void readNodes();
-		virtual void readPhysicalEntities() = 0;
-		void readConnectivities();
-		virtual void determineNumberOfFacets() = 0;
-		void divideConnectivities();
-		void assignElementsToRegions();
-		void assignFacetsToBoundaries();
-		virtual void addRegions() = 0;
-		virtual void addBoundaries() = 0;
-		virtual void defineBoundaryVertices() = 0;
+    protected:
+        void checkFile();
+        void readNodes();
+        virtual void readPhysicalEntities() = 0;
+        void readConnectivities();
+        virtual void determineNumberOfFacets() = 0;
+        void divideConnectivities();
+        void assignElementsToRegions();
+        void assignFacetsToBoundaries();
+        virtual void addRegions() = 0;
+        virtual void addBoundaries() = 0;
+        virtual void defineBoundaryVertices() = 0;
 
-		std::string filePath;
-		std::ifstream file;
-		char buffer[800];
-		int numberOfPhysicalEntities, numberOfBoundaries, numberOfRegions, numberOfFacets;
-		std::vector<std::vector<int>> connectivities, elements, facets, regionElements, boundaryFacets;
+        std::string filePath;
+        std::ifstream file;
+        char buffer[800];
+        int numberOfPhysicalEntities, numberOfBoundaries, numberOfRegions, numberOfFacets;
+        std::vector<std::vector<int>> connectivities, elements, facets, regionElements, boundaryFacets;
 };
 
 #endif

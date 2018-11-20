@@ -2,183 +2,183 @@
 #include <cgnslib.h>
 
 CgnsReader::CgnsReader(std::string filePath) : filePath(filePath) {
-	this->checkFile();
-	this->readBase();
-	this->readZone();
-	this->readNumberOfSections();
-	this->readNumberOfBoundaries();
-	this->createGridData();
+    this->checkFile();
+    this->readBase();
+    this->readZone();
+    this->readNumberOfSections();
+    this->readNumberOfBoundaries();
+    this->createGridData();
 }
 
 void CgnsReader::checkFile() {
     boost::filesystem::path input(this->filePath);
-	if (!boost::filesystem::exists(input.parent_path()))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path " + input.parent_path().string() + " does not exist");
+    if (!boost::filesystem::exists(input.parent_path()))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path " + input.parent_path().string() + " does not exist");
 
-	if (!boost::filesystem::exists(this->filePath))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no file in the given path");
+    if (!boost::filesystem::exists(this->filePath))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no file in the given path");
 
-	int fileType;
-	if (cg_is_cgns(this->filePath.c_str(), &fileType))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The file is not a valid cgns file");
+    int fileType;
+    if (cg_is_cgns(this->filePath.c_str(), &fileType))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The file is not a valid cgns file");
 
-	if (cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not open the file " + this->filePath);
+    if (cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not open the file " + this->filePath);
 
-	float version;
-	if (cg_version(this->fileIndex, &version))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read file version");
+    float version;
+    if (cg_version(this->fileIndex, &version))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read file version");
 
-	if (version <= 3.10)
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - File version (" + std::to_string(version) + ") is older than 3.11");
+    if (version <= 3.10)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - File version (" + std::to_string(version) + ") is older than 3.11");
 }
 
 void CgnsReader::readBase() {
-	if (cg_nbases(this->fileIndex, &this->baseIndex))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of bases");
+    if (cg_nbases(this->fileIndex, &this->baseIndex))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of bases");
 
-	if (this->baseIndex != 1)
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has more than one base");
+    if (this->baseIndex != 1)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has more than one base");
 
-	if (cg_base_read(this->fileIndex, this->baseIndex, this->buffer, &this->cellDimension, &this->physicalDimension))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read base");
+    if (cg_base_read(this->fileIndex, this->baseIndex, this->buffer, &this->cellDimension, &this->physicalDimension))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read base");
 }
 
 void CgnsReader::readZone() {
-	if (cg_nzones(this->fileIndex, this->baseIndex, &this->zoneIndex))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of zones");
+    if (cg_nzones(this->fileIndex, this->baseIndex, &this->zoneIndex))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of zones");
 
-	if (this->zoneIndex != 1)
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has more than one zone");
+    if (this->zoneIndex != 1)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has more than one zone");
 
-	ZoneType_t zoneType;
-	if (cg_zone_type(this->fileIndex, this->baseIndex, this->zoneIndex, &zoneType))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read zone type");
+    ZoneType_t zoneType;
+    if (cg_zone_type(this->fileIndex, this->baseIndex, this->zoneIndex, &zoneType))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read zone type");
 
-	if (zoneType != Unstructured)
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Only unstructured zones are supported");
+    if (zoneType != Unstructured)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Only unstructured zones are supported");
 
-	if (cg_zone_read(this->fileIndex, this->baseIndex, this->zoneIndex, this->buffer, this->sizes))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read zone");
+    if (cg_zone_read(this->fileIndex, this->baseIndex, this->zoneIndex, this->buffer, this->sizes))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read zone");
 }
 
 void CgnsReader::readNumberOfSections() {
-	if (cg_nsections(this->fileIndex, this->baseIndex, this->zoneIndex, &this->numberOfSections))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of sections");
+    if (cg_nsections(this->fileIndex, this->baseIndex, this->zoneIndex, &this->numberOfSections))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of sections");
 }
 
 void CgnsReader::readNumberOfBoundaries() {
-	if (cg_nbocos(this->fileIndex, this->baseIndex, this->zoneIndex, &this->numberOfBoundaries))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of boundaries");
+    if (cg_nbocos(this->fileIndex, this->baseIndex, this->zoneIndex, &this->numberOfBoundaries))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of boundaries");
 }
 
 void CgnsReader::createGridData() {
-	this->gridData = boost::make_shared<GridData>();
-	this->gridData->dimension = this->cellDimension;
+    this->gridData = boost::make_shared<GridData>();
+    this->gridData->dimension = this->cellDimension;
 }
 
 void CgnsReader::addRegion(std::string&& name, int elementStart, int elementEnd) {
-	RegionData region;
-	region.name = name;
-	region.elementBegin = elementStart;
-	region.elementEnd = elementEnd;
-	this->gridData->regions.emplace_back(std::move(region));
+    RegionData region;
+    region.name = name;
+    region.elementBegin = elementStart;
+    region.elementEnd = elementEnd;
+    this->gridData->regions.emplace_back(std::move(region));
 }
 
 void CgnsReader::addBoundary(std::string&& name, int elementStart, int elementEnd) {
-	BoundaryData boundary;
-	boundary.name = name;
-	boundary.facetBegin = elementStart;
-	boundary.facetEnd = elementEnd;
-	this->gridData->boundaries.emplace_back(std::move(boundary));
+    BoundaryData boundary;
+    boundary.name = name;
+    boundary.facetBegin = elementStart;
+    boundary.facetEnd = elementEnd;
+    this->gridData->boundaries.emplace_back(std::move(boundary));
 }
 
 void CgnsReader::readBoundaryConditions() {
-	for (int boundaryIndex = 1; boundaryIndex <= this->numberOfBoundaries; boundaryIndex++) {
-		BCType_t boundaryConditionType;
-		PointSetType_t pointSetType;
-		int numberOfVertices, NormalIndex, NormalListSize, ndataset;
-		DataType_t NormalDataType;
-		if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &boundaryConditionType, &pointSetType, &numberOfVertices, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset))
-			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read boundary information");
+    for (int boundaryIndex = 1; boundaryIndex <= this->numberOfBoundaries; boundaryIndex++) {
+        BCType_t boundaryConditionType;
+        PointSetType_t pointSetType;
+        int numberOfVertices, NormalIndex, NormalListSize, ndataset;
+        DataType_t NormalDataType;
+        if (cg_boco_info(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, this->buffer, &boundaryConditionType, &pointSetType, &numberOfVertices, &NormalIndex, &NormalListSize, &NormalDataType, &ndataset))
+            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read boundary information");
 
-		if (cg_goto(this->fileIndex, this->baseIndex, "Zone_t", this->zoneIndex, "ZoneBC_t", 1, "BC_t", boundaryIndex, nullptr))
-			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could go to boundary condition " + std::to_string(boundaryIndex));
+        if (cg_goto(this->fileIndex, this->baseIndex, "Zone_t", this->zoneIndex, "ZoneBC_t", 1, "BC_t", boundaryIndex, nullptr))
+            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could go to boundary condition " + std::to_string(boundaryIndex));
 
-		if (cg_famname_read(this->buffer))
-			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read boundary condition " + std::to_string(boundaryIndex) + " family name");
+        if (cg_famname_read(this->buffer))
+            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read boundary condition " + std::to_string(boundaryIndex) + " family name");
 
-		auto boundary = std::find_if(this->gridData->boundaries.begin(), this->gridData->boundaries.end(), [this](auto b){return b.name == std::string(this->buffer);});
-		if (boundary != this->gridData->boundaries.end()) {
-			std::vector<int> vertices(numberOfVertices);
-			if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, &vertices[0], nullptr))
-				throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read boundary condition" + std::to_string(boundaryIndex));
+        auto boundary = std::find_if(this->gridData->boundaries.begin(), this->gridData->boundaries.end(), [this](auto b){return b.name == std::string(this->buffer);});
+        if (boundary != this->gridData->boundaries.end()) {
+            std::vector<int> vertices(numberOfVertices);
+            if (cg_boco_read(this->fileIndex, this->baseIndex, this->zoneIndex, boundaryIndex, &vertices[0], nullptr))
+                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read boundary condition" + std::to_string(boundaryIndex));
 
-			std::transform(vertices.cbegin(), vertices.cend(), std::back_inserter(boundary->vertices), [](auto x){return x - 1;});
-		}
-	}
+            std::transform(vertices.cbegin(), vertices.cend(), std::back_inserter(boundary->vertices), [](auto x){return x - 1;});
+        }
+    }
 }
 
 int CgnsReader::readSolutionIndex(std::string solutionName) {
-	int numberOfSolutions;
-	if (cg_nsols(this->fileIndex, this->baseIndex, this->zoneIndex, &numberOfSolutions))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of solutions");
+    int numberOfSolutions;
+    if (cg_nsols(this->fileIndex, this->baseIndex, this->zoneIndex, &numberOfSolutions))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of solutions");
 
-	int solutionIndex;
-	for (solutionIndex = 1; solutionIndex <= numberOfSolutions; solutionIndex++) {
-		GridLocation_t gridLocation;
-		if (cg_sol_info(this->fileIndex, this->baseIndex, this->zoneIndex, solutionIndex, this->buffer, &gridLocation))
-			throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read solution " + std::to_string(solutionIndex) + " information");
+    int solutionIndex;
+    for (solutionIndex = 1; solutionIndex <= numberOfSolutions; solutionIndex++) {
+        GridLocation_t gridLocation;
+        if (cg_sol_info(this->fileIndex, this->baseIndex, this->zoneIndex, solutionIndex, this->buffer, &gridLocation))
+            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read solution " + std::to_string(solutionIndex) + " information");
 
-		if (solutionName.compare(this->buffer) == 0)
-			break;
-	}
+        if (solutionName.compare(this->buffer) == 0)
+            break;
+    }
 
-	return solutionIndex;
+    return solutionIndex;
 }
 
 std::vector<double> CgnsReader::readField(int solutionIndex, std::string fieldName) {
-	int dataDimension, solutionEnd;
-	if (cg_sol_size(this->fileIndex, this->baseIndex, this->zoneIndex, solutionIndex, &dataDimension, &solutionEnd))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read solution " + std::to_string(solutionIndex));
+    int dataDimension, solutionEnd;
+    if (cg_sol_size(this->fileIndex, this->baseIndex, this->zoneIndex, solutionIndex, &dataDimension, &solutionEnd))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read solution " + std::to_string(solutionIndex));
 
-	int solutionStart = 1;
-	std::vector<double> field(solutionEnd);
-	if (cg_field_read(this->fileIndex, this->baseIndex, this->zoneIndex, solutionIndex, fieldName.c_str(), RealDouble, &solutionStart, &solutionEnd, &field[0]))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read permanent field '" + fieldName + "'' in solution " + std::to_string(solutionIndex));
+    int solutionStart = 1;
+    std::vector<double> field(solutionEnd);
+    if (cg_field_read(this->fileIndex, this->baseIndex, this->zoneIndex, solutionIndex, fieldName.c_str(), RealDouble, &solutionStart, &solutionEnd, &field[0]))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read permanent field '" + fieldName + "'' in solution " + std::to_string(solutionIndex));
 
-	return field;
+    return field;
 }
 
 std::vector<double> CgnsReader::readField(std::string solutionName, std::string fieldName){
-	return this->readField(this->readSolutionIndex(solutionName), fieldName);
+    return this->readField(this->readSolutionIndex(solutionName), fieldName);
 }
 
 int CgnsReader::readNumberOfTimeSteps() {
-	int numberOfTimeSteps;
-	if (cg_biter_read(this->fileIndex, this->baseIndex, this->buffer, &numberOfTimeSteps))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not base iterative data information");
+    int numberOfTimeSteps;
+    if (cg_biter_read(this->fileIndex, this->baseIndex, this->buffer, &numberOfTimeSteps))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not base iterative data information");
 
-	return numberOfTimeSteps;
+    return numberOfTimeSteps;
 }
 
 std::vector<double> CgnsReader::readTimeInstants() {
- 	if (cg_goto(this->fileIndex, this->baseIndex, "BaseIterativeData_t", 1, nullptr))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not go to base iterative data");
+    if (cg_goto(this->fileIndex, this->baseIndex, "BaseIterativeData_t", 1, nullptr))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not go to base iterative data");
 
- 	int arrayIndex = 1;
- 	DataType_t dataType;
- 	int dataDimension, dimensionVector;
- 	if (cg_array_info(arrayIndex, this->buffer, &dataType, &dataDimension, &dimensionVector))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read array information");
+    int arrayIndex = 1;
+    DataType_t dataType;
+    int dataDimension, dimensionVector;
+    if (cg_array_info(arrayIndex, this->buffer, &dataType, &dataDimension, &dimensionVector))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read array information");
 
- 	std::vector<double> timeInstants(dimensionVector);
- 	if (cg_array_read(arrayIndex, &timeInstants[0]))
-		throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read array");
+    std::vector<double> timeInstants(dimensionVector);
+    if (cg_array_read(arrayIndex, &timeInstants[0]))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read array");
 
- 	return timeInstants;
+    return timeInstants;
 }
 
 CgnsReader::~CgnsReader() {
-	cg_close(this->fileIndex);
+    cg_close(this->fileIndex);
 }

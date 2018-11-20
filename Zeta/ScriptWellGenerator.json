@@ -1,10 +1,10 @@
 {
     "wellRegions" :
     [
-    	{
-			"regionName": "WELL_BODY",
-			"wellStart": [20.0, 125.0, 50.0],
-			"wellName": "LINE_WELL"
-    	}
+        {
+            "regionName": "WELL_BODY",
+            "wellStart": [20.0, 125.0, 50.0],
+            "wellName": "LINE_WELL"
+        }
     ]
 }

@@ -4,14 +4,14 @@
 #include <CgnsInterface/CgnsReader.hpp>
 
 class CgnsReader3D : public CgnsReader {
-	public:
-		CgnsReader3D(std::string filePath, bool readInConstructor = true);
+    public:
+        CgnsReader3D(std::string filePath, bool readInConstructor = true);
 
-	protected:
-		void readCoordinates() override;
-		void readSections() override;
-		void addWell(std::string&& name, int elementStart, int elementEnd);
-		void findWellVertices();
+    protected:
+        void readCoordinates() override;
+        void readSections() override;
+        void addWell(std::string&& name, int elementStart, int elementEnd);
+        void findWellVertices();
 };
 
 #endif

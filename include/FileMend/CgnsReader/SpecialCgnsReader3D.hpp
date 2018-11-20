@@ -4,12 +4,12 @@
 #include <CgnsInterface/CgnsReader/CgnsReader3D.hpp>
 
 class SpecialCgnsReader3D : public CgnsReader3D {
-	public:
-		SpecialCgnsReader3D(std::string filePath);
+    public:
+        SpecialCgnsReader3D(std::string filePath);
 
-	private:
-		void readSections() override;
-		void addWell(std::string&& name, int elementStart, int elementEnd) = delete;
+    private:
+        void readSections() override;
+        void addWell(std::string&& name, int elementStart, int elementEnd) = delete;
 };
 
 #endif

@@ -1,19 +1,19 @@
 {
-	"folders":
-	[
-		{
-			"path": "./"
-		}
-	],
-	"settings":
+    "folders":
+    [
+        {
+            "path": "./"
+        }
+    ],
+    "settings":
     {
         "sublimegdb_executables":
         {
-        	"CgnsInterfaceTest":
+            "CgnsInterfaceTest":
             {
-        		"sublimegdb_workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/CgnsInterfaceTest/source",
+                "sublimegdb_workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/CgnsInterfaceTest/source",
                 "workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/debug/bin/Debug",
-            	"commandline": "gdb --interpreter=mi ./CgnsInterfaceTest",
+                "commandline": "gdb --interpreter=mi ./CgnsInterfaceTest",
                 "arguments": "--run_test=ReadCgns_Region1_Mixed_3D"
             },
             "MultipleZones":

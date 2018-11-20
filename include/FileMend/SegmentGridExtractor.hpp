@@ -11,37 +11,37 @@
 #include <Grid/GridData.hpp>
 
 class SegmentGridExtractor {
-	public:
-		SegmentGridExtractor(boost::shared_ptr<GridData> gridData);
+    public:
+        SegmentGridExtractor(boost::shared_ptr<GridData> gridData);
 
-		~SegmentGridExtractor() = default;
+        ~SegmentGridExtractor() = default;
 
-		boost::shared_ptr<GridData> segmentGrid;
+        boost::shared_ptr<GridData> segmentGrid;
 
-		double tolerance = 1e-4;
+        double tolerance = 1e-4;
 
-	private:
-		void checkGridData();
-		void defineQuantities();
-		void createSegmentGrid();
-		void copyVertices();
-		void copyElements();
-		void copyFacets();
-		void copyLine();
-		void fixRegion();
-		void fixBoundaries();
-		void fixWell();
+    private:
+        void checkGridData();
+        void defineQuantities();
+        void createSegmentGrid();
+        void copyVertices();
+        void copyElements();
+        void copyFacets();
+        void copyLine();
+        void fixRegion();
+        void fixBoundaries();
+        void fixWell();
 
-		boost::shared_ptr<GridData> gridData;
+        boost::shared_ptr<GridData> gridData;
 
-		int numberOfSegments;
-		int numberOfPrismsPerSegment;
-		int numberOfHexahedronsPerSegment;
-		int numberOfHexahedronsPerRadius;
-		int numberOfVerticesPerSection;
+        int numberOfSegments;
+        int numberOfPrismsPerSegment;
+        int numberOfHexahedronsPerSegment;
+        int numberOfHexahedronsPerRadius;
+        int numberOfVerticesPerSection;
 
-		int vertexShift = 0;
-		int elementShift = 0;
+        int vertexShift = 0;
+        int elementShift = 0;
 };
 
 #endif

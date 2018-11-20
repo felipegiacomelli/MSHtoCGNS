@@ -4,18 +4,18 @@
 #include <CgnsInterface/CgnsCreator.hpp>
 
 class CgnsCreator3D : public CgnsCreator {
-	public:
-		CgnsCreator3D(boost::shared_ptr<GridData> gridData, std::string folderPath);
+    public:
+        CgnsCreator3D(boost::shared_ptr<GridData> gridData, std::string folderPath);
 
-	private:
-		void checkDimension() override;
-		void setDimensions() override;
-		void writeCoordinates() override;
-		void buildGlobalConnectivities() override;
-		void writeSections() override;
-		void writeRegions() override;
-		void writeBoundaries() override;
-		void writeWells();
+    private:
+        void checkDimension() override;
+        void setDimensions() override;
+        void writeCoordinates() override;
+        void buildGlobalConnectivities() override;
+        void writeSections() override;
+        void writeRegions() override;
+        void writeBoundaries() override;
+        void writeWells();
 };
 
 #endif
