@@ -1,4 +1,5 @@
 #include <MshInterface/MshReader.hpp>
+#include <Utilities/Print.hpp>
 
 MshReader::MshReader(std::string filePath) : filePath(filePath) {
     this->checkFile();
@@ -57,6 +58,12 @@ void MshReader::readConnectivities() {
     }
     this->connectivities.erase(this->connectivities.begin());
 
+    // $PhysicalNames
+    // dimension, index, "name"
+
+    // $Elements
+    // index, type, number-of-tags, physical-entity-index, geometrical-entity-index, node-number-list
+
     if (connectivities[0][2] != 1)
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Elements must have exactly 2 tags");
 
@@ -65,6 +72,8 @@ void MshReader::readConnectivities() {
         this->connectivities[i].erase(this->connectivities[i].begin() + 1);
         this->connectivities[i].erase(this->connectivities[i].begin() + 2);
     }
+
+    print(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities");
 }
 
 void MshReader::divideConnectivities() {
