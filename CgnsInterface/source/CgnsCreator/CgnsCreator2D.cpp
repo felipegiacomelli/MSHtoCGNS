@@ -11,6 +11,18 @@ CgnsCreator2D::CgnsCreator2D(boost::shared_ptr<GridData> gridData, std::string f
 void CgnsCreator2D::checkDimension() {
     if (this->gridData->dimension != 2)
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData dimension must be equal to 2 and not " + std::to_string(this->gridData->dimension));
+
+    if (this->gridData->tetrahedronConnectivity.size() != 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->tetrahedronConnectivity.size()));
+
+    if (this->gridData->hexahedronConnectivity.size() != 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->hexahedronConnectivity.size()));
+
+    if (this->gridData->prismConnectivity.size() != 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->prismConnectivity.size()));
+
+    if (this->gridData->pyramidConnectivity.size() != 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->pyramidConnectivity.size()));
 }
 
 void CgnsCreator2D::setDimensions() {
