@@ -41,11 +41,6 @@ void CgnsCreator::writeZone() {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write zone");
 }
 
-void CgnsCreator::writeSections() {
-    this->writeRegions();
-    this->writeBoundaries();
-}
-
 void CgnsCreator::buildGlobalConnectivities() {
     for (auto i = this->gridData->tetrahedronConnectivity.cbegin(); i != this->gridData->tetrahedronConnectivity.cend(); i++) {
         this->globalConnectivities.emplace_back(std::vector<int>());
@@ -81,6 +76,11 @@ void CgnsCreator::buildGlobalConnectivities() {
     std::stable_sort(this->globalConnectivities.begin(), this->globalConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
     for (unsigned i = 0; i < this->globalConnectivities.size(); i++)
         this->globalConnectivities[i].pop_back();
+}
+
+void CgnsCreator::writeSections() {
+    this->writeRegions();
+    this->writeBoundaries();
 }
 
 void CgnsCreator::writeBoundaryConditions() {
