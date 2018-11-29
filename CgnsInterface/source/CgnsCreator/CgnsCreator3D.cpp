@@ -41,43 +41,6 @@ void CgnsCreator3D::writeCoordinates() {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write CoordinateZ");
 }
 
-void CgnsCreator3D::buildGlobalConnectivities() {
-    for (auto i = this->gridData->tetrahedronConnectivity.cbegin(); i != this->gridData->tetrahedronConnectivity.cend(); i++) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
-    }
-    for (auto i = this->gridData->hexahedronConnectivity.cbegin(); i != this->gridData->hexahedronConnectivity.cend(); i++) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
-    }
-    for (auto i = this->gridData->prismConnectivity.cbegin(); i != this->gridData->prismConnectivity.cend(); i++) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
-    }
-    for (auto i = this->gridData->pyramidConnectivity.cbegin(); i != this->gridData->pyramidConnectivity.cend(); i++) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
-    }
-
-    for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
-    }
-    for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
-    }
-
-    for (auto i = this->gridData->lineConnectivity.cbegin(); i != this->gridData->lineConnectivity.cend(); i++) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
-    }
-
-    std::stable_sort(this->globalConnectivities.begin(), this->globalConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
-    for (unsigned i = 0; i < this->globalConnectivities.size(); i++)
-        this->globalConnectivities[i].pop_back();
-}
-
 void CgnsCreator3D::writeSections() {
     this->writeRegions();
     this->writeBoundaries();

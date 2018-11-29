@@ -48,27 +48,6 @@ void CgnsCreator2D::writeCoordinates() {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write CoordinateY");
 }
 
-void CgnsCreator2D::buildGlobalConnectivities() {
-    for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
-    }
-    for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
-    }
-
-    for (auto i = this->gridData->lineConnectivity.cbegin(); i != this->gridData->lineConnectivity.cend(); i++) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
-    }
-
-    std::stable_sort(this->globalConnectivities.begin(), this->globalConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
-
-    for (unsigned i = 0; i < this->globalConnectivities.size(); i++)
-        this->globalConnectivities[i].pop_back();
-}
-
 void CgnsCreator2D::writeRegions() {
     for (auto region = this->gridData->regions.cbegin(); region != this->gridData->regions.cend(); region++) {
 

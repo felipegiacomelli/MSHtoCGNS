@@ -23,7 +23,7 @@ class CgnsCreator {
         void writeBase();
         void writeZone();
         virtual void writeCoordinates() = 0;
-        virtual void buildGlobalConnectivities() = 0;
+        void buildGlobalConnectivities();
         virtual void writeSections();
         virtual void writeRegions() = 0;
         virtual void writeBoundaries() = 0;

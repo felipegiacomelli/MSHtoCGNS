@@ -46,6 +46,43 @@ void CgnsCreator::writeSections() {
     this->writeBoundaries();
 }
 
+void CgnsCreator::buildGlobalConnectivities() {
+    for (auto i = this->gridData->tetrahedronConnectivity.cbegin(); i != this->gridData->tetrahedronConnectivity.cend(); i++) {
+        this->globalConnectivities.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+    }
+    for (auto i = this->gridData->hexahedronConnectivity.cbegin(); i != this->gridData->hexahedronConnectivity.cend(); i++) {
+        this->globalConnectivities.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+    }
+    for (auto i = this->gridData->prismConnectivity.cbegin(); i != this->gridData->prismConnectivity.cend(); i++) {
+        this->globalConnectivities.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+    }
+    for (auto i = this->gridData->pyramidConnectivity.cbegin(); i != this->gridData->pyramidConnectivity.cend(); i++) {
+        this->globalConnectivities.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+    }
+
+    for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); i++) {
+        this->globalConnectivities.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+    }
+    for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); i++) {
+        this->globalConnectivities.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+    }
+
+    for (auto i = this->gridData->lineConnectivity.cbegin(); i != this->gridData->lineConnectivity.cend(); i++) {
+        this->globalConnectivities.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+    }
+
+    std::stable_sort(this->globalConnectivities.begin(), this->globalConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
+    for (unsigned i = 0; i < this->globalConnectivities.size(); i++)
+        this->globalConnectivities[i].pop_back();
+}
+
 void CgnsCreator::writeBoundaryConditions() {
     for (auto boundary = this->gridData->boundaries.cbegin(); boundary != this->gridData->boundaries.cend(); boundary++) {
         std::vector<int> indices;

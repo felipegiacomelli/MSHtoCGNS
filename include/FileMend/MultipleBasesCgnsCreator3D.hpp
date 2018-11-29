@@ -12,7 +12,6 @@ class MultipleBasesCgnsCreator3D : public CgnsCreator {
         void checkDimension() override;
         void setDimensions() override;
         void writeCoordinates() override;
-        void buildGlobalConnectivities() override;
         void writeSections() override;
         void writeRegions() override;
         void writeBoundaries() override;
