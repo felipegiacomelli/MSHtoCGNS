@@ -10,6 +10,7 @@ struct RegionData {
     std::string name;
     int elementBegin;
     int elementEnd;
+    std::vector<int> vertices;
 };
 
 struct BoundaryData {
