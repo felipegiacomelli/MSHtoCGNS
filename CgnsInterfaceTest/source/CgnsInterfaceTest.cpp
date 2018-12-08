@@ -1,3 +1,3 @@
 #define BOOST_TEST_MODULE CgnsInterfaceTestModule
 
-#include <BoostInterface/Test.hpp>
+#include "BoostInterface/Test.hpp"

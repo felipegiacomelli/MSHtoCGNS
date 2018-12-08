@@ -1,7 +1,7 @@
 #ifndef CGNS_WRITER_HPP
 #define CGNS_WRITER_HPP
 
-#include <BoostInterface/Filesystem.hpp>
+#include "BoostInterface/Filesystem.hpp"
 
 class CgnsWriter {
     public:

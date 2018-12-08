@@ -1,4 +1,4 @@
-#include <CgnsInterface/CgnsReader/CgnsReader2D.hpp>
+#include "CgnsInterface/CgnsReader/CgnsReader2D.hpp"
 #include <cgnslib.h>
 
 CgnsReader2D::CgnsReader2D(std::string filePath, bool readInConstructor) : CgnsReader(filePath) {

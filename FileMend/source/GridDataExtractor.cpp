@@ -1,4 +1,4 @@
-#include <FileMend/GridDataExtractor.hpp>
+#include "FileMend/GridDataExtractor.hpp"
 
 GridDataExtractor::GridDataExtractor(boost::shared_ptr<GridData> original, std::string gridDataExtractorScript) : original(original) {
     this->checkGridData();

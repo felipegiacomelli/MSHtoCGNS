@@ -6,9 +6,9 @@
 #include <numeric>
 #include <unordered_map>
 
-#include <BoostInterface/Filesystem.hpp>
-#include <BoostInterface/PropertyTree.hpp>
-#include <Grid/GridData.hpp>
+#include "BoostInterface/Filesystem.hpp"
+#include "BoostInterface/PropertyTree.hpp"
+#include "Grid/GridData.hpp"
 
 struct GridDataExtractorData {
     std::vector<std::string> regions;

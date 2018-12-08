@@ -4,7 +4,7 @@
 #include <vector>
 #include <array>
 #include <string>
-#include <BoostInterface/SharedPointer.hpp>
+#include "BoostInterface/SharedPointer.hpp"
 
 struct RegionData {
     std::string name;

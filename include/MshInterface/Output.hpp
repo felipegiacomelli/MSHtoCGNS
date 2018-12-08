@@ -4,7 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include <Grid/GridData.hpp>
+#include "Grid/GridData.hpp"
 
 template<class InputIt>
 void output(InputIt cbegin, InputIt cend, std::ofstream& file) {

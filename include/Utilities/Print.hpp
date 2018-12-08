@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include <Grid/GridData.hpp>
+#include "Grid/GridData.hpp"
 
 template<typename T>
 void print(const std::vector<T>& a, std::string&& message) {

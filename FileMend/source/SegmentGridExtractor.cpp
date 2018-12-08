@@ -1,4 +1,4 @@
-#include <FileMend/SegmentGridExtractor.hpp>
+#include "FileMend/SegmentGridExtractor.hpp"
 #include <cgnslib.h>
 
 SegmentGridExtractor::SegmentGridExtractor(boost::shared_ptr<GridData> gridData) : gridData(gridData) {

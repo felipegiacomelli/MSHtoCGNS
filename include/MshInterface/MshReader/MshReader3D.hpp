@@ -1,7 +1,7 @@
 #ifndef MSH_READER_3D_HPP
 #define MSH_READER_3D_HPP
 
-#include <MshInterface/MshReader.hpp>
+#include "MshInterface/MshReader.hpp"
 
 class MshReader3D : public MshReader {
     public:

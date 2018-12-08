@@ -1,7 +1,7 @@
 #ifndef MULTIPLE_BASES_CGNS_CREATOR_3D_HPP
 #define MULTIPLE_BASES_CGNS_CREATOR_3D_HPP
 
-#include <CgnsInterface/CgnsCreator.hpp>
+#include "CgnsInterface/CgnsCreator.hpp"
 
 class MultipleBasesCgnsCreator3D : public CgnsCreator {
     public:

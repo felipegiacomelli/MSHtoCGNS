@@ -1,9 +1,9 @@
-#include <BoostInterface/Test.hpp>
-#include <Utilities/Vector.hpp>
+#include "BoostInterface/Test.hpp"
+#include "Utilities/Vector.hpp"
 
 #define TOLERANCE 1e-12
 
-TestCase(linearize_matrix_via_iterators) {
+TestCase(Append) {
     std::vector<std::vector<double>> a = {{-10.0, 10.0, 20.0}, {30.0, 40.0, 50.0}, {60.0, 70.0, 80.0}};
 
     std::vector<double> b;

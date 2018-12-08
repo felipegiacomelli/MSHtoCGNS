@@ -6,10 +6,10 @@
 #include <numeric>
 #include <unordered_map>
 
-#include <BoostInterface/Filesystem.hpp>
-#include <BoostInterface/PropertyTree.hpp>
-#include <Utilities/Vector.hpp>
-#include <Grid/GridData.hpp>
+#include "BoostInterface/Filesystem.hpp"
+#include "BoostInterface/PropertyTree.hpp"
+#include "Utilities/Vector.hpp"
+#include "Grid/GridData.hpp"
 
 struct WellGeneratorData {
     std::string regionName;
