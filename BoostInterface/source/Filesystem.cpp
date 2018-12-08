@@ -1,15 +1,22 @@
 #include <BoostInterface/Filesystem.hpp>
 
-void createDirectory(std::string name) {
-    if (!boost::filesystem::exists(name)) {
-        boost::filesystem::path directory(name);
+void createDirectory(std::string path) {
+    if (!boost::filesystem::exists(path)) {
+        boost::filesystem::path directory(path);
         boost::filesystem::create_directory(directory);
     }
 }
 
-void deleteDirectory(std::string name) {
-    if (boost::filesystem::exists(name)) {
-        boost::filesystem::path directory(name);
+void createDirectories(std::string path) {
+    if (!boost::filesystem::exists(path)) {
+        boost::filesystem::path directory(path);
+        boost::filesystem::create_directories(directory);
+    }
+}
+
+void deleteDirectory(std::string path) {
+    if (boost::filesystem::exists(path)) {
+        boost::filesystem::path directory(path);
         boost::filesystem::remove_all(directory);
     }
 }

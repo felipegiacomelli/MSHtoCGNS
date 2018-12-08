@@ -4,17 +4,26 @@
 TestSuite(Filesystem)
 
 TestCase(CreateDirectory) {
-    std::string Path = "Test/";
-    createDirectory(Path);
+    std::string directory = "Test/";
+    createDirectory(directory);
 
-    check(boost::filesystem::exists(Path));
+    check(boost::filesystem::exists(directory));
 }
 
 TestCase(DeleteDirectory) {
-    std::string Path = "Test/";
-    deleteDirectory(Path);
+    std::string directory = "Test/";
+    deleteDirectory(directory);
 
-    check(!boost::filesystem::exists(Path));
+    check(!boost::filesystem::exists(directory));
+}
+
+TestCase(CreateDirectories) {
+    std::string directories = "Test/Test";
+    createDirectories(directories);
+
+    check(boost::filesystem::exists(directories));
+
+    deleteDirectory("Test/");
 }
 
 TestSuiteEnd()
