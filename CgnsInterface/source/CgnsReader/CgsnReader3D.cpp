@@ -36,9 +36,9 @@ void CgnsReader3D::readCoordinates() {
 void CgnsReader3D::readSections() {
     for (int sectionIndex = 1; sectionIndex <= this->numberOfSections; sectionIndex++) {
         ElementType_t elementType;
-        int elementStart, elementEnd;
+        int elementStart, end;
         int lastBoundaryElement, parentFlag;
-        if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag))
+        if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &end, &lastBoundaryElement, &parentFlag))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section");
 
         int size;
@@ -51,21 +51,21 @@ void CgnsReader3D::readSections() {
 
         if (elementType == MIXED)
             if (ElementType_t(connectivities[0]) == TETRA_4 || ElementType_t(connectivities[0]) == HEXA_8 || ElementType_t(connectivities[0]) == PENTA_6 || ElementType_t(connectivities[0]) == PYRA_5)
-                this->addRegion(std::string(this->buffer), elementStart - 1, elementEnd);
+                this->addRegion(std::string(this->buffer), elementStart - 1, end);
             else
-                this->addBoundary(std::string(this->buffer), elementStart - 1, elementEnd);
+                this->addBoundary(std::string(this->buffer), elementStart - 1, end);
         else if (elementType == TETRA_4 || elementType == HEXA_8 || elementType == PENTA_6 || elementType == PYRA_5)
-                this->addRegion(std::string(this->buffer), elementStart - 1, elementEnd);
+                this->addRegion(std::string(this->buffer), elementStart - 1, end);
         else if (elementType == TRI_3 || elementType == QUAD_4)
-            this->addBoundary(std::string(this->buffer), elementStart - 1, elementEnd);
+            this->addBoundary(std::string(this->buffer), elementStart - 1, end);
         else if (elementType == BAR_2)
-            this->addWell(std::string(this->buffer), elementStart - 1, elementEnd);
+            this->addWell(std::string(this->buffer), elementStart - 1, end);
 
         int numberOfVertices;
         if (cg_npe(elementType, &numberOfVertices))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element number of vertices");
 
-        int numberOfElements = elementEnd - elementStart + 1;
+        int numberOfElements = end - elementStart + 1;
 
         switch (elementType) {
             case MIXED : {
@@ -194,11 +194,11 @@ void CgnsReader3D::readSections() {
     }
 }
 
-void CgnsReader3D::addWell(std::string&& name, int elementStart, int elementEnd) {
+void CgnsReader3D::addWell(std::string&& name, int elementStart, int end) {
     WellData well;
     well.name = name;
-    well.lineBegin = elementStart;
-    well.lineEnd = elementEnd;
+    well.begin = elementStart;
+    well.end = end;
     this->gridData->wells.emplace_back(std::move(well));
 }
 
@@ -206,7 +206,7 @@ void CgnsReader3D::findWellVertices() {
     for (auto& well : this->gridData->wells) {
         std::set<int> vertices;
         for (const auto& line : this->gridData->lineConnectivity)
-            if (line.back() >= well.lineBegin && line.back() < well.lineEnd)
+            if (line.back() >= well.begin && line.back() < well.end)
                 vertices.insert(line.cbegin(), line.cend() - 1);
         well.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
     }

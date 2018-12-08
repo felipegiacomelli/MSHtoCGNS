@@ -28,7 +28,7 @@ struct Region4_ElementType1_2D {
     char name[100];
     ElementType_t type;
     int elementStart;
-    int elementEnd;
+    int end;
     int nbndry;
     int parent_flag;
 };
@@ -95,13 +95,13 @@ TestCase(A) {
 
     check(region.name == std::string("A"));
 
-    checkEqual(region.elementBegin, 0);
-    checkEqual(region.elementEnd, 1);
+    checkEqual(region.begin, 0);
+    checkEqual(region.end, 1);
 
-    cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
     check(std::string(name) == std::string("A"));
     checkEqual(this->elementStart, 1);
-    checkEqual(this->elementEnd  , 1);
+    checkEqual(this->end  , 1);
     check(this->type == QUAD_4);
 }
 
@@ -110,13 +110,13 @@ TestCase(B) {
 
     check(region.name == std::string("B"));
 
-    checkEqual(region.elementBegin, 1);
-    checkEqual(region.elementEnd, 5);
+    checkEqual(region.begin, 1);
+    checkEqual(region.end, 5);
 
-    cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
     check(std::string(name) == std::string("B"));
     checkEqual(this->elementStart, 2);
-    checkEqual(this->elementEnd  , 5);
+    checkEqual(this->end  , 5);
     check(this->type == TRI_3);
 }
 
@@ -125,13 +125,13 @@ TestCase(C) {
 
     check(region.name == std::string("C"));
 
-    checkEqual(region.elementBegin, 5);
-    checkEqual(region.elementEnd, 6);
+    checkEqual(region.begin, 5);
+    checkEqual(region.end, 6);
 
-    cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
     check(std::string(name) == std::string("C"));
     checkEqual(this->elementStart, 6);
-    checkEqual(this->elementEnd  , 6);
+    checkEqual(this->end  , 6);
     check(this->type == QUAD_4);
 }
 
@@ -140,13 +140,13 @@ TestCase(D) {
 
     check(region.name == std::string("D"));
 
-    checkEqual(region.elementBegin, 6);
-    checkEqual(region.elementEnd, 10);
+    checkEqual(region.begin, 6);
+    checkEqual(region.end, 10);
 
-    cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
     check(std::string(name) == std::string("D"));
     checkEqual(this->elementStart,  7);
-    checkEqual(this->elementEnd  , 10);
+    checkEqual(this->end  , 10);
     check(this->type == TRI_3);
 }
 
@@ -159,8 +159,8 @@ TestCase(West) {
 
     check(boundary.name == std::string("West"));
 
-    checkEqual(boundary.facetBegin, 10);
-    checkEqual(boundary.facetEnd, 12);
+    checkEqual(boundary.begin, 10);
+    checkEqual(boundary.end, 12);
 
     auto vertices = boundary.vertices;
     checkEqual(vertices.size(), 3u);
@@ -174,8 +174,8 @@ TestCase(East) {
 
     check(boundary.name == std::string("East"));
 
-    checkEqual(boundary.facetBegin, 12);
-    checkEqual(boundary.facetEnd, 14);
+    checkEqual(boundary.begin, 12);
+    checkEqual(boundary.end, 14);
 
     auto vertices = boundary.vertices;
     checkEqual(vertices.size(), 3u);
@@ -189,8 +189,8 @@ TestCase(South) {
 
     check(boundary.name == std::string("South"));
 
-    checkEqual(boundary.facetBegin, 14);
-    checkEqual(boundary.facetEnd, 16);
+    checkEqual(boundary.begin, 14);
+    checkEqual(boundary.end, 16);
 
     auto vertices = boundary.vertices;
     checkEqual(vertices.size(), 3u);
@@ -204,8 +204,8 @@ TestCase(North) {
 
     check(boundary.name == std::string("North"));
 
-    checkEqual(boundary.facetBegin, 16);
-    checkEqual(boundary.facetEnd, 18);
+    checkEqual(boundary.begin, 16);
+    checkEqual(boundary.end, 18);
 
     auto vertices = boundary.vertices;
     checkEqual(vertices.size(), 3u);

@@ -41,17 +41,17 @@ TestCase(RadialGridDataReorderedTest) {
     checkEqual(reordered->regions.size()   ,  1u);
     checkEqual(reordered->wells.size()     ,  1u);
 
-    checkEqual(reordered->boundaries[0].facetBegin, 324);
-    checkEqual(reordered->boundaries[0].facetEnd  , 432);
+    checkEqual(reordered->boundaries[0].begin, 324);
+    checkEqual(reordered->boundaries[0].end  , 432);
 
-    checkEqual(reordered->boundaries[1].facetBegin, 432);
-    checkEqual(reordered->boundaries[1].facetEnd  , 468);
+    checkEqual(reordered->boundaries[1].begin, 432);
+    checkEqual(reordered->boundaries[1].end  , 468);
 
-    checkEqual(reordered->boundaries[2].facetBegin, 468);
-    checkEqual(reordered->boundaries[2].facetEnd  , 504);
+    checkEqual(reordered->boundaries[2].begin, 468);
+    checkEqual(reordered->boundaries[2].end  , 504);
 
-    checkEqual(reordered->wells[0].lineBegin, 504);
-    checkEqual(reordered->wells[0].lineEnd  , 513);
+    checkEqual(reordered->wells[0].begin, 504);
+    checkEqual(reordered->wells[0].end  , 513);
     checkEqual(reordered->wells[0].vertices.size(), 10u);
     for (int j = 0; j < 10; j++)
         checkEqual(reordered->wells[0].vertices[j], j * 37);

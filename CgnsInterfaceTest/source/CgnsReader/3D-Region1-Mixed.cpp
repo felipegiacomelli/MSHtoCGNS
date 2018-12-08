@@ -30,46 +30,46 @@ TestCase(CgnsReader3DTest) {
     checkEqual(this->gridData->wells.size(), 1u);
 
     auto region = this->gridData->regions[0];
-    checkEqual(region.elementBegin, 0);
-    checkEqual(region.elementEnd  , 54300);
+    checkEqual(region.begin, 0);
+    checkEqual(region.end  , 54300);
 
     region = this->gridData->regions[1];
-    checkEqual(region.elementBegin, 54300);
-    checkEqual(region.elementEnd  , 57072);
+    checkEqual(region.begin, 54300);
+    checkEqual(region.end  , 57072);
 
     auto boundary = this->gridData->boundaries[0];
-    checkEqual(boundary.facetBegin, 57072);
-    checkEqual(boundary.facetEnd  , 57286);
+    checkEqual(boundary.begin, 57072);
+    checkEqual(boundary.end  , 57286);
     checkEqual(boundary.vertices.size(), 135u);
 
     boundary = this->gridData->boundaries[1];
-    checkEqual(boundary.facetBegin, 57286);
-    checkEqual(boundary.facetEnd  , 57492);
+    checkEqual(boundary.begin, 57286);
+    checkEqual(boundary.end  , 57492);
     checkEqual(boundary.vertices.size(), 131u);
 
     boundary = this->gridData->boundaries[2];
-    checkEqual(boundary.facetBegin, 57492);
-    checkEqual(boundary.facetEnd  , 57704);
+    checkEqual(boundary.begin, 57492);
+    checkEqual(boundary.end  , 57704);
     checkEqual(boundary.vertices.size(), 134u);
 
     boundary = this->gridData->boundaries[3];
-    checkEqual(boundary.facetBegin, 57704);
-    checkEqual(boundary.facetEnd  , 57916);
+    checkEqual(boundary.begin, 57704);
+    checkEqual(boundary.end  , 57916);
     checkEqual(boundary.vertices.size(), 134u);
 
     boundary = this->gridData->boundaries[4];
-    checkEqual(boundary.facetBegin, 57916);
-    checkEqual(boundary.facetEnd  , 58858);
+    checkEqual(boundary.begin, 57916);
+    checkEqual(boundary.end  , 58858);
     checkEqual(boundary.vertices.size(), 516u);
 
     boundary = this->gridData->boundaries[5];
-    checkEqual(boundary.facetBegin, 58858);
-    checkEqual(boundary.facetEnd  , 59958);
+    checkEqual(boundary.begin, 58858);
+    checkEqual(boundary.end  , 59958);
     checkEqual(boundary.vertices.size(), 607u);
 
     auto well = this->gridData->wells[0];
-    checkEqual(well.lineBegin, 59958);
-    checkEqual(well.lineEnd  , 60035);
+    checkEqual(well.begin, 59958);
+    checkEqual(well.end  , 60035);
     checkEqual(well.vertices.size(), 78u);
 
     auto tetrahedron = this->gridData->tetrahedronConnectivity.front();

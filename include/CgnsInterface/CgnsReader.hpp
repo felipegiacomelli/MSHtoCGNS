@@ -28,8 +28,8 @@ class CgnsReader {
         void createGridData();
         virtual void readCoordinates() = 0;
         virtual void readSections() = 0;
-        void addRegion(std::string&& name, int elementStart, int elementEnd);
-        void addBoundary(std::string&& name, int elementStart, int elementEnd);
+        void addRegion(std::string&& name, int elementStart, int end);
+        void addBoundary(std::string&& name, int elementStart, int end);
         void readBoundaryConditions();
         int readSolutionIndex(std::string solutionName);
 

@@ -76,8 +76,8 @@ TestCase(A) {
 
     check(region.name == std::string("A"));
 
-    checkEqual(region.elementBegin, 0);
-    checkEqual(region.elementEnd, 1);
+    checkEqual(region.begin, 0);
+    checkEqual(region.end, 1);
 }
 
 TestCase(B) {
@@ -85,8 +85,8 @@ TestCase(B) {
 
     check(region.name == std::string("B"));
 
-    checkEqual(region.elementBegin, 1);
-    checkEqual(region.elementEnd, 5);
+    checkEqual(region.begin, 1);
+    checkEqual(region.end, 5);
 }
 
 TestCase(C) {
@@ -94,8 +94,8 @@ TestCase(C) {
 
     check(region.name == std::string("C"));
 
-    checkEqual(region.elementBegin, 5);
-    checkEqual(region.elementEnd, 6);
+    checkEqual(region.begin, 5);
+    checkEqual(region.end, 6);
 }
 
 TestCase(D) {
@@ -103,8 +103,8 @@ TestCase(D) {
 
     check(region.name == std::string("D"));
 
-    checkEqual(region.elementBegin, 6);
-    checkEqual(region.elementEnd, 10);
+    checkEqual(region.begin, 6);
+    checkEqual(region.end, 10);
 }
 
 TestCase(Boundaries) {
@@ -116,8 +116,8 @@ TestCase(West) {
 
     check(boundary.name == std::string("West"));
 
-    checkEqual(boundary.facetBegin, 10);
-    checkEqual(boundary.facetEnd, 12);
+    checkEqual(boundary.begin, 10);
+    checkEqual(boundary.end, 12);
 
     auto vertices = boundary.vertices;
     checkEqual(vertices.size(), 3u);
@@ -131,8 +131,8 @@ TestCase(East) {
 
     check(boundary.name == std::string("East"));
 
-    checkEqual(boundary.facetBegin, 12);
-    checkEqual(boundary.facetEnd, 14);
+    checkEqual(boundary.begin, 12);
+    checkEqual(boundary.end, 14);
 
     auto vertices = boundary.vertices;
     checkEqual(vertices.size(), 3u);
@@ -146,8 +146,8 @@ TestCase(South) {
 
     check(boundary.name == std::string("South"));
 
-    checkEqual(boundary.facetBegin, 14);
-    checkEqual(boundary.facetEnd, 16);
+    checkEqual(boundary.begin, 14);
+    checkEqual(boundary.end, 16);
 
     auto vertices = boundary.vertices;
     checkEqual(vertices.size(), 3u);
@@ -161,8 +161,8 @@ TestCase(North) {
 
     check(boundary.name == std::string("North"));
 
-    checkEqual(boundary.facetBegin, 16);
-    checkEqual(boundary.facetEnd, 18);
+    checkEqual(boundary.begin, 16);
+    checkEqual(boundary.end, 18);
 
     auto vertices = boundary.vertices;
     checkEqual(vertices.size(), 3u);

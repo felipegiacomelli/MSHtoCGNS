@@ -81,8 +81,8 @@ void GridDataExtractor::extractRegions() {
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no region " + name + " in gridData");
         auto region(*iterator);
 
-        auto regionBegin = this->elementConnectivities.begin() + region.elementBegin;
-        auto regionEnd = this->elementConnectivities.begin() + region.elementEnd;
+        auto regionBegin = this->elementConnectivities.begin() + region.begin;
+        auto regionEnd = this->elementConnectivities.begin() + region.end;
 
         for (auto element = regionBegin; element != regionEnd; element++) {
 
@@ -120,8 +120,8 @@ void GridDataExtractor::extractRegions() {
 
         }
 
-        region.elementBegin = regionBegin->back();
-        region.elementEnd = (regionEnd - 1)->back() + 1;
+        region.begin = regionBegin->back();
+        region.end = (regionEnd - 1)->back() + 1;
 
         this->extract->regions.emplace_back(region);
     }
@@ -137,7 +137,7 @@ void GridDataExtractor::extractBoundaries() {
 
         std::vector<int> deleteIndices;
         for (auto i = this->original->triangleConnectivity.cbegin(); i != this->original->triangleConnectivity.cend(); i++)
-            if (i->back() >= boundary.facetBegin && i->back() <= boundary.facetEnd)
+            if (i->back() >= boundary.begin && i->back() <= boundary.end)
                 deleteIndices.emplace_back(i -  this->original->triangleConnectivity.cbegin());
 
         for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); rit++)
@@ -145,7 +145,7 @@ void GridDataExtractor::extractBoundaries() {
 
         deleteIndices.clear();
         for (auto i = this->original->quadrangleConnectivity.cbegin(); i != this->original->quadrangleConnectivity.cend(); i++)
-            if (i->back() >= boundary.facetBegin && i->back() <= boundary.facetEnd)
+            if (i->back() >= boundary.begin && i->back() <= boundary.end)
                 deleteIndices.emplace_back(i -  this->original->quadrangleConnectivity.cbegin());
 
         for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); rit++)
@@ -153,8 +153,8 @@ void GridDataExtractor::extractBoundaries() {
 
         this->original->boundaries.erase(iterator);
 
-        auto boundaryBegin = this->elementConnectivities.begin() + boundary.facetBegin;
-        auto boundaryEnd = this->elementConnectivities.begin() + boundary.facetEnd;
+        auto boundaryBegin = this->elementConnectivities.begin() + boundary.begin;
+        auto boundaryEnd = this->elementConnectivities.begin() + boundary.end;
 
         for (auto facet = boundaryBegin; facet != boundaryEnd; facet++) {
 
@@ -177,8 +177,8 @@ void GridDataExtractor::extractBoundaries() {
 
         }
 
-        boundary.facetBegin = boundaryBegin->back();
-        boundary.facetEnd = (boundaryEnd - 1)->back() + 1;
+        boundary.begin = boundaryBegin->back();
+        boundary.end = (boundaryEnd - 1)->back() + 1;
 
         this->extract->boundaries.emplace_back(boundary);
     }
@@ -192,8 +192,8 @@ void GridDataExtractor::extractWells() {
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no well " + name + " in gridData");
         auto well(*iterator);
 
-        auto wellBegin = this->elementConnectivities.begin() + well.lineBegin;
-        auto wellEnd = this->elementConnectivities.begin() + well.lineEnd;
+        auto wellBegin = this->elementConnectivities.begin() + well.begin;
+        auto wellEnd = this->elementConnectivities.begin() + well.end;
 
         for (auto element = wellBegin; element != wellEnd; element++) {
 
@@ -204,8 +204,8 @@ void GridDataExtractor::extractWells() {
             this->extract->lineConnectivity.emplace_back(std::move(line));
         }
 
-        well.lineBegin = wellBegin->back();
-        well.lineEnd = (wellEnd - 1)->back() + 1;
+        well.begin = wellBegin->back();
+        well.end = (wellEnd - 1)->back() + 1;
 
         this->extract->wells.emplace_back(well);
     }

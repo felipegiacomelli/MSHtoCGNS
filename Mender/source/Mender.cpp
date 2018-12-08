@@ -13,8 +13,8 @@
 void createSingleRegion(boost::shared_ptr<GridData> gridData, std::string regionName) {
     RegionData region;
     region.name = regionName;
-    region.elementBegin = 0;
-    region.elementEnd = gridData->tetrahedronConnectivity.size() + gridData->hexahedronConnectivity.size() + gridData->prismConnectivity.size() + gridData->pyramidConnectivity.size();
+    region.begin = 0;
+    region.end = gridData->tetrahedronConnectivity.size() + gridData->hexahedronConnectivity.size() + gridData->prismConnectivity.size() + gridData->pyramidConnectivity.size();
     gridData->regions.clear();
     gridData->regions.emplace_back(std::move(region));
 }

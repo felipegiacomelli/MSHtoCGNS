@@ -47,7 +47,7 @@ void WellGenerator::generateWells() {
         auto wellRegion = std::find_if(this->gridData->regions.cbegin(), this->gridData->regions.cend(), [=](auto r){return r.name == wellGeneratorData.regionName;});
 
         for (auto i = this->gridData->prismConnectivity.cbegin(); i != this->gridData->prismConnectivity.cend(); i++)
-            if (i->back() >= wellRegion->elementBegin && i->back() < wellRegion->elementEnd)
+            if (i->back() >= wellRegion->begin && i->back() < wellRegion->end)
                 this->prisms.emplace_back(i->cbegin(), i->cend()-1);
 
         for (const auto& prism : this->prisms)
@@ -93,8 +93,8 @@ void WellGenerator::generateWells() {
 
         WellData well;
         well.name = wellGeneratorData.wellName;
-        well.lineBegin = this->lineConnectivityShift;
-        well.lineEnd = this->lineConnectivityShift +  numberOfLines;
+        well.begin = this->lineConnectivityShift;
+        well.end = this->lineConnectivityShift +  numberOfLines;
         well.vertices = std::move(vertices);
         this->gridData->wells.emplace_back(std::move(well));
 

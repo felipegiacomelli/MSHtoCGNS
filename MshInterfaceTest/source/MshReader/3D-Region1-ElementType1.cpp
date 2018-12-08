@@ -105,8 +105,8 @@ TestCase(Geometry) {
 
     check(region.name == std::string("Geometry"));
 
-    checkEqual(region.elementBegin, 0);
-    checkEqual(region.elementEnd, 24);
+    checkEqual(region.begin, 0);
+    checkEqual(region.end, 24);
 }
 
 TestCase(Boundaries) {
@@ -118,8 +118,8 @@ TestCase(West) {
 
     check(boundary.name == std::string("West"));
 
-    checkEqual(boundary.facetBegin, 24);
-    checkEqual(boundary.facetEnd, 28);
+    checkEqual(boundary.begin, 24);
+    checkEqual(boundary.end, 28);
 
     auto vertices = boundary.vertices;
     checkEqual((vertices.size()), 5u);
@@ -135,8 +135,8 @@ TestCase(East) {
 
     check(boundary.name == std::string("East"));
 
-    checkEqual(boundary.facetBegin, 28);
-    checkEqual(boundary.facetEnd, 32);
+    checkEqual(boundary.begin, 28);
+    checkEqual(boundary.end, 32);
 
     auto vertices = boundary.vertices;
     checkEqual((vertices.size()), 5u);
@@ -152,8 +152,8 @@ TestCase(South) {
 
     check(boundary.name == std::string("South"));
 
-    checkEqual(boundary.facetBegin, 32);
-    checkEqual(boundary.facetEnd, 36);
+    checkEqual(boundary.begin, 32);
+    checkEqual(boundary.end, 36);
 
     auto vertices = boundary.vertices;
     checkEqual((vertices.size()), 5u);
@@ -169,8 +169,8 @@ TestCase(North) {
 
     check(boundary.name == std::string("North"));
 
-    checkEqual(boundary.facetBegin, 36);
-    checkEqual(boundary.facetEnd, 40);
+    checkEqual(boundary.begin, 36);
+    checkEqual(boundary.end, 40);
 
     auto vertices = boundary.vertices;
     checkEqual((vertices.size()), 5u);
@@ -186,8 +186,8 @@ TestCase(Bottom) {
 
     check(boundary.name == std::string("Bottom"));
 
-    checkEqual(boundary.facetBegin, 40);
-    checkEqual(boundary.facetEnd, 44);
+    checkEqual(boundary.begin, 40);
+    checkEqual(boundary.end, 44);
 
     auto vertices = boundary.vertices;
     checkEqual((vertices.size()), 5u);
@@ -203,8 +203,8 @@ TestCase(Top) {
 
     check(boundary.name == std::string("Top"));
 
-    checkEqual(boundary.facetBegin, 44);
-    checkEqual(boundary.facetEnd, 48);
+    checkEqual(boundary.begin, 44);
+    checkEqual(boundary.end, 48);
 
     auto vertices = boundary.vertices;
     checkEqual((vertices.size()), 5u);

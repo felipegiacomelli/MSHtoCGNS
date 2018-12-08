@@ -46,25 +46,25 @@ TestCase(SegmentGridExtractorTest) {
     checkEqual(segmentGrid->wells.size()     ,  1u);
 
     auto boundary = segmentGrid->boundaries[0];
-    checkEqual(boundary.facetBegin, 36);
-    checkEqual(boundary.facetEnd  , 48);
+    checkEqual(boundary.begin, 36);
+    checkEqual(boundary.end  , 48);
     checkEqual(boundary.vertices.size(), 24u);
     check(std::all_of(boundary.vertices.cbegin(), boundary.vertices.cend(), [=](auto v){return v >= 0 && v < 74;}));
 
     boundary = segmentGrid->boundaries[1];
-    checkEqual(boundary.facetBegin, 48);
-    checkEqual(boundary.facetEnd  , 84);
+    checkEqual(boundary.begin, 48);
+    checkEqual(boundary.end  , 84);
     checkEqual(boundary.vertices.size(), 37u);
     check(std::all_of(boundary.vertices.cbegin(), boundary.vertices.cend(), [=](auto v){return v >= 0 && v < 37;}));
 
     boundary = segmentGrid->boundaries[2];
-    checkEqual(boundary.facetBegin,  84);
-    checkEqual(boundary.facetEnd  , 120);
+    checkEqual(boundary.begin,  84);
+    checkEqual(boundary.end  , 120);
     checkEqual(boundary.vertices.size(), 37u);
     check(std::all_of(boundary.vertices.cbegin(), boundary.vertices.cend(), [=](auto v){return v >= 37 && v < 74;}));
 
-    checkEqual(segmentGrid->wells[0].lineBegin, 120);
-    checkEqual(segmentGrid->wells[0].lineEnd  , 121);
+    checkEqual(segmentGrid->wells[0].begin, 120);
+    checkEqual(segmentGrid->wells[0].end  , 121);
     checkEqual(segmentGrid->wells[0].vertices.size(), 2u);
     checkEqual(segmentGrid->wells[0].vertices[0],  0);
     checkEqual(segmentGrid->wells[0].vertices[1], 37);

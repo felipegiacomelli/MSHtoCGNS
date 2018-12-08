@@ -50,9 +50,9 @@ void CgnsCreator3D::writeSections() {
 void CgnsCreator3D::writeRegions() {
     for (auto region : this->gridData->regions) {
 
-        auto regionBegin = this->globalConnectivities.begin() + region.elementBegin;
-        auto regionEnd = this->globalConnectivities.begin() + region.elementEnd;
-        this->elementEnd += (regionEnd - regionBegin);
+        auto regionBegin = this->globalConnectivities.begin() + region.begin;
+        auto regionEnd = this->globalConnectivities.begin() + region.end;
+        this->end += (regionEnd - regionBegin);
 
         ElementType_t elementType = ElementType_t(0);
         if (std::all_of(regionBegin, regionEnd, [](const auto& connectivity){return connectivity.size() == 4u;}))
@@ -70,13 +70,13 @@ void CgnsCreator3D::writeRegions() {
             std::vector<int> connectivities;
             append(regionBegin, regionEnd, std::back_inserter(connectivities));
 
-            if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndex))
+            if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->end, sizes[2], &connectivities[0], &this->sectionIndex))
                 throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write element section " + std::to_string(this->sectionIndex));
 
-            this->elementStart = this->elementEnd + 1;
+            this->elementStart = this->end + 1;
         }
         else {
-            if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
+            if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->end, sizes[2], &this->sectionIndex))
                 throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write element section " + std::to_string(this->sectionIndex));
 
             for (auto element = regionBegin; element != regionEnd; element++) {
@@ -105,10 +105,10 @@ void CgnsCreator3D::writeRegions() {
             std::vector<int> connectivities;
             append(regionBegin, regionEnd, std::back_inserter(connectivities));
 
-            if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->elementEnd, &connectivities[0]))
+            if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->end, &connectivities[0]))
                     throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
 
-            this->elementStart = this->elementEnd + 1;
+            this->elementStart = this->end + 1;
         }
     }
 }
@@ -116,9 +116,9 @@ void CgnsCreator3D::writeRegions() {
 void CgnsCreator3D::writeBoundaries() {
     for (auto boundary : this->gridData->boundaries) {
 
-        auto boundaryBegin = this->globalConnectivities.begin() + boundary.facetBegin;
-        auto boundaryEnd = this->globalConnectivities.begin() + boundary.facetEnd;
-        this->elementEnd = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
+        auto boundaryBegin = this->globalConnectivities.begin() + boundary.begin;
+        auto boundaryEnd = this->globalConnectivities.begin() + boundary.end;
+        this->end = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
 
         ElementType_t elementType;
         if (std::all_of(boundaryBegin, boundaryEnd, [](const auto& connectivity){return connectivity.size() == 3u;}))
@@ -132,13 +132,13 @@ void CgnsCreator3D::writeBoundaries() {
             std::vector<int> connectivities;
             append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
 
-            if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndex))
+            if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType, this->elementStart, this->end, sizes[2], &connectivities[0], &this->sectionIndex))
                 throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write facet section " + std::to_string(this->sectionIndex));
 
-            this->elementStart = this->elementEnd + 1;
+            this->elementStart = this->end + 1;
         }
         else {
-            if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
+            if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType, this->elementStart, this->end, sizes[2], &this->sectionIndex))
                 throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write facet section " + std::to_string(this->sectionIndex));
 
             for (auto facet = boundaryBegin; facet != boundaryEnd; facet++) {
@@ -159,10 +159,10 @@ void CgnsCreator3D::writeBoundaries() {
             std::vector<int> connectivities;
             append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
 
-            if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->elementEnd, &connectivities[0]))
+            if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->end, &connectivities[0]))
                     throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write facet " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
 
-            this->elementStart = this->elementEnd + 1;
+            this->elementStart = this->end + 1;
         }
     }
 }
@@ -170,16 +170,16 @@ void CgnsCreator3D::writeBoundaries() {
 void CgnsCreator3D::writeWells() {
     for (auto well : this->gridData->wells) {
 
-        auto wellBegin = this->globalConnectivities.cbegin() + well.lineBegin;
-        auto wellEnd = this->globalConnectivities.cbegin() + well.lineEnd;
-        this->elementEnd = this->elementStart + (wellEnd - wellBegin) - 1;
+        auto wellBegin = this->globalConnectivities.cbegin() + well.begin;
+        auto wellEnd = this->globalConnectivities.cbegin() + well.end;
+        this->end = this->elementStart + (wellEnd - wellBegin) - 1;
 
         std::vector<int> connectivities;
         append(wellBegin, wellEnd, std::back_inserter(connectivities));
 
-        if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, well.name.c_str(), BAR_2, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndex))
+        if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, well.name.c_str(), BAR_2, this->elementStart, this->end, sizes[2], &connectivities[0], &this->sectionIndex))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write well section " + std::to_string(this->sectionIndex));
 
-        this->elementStart = this->elementEnd + 1;
+        this->elementStart = this->end + 1;
     }
 }

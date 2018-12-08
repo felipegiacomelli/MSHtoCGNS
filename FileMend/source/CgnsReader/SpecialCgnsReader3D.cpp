@@ -10,9 +10,9 @@ SpecialCgnsReader3D::SpecialCgnsReader3D(std::string filePath) : CgnsReader3D(fi
 void SpecialCgnsReader3D::readSections() {
     for (int sectionIndex = 1; sectionIndex <= this->numberOfSections; sectionIndex++) {
         ElementType_t elementType;
-        int elementStart, elementEnd;
+        int elementStart, end;
         int lastBoundaryElement, parentFlag;
-        if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag))
+        if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &end, &lastBoundaryElement, &parentFlag))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section");
 
         std::string sectionName(this->buffer);
@@ -23,9 +23,9 @@ void SpecialCgnsReader3D::readSections() {
         if (elementType == BAR_2)
             continue;
 
-        int numberOfElements = elementEnd - elementStart + 1;
+        int numberOfElements = end - elementStart + 1;
         elementStart = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size() + this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
-        elementEnd = elementStart + numberOfElements;
+        end = elementStart + numberOfElements;
 
         int size;
         if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
@@ -37,13 +37,13 @@ void SpecialCgnsReader3D::readSections() {
 
         if (elementType == MIXED)
             if (ElementType_t(connectivities[0]) == TETRA_4 || ElementType_t(connectivities[0]) == HEXA_8 || ElementType_t(connectivities[0]) == PENTA_6 || ElementType_t(connectivities[0]) == PYRA_5)
-                this->addRegion(std::string(this->buffer), elementStart, elementEnd);
+                this->addRegion(std::string(this->buffer), elementStart, end);
             else
-                this->addBoundary(std::string(this->buffer), elementStart, elementEnd);
+                this->addBoundary(std::string(this->buffer), elementStart, end);
         else if (elementType == TETRA_4 || elementType == HEXA_8 || elementType == PENTA_6 || elementType == PYRA_5)
-                this->addRegion(std::string(this->buffer), elementStart, elementEnd);
+                this->addRegion(std::string(this->buffer), elementStart, end);
         else if (elementType == TRI_3 || elementType == QUAD_4)
-            this->addBoundary(std::string(this->buffer), elementStart, elementEnd);
+            this->addBoundary(std::string(this->buffer), elementStart, end);
 
         int numberOfVertices;
         if (cg_npe(elementType, &numberOfVertices))

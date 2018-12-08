@@ -65,8 +65,8 @@ TestCase(WellGeneratorTest) {
 
     auto well = this->gridData->wells[0];
     checkEqual(well.name, std::string("LINE_INJECTOR_WEST"));
-    checkEqual(well.lineBegin, 50253);
-    checkEqual(well.lineEnd  , 50262);
+    checkEqual(well.begin, 50253);
+    checkEqual(well.end  , 50262);
     checkEqual(well.vertices.size(), 10u);
     checkEqual(well.vertices[0], 7858);
     checkEqual(well.vertices[1], 7865);
@@ -81,8 +81,8 @@ TestCase(WellGeneratorTest) {
 
     well = this->gridData->wells[1];
     checkEqual(well.name, std::string("LINE_INJECTOR_EAST"));
-    checkEqual(well.lineBegin, 50262);
-    checkEqual(well.lineEnd  , 50271);
+    checkEqual(well.begin, 50262);
+    checkEqual(well.end  , 50271);
     checkEqual(well.vertices.size(), 10u);
     checkEqual(well.vertices[0], 8684);
     checkEqual(well.vertices[1], 8685);
@@ -97,8 +97,8 @@ TestCase(WellGeneratorTest) {
 
     well = this->gridData->wells[2];
     checkEqual(well.name, std::string("LINE_WELL"));
-    checkEqual(well.lineBegin, 50271);
-    checkEqual(well.lineEnd  , 50290);
+    checkEqual(well.begin, 50271);
+    checkEqual(well.end  , 50290);
     checkEqual(well.vertices.size(), 20u);
     checkEqual(well.vertices[ 0], 8817);
     checkEqual(well.vertices[ 1], 8818);

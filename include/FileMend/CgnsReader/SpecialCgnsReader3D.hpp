@@ -9,7 +9,7 @@ class SpecialCgnsReader3D : public CgnsReader3D {
 
     private:
         void readSections() override;
-        void addWell(std::string&& name, int elementStart, int elementEnd) = delete;
+        void addWell(std::string&& name, int elementStart, int end) = delete;
 };
 
 #endif

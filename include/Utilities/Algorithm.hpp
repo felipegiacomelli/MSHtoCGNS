@@ -7,10 +7,10 @@ bool hasElement(InputIt cbegin, InputIt cend, const T& element) {
 }
 
 template<class InputIt>
-bool hasElements(InputIt setBegin, InputIt setEnd, InputIt elementBegin, InputIt elementEnd) {
+bool hasElements(InputIt setBegin, InputIt setEnd, InputIt begin, InputIt end) {
     bool close = true;
 
-    for (auto element = elementBegin; element != elementEnd; element++)
+    for (auto element = begin; element != end; element++)
         close &= std::find(setBegin, setEnd, *element) != setEnd;
 
     return close;

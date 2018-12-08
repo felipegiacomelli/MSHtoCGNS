@@ -28,7 +28,7 @@ struct Region1_Mixed_3D {
     char name[100];
     ElementType_t type;
     int elementStart;
-    int elementEnd;
+    int end;
     int nbndry;
     int parent_flag;
 };

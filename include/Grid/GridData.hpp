@@ -8,22 +8,22 @@
 
 struct RegionData {
     std::string name;
-    int elementBegin;
-    int elementEnd;
+    int begin;
+    int end;
     std::vector<int> vertices;
 };
 
 struct BoundaryData {
     std::string name;
-    int facetBegin;
-    int facetEnd;
+    int begin;
+    int end;
     std::vector<int> vertices;
 };
 
 struct WellData {
     std::string name;
-    int lineBegin;
-    int lineEnd;
+    int begin;
+    int end;
     std::vector<int> vertices;
 };
 
