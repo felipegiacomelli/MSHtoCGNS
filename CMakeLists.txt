@@ -64,16 +64,21 @@ endif ()
 # EXTERNAL LIBRARIES
 ##################################################################
 set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Zeta/CMakeModules)
-set (BOOST_VERSION "1.67.0")
+set (BOOST_VERSION "1.68.0")
 set (CGNS_VERSION  "3.3.1" )
 
 ##############
 # BOOST
 ##############
-set (BOOST_ROOT ${CMAKE_SOURCE_DIR}/Zeta/Libraries/boost-1.67.0/${BUILD_TYPE_OUTPUT_DIRECTORY})
+if (DEFINED ENV{BOOST_DIR})
+    set (BOOST_ROOT $ENV{BOOST_DIR}/${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
+else ()
+    set (BOOST_ROOT ${CMAKE_SOURCE_DIR}/Zeta/Libraries/boost-${BOOST_VERSION}/${BUILD_TYPE_OUTPUT_DIRECTORY})
+endif()
+
 set (Components_Boost system filesystem unit_test_framework test_exec_monitor)
 set (Boost_USE_MULTITHREADED ON)
-find_package (Boost ${BOOST_VERSION} COMPONENTS ${Components_Boost} REQUIRED)
+find_package (Boost COMPONENTS ${Components_Boost} REQUIRED)
 if (Boost_FOUND)
     include_directories (${Boost_INCLUDE_DIRS})
 endif ()
@@ -81,8 +86,13 @@ endif ()
 ##############
 # CGNS
 ##############
-set (CGNS_DIR ${CMAKE_SOURCE_DIR}/Zeta/Libraries/cgns-3.3.1/${BUILD_TYPE_OUTPUT_DIRECTORY})
-find_package (CGNS ${CGNS_VERSION} REQUIRED)
+if (DEFINED ENV{CGNS_DIR})
+    set (CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
+else ()
+    set (CGNS_DIR ${CMAKE_SOURCE_DIR}/Zeta/Libraries/cgns-${CGNS_VERSION}/${BUILD_TYPE_OUTPUT_DIRECTORY})
+endif()
+
+find_package (CGNS REQUIRED)
 if (CGNS_FOUND)
     include_directories (${CGNS_INCLUDE_DIR})
 endif ()
@@ -124,7 +134,6 @@ add_subdirectory (FileMend)
 add_subdirectory (FileMendTest)
 add_subdirectory (UtilitiesTest)
 
-# add_subdirectory (CartesianWell)
 add_subdirectory (Mender)
 add_subdirectory (MSHtoCGNS)
 add_subdirectory (MultipleBases)

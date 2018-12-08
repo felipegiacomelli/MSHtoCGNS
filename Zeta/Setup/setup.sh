@@ -1,12 +1,14 @@
-# !/bin/bash
+#!/bin/bash
 
 export SETUP_DIRECTORY=$PWD
 export LIBRARY_INSTALL_DIRECTORY=$PWD/../Libraries
-export BUILD_TYPE="Debug"
+export BUILD_TYPE="Release"
+export NUMBER_OF_CORES=`nproc`
 
 cd ..
 
-if [ ! -d Libraries ]; then
+if [ ! -d Libraries ]
+then
     mkdir Libraries
 fi
 
@@ -16,4 +18,4 @@ cd $SETUP_DIRECTORY
 
 cd $SETUP_DIRECTORY
 
-. boost-1.67.0.sh
+. boost-1.68.0.sh

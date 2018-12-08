@@ -30,7 +30,6 @@ endif ()
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(CGNS DEFAULT_MSG CGNS_LIBRARY CGNS_INCLUDE_DIR)
 
-
 mark_as_advanced(
   CGNS_INCLUDE_DIR
   CGNS_LIBRARY

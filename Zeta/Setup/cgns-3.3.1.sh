@@ -1,4 +1,4 @@
-# !/bin/bash
+#!/bin/bash
 
 LIBRARY="cgns-3.3.1"
 export FLIBS="-Wl,--no-as-needed -ldl -lz"
@@ -14,12 +14,13 @@ cd $LIBRARY
 cd src
 
 CGNS_CONFIGURE_FLAG="--enable-debug"
-if [ "${BUILD_TYPE^^}" == "RELEASE" ]; then
+if [ "${BUILD_TYPE^^}" == "RELEASE" ]
+then
     CGNS_CONFIGURE_FLAG="--disable-debug"
 fi
 
 ./configure --without-fortran --disable-cgnstools --enable-shared $CGNS_CONFIGURE_FLAG --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY/$BUILD_TYPE
 
-make -j 2
+make -j $NUMBER_OF_CORES
 
 make install
