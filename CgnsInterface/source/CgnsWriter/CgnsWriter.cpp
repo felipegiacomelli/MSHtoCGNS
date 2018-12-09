@@ -1,4 +1,4 @@
-#include "CgnsInterface/CgnsWriter.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsWriter.hpp"
 #include <cgnslib.h>
 
 CgnsWriter::CgnsWriter(std::string filePath, std::string solutionLocation) : filePath(filePath), isFinalized(false) {

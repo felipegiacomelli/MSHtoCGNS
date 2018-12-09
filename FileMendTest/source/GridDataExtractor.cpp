@@ -1,7 +1,7 @@
-#include "BoostInterface/Test.hpp"
-#include "MshInterface/MshReader/MshReader3D.hpp"
-#include "CgnsInterface/CgnsReader/CgnsReader3D.hpp"
-#include "FileMend/GridDataExtractor.hpp"
+#include "MSHtoCGNS/BoostInterface/Test.hpp"
+#include "MSHtoCGNS/MshInterface/MshReader/MshReader3D.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader3D.hpp"
+#include "MSHtoCGNS/FileMend/GridDataExtractor.hpp"
 
 #define TOLERANCE 1e-6
 

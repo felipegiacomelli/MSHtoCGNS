@@ -1,4 +1,4 @@
-#include "MshInterface/MshReader/MshReader3D.hpp"
+#include "MSHtoCGNS/MshInterface/MshReader/MshReader3D.hpp"
 
 MshReader3D::MshReader3D(std::string filePath) : MshReader(filePath) {
     this->gridData->dimension = 3;

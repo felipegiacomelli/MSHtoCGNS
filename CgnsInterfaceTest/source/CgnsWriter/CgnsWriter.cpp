@@ -1,5 +1,5 @@
-#include "BoostInterface/Test.hpp"
-#include "CgnsInterface/CgnsWriter.hpp"
+#include "MSHtoCGNS/BoostInterface/Test.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsWriter.hpp"
 #include <cgnslib.h>
 
 #define TOLERANCE 1e-12

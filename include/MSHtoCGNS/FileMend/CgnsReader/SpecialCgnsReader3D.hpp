@@ -1,7 +1,7 @@
 #ifndef SPECIAL_CGNS_READER_3D_HPP
 #define SPECIAL_CGNS_READER_3D_HPP
 
-#include "CgnsInterface/CgnsReader/CgnsReader3D.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader3D.hpp"
 
 class SpecialCgnsReader3D : public CgnsReader3D {
     public:

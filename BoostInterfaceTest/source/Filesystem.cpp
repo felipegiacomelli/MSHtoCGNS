@@ -1,5 +1,5 @@
-#include "BoostInterface/Test.hpp"
-#include "BoostInterface/Filesystem.hpp"
+#include "MSHtoCGNS/BoostInterface/Test.hpp"
+#include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 
 TestSuite(Filesystem)
 

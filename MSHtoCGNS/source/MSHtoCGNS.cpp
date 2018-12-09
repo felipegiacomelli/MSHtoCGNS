@@ -2,14 +2,14 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include "BoostInterface/Filesystem.hpp"
-#include "BoostInterface/PropertyTree.hpp"
-#include "Grid/GridData.hpp"
-#include "MshInterface/Output.hpp"
-#include "MshInterface/MshReader/MshReader2D.hpp"
-#include "MshInterface/MshReader/MshReader3D.hpp"
-#include "CgnsInterface/CgnsCreator/CgnsCreator2D.hpp"
-#include "CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
+#include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
+#include "MSHtoCGNS/BoostInterface/PropertyTree.hpp"
+#include "MSHtoCGNS/Grid/GridData.hpp"
+#include "MSHtoCGNS/MshInterface/Output.hpp"
+#include "MSHtoCGNS/MshInterface/MshReader/MshReader2D.hpp"
+#include "MSHtoCGNS/MshInterface/MshReader/MshReader3D.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsCreator/CgnsCreator2D.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
 
 int main(int argc, char** argv) {
     if (argc != 2)

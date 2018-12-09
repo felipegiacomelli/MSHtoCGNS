@@ -1,8 +1,8 @@
 #ifndef CGNS_READER_HPP
 #define CGNS_READER_HPP
 
-#include "BoostInterface/Filesystem.hpp"
-#include "Grid/GridData.hpp"
+#include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
+#include "MSHtoCGNS/Grid/GridData.hpp"
 #include <string>
 #include <set>
 

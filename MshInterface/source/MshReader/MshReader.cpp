@@ -1,5 +1,5 @@
-#include "MshInterface/MshReader.hpp"
-#include "Utilities/Print.hpp"
+#include "MSHtoCGNS/MshInterface/MshReader.hpp"
+#include "MSHtoCGNS/Utilities/Print.hpp"
 
 MshReader::MshReader(std::string filePath) : filePath(filePath) {
     this->checkFile();

@@ -3,9 +3,9 @@
 
 #include <set>
 #include <algorithm>
-#include "BoostInterface/Filesystem.hpp"
-#include "Utilities/Vector.hpp"
-#include "Grid/GridData.hpp"
+#include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
+#include "MSHtoCGNS/Utilities/Vector.hpp"
+#include "MSHtoCGNS/Grid/GridData.hpp"
 
 class CgnsCreator {
     public:

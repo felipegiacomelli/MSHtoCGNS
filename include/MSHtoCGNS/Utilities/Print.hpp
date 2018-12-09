@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "Grid/GridData.hpp"
+#include "MSHtoCGNS/Grid/GridData.hpp"
 
 std::string red(std::string message) {
     return "\033[1;31m" + message + "\033[0m";

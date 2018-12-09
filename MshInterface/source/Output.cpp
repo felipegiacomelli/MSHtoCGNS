@@ -1,4 +1,4 @@
-#include "MshInterface/Output.hpp"
+#include "MSHtoCGNS/MshInterface/Output.hpp"
 
 void output(boost::shared_ptr<GridData> gridData, std::string fileName) {
     std::ofstream file(fileName, std::ofstream::out);

@@ -1,7 +1,7 @@
 #ifndef CGNS_READER_2D_HPP
 #define CGNS_READER_2D_HPP
 
-#include "CgnsInterface/CgnsReader.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsReader.hpp"
 
 class CgnsReader2D : public CgnsReader {
     public:

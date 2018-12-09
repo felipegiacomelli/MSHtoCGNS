@@ -1,5 +1,5 @@
-#include "BoostInterface/Test.hpp"
-#include "CgnsInterface/CgnsReader/CgnsReader2D.hpp"
+#include "MSHtoCGNS/BoostInterface/Test.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader2D.hpp"
 
 #define TOLERANCE 1e-12
 

@@ -1,3 +1,3 @@
 #define BOOST_TEST_MODULE MshInterfaceTestTestModule
 
-#include "BoostInterface/Test.hpp"
+#include "MSHtoCGNS/BoostInterface/Test.hpp"

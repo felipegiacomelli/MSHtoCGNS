@@ -6,9 +6,9 @@
 #include <numeric>
 #include <unordered_map>
 
-#include "BoostInterface/Filesystem.hpp"
-#include "Utilities/Algorithm.hpp"
-#include "Grid/GridData.hpp"
+#include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
+#include "MSHtoCGNS/Utilities/Algorithm.hpp"
+#include "MSHtoCGNS/Grid/GridData.hpp"
 
 class SegmentGridExtractor {
     public:

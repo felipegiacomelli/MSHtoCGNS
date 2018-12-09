@@ -1,8 +1,8 @@
-#include "BoostInterface/Test.hpp"
-#include "CgnsInterface/CgnsReader/CgnsReader3D.hpp"
-#include "CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
-#include "FileMend/RadialGridDataReordered.hpp"
-#include "FileMend/SegmentGridExtractor.hpp"
+#include "MSHtoCGNS/BoostInterface/Test.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader3D.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
+#include "MSHtoCGNS/FileMend/RadialGridDataReordered.hpp"
+#include "MSHtoCGNS/FileMend/SegmentGridExtractor.hpp"
 
 #define TOLERANCE 1e-4
 

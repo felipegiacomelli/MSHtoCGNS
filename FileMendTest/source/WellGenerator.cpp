@@ -1,6 +1,6 @@
-#include "BoostInterface/Test.hpp"
-#include "FileMend/CgnsReader/SpecialCgnsReader3D.hpp"
-#include "FileMend/WellGenerator.hpp"
+#include "MSHtoCGNS/BoostInterface/Test.hpp"
+#include "MSHtoCGNS/FileMend/CgnsReader/SpecialCgnsReader3D.hpp"
+#include "MSHtoCGNS/FileMend/WellGenerator.hpp"
 
 struct WellGeneratorFixture {
     WellGeneratorFixture() {

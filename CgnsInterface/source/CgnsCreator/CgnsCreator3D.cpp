@@ -1,4 +1,4 @@
-#include "CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
 #include <cgnslib.h>
 
 CgnsCreator3D::CgnsCreator3D(boost::shared_ptr<GridData> gridData, std::string folderPath) : CgnsCreator(gridData, folderPath) {

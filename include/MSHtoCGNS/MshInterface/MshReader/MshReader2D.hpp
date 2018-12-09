@@ -1,7 +1,7 @@
 #ifndef MSH_READER_2D_HPP
 #define MSH_READER_2D_HPP
 
-#include "MshInterface/MshReader.hpp"
+#include "MSHtoCGNS/MshInterface/MshReader.hpp"
 
 class MshReader2D : public MshReader {
     public:

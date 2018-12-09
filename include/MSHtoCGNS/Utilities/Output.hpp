@@ -1,7 +1,7 @@
 #ifndef OUTPUT_HPP
 #define OUTPUT_HPP
 
-#include "BoostInterface/PropertyTree.hpp"
+#include "MSHtoCGNS/BoostInterface/PropertyTree.hpp"
 #include <fstream>
 
 void output(boost::property_tree::ptree propertyTree, std::string&& path) {

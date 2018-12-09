@@ -1,13 +1,13 @@
 #include <chrono>
 
-#include "BoostInterface/PropertyTree.hpp"
-#include "Grid/GridData.hpp"
-#include "MshInterface/MshReader/MshReader3D.hpp"
-#include "CgnsInterface/CgnsReader/CgnsReader3D.hpp"
-#include "CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
-#include "FileMend/GridDataExtractor.hpp"
-#include "FileMend/MultipleBasesCgnsCreator3D.hpp"
-#include "Utilities/Print.hpp"
+#include "MSHtoCGNS/BoostInterface/PropertyTree.hpp"
+#include "MSHtoCGNS/Grid/GridData.hpp"
+#include "MSHtoCGNS/MshInterface/MshReader/MshReader3D.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader3D.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
+#include "MSHtoCGNS/FileMend/GridDataExtractor.hpp"
+#include "MSHtoCGNS/FileMend/MultipleBasesCgnsCreator3D.hpp"
+#include "MSHtoCGNS/Utilities/Print.hpp"
 
 int main() {
     boost::property_tree::ptree script;

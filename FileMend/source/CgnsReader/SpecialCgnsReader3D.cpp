@@ -1,4 +1,4 @@
-#include "FileMend/CgnsReader/SpecialCgnsReader3D.hpp"
+#include "MSHtoCGNS/FileMend/CgnsReader/SpecialCgnsReader3D.hpp"
 #include <cgnslib.h>
 
 SpecialCgnsReader3D::SpecialCgnsReader3D(std::string filePath) : CgnsReader3D(filePath, false) {
