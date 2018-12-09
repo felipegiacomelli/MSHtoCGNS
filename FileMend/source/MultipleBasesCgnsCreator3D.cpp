@@ -25,7 +25,6 @@ void MultipleBasesCgnsCreator3D::initialize() {
         this->writeCoordinates();
         this->buildGlobalConnectivities();
         this->writeSections();
-        this->writeBoundaryConditions();
 
         this->globalConnectivities.clear();
         this->globalConnectivities.clear();

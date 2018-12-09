@@ -27,7 +27,6 @@ class CgnsCreator {
         virtual void writeSections();
         virtual void writeRegions() = 0;
         virtual void writeBoundaries() = 0;
-        void writeBoundaryConditions();
 
         boost::shared_ptr<GridData> gridData;
         std::string folderPath, baseName, zoneName, fileName;

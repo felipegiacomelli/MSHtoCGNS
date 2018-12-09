@@ -5,7 +5,8 @@ CgnsReader2D::CgnsReader2D(std::string filePath, bool readInConstructor) : CgnsR
     if (readInConstructor) {
         this->readCoordinates();
         this->readSections();
-        this->readBoundaryConditions();
+        this->findBoundaryVertices();
+        this->findRegionVertices();
     }
 }
 
@@ -114,5 +115,33 @@ void CgnsReader2D::readSections() {
             default:
                 throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Section element type not supported");
         }
+    }
+}
+
+void CgnsReader2D::findBoundaryVertices() {
+    for (auto& boundary : this->gridData->boundaries) {
+        std::set<int> vertices;
+
+        for (const auto& line : this->gridData->lineConnectivity)
+            if (line.back() >= boundary.begin && line.back() < boundary.end)
+                vertices.insert(line.cbegin(), line.cend() - 1);
+
+        boundary.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
+    }
+}
+
+void CgnsReader2D::findRegionVertices() {
+    for (auto& region : this->gridData->regions) {
+        std::set<int> vertices;
+
+        for (const auto& triangle : this->gridData->triangleConnectivity)
+            if (triangle.back() >= region.begin && triangle.back() < region.end)
+                vertices.insert(triangle.cbegin(), triangle.cend() - 1);
+
+        for (const auto& quadrangle : this->gridData->quadrangleConnectivity)
+            if (quadrangle.back() >= region.begin && quadrangle.back() < region.end)
+                vertices.insert(quadrangle.cbegin(), quadrangle.cend() - 1);
+
+        region.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
     }
 }

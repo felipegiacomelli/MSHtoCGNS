@@ -5,7 +5,8 @@ CgnsReader3D::CgnsReader3D(std::string filePath, bool readInConstructor) : CgnsR
     if (readInConstructor) {
         this->readCoordinates();
         this->readSections();
-        this->readBoundaryConditions();
+        this->findBoundaryVertices();
+        this->findRegionVertices();
         this->findWellVertices();
     }
 }
@@ -202,12 +203,54 @@ void CgnsReader3D::addWell(std::string&& name, int elementStart, int end) {
     this->gridData->wells.emplace_back(std::move(well));
 }
 
+void CgnsReader3D::findBoundaryVertices() {
+    for (auto& boundary : this->gridData->boundaries) {
+        std::set<int> vertices;
+
+        for (const auto& triangle : this->gridData->triangleConnectivity)
+            if (triangle.back() >= boundary.begin && triangle.back() < boundary.end)
+                vertices.insert(triangle.cbegin(), triangle.cend() - 1);
+
+        for (const auto& quadrangle : this->gridData->quadrangleConnectivity)
+            if (quadrangle.back() >= boundary.begin && quadrangle.back() < boundary.end)
+                vertices.insert(quadrangle.cbegin(), quadrangle.cend() - 1);
+
+        boundary.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
+    }
+}
+
+void CgnsReader3D::findRegionVertices() {
+    for (auto& region : this->gridData->regions) {
+        std::set<int> vertices;
+
+        for (const auto& tetrahedron : this->gridData->tetrahedronConnectivity)
+            if (tetrahedron.back() >= region.begin && tetrahedron.back() < region.end)
+                vertices.insert(tetrahedron.cbegin(), tetrahedron.cend() - 1);
+
+        for (const auto& hexahedron : this->gridData->hexahedronConnectivity)
+            if (hexahedron.back() >= region.begin && hexahedron.back() < region.end)
+                vertices.insert(hexahedron.cbegin(), hexahedron.cend() - 1);
+
+        for (const auto& prism : this->gridData->prismConnectivity)
+            if (prism.back() >= region.begin && prism.back() < region.end)
+                vertices.insert(prism.cbegin(), prism.cend() - 1);
+
+        for (const auto& pyramid : this->gridData->pyramidConnectivity)
+            if (pyramid.back() >= region.begin && pyramid.back() < region.end)
+                vertices.insert(pyramid.cbegin(), pyramid.cend() - 1);
+
+        region.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
+    }
+}
+
 void CgnsReader3D::findWellVertices() {
     for (auto& well : this->gridData->wells) {
         std::set<int> vertices;
+
         for (const auto& line : this->gridData->lineConnectivity)
             if (line.back() >= well.begin && line.back() < well.end)
                 vertices.insert(line.cbegin(), line.cend() - 1);
+
         well.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
     }
 }
