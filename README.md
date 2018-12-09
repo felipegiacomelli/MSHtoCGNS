@@ -39,9 +39,9 @@ To build, it is necessary:
 - cmake
 - make
 - CGNS 3.3.1
-- Boost 1.66
+- Boost 1.66 (at least)
 
-Once you have installed the first three dependecies, you may install **boost** and **CGNS** by executing **setup.sh** located in *Zeta/Setup/*. This script will install **shared libraries** in **debug** variant.
+Once you have installed the first three dependecies, you may install **boost** and **CGNS** by executing **setup.sh** located in *Zeta/Setup/*. This script will install **shared libraries** in **release** variant.
 
 ## Building
 
