@@ -18,29 +18,20 @@ if (UNIX)
     set (CMAKE_CXX_COMPILER g++)
     set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64 -std=c++17 -Wall -Wextra -Wnon-virtual-dtor -pedantic -Wno-parentheses" CACHE STRING "Setting default compiler flags.")
 
-    if (CMAKE_BUILD_TYPE MATCHES "Debug")
-        set (BUILD_TYPE_OUTPUT_DIRECTORY "Debug")
-    elseif (CMAKE_BUILD_TYPE MATCHES "Release")
-        set (BUILD_TYPE_OUTPUT_DIRECTORY "Release")
-    else ()
-        message ("\n-- CMAKE_BUILD_TYPE must be set to Debug or Release.\n-- It will be set to Release.\n")
+    if (NOT CMAKE_BUILD_TYPE)
         set (CMAKE_BUILD_TYPE "Release")
-        set (BUILD_TYPE_OUTPUT_DIRECTORY "Release")
     endif ()
+    string (TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
 
     if (BUILD_SHARED_LIBS)
         set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fPIC" CACHE STRING "Setting default compiler flags.")
-        set (LIBRARY_TYPE_OUTPUT_DIRECTORY "Shared")
+        set (LIBRARY_TYPE "shared")
     else ()
-        set (LIBRARY_TYPE_OUTPUT_DIRECTORY "Static")
+        set (LIBRARY_TYPE "static")
     endif ()
 
     set (CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} "-g -DDEBUG" CACHE STRING "Setting default compiler flags.")
     set (CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3 -DNDEBUG" CACHE STRING "Setting default compiler flags")
-
-    set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${BUILD_TYPE_OUTPUT_DIRECTORY})
-    set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${BUILD_TYPE_OUTPUT_DIRECTORY})
-    set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BUILD_TYPE_OUTPUT_DIRECTORY})
 else ()
     message ("\n-- CMAKE HAS NOT BEEN CONFIGURED FOR THE CURRENT OPERATIONAL SYSTEM.\n")
 endif ()
@@ -71,9 +62,9 @@ set (CGNS_VERSION  "3.3.1" )
 # BOOST
 ##############
 if (DEFINED ENV{BOOST_DIR})
-    set (BOOST_ROOT $ENV{BOOST_DIR}/${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
+    set (BOOST_ROOT $ENV{BOOST_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
 else ()
-    set (BOOST_ROOT ${CMAKE_SOURCE_DIR}/Zeta/Libraries/boost-${BOOST_VERSION}/${BUILD_TYPE_OUTPUT_DIRECTORY})
+    set (BOOST_ROOT ${CMAKE_SOURCE_DIR}/Zeta/Libraries/boost-${BOOST_VERSION}/${BUILD_TYPE})
 endif()
 
 set (Components_Boost system filesystem unit_test_framework test_exec_monitor)
@@ -87,9 +78,9 @@ endif ()
 # CGNS
 ##############
 if (DEFINED ENV{CGNS_DIR})
-    set (CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
+    set (CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
 else ()
-    set (CGNS_DIR ${CMAKE_SOURCE_DIR}/Zeta/Libraries/cgns-${CGNS_VERSION}/${BUILD_TYPE_OUTPUT_DIRECTORY})
+    set (CGNS_DIR ${CMAKE_SOURCE_DIR}/Zeta/Libraries/cgns-${CGNS_VERSION}/${BUILD_TYPE})
 endif()
 
 find_package (CGNS REQUIRED)
@@ -112,49 +103,57 @@ macro (add_library _target)
     _add_library (${_target} ${ARGN})
     target_link_libraries (${_target} ${Boost_LIBRARIES})
     target_link_libraries (${_target} ${CGNS_LIBRARIES})
-    set_target_properties (${_target}  PROPERTIES PREFIX "" VERSION ${VERSION})
-    install (TARGETS ${PROJECT_NAME} EXPORT ${Distribution} DESTINATION ${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY}/libs)
-    install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/${PROJECT_NAME} DESTINATION ${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY}/include/MSHtoCGNS)
-    install (EXPORT ${Distribution} DESTINATION ${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY})
+    set_target_properties (${_target}  PROPERTIES PREFIX "")
+    set_target_properties (${_target}  PROPERTIES VERSION ${VERSION})
+    install (TARGETS ${PROJECT_NAME} EXPORT ${Distribution} DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE}/libs)
+    install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/${PROJECT_NAME} DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE}/include/MSHtoCGNS)
+    install (EXPORT ${Distribution} DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE})
 endmacro ()
 
-install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/Grid DESTINATION ${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY}/include/MSHtoCGNS)
-install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/Utilities DESTINATION ${BUILD_TYPE_OUTPUT_DIRECTORY}/${LIBRARY_TYPE_OUTPUT_DIRECTORY}/include/MSHtoCGNS)
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/Grid DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE}/include/MSHtoCGNS)
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/Utilities DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE}/include/MSHtoCGNS)
 
 ##################################################################
 # COMPONENTS
 ##################################################################
+enable_testing ()
+
 add_subdirectory (BoostInterface)
 add_subdirectory (BoostInterfaceTest)
+add_test (NAME BoostInterfaceTest COMMAND BoostInterfaceTest)
+
 add_subdirectory (MshInterface)
 add_subdirectory (MshInterfaceTest)
+add_test (NAME MshInterfaceTest COMMAND MshInterfaceTest)
+
 add_subdirectory (CgnsInterface)
 add_subdirectory (CgnsInterfaceTest)
+add_test (NAME CgnsInterfaceTest COMMAND CgnsInterfaceTest)
+
 add_subdirectory (FileMend)
 add_subdirectory (FileMendTest)
+add_test (NAME FileMendTest COMMAND FileMendTest)
+
 add_subdirectory (UtilitiesTest)
+add_test (NAME UtilitiesTest COMMAND UtilitiesTest)
 
 add_subdirectory (Mender)
 add_subdirectory (MSHtoCGNS)
 add_subdirectory (MultipleBases)
 
-#################################################################
-# TESTING
-#################################################################
-enable_testing()
-add_test(NAME BoostInterfaceTest COMMAND BoostInterfaceTest)
-add_test(NAME MshInterfaceTest COMMAND MshInterfaceTest)
-add_test(NAME CgnsInterfaceTest COMMAND CgnsInterfaceTest)
-add_test(NAME FileMendTest COMMAND FileMendTest)
-add_test(NAME UtilitiesTest COMMAND UtilitiesTest)
-
 ##################################################################
 # DISPLAY INFORMATION
 ##################################################################
-message ("\n-- Project: ${PROJECT_NAME} ${VERSION}")
-message ("-- Build type: ${BUILD_TYPE_OUTPUT_DIRECTORY}")
-message ("-- Install prefix: ${CMAKE_INSTALL_PREFIX}\n")
-message ("-- C++ compiler: ${CMAKE_CXX_COMPILER}")
-message ("-- Compile flags: ${CMAKE_CXX_FLAGS}")
-message ("-- Debug flags: ${CMAKE_CXX_FLAGS_DEBUG}")
-message ("-- Release flags: ${CMAKE_CXX_FLAGS_RELEASE}\n")
+message ("\n")
+message (STATUS "Project: ${PROJECT_NAME} ${VERSION}")
+message (STATUS "Build type: ${BUILD_TYPE}")
+message (STATUS "Library type: ${LIBRARY_TYPE}")
+
+message ("\n")
+message (STATUS "C++ compiler: ${CMAKE_CXX_COMPILER}")
+message (STATUS "Compile flags: ${CMAKE_CXX_FLAGS}")
+message (STATUS "Debug flags: ${CMAKE_CXX_FLAGS_DEBUG}")
+message (STATUS "Release flags: ${CMAKE_CXX_FLAGS_RELEASE}")
+
+message ("\n")
+message (STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
