@@ -3,7 +3,6 @@
 #include "CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
 #include "FileMend/RadialGridDataReordered.hpp"
 #include "FileMend/SegmentGridExtractor.hpp"
-#include "Utilities/Print.hpp"
 
 #define TOLERANCE 1e-4
 

@@ -1,15 +1,13 @@
 #include <chrono>
 
 #include "BoostInterface/PropertyTree.hpp"
-#include "Utilities/Print.hpp"
 #include "Grid/GridData.hpp"
 #include "MshInterface/MshReader/MshReader3D.hpp"
 #include "CgnsInterface/CgnsReader/CgnsReader3D.hpp"
 #include "CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
 #include "FileMend/GridDataExtractor.hpp"
-#include "Utilities/Print.hpp"
-
 #include "FileMend/MultipleBasesCgnsCreator3D.hpp"
+#include "Utilities/Print.hpp"
 
 int main() {
     boost::property_tree::ptree script;
@@ -37,7 +35,7 @@ int main() {
     std::cout << std::endl << "\tGrid path: " << inputPath.string();
     std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
-    printGridDataInformation(gridData, "\033[1;31m original gridData \033[0m");
+    printGridDataInformation(gridData, red("original gridData"));
 
     boost::shared_ptr<GridData> extract;
     if (script.get_child_optional("ScriptGridDataExtractor")) {
@@ -48,7 +46,7 @@ int main() {
     std::vector<boost::shared_ptr<GridData>> gridDatas{gridData, extract};
     std::vector<std::string> baseNames{"Rock", "Reservoir"};
 
-    printGridDataInformation(extract, "\033[1;31m original gridData \033[0m");
+    printGridDataInformation(extract, red("original gridData"));
 
     start = std::chrono::steady_clock::now();
     MultipleBasesCgnsCreator3D(gridDatas, baseNames, outputPath.string());

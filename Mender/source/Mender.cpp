@@ -39,12 +39,12 @@ int main() {
     std::cout << std::endl << "\tGrid path: " << inputPath;
     std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
-    printGridDataInformation(gridData, "\033[1;31m original gridData \033[0m");
+    printGridDataInformation(gridData, red("original gridData"));
 
     if (menderScript.get_child_optional("ScriptWellGenerator"))
         WellGenerator wellGenerator(gridData, menderScript.get_child("ScriptWellGenerator"));
 
-    printGridDataInformation(gridData, "\033[1;31m gridData after well generation \033[0m");
+    printGridDataInformation(gridData, red("gridData after well generation"));
 
     boost::shared_ptr<GridData> radialGridData;
     if (menderScript.get_child_optional("ScriptGridDataExtractor")) {
@@ -52,7 +52,7 @@ int main() {
         radialGridData = gridDataExtractor.extract;
     }
 
-    printGridDataInformation(radialGridData, "\033[1;31m radial gridData \033[0m");
+    printGridDataInformation(radialGridData, red("radial gridData"));
 
     RadialGridDataReordered radialGridDataReordered(radialGridData);
     radialGridData = radialGridData;
