@@ -3,7 +3,7 @@
 LIBRARY="boost-1.68.0"
 DOWNLOAD_LINK="https://downloads.sourceforge.net/project/boost/boost/1.68.0/boost_1_68_0.tar.gz"
 COMPRESSED_LIBRARY=$LIBRARY.tar.gz
-VARIANT=`echo ${BUILD_TYPE,,}`
+BUILD_TYPE=`echo ${BUILD_TYPE,,}`
 
 if [ ! -d "$LIBRARY" ]; then
     if [ ! -f "$COMPRESSED_LIBRARY" ]; then
@@ -20,4 +20,4 @@ cd $LIBRARY
 
 ./bootstrap.sh --with-libraries=system,filesystem,test --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY/$BUILD_TYPE
 
-./b2 variant=$VARIANT --cxxflags=-fPIC link=shared runtime-link=shared threading=multi -j $NUMBER_OF_CORES --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY/$BUILD_TYPE install
+./b2 variant=$BUILD_TYPE --cxxflags=-fPIC link=shared runtime-link=shared threading=multi -j $NUMBER_OF_CORES --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY/$BUILD_TYPE install

@@ -4,6 +4,7 @@ LIBRARY="cgns-3.3.1"
 export FLIBS="-Wl,--no-as-needed -ldl -lz"
 export LIBS="-Wl,--no-as-needed -ldl -lz"
 export CLIBS="-ldl"
+BUILD_TYPE=`echo ${BUILD_TYPE,,}`
 
 if [ ! -d "$LIBRARY" ]; then
     git clone -b master "https://github.com/CGNS/CGNS.git"
@@ -14,7 +15,7 @@ cd $LIBRARY
 cd src
 
 CGNS_CONFIGURE_FLAG="--enable-debug"
-if [ "${BUILD_TYPE^^}" == "RELEASE" ]
+if [ "${BUILD_TYPE}" == "release" ]
 then
     CGNS_CONFIGURE_FLAG="--disable-debug"
 fi
