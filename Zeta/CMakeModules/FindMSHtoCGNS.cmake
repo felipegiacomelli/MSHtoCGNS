@@ -1,33 +1,33 @@
 # BUILD_TYPE_OUTPUT_DIRECTORY   - Release or Debug (CASE SENSITIVE)
 # LIBRARY_TYPE_OUTPUT_DIRECTORY - Shared or Static (CASE SENSITIVE)
 #
-# NOTE: ${MSHtoCGNS_DIR} = $ENV{MSHtoCGNS_DIR}/BUILD_TYPE_OUTPUT_DIRECTORY/LIBRARY_TYPE_OUTPUT_DIRECTORY
+# NOTE: ${MSHTOCGNS_DIR} = $ENV{MSHTOCGNS_DIR}/BUILD_TYPE_OUTPUT_DIRECTORY/LIBRARY_TYPE_OUTPUT_DIRECTORY
 #
-# MSHtoCGNS_FOUND
-# MSHtoCGNS_INCLUDE_DIR
-# MSHtoCGNS_LIBRARIES
+# MSHTOCGNS_FOUND
+# MSHTOCGNS_INCLUDE_DIR
+# MSHTOCGNS_LIBRARIES
 
-include (${MSHtoCGNS_DIR}/MSHtoCGNSConfig.cmake)
-find_path (MSHtoCGNS_INCLUDE_DIR CgnsInterface/CgnsCreator.hpp ${MSHtoCGNS_DIR}/include)
+include (${MSHTOCGNS_DIR}/MSHtoCGNSConfig.cmake)
+find_path (MSHTOCGNS_INCLUDE_DIR MSHtoCGNS/CgnsInterface/CgnsCreator.hpp ${MSHTOCGNS_DIR}/include)
 if (BUILD_SHARED_LIBS)
-    find_library (MSHtoCGNS_LIBRARY_DIR CgnsInterface.so ${MSHtoCGNS_DIR}/libs)
+    find_library (MSHTOCGNS_LIBRARY_DIR CgnsInterface.so ${MSHTOCGNS_DIR}/libs)
 else ()
-    find_library (MSHtoCGNS_LIBRARY_DIR CgnsInterface.a ${MSHtoCGNS_DIR}/libs)
+    find_library (MSHTOCGNS_LIBRARY_DIR CgnsInterface.a ${MSHTOCGNS_DIR}/libs)
 endif()
 
-set (MSHtoCGNS_COMPONENTS BoostInterface CgnsInterface MshInterface MSHtoCGNS)
+set (MSHTOCGNS_COMPONENTS BoostInterface CgnsInterface MshInterface)
 
-set (MSHtoCGNS_FOUND FALSE)
-if (MSHtoCGNS_INCLUDE_DIR)
-    if (MSHtoCGNS_LIBRARY_DIR)
-        set (MSHtoCGNS_FOUND TRUE)
-        set (MSHtoCGNS_INCLUDE_DIR ${MSHtoCGNS_INCLUDE_DIR})
-        set (MSHtoCGNS_LIBRARIES ${MSHtoCGNS_COMPONENTS})
+set (MSHTOCGNS_FOUND FALSE)
+if (MSHTOCGNS_INCLUDE_DIR)
+    if (MSHTOCGNS_LIBRARY_DIR)
+        set (MSHTOCGNS_FOUND TRUE)
+        set (MSHTOCGNS_INCLUDE_DIR ${MSHTOCGNS_INCLUDE_DIR})
+        set (MSHTOCGNS_LIBRARIES ${MSHTOCGNS_COMPONENTS})
     endif ()
 endif ()
 
-if (MSHtoCGNS_FOUND)
-    message ("-- Found MSHtoCGNS: ${MSHtoCGNS_DIR}")
+if (MSHTOCGNS_FOUND)
+    message ("-- Found MSHtoCGNS: ${MSHTOCGNS_DIR}")
 else ()
     message ("\n\n-- Could not find MSHtoCGNS.\n\n")
 endif ()
