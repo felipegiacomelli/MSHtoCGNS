@@ -35,11 +35,11 @@ This project currently supports:
 
 To build, it is necessary:
 
-- g++/gcc 6.4 (at least)
-- cmake
-- make
-- CGNS 3.3.1
-- Boost 1.66 (at least)
+- [g++/gcc](https://gcc.gnu.org/) 6.4 (at least)
+- [cmake](https://cmake.org/)
+- [make](https://www.gnu.org/software/make/)
+- [CGNS](https://cgns.github.io/index.html) 3.3.1
+- [Boost](https://www.boost.org/) 1.66 (at least)
 
 Once you have installed the first three dependecies, you may install **Boost** and **CGNS** by executing **setup.sh** located in *Zeta/Setup/*. This script will install **shared libraries** in **release** variant.
 
@@ -54,9 +54,14 @@ $ cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=TRUE
 $ make
 ```
 
-If you would like to run the tests:
+If you would like **test**:
 ```shell
 $ make test
+```
+
+If you would like to **install**:
+```shell
+$ make install
 ```
 
 ## Converting
