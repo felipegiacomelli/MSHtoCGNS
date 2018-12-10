@@ -2,7 +2,6 @@
 #define RADIAL_GRID_DATA_REORDERED_HPP
 
 #include <set>
-#include <algorithm>
 #include <numeric>
 #include <unordered_map>
 

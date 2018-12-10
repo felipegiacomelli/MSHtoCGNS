@@ -2,8 +2,8 @@
 #include <cgnslib.h>
 
 CgnsCreator::CgnsCreator(boost::shared_ptr<GridData> gridData, std::string folderPath) : gridData(gridData), folderPath(folderPath), elementStart(1), end(0) {
-    this->baseName = "Base";
-    this->zoneName = "Zone";
+    this->baseName = "BASE";
+    this->zoneName = "ZONE";
 }
 
 void CgnsCreator::setupFile() {

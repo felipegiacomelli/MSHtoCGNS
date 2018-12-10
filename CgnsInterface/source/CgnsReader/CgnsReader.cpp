@@ -77,20 +77,18 @@ void CgnsReader::createGridData() {
     this->gridData->dimension = this->cellDimension;
 }
 
-void CgnsReader::addRegion(std::string&& name, int elementStart, int end) {
-    RegionData region;
-    region.name = name;
-    region.begin = elementStart;
-    region.end = end;
-    this->gridData->regions.emplace_back(std::move(region));
+void CgnsReader::addRegion(std::string&& name, int start, int end) {
+    this->gridData->regions.emplace_back(RegionData());
+    std::transform(name.begin(), name.end(), std::back_inserter(this->gridData->regions.back().name), ::toupper);
+    this->gridData->regions.back().begin = start;
+    this->gridData->regions.back().end = end;
 }
 
-void CgnsReader::addBoundary(std::string&& name, int elementStart, int end) {
-    BoundaryData boundary;
-    boundary.name = name;
-    boundary.begin = elementStart;
-    boundary.end = end;
-    this->gridData->boundaries.emplace_back(std::move(boundary));
+void CgnsReader::addBoundary(std::string&& name, int start, int end) {
+    this->gridData->boundaries.emplace_back(BoundaryData());
+    std::transform(name.begin(), name.end(), std::back_inserter(this->gridData->boundaries.back().name), ::toupper);
+    this->gridData->boundaries.back().begin = start;
+    this->gridData->boundaries.back().end = end;
 }
 
 int CgnsReader::readSolutionIndex(std::string solutionName) {

@@ -49,10 +49,11 @@ void CgnsCreator2D::writeCoordinates() {
 }
 
 void CgnsCreator2D::writeRegions() {
-    for (auto region = this->gridData->regions.cbegin(); region != this->gridData->regions.cend(); region++) {
+    for (auto region : this->gridData->regions) {
+        std::transform(region.name.begin(), region.name.end(), region.name.begin(), ::toupper);
 
-        auto regionBegin = this->globalConnectivities.begin() + region->begin;
-        auto regionEnd = this->globalConnectivities.begin() + region->end;
+        auto regionBegin = this->globalConnectivities.begin() + region.begin;
+        auto regionEnd = this->globalConnectivities.begin() + region.end;
         this->end += (regionEnd - regionBegin);
 
         ElementType_t elementType;
@@ -67,13 +68,13 @@ void CgnsCreator2D::writeRegions() {
             std::vector<int> connectivities;
             append(regionBegin, regionEnd, std::back_inserter(connectivities));
 
-            if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, region->name.c_str(), elementType, this->elementStart, this->end, sizes[2], &connectivities[0], &this->sectionIndex))
+            if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->end, sizes[2], &connectivities[0], &this->sectionIndex))
                 throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write element section " + std::to_string(this->sectionIndex));
 
             this->elementStart = this->end + 1;
         }
         else {
-            if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region->name.c_str(), elementType, this->elementStart, this->end, sizes[2], &this->sectionIndex))
+            if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->end, sizes[2], &this->sectionIndex))
                 throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write element section " + std::to_string(this->sectionIndex));
 
             for (auto element = regionBegin; element != regionEnd; element++) {

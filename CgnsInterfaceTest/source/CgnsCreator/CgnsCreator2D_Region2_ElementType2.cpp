@@ -125,7 +125,7 @@ TestCase(Boundaries) {
 TestCase(West) {
     auto boundary = this->gridData->boundaries[0];
 
-    check(boundary.name == std::string("West"));
+    check(boundary.name == std::string("WEST"));
 
     checkEqual(boundary.begin, 10);
     checkEqual(boundary.end, 12);
@@ -137,20 +137,20 @@ TestCase(West) {
     checkEqual(vertices[2], 6);
 
     cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
-    check(name == std::string("West"));
+    check(name == std::string("WEST"));
     checkEqual(this->elementStart, 11);
     checkEqual(this->end  , 12);
     check(this->type == BAR_2);
 
     cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 1, nullptr);
     cg_famname_read(this->name);
-    check(name == std::string("West"));
+    check(name == std::string("WEST"));
 }
 
 TestCase(East) {
     auto boundary = this->gridData->boundaries[1];
 
-    check(boundary.name == std::string("East"));
+    check(boundary.name == std::string("EAST"));
 
     checkEqual(boundary.begin, 12);
     checkEqual(boundary.end, 14);
@@ -162,20 +162,20 @@ TestCase(East) {
     checkEqual(vertices[2], 8);
 
     cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
-    check(name == std::string("East"));
+    check(name == std::string("EAST"));
     checkEqual(this->elementStart, 13);
     checkEqual(this->end  , 14);
     check(this->type == BAR_2);
 
     cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 2, nullptr);
     cg_famname_read(this->name);
-    check(name == std::string("East"));
+    check(name == std::string("EAST"));
 }
 
 TestCase(South) {
     auto boundary = this->gridData->boundaries[2];
 
-    check(boundary.name == std::string("South"));
+    check(boundary.name == std::string("SOUTH"));
 
     checkEqual(boundary.begin, 14);
     checkEqual(boundary.end, 16);
@@ -187,20 +187,20 @@ TestCase(South) {
     checkEqual(vertices[2], 2);
 
     cg_section_read(this->fileIndex, 1, 1, 5, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
-    check(name == std::string("South"));
+    check(name == std::string("SOUTH"));
     checkEqual(this->elementStart, 15);
     checkEqual(this->end  , 16);
     check(this->type == BAR_2);
 
     cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 3, nullptr);
     cg_famname_read(this->name);
-    check(name == std::string("South"));
+    check(name == std::string("SOUTH"));
 }
 
 TestCase(North) {
     auto boundary = this->gridData->boundaries[3];
 
-    check(boundary.name == std::string("North"));
+    check(boundary.name == std::string("NORTH"));
 
     checkEqual(boundary.begin, 16);
     checkEqual(boundary.end, 18);
@@ -212,14 +212,14 @@ TestCase(North) {
     checkEqual(vertices[2], 8);
 
     cg_section_read(this->fileIndex, 1, 1, 6, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
-    check(name == std::string("North"));
+    check(name == std::string("NORTH"));
     checkEqual(this->elementStart, 17);
     checkEqual(this->end  , 18);
     check(this->type == BAR_2);
 
     cg_goto(this->fileIndex, 1, "Zone_t", 1, "ZoneBC_t", 1, "BC_t", 4, nullptr);
     cg_famname_read(this->name);
-    check(name == std::string("North"));
+    check(name == std::string("NORTH"));
 }
 
 TestSuiteEnd()

@@ -49,6 +49,7 @@ void CgnsCreator3D::writeSections() {
 
 void CgnsCreator3D::writeRegions() {
     for (auto region : this->gridData->regions) {
+        std::transform(region.name.begin(), region.name.end(), region.name.begin(), ::toupper);
 
         auto regionBegin = this->globalConnectivities.begin() + region.begin;
         auto regionEnd = this->globalConnectivities.begin() + region.end;

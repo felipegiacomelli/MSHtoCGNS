@@ -1,6 +1,8 @@
 #ifndef ALGORITHM_HPP
 #define ALGORITHM_HPP
 
+#include <algorithm>
+
 template<class InputIt, class T>
 bool hasElement(InputIt cbegin, InputIt cend, const T& element) {
     return std::find(cbegin, cend, element) != cend;
