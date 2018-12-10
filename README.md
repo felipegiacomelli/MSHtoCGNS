@@ -41,7 +41,7 @@ To build, it is necessary:
 - CGNS 3.3.1
 - Boost 1.66 (at least)
 
-Once you have installed the first three dependecies, you may install **boost** and **CGNS** by executing **setup.sh** located in *Zeta/Setup/*. This script will install **shared libraries** in **release** variant.
+Once you have installed the first three dependecies, you may install **Boost** and **CGNS** by executing **setup.sh** located in *Zeta/Setup/*. This script will install **shared libraries** in **release** variant.
 
 ## Building
 
@@ -88,3 +88,30 @@ Simulation results may be easily visualised.
     <img src="Zeta/Images/3D/Pressure-first.png"  alt="gmsh" height=150 width=250  />
     <img src="Zeta/Images/3D/Pressure-last.png" alt="gmsh" height=150 width=250  />
 </p>
+
+---
+
+## Importing
+
+MSHtoCGNS may be easily imported to any project using **CMake**, just make sure [*FindMSHtoCGNS.cmake*](Zeta/CMakeModules/FindMSHtoCGNS.cmake)  is on your CMAKE_MODULE_PATH. Hence, you may use this snippet:
+
+```cmake
+set (MSHTOCGNS_DIR $ENV{MSHTOCGNS_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
+find_package (MSHtoCGNS REQUIRED)
+if (MSHTOCGNS_FOUND)
+    include_directories (${MSHTOCGNS_INCLUDE_DIR})
+endif ()
+
+...
+
+target_link_libraries (${_target} ${MSHTOCGNS_LIBRARIES})
+```
+Usually,
+
+*$ENV{MSHTOCGNS_DIR}* is set to a directory such as **/home/felipe/Libraries/MSHtoCGNS-0.11.0**
+
+*${BUILD_TYPE}* is the lower case ${CMAKE_BUILD_TYPE} - **release** OR **debug**
+
+*${LIBRARY_TYPE}* is the lower case library type - **shared** OR **static**
+
+You may also set ${MSHTOCGNS_DIR} (on your project's CMakeLists.txt) to the installation directory of MSHtoCGNS.

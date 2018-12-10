@@ -1,8 +1,3 @@
-# BUILD_TYPE_OUTPUT_DIRECTORY   - Release or Debug (CASE SENSITIVE)
-# LIBRARY_TYPE_OUTPUT_DIRECTORY - Shared or Static (CASE SENSITIVE)
-#
-# NOTE: ${MSHTOCGNS_DIR} = $ENV{MSHTOCGNS_DIR}/BUILD_TYPE_OUTPUT_DIRECTORY/LIBRARY_TYPE_OUTPUT_DIRECTORY
-#
 # MSHTOCGNS_FOUND
 # MSHTOCGNS_INCLUDE_DIR
 # MSHTOCGNS_LIBRARIES
@@ -27,7 +22,7 @@ if (MSHTOCGNS_INCLUDE_DIR)
 endif ()
 
 if (MSHTOCGNS_FOUND)
-    message ("-- Found MSHtoCGNS: ${MSHTOCGNS_DIR}")
+    message (STATUS "Found MSHtoCGNS: ${MSHTOCGNS_DIR}")
 else ()
-    message ("\n\n-- Could not find MSHtoCGNS.\n\n")
+    message (STATUS"\n\nCould not find MSHtoCGNS\n\n")
 endif ()
