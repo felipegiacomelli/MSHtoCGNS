@@ -4,8 +4,8 @@
 
 struct WellGeneratorFixture {
     WellGeneratorFixture() {
-        SpecialCgnsReader3D reader(this->inputPath);
-        this->gridData = reader.gridData;
+        SpecialCgnsReader3D specialCgnsReader3D(this->inputPath);
+        this->gridData = specialCgnsReader3D.gridData;
     }
 
     std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/WellGenerator/9821v_45841e.cgns";

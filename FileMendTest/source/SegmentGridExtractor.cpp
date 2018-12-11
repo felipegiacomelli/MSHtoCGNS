@@ -8,8 +8,8 @@
 
 struct SegmentGridExtractorFixture {
     SegmentGridExtractorFixture() {
-        CgnsReader3D reader(this->inputPath);
-        RadialGridDataReordered radialGridDataReordered(reader.gridData);
+        CgnsReader3D cgnsReader3D(this->inputPath);
+        RadialGridDataReordered radialGridDataReordered(cgnsReader3D.gridData);
         this->gridData = radialGridDataReordered.reordered;
     }
 

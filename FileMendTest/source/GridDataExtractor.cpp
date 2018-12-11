@@ -7,19 +7,21 @@
 
 struct GridDataExtractorFixture {
     GridDataExtractorFixture() {
-        MshReader3D reader(this->inputPath);
-        this->gridData = reader.gridData;
+        MshReader3D mshReader3D(this->inputPath);
+        this->gridData = mshReader3D.gridData;
     }
 
     std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractor/4x4x4_2x2x2.msh";
     boost::shared_ptr<GridData> gridData;
-    std::string wellGeneratorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractor/ScriptGridDataExtractor.json";
+    std::string gridDataExtractorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractor/ScriptGridDataExtractor.json";
 };
 
 FixtureTestSuite(GridDataExtractorSuite, GridDataExtractorFixture)
 
 TestCase(GridDataExtractorTest) {
-    GridDataExtractor gridDataExtractor(this->gridData, this->wellGeneratorScript);
+    checkEqual(this->gridData->coordinates.size(), 152u);
+
+    GridDataExtractor gridDataExtractor(this->gridData, this->gridDataExtractorScript);
 
     checkEqual(this->gridData->coordinates.size(), 152u);
 
@@ -189,19 +191,19 @@ TestSuiteEnd()
 
 struct GridDataExtractorWithWellFixture {
     GridDataExtractorWithWellFixture() {
-        CgnsReader3D reader(this->inputPath);
-        this->gridData = reader.gridData;
+        CgnsReader3D cgnsReader3D(this->inputPath);
+        this->gridData = cgnsReader3D.gridData;
     }
 
     std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractorWithWell/12523v_57072e.cgns";
     boost::shared_ptr<GridData> gridData;
-    std::string wellGeneratorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractorWithWell/ScriptGridDataExtractor.json";
+    std::string gridDataExtractorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractorWithWell/ScriptGridDataExtractor.json";
 };
 
 FixtureTestSuite(GridDataExtractorWithWellSuite, GridDataExtractorWithWellFixture)
 
 TestCase(GridDataExtractorWithWellTest) {
-    GridDataExtractor gridDataExtractor(this->gridData, this->wellGeneratorScript);
+    GridDataExtractor gridDataExtractor(this->gridData, this->gridDataExtractorScript);
 
     boost::shared_ptr<GridData> extract = gridDataExtractor.extract;
 

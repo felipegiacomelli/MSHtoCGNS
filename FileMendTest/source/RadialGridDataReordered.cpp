@@ -6,8 +6,8 @@
 
 struct RadialGridDataReorderedFixture {
     RadialGridDataReorderedFixture() {
-        CgnsReader3D reader(this->inputPath);
-        this->gridData = reader.gridData;
+        CgnsReader3D cgnsReader3D(this->inputPath);
+        this->gridData = cgnsReader3D.gridData;
     }
 
     double calculateDistance(std::array<double, 3> a, std::array<double, 3> b) {

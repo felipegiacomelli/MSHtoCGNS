@@ -1,0 +1,14 @@
+{
+    "path" :
+    {
+        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/FileMend/GridDataExtractor/4x4x4_2x2x2.msh",
+        "output" : "/home/felipe/Downloads/"
+    },
+
+    "ScriptGridDataExtractor" :
+    {
+        "regions" : ["Limestone"],
+        "boundaries" : ["ReservoirWest", "ReservoirEast", "ReservoirSouth", "ReservoirNorth", "ReservoirBottom", "ReservoirTop"],
+        "wells": []
+    }
+}

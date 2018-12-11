@@ -73,7 +73,7 @@ void MshReader::readConnectivities() {
         this->connectivities[i].erase(this->connectivities[i].begin() + 2);
     }
 
-    print(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities");
+    // print(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities");
 }
 
 void MshReader::divideConnectivities() {
