@@ -29,12 +29,10 @@ void MshReader2D::readPhysicalEntities() {
         int type, index;
         std::string name;
         this->file >> type >> index >> name;
-        type--;
-        index--;
-        name.erase(name.begin()); name.erase(name.end()-1);
-        entitiesTypes.push_back(type);
-        entitiesIndices.push_back(index);
-        entitiesNames.push_back(name);
+        entitiesTypes.push_back(type - 1);
+        entitiesIndices.push_back(index - 1);
+        entitiesNames.emplace_back(std::string());
+        std::transform(name.begin() + 1, name.end() - 1, std::back_inserter(entitiesNames.back()), ::toupper);
     }
 
     std::vector<int> regionsIndices, boundaryIndices;

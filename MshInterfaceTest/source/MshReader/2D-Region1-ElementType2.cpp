@@ -74,7 +74,7 @@ TestCase(Regions) {
 TestCase(Geometry) {
     auto region = this->gridData->regions[0];
 
-    check(region.name == std::string("Geometry"));
+    check(region.name == std::string("GEOMETRY"));
 
     checkEqual(region.begin, 0);
     checkEqual(region.end, 10);
@@ -87,7 +87,7 @@ TestCase(Boundaries) {
 TestCase(West) {
     auto boundary = this->gridData->boundaries[0];
 
-    check(boundary.name == std::string("West"));
+    check(boundary.name == std::string("WEST"));
 
     checkEqual(boundary.begin, 10);
     checkEqual(boundary.end, 12);
@@ -102,7 +102,7 @@ TestCase(West) {
 TestCase(East) {
     auto boundary = this->gridData->boundaries[1];
 
-    check(boundary.name == std::string("East"));
+    check(boundary.name == std::string("EAST"));
 
     checkEqual(boundary.begin, 12);
     checkEqual(boundary.end, 14);
@@ -117,7 +117,7 @@ TestCase(East) {
 TestCase(South) {
     auto boundary = this->gridData->boundaries[2];
 
-    check(boundary.name == std::string("South"));
+    check(boundary.name == std::string("SOUTH"));
 
     checkEqual(boundary.begin, 14);
     checkEqual(boundary.end, 16);
@@ -132,7 +132,7 @@ TestCase(South) {
 TestCase(North) {
     auto boundary = this->gridData->boundaries[3];
 
-    check(boundary.name == std::string("North"));
+    check(boundary.name == std::string("NORTH"));
 
     checkEqual(boundary.begin, 16);
     checkEqual(boundary.end, 18);

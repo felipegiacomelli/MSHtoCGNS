@@ -7,8 +7,8 @@
 
     "ScriptGridDataExtractor" :
     {
-        "regions" : ["Limestone"],
-        "boundaries" : ["ReservoirWest", "ReservoirEast", "ReservoirSouth", "ReservoirNorth", "ReservoirBottom", "ReservoirTop"],
+        "regions" : ["LIMESTONE"],
+        "boundaries" : ["RESERVOIR_WEST", "RESERVOIR_EAST", "RESERVOIR_SOUTH", "RESERVOIR_NORTH", "RESERVOIR_BOTTOM", "RESERVOIR_TOP"],
         "wells": []
     }
 }

@@ -28,7 +28,7 @@ struct Region4_ElementType1_2D {
     char name[100];
     ElementType_t type;
     int elementStart;
-    int end;
+    int elementEnd;
     int nbndry;
     int parent_flag;
 };
@@ -98,10 +98,10 @@ TestCase(A) {
     checkEqual(region.begin, 0);
     checkEqual(region.end, 1);
 
-    cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
     check(std::string(name) == std::string("A"));
     checkEqual(this->elementStart, 1);
-    checkEqual(this->end  , 1);
+    checkEqual(this->elementEnd  , 1);
     check(this->type == QUAD_4);
 }
 
@@ -113,10 +113,10 @@ TestCase(B) {
     checkEqual(region.begin, 1);
     checkEqual(region.end, 5);
 
-    cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
     check(std::string(name) == std::string("B"));
     checkEqual(this->elementStart, 2);
-    checkEqual(this->end  , 5);
+    checkEqual(this->elementEnd  , 5);
     check(this->type == TRI_3);
 }
 
@@ -128,10 +128,10 @@ TestCase(C) {
     checkEqual(region.begin, 5);
     checkEqual(region.end, 6);
 
-    cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
     check(std::string(name) == std::string("C"));
     checkEqual(this->elementStart, 6);
-    checkEqual(this->end  , 6);
+    checkEqual(this->elementEnd  , 6);
     check(this->type == QUAD_4);
 }
 
@@ -143,10 +143,10 @@ TestCase(D) {
     checkEqual(region.begin, 6);
     checkEqual(region.end, 10);
 
-    cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
     check(std::string(name) == std::string("D"));
     checkEqual(this->elementStart,  7);
-    checkEqual(this->end  , 10);
+    checkEqual(this->elementEnd  , 10);
     check(this->type == TRI_3);
 }
 

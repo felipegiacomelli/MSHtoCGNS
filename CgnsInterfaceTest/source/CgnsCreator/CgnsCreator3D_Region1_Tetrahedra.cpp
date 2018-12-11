@@ -28,7 +28,7 @@ struct Region1_Tetrahedra_3D {
     char name[100];
     ElementType_t type;
     int elementStart;
-    int end;
+    int elementEnd;
     int nbndry;
     int parent_flag;
 };
@@ -84,11 +84,11 @@ TestCase(Elements) {
     checkEqual(tetrahedra[22][0],  9); checkEqual(tetrahedra[22][1],  1); checkEqual(tetrahedra[22][2], 10); checkEqual(tetrahedra[22][3], 12);
     checkEqual(tetrahedra[23][0],  0); checkEqual(tetrahedra[23][1],  8); checkEqual(tetrahedra[23][2], 10); checkEqual(tetrahedra[23][3], 12);
 
-    cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
     check(std::string(this->name) == std::string("GEOMETRY"));
     check(this->type == TETRA_4);
     checkEqual(this->elementStart, 1);
-    checkEqual(this->end  , 24);
+    checkEqual(this->elementEnd  , 24);
 }
 
 TestCase(Facets) {
@@ -154,9 +154,9 @@ TestCase(West) {
     checkEqual(vertices[3], 7);
     checkEqual(vertices[4], 8);
 
-    cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 2, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
     checkEqual(this->elementStart, 25);
-    checkEqual(this->end  , 28);
+    checkEqual(this->elementEnd  , 28);
 }
 
 TestCase(East) {
@@ -175,9 +175,9 @@ TestCase(East) {
     checkEqual(vertices[3], 6);
     checkEqual(vertices[4], 9);
 
-    cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 3, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
     checkEqual(this->elementStart, 29);
-    checkEqual(this->end  , 32);
+    checkEqual(this->elementEnd  , 32);
 }
 
 TestCase(South) {
@@ -196,9 +196,9 @@ TestCase(South) {
     checkEqual(vertices[3], 5);
     checkEqual(vertices[4], 10);
 
-    cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 4, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
     checkEqual(this->elementStart, 33);
-    checkEqual(this->end  , 36);
+    checkEqual(this->elementEnd  , 36);
 }
 
 TestCase(North) {
@@ -217,9 +217,9 @@ TestCase(North) {
     checkEqual(vertices[3],  7);
     checkEqual(vertices[4], 11);
 
-    cg_section_read(this->fileIndex, 1, 1, 5, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 5, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
     checkEqual(this->elementStart, 37);
-    checkEqual(this->end  , 40);
+    checkEqual(this->elementEnd  , 40);
 }
 
 TestCase(Bottom) {
@@ -238,9 +238,9 @@ TestCase(Bottom) {
     checkEqual(vertices[3],  3);
     checkEqual(vertices[4], 12);
 
-    cg_section_read(this->fileIndex, 1, 1, 6, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 6, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
     checkEqual(this->elementStart, 41);
-    checkEqual(this->end  , 44);
+    checkEqual(this->elementEnd  , 44);
 }
 
 TestCase(Top) {
@@ -259,9 +259,9 @@ TestCase(Top) {
     checkEqual(vertices[3],  7);
     checkEqual(vertices[4], 13);
 
-    cg_section_read(this->fileIndex, 1, 1, 7, this->name, &this->type, &this->elementStart, &this->end, &this->nbndry, &this->parent_flag);
+    cg_section_read(this->fileIndex, 1, 1, 7, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
     checkEqual(this->elementStart, 45);
-    checkEqual(this->end  , 48);
+    checkEqual(this->elementEnd  , 48);
 }
 
 TestSuiteEnd()
