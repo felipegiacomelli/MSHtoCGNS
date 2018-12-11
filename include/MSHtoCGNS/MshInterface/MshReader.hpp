@@ -25,12 +25,8 @@ class MshReader {
         void readElements();
         void determinePhysicalEntitiesRange();
         virtual void addPhysicalEntities() = 0;
-        virtual void determineNumberOfFacets() = 0;
-        void divideConnectivities();
-        void assignElementsToRegions();
-        void assignFacetsToBoundaries();
-        virtual void addRegions() = 0;
-        virtual void addBoundaries() = 0;
+        virtual void addElements() = 0;
+        virtual void addFacets() = 0;
         virtual void defineBoundaryVertices() = 0;
 
         std::string filePath;
@@ -50,6 +46,8 @@ class MshReader {
         std::vector<std::string> entitiesNames;
 
         std::vector<std::array<int, 2>> physicalEntitiesRange;
+
+        int shift = 0;
 };
 
 #endif

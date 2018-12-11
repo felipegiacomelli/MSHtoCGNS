@@ -9,6 +9,7 @@
 #include "MSHtoCGNS/MshInterface/MshReader/MshReader3D.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator/CgnsCreator2D.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
+#include "MSHtoCGNS/Utilities/Print.hpp"
 
 int main(int argc, char** argv) {
     if (argc != 2)

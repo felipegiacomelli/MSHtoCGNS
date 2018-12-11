@@ -11,9 +11,8 @@ class MshReader3D : public MshReader {
 
     private:
         void addPhysicalEntities() override;
-        void determineNumberOfFacets() override;
-        void addRegions() override;
-        void addBoundaries() override;
+        void addElements() override;
+        void addFacets() override;
         void defineBoundaryVertices() override;
 };
 

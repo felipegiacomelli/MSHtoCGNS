@@ -1,5 +1,4 @@
 #include "MSHtoCGNS/MshInterface/MshReader/MshReader2D.hpp"
-#include "MSHtoCGNS/Utilities/Print.hpp"
 
 MshReader2D::MshReader2D(std::string filePath) : MshReader(filePath) {
     this->gridData->dimension = 2;
@@ -8,12 +7,8 @@ MshReader2D::MshReader2D(std::string filePath) : MshReader(filePath) {
     this->readElements();
     this->determinePhysicalEntitiesRange();
     this->addPhysicalEntities();
-    this->determineNumberOfFacets();
-    this->divideConnectivities();
-    this->assignElementsToRegions();
-    this->assignFacetsToBoundaries();
-    this->addRegions();
-    this->addBoundaries();
+    this->addElements();
+    this->addFacets();
     this->defineBoundaryVertices();
 }
 
@@ -42,73 +37,72 @@ void MshReader2D::addPhysicalEntities() {
     }
 }
 
-void MshReader2D::determineNumberOfFacets() {
-    this->numberOfFacets = 0;
-    for (unsigned i = 0; i < this->connectivities.size(); i++) {
-        if (this->connectivities[i][this->typeIndex] != 0)
-            break;
-        else
-            this->numberOfFacets++;
-    }
-}
-
-void MshReader2D::addRegions() {
-    for (unsigned i = 0; i < this->regionElements.size(); i++) {
-        this->gridData->regions[i].begin = this->regionElements[i].front();
-        this->gridData->regions[i].end   = this->regionElements[i].back() + 1;
-        for (unsigned j = 0; j < this->regionElements[i].size(); j++) {
-            int index = this->regionElements[i][j];
-            int type  = this->elements[index][this->typeIndex];
-            std::vector<int> connectivity(this->elements[index].cbegin() + this->nodeIndex, this->elements[index].cend());
-            switch (type) {
+void MshReader2D::addElements() {
+    for (auto& region : this->gridData->regions) {
+        auto regionBegin = this->connectivities.begin() + region.begin;
+        auto regionEnd = this->connectivities.begin() + region.end;
+        region.begin = this->shift;
+        for (auto element = regionBegin; element != regionEnd; element++) {
+            element->push_back(this->shift++);
+            switch ((*element)[this->typeIndex]) {
                 case 1: {
-                    std::array<int, 4> triangle;
-                    std::copy_n(std::begin(connectivity), 4, std::begin(triangle));
-                    this->gridData->triangleConnectivity.emplace_back(std::move(triangle));
+                    this->gridData->triangleConnectivity.emplace_back(std::array<int, 4>());
+                    std::copy_n(element->begin() + this->nodeIndex, 4, std::begin(this->gridData->triangleConnectivity.back()));
                     break;
                 }
                 case 2: {
-                    std::array<int, 5> quadrangle;
-                    std::copy_n(std::begin(connectivity), 5, std::begin(quadrangle));
-                    this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));
+                    this->gridData->quadrangleConnectivity.emplace_back(std::array<int, 5>());
+                    std::copy_n(element->begin() + this->nodeIndex, 5, std::begin(this->gridData->quadrangleConnectivity.back()));
                     break;
                 }
                 default:
                     throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Non supported element found");
             }
         }
+        region.end = this->shift;
     }
 }
 
-void MshReader2D::addBoundaries() {
-    for (unsigned i = 0; i < this->boundaryFacets.size(); i++) {
-        this->gridData->boundaries[i].begin = this->facets[this->boundaryFacets[i].front()].back();
-        this->gridData->boundaries[i].end   = this->facets[this->boundaryFacets[i].back() ].back() + 1;
-        for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
-            int index = this->boundaryFacets[i][j];
-            int type  = this->facets[index][this->typeIndex];
-            std::vector<int> connectivity(this->facets[index].cbegin() + this->nodeIndex, this->facets[index].cend());
-            switch (type) {
+void MshReader2D::addFacets() {
+    for (auto& boundary : this->gridData->boundaries) {
+        auto boundaryBegin = this->connectivities.begin() + boundary.begin;
+        auto boundaryEnd = this->connectivities.begin() + boundary.end;
+        boundary.begin = this->shift;
+        for (auto facet = boundaryBegin; facet != boundaryEnd; facet++) {
+            facet->push_back(this->shift++);
+            switch ((*facet)[this->typeIndex]) {
                 case 0: {
-                    std::array<int, 3> line;
-                    std::copy_n(std::begin(connectivity), 3, std::begin(line));
-                    this->gridData->lineConnectivity.emplace_back(std::move(line));
+                    this->gridData->lineConnectivity.emplace_back(std::array<int, 3>());
+                    std::copy_n(facet->begin() + this->nodeIndex, 3, std::begin(this->gridData->lineConnectivity.back()));
                     break;
                 }
                 default:
                     throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Non supported facet found");
             }
         }
+        boundary.end = this->shift;
     }
 }
 
+// void MshReader2D::defineBoundaryVertices() {
+//     for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
+//         std::set<int> vertices;
+//         std::vector<std::array<int, 3>> boundaryConnectivity(this->gridData->lineConnectivity.cbegin() + boundary->begin - this->elements.size(), this->gridData->lineConnectivity.cbegin() + boundary->end - this->elements.size());
+//         for (unsigned j = 0; j < boundaryConnectivity.size(); j++)
+//             for (unsigned k = 0; k != 2u; k++)
+//                 vertices.insert(boundaryConnectivity[j][k]);
+//         boundary->vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
+//     }
+// }
+
 void MshReader2D::defineBoundaryVertices() {
-    for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
+    for (auto& boundary : this->gridData->boundaries) {
         std::set<int> vertices;
-        std::vector<std::array<int, 3>> boundaryConnectivity(this->gridData->lineConnectivity.cbegin() + boundary->begin - this->elements.size(), this->gridData->lineConnectivity.cbegin() + boundary->end - this->elements.size());
-        for (unsigned j = 0; j < boundaryConnectivity.size(); j++)
-            for (unsigned k = 0; k != 2u; k++)
-                vertices.insert(boundaryConnectivity[j][k]);
-        boundary->vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
+
+        for (const auto& line : this->gridData->lineConnectivity)
+            if (line.back() >= boundary.begin && line.back() < boundary.end)
+                vertices.insert(line.cbegin(), line.cend() - 1);
+
+        boundary.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
     }
 }
