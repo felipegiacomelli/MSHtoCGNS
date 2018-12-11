@@ -12,17 +12,11 @@ void MshReader2D::addPhysicalEntities() {
     for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
         switch (this->entitiesTypes[i]) {
             case 0: {
-                this->gridData->boundaries.emplace_back(BoundaryData());
-                this->gridData->boundaries.back().name = this->entitiesNames[i];
-                this->gridData->boundaries.back().begin = this->physicalEntitiesRange[i].front();
-                this->gridData->boundaries.back().end = this->physicalEntitiesRange[i].back();
+                this->addBoundary(this->entitiesNames[i], this->physicalEntitiesRange[i].front(), this->physicalEntitiesRange[i].back());
                 break;
             }
             case 1: {
-                this->gridData->regions.emplace_back(RegionData());
-                this->gridData->regions.back().name = this->entitiesNames[i];
-                this->gridData->regions.back().begin = this->physicalEntitiesRange[i].front();
-                this->gridData->regions.back().end = this->physicalEntitiesRange[i].back();
+                this->addRegion(this->entitiesNames[i], this->physicalEntitiesRange[i].front(), this->physicalEntitiesRange[i].back());
                 break;
             }
             default:

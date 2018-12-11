@@ -81,7 +81,7 @@ void MshReader::readElements() {
     if (connectivities[0][2] != 1)
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Elements must have exactly 2 tags");
 
-    // $Elements
+    // Before
     // index, type, number-of-tags, physical-entity-index, geometrical-entity-index, node-number-list
 
     for (unsigned i = 0; i < this->connectivities.size(); i++) {
@@ -89,6 +89,7 @@ void MshReader::readElements() {
         this->connectivities[i].erase(this->connectivities[i].begin() + 2);
     }
 
+    // After
     // index, type, physical-entity-index, node-number-list
 }
 
@@ -103,4 +104,18 @@ void MshReader::determinePhysicalEntitiesRange() {
         auto range = std::equal_range(indices.cbegin(), indices.cend(), index);
         this->physicalEntitiesRange.emplace_back(std::array<int, 2>{static_cast<int>(std::distance(indices.cbegin(), range.first)), static_cast<int>(std::distance(indices.cbegin(), range.second))});
     }
+}
+
+void MshReader::addRegion(std::string name, int begin, int end) {
+    this->gridData->regions.emplace_back(RegionData());
+    this->gridData->regions.back().name = name;
+    this->gridData->regions.back().begin = begin;
+    this->gridData->regions.back().end = end;
+}
+
+void MshReader::addBoundary(std::string name, int begin, int end) {
+    this->gridData->boundaries.emplace_back(BoundaryData());
+    this->gridData->boundaries.back().name = name;
+    this->gridData->boundaries.back().begin = begin;
+    this->gridData->boundaries.back().end = end;
 }

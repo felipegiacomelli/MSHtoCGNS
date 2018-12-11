@@ -24,6 +24,8 @@ class MshReader {
         void readElements();
         void determinePhysicalEntitiesRange();
         virtual void addPhysicalEntities() = 0;
+        void addRegion(std::string name, int begin, int end);
+        void addBoundary(std::string name, int begin, int end);
         virtual void addElements() = 0;
         virtual void addFacets() = 0;
         virtual void defineBoundaryVertices() = 0;

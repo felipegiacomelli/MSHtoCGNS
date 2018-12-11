@@ -77,17 +77,17 @@ void CgnsReader::createGridData() {
     this->gridData->dimension = this->cellDimension;
 }
 
-void CgnsReader::addRegion(std::string&& name, int start, int end) {
+void CgnsReader::addRegion(std::string&& name, int begin, int end) {
     this->gridData->regions.emplace_back(RegionData());
     std::transform(name.begin(), name.end(), std::back_inserter(this->gridData->regions.back().name), ::toupper);
-    this->gridData->regions.back().begin = start;
+    this->gridData->regions.back().begin = begin;
     this->gridData->regions.back().end = end;
 }
 
-void CgnsReader::addBoundary(std::string&& name, int start, int end) {
+void CgnsReader::addBoundary(std::string&& name, int begin, int end) {
     this->gridData->boundaries.emplace_back(BoundaryData());
     std::transform(name.begin(), name.end(), std::back_inserter(this->gridData->boundaries.back().name), ::toupper);
-    this->gridData->boundaries.back().begin = start;
+    this->gridData->boundaries.back().begin = begin;
     this->gridData->boundaries.back().end = end;
 }
 
