@@ -65,7 +65,7 @@ void MshReader3D::readPhysicalEntities() {
 void MshReader3D::determineNumberOfFacets() {
     this->numberOfFacets = 0;
     for (unsigned i = 0; i < this->connectivities.size(); i++) {
-        if (this->connectivities[i][0] != 1 && this->connectivities[i][0] != 2)
+        if (this->connectivities[i][this->typeIndex] != 1 && this->connectivities[i][this->typeIndex] != 2)
             break;
         else
             this->numberOfFacets++;
@@ -78,8 +78,8 @@ void MshReader3D::addRegions() {
         this->gridData->regions[i].end   = this->regionElements[i].back() + 1;
         for (unsigned j = 0; j < this->regionElements[i].size(); j++) {
             int index = this->regionElements[i][j];
-            int type  = this->elements[index][0];
-            std::vector<int> connectivity(this->elements[index].cbegin() + 2, this->elements[index].cend());
+            int type  = this->elements[index][this->typeIndex];
+            std::vector<int> connectivity(this->elements[index].cbegin() + this->nodeIndex, this->elements[index].cend());
             switch (type) {
                 case 3: {
                     std::array<int, 5> tetrahedron;
@@ -106,8 +106,8 @@ void MshReader3D::addBoundaries() {
         this->gridData->boundaries[i].end   = this->facets[this->boundaryFacets[i].back() ].back() + 1;
         for (unsigned j = 0; j < this->boundaryFacets[i].size(); j++) {
             int index = this->boundaryFacets[i][j];
-            int type  = this->facets[index][0];
-            std::vector<int> connectivity(this->facets[index].cbegin() + 2, this->facets[index].cend());
+            int type  = this->facets[index][this->typeIndex];
+            std::vector<int> connectivity(this->facets[index].cbegin() + this->nodeIndex, this->facets[index].cend());
             switch (type) {
                 case 1: {
                     std::array<int, 4> triangle;

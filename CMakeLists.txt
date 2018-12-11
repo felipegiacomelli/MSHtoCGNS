@@ -130,16 +130,16 @@ add_subdirectory (CgnsInterface)
 add_subdirectory (CgnsInterfaceTest)
 add_test (NAME CgnsInterfaceTest COMMAND CgnsInterfaceTest)
 
-add_subdirectory (FileMend)
-add_subdirectory (FileMendTest)
-add_test (NAME FileMendTest COMMAND FileMendTest)
+# add_subdirectory (FileMend)
+# add_subdirectory (FileMendTest)
+# add_test (NAME FileMendTest COMMAND FileMendTest)
 
 add_subdirectory (UtilitiesTest)
 add_test (NAME UtilitiesTest COMMAND UtilitiesTest)
 
-add_subdirectory (Mender)
+# add_subdirectory (Mender)
 add_subdirectory (MSHtoCGNS)
-add_subdirectory (MultipleBases)
+# add_subdirectory (MultipleBases)
 
 ##################################################################
 # DISPLAY INFORMATION

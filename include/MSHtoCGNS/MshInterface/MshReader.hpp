@@ -36,6 +36,9 @@ class MshReader {
         char buffer[1024];
         int numberOfPhysicalEntities, numberOfBoundaries, numberOfRegions, numberOfFacets;
         std::vector<std::vector<int>> connectivities, elements, facets, regionElements, boundaryFacets;
+        int sectionIndex = 2;
+        int typeIndex = 1;
+        int nodeIndex = 3;
 };
 
 #endif

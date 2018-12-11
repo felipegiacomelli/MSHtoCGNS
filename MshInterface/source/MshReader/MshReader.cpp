@@ -67,18 +67,18 @@ void MshReader::readConnectivities() {
             ++index;
 
     // index, type, number-of-tags, physical-entity-index, geometrical-entity-index, node-number-list
-    print2D(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities\n\n");
+    // print2D(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities\n\n");
 
     // if (connectivities[0][2] != 1)
         // throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Elements must have exactly 2 tags");
 
     for (unsigned i = 0; i < this->connectivities.size(); i++) {
-        this->connectivities[i].erase(this->connectivities[i].begin()    );
-        this->connectivities[i].erase(this->connectivities[i].begin() + 1);
+        this->connectivities[i].erase(this->connectivities[i].begin() + 4);
         this->connectivities[i].erase(this->connectivities[i].begin() + 2);
     }
-    // type, physical-entity-index, node-number-list
-    print2D(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities\n\n");
+
+    // index, type, physical-entity-index, node-number-list
+    // print2D(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities\n\n");
 
     for (auto& connectivity : this->connectivities)
         for (auto& index : connectivity)
@@ -87,15 +87,13 @@ void MshReader::readConnectivities() {
 
 void MshReader::divideConnectivities() {
     this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + this->numberOfFacets, this->connectivities.end());
-    int regionIndex = 1;
-    std::stable_sort(this->elements.begin(), this->elements.end(), [regionIndex](const auto& a, const auto& b) {return a[regionIndex] < b[regionIndex];});
+    std::stable_sort(this->elements.begin(), this->elements.end(), [=](const auto& a, const auto& b) {return a[this->sectionIndex] < b[this->sectionIndex];});
     for (unsigned i = 0; i < this->elements.size(); i++)
         this->elements[i].push_back(i);
     int numberOfElements = elements.size();
 
     this->facets = std::vector<std::vector<int>>(this->connectivities.begin(), this->connectivities.begin() + this->numberOfFacets);
-    unsigned boundaryIndex = 1;
-    std::stable_sort(this->facets.begin(), this->facets.end(), [boundaryIndex](const auto& a, const auto& b) {return a[boundaryIndex] < b[boundaryIndex];});
+    std::stable_sort(this->facets.begin(), this->facets.end(), [=](const auto& a, const auto& b) {return a[this->sectionIndex] < b[this->sectionIndex];});
     for (unsigned i = 0; i < this->facets.size(); i++)
         this->facets[i].push_back(numberOfElements + i);
 }
@@ -105,7 +103,7 @@ void MshReader::assignElementsToRegions() {
     std::vector<unsigned> regionStart;
     regionStart.emplace_back(0);
     for (unsigned i = 0; i < this->elements.size()-1; i++) {
-        if (this->elements[i][1] == this->elements[i+1][1])
+        if (this->elements[i][sectionIndex] == this->elements[i+1][sectionIndex])
             counter++;
         else {
             counter++;
@@ -116,15 +114,15 @@ void MshReader::assignElementsToRegions() {
 
     for (unsigned i = 0; i < regionStart.size()-1; i++)
         for (unsigned j = regionStart[i]; j < regionStart[i+1]; j++)
-            this->elements[j][1] = i;
+            this->elements[j][sectionIndex] = i;
 
     this->regionElements.resize(this->numberOfRegions, std::vector<int>());
     for (unsigned i = 0; i < this->elements.size(); i++)
-        this->regionElements[this->elements[i][1]].push_back(i);
+        this->regionElements[this->elements[i][sectionIndex]].push_back(i);
 }
 
 void MshReader::assignFacetsToBoundaries() {
     this->boundaryFacets.resize(this->numberOfBoundaries, std::vector<int>());
     for (unsigned i = 0; i < this->facets.size(); i++)
-        this->boundaryFacets[this->facets[i][1]].push_back(i);
+        this->boundaryFacets[this->facets[i][sectionIndex]].push_back(i);
 }
