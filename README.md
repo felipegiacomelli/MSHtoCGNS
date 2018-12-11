@@ -18,8 +18,8 @@ This project currently supports:
 - multiple physical surfaces
 
 ## 3D grids
-- tetrahedra **or** hexahedra grids
-- only one physical volume
+- hybrid grids (tetrahedra and hexahedra)
+- multiple physical surfaces
 
 ## CGNS IO
 - read 2D single element or mixed element unstructured grids
