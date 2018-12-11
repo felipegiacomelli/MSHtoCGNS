@@ -6,7 +6,7 @@
 #include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader3D.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
 #include "MSHtoCGNS/FileMend/GridDataExtractor.hpp"
-#include "MSHtoCGNS/FileMend/MultipleBasesCgnsCreator3D.hpp"
+#include "MSHtoCGNS/FileMend/CgnsCreator/MultipleBasesCgnsCreator3D.hpp"
 #include "MSHtoCGNS/Utilities/Print.hpp"
 
 int main() {

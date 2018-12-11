@@ -8,7 +8,7 @@
 #include "MSHtoCGNS/FileMend/WellGenerator.hpp"
 #include "MSHtoCGNS/FileMend/GridDataExtractor.hpp"
 #include "MSHtoCGNS/FileMend/RadialGridDataReordered.hpp"
-#include "MSHtoCGNS/FileMend/MultipleBasesCgnsCreator3D.hpp"
+#include "MSHtoCGNS/FileMend/CgnsCreator/MultipleBasesCgnsCreator3D.hpp"
 
 void createSingleRegion(boost::shared_ptr<GridData> gridData, std::string regionName) {
     RegionData region;

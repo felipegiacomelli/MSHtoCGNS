@@ -1,7 +1,7 @@
-#include "MSHtoCGNS/FileMend/MultipleBasesCgnsCreator3D.hpp"
+#include "MSHtoCGNS/FileMend/CgnsCreator/MultipleBasesCgnsCreator3D.hpp"
 #include <cgnslib.h>
 
-MultipleBasesCgnsCreator3D::MultipleBasesCgnsCreator3D(std::vector<boost::shared_ptr<GridData>> gridDatas, std::vector<std::string> baseNames, std::string folderPath) : CgnsCreator3D(nullptr, folderPath, false), gridDatas(gridDatas), baseNames(baseNames), firstCall(true) {
+MultipleBasesCgnsCreator3D::MultipleBasesCgnsCreator3D(std::vector<boost::shared_ptr<GridData>> gridDatas, std::vector<std::string> baseNames, std::string folderPath) : CgnsCreator3D(nullptr, folderPath, false), gridDatas(gridDatas), baseNames(baseNames) {
     this->initialize();
 }
 
@@ -29,8 +29,6 @@ void MultipleBasesCgnsCreator3D::initialize() {
         this->buildGlobalConnectivities();
         this->writeSections();
 
-        this->globalConnectivities.clear();
-        this->globalConnectivities.clear();
         this->globalConnectivities.clear();
 
         this->elementStart = 1;
