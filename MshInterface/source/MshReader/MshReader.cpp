@@ -64,6 +64,8 @@ void MshReader::readConnectivities() {
     // $Elements
     // index, type, number-of-tags, physical-entity-index, geometrical-entity-index, node-number-list
 
+    print(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities");
+
     if (connectivities[0][2] != 1)
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Elements must have exactly 2 tags");
 
@@ -73,7 +75,7 @@ void MshReader::readConnectivities() {
         this->connectivities[i].erase(this->connectivities[i].begin() + 2);
     }
 
-    // print(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities");
+    print(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities");
 }
 
 void MshReader::divideConnectivities() {

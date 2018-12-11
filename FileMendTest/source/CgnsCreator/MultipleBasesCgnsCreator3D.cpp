@@ -18,7 +18,7 @@ struct MultipleBasesCgnsCreator3DFixture {
         this->gridDatas.emplace_back(mshReader3D.gridData);
         this->gridDatas.emplace_back(gridDataExtractor.extract);
 
-        MultipleBasesCgnsCreator3D multipleBasesCgnsCreator3D(this->gridDatas, this->baseNames, "./");
+        MultipleBasesCgnsCreator3D multipleBasesCgnsCreator3D(this->gridDatas, this->baseNames, "./TEST_FILE.cgns");
 
         this->filePath = multipleBasesCgnsCreator3D.getFileName();
         cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex);

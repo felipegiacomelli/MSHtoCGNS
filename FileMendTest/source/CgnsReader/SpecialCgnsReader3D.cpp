@@ -3,20 +3,18 @@
 
 #define TOLERANCE 1e-12
 
-struct Region1_Mixed_3D_Cgns {
-    Region1_Mixed_3D_Cgns() {
+struct SpecialCgnsReader3DFixture {
+    SpecialCgnsReader3DFixture() {
         SpecialCgnsReader3D specialCgnsReader3D(std::string(TEST_INPUT_DIRECTORY) + "CgnsInterface/3D-Region1-Mixed/12523v_57072e.cgns");
         this->gridData = specialCgnsReader3D.gridData;
     }
 
-    ~Region1_Mixed_3D_Cgns() = default;
-
     boost::shared_ptr<GridData> gridData;
 };
 
-FixtureTestSuite(ReadCgns_Region1_Mixed_3D, Region1_Mixed_3D_Cgns)
+FixtureTestSuite(SpecialCgnsReader3DSuite, SpecialCgnsReader3DFixture)
 
-TestCase(CgnsReader3DTest) {
+TestCase(SpecialCgnsReader3DCase) {
     checkEqual(this->gridData->coordinates.size(), 12523u);
     checkEqual(this->gridData->tetrahedronConnectivity.size(), 53352u);
     checkEqual(this->gridData->hexahedronConnectivity.size(), 1848u);
