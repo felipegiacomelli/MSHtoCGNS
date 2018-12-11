@@ -2,10 +2,9 @@
 #define MSH_READER_HPP
 
 #include <set>
-#include <string>
 #include <sstream>
 #include <fstream>
-#include <numeric>
+
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 #include "MSHtoCGNS/Grid/GridData.hpp"
 #include "MSHtoCGNS/Utilities/Vector.hpp"
@@ -32,10 +31,8 @@ class MshReader {
         std::string filePath;
         std::ifstream file;
         char buffer[1024];
-        int numberOfPhysicalEntities, numberOfFacets;
-        int numberOfBoundaries = 0;
-        int numberOfRegions = 0;
-        std::vector<std::vector<int>> connectivities, elements, facets, regionElements, boundaryFacets;
+        int numberOfPhysicalEntities;
+        std::vector<std::vector<int>> connectivities;
 
         int sectionIndex = 2;
         int typeIndex = 1;

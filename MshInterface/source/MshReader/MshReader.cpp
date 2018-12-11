@@ -3,6 +3,10 @@
 MshReader::MshReader(std::string filePath) : filePath(filePath) {
     this->checkFile();
     this->gridData = boost::make_shared<GridData>();
+    this->readPhysicalNames();
+    this->readNodes();
+    this->readElements();
+    this->determinePhysicalEntitiesRange();
 }
 
 void MshReader::checkFile() {
@@ -74,19 +78,17 @@ void MshReader::readElements() {
     }
     this->connectivities.erase(this->connectivities.begin());
 
-    // $PhysicalNames
-    // dimension, index, "name"
+    if (connectivities[0][2] != 1)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Elements must have exactly 2 tags");
 
     // $Elements
     // index, type, number-of-tags, physical-entity-index, geometrical-entity-index, node-number-list
-
-    if (connectivities[0][2] != 1)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Elements must have exactly 2 tags");
 
     for (unsigned i = 0; i < this->connectivities.size(); i++) {
         this->connectivities[i].erase(this->connectivities[i].begin() + 4);
         this->connectivities[i].erase(this->connectivities[i].begin() + 2);
     }
+
     // index, type, physical-entity-index, node-number-list
 }
 

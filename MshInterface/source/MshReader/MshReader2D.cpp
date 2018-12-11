@@ -2,10 +2,6 @@
 
 MshReader2D::MshReader2D(std::string filePath) : MshReader(filePath) {
     this->gridData->dimension = 2;
-    this->readPhysicalNames();
-    this->readNodes();
-    this->readElements();
-    this->determinePhysicalEntitiesRange();
     this->addPhysicalEntities();
     this->addElements();
     this->addFacets();
@@ -16,7 +12,6 @@ void MshReader2D::addPhysicalEntities() {
     for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
         switch (this->entitiesTypes[i]) {
             case 0: {
-                this->numberOfBoundaries++;
                 this->gridData->boundaries.emplace_back(BoundaryData());
                 this->gridData->boundaries.back().name = this->entitiesNames[i];
                 this->gridData->boundaries.back().begin = this->physicalEntitiesRange[i].front();
@@ -24,7 +19,6 @@ void MshReader2D::addPhysicalEntities() {
                 break;
             }
             case 1: {
-                this->numberOfRegions++;
                 this->gridData->regions.emplace_back(RegionData());
                 this->gridData->regions.back().name = this->entitiesNames[i];
                 this->gridData->regions.back().begin = this->physicalEntitiesRange[i].front();
@@ -83,17 +77,6 @@ void MshReader2D::addFacets() {
         boundary.end = this->shift;
     }
 }
-
-// void MshReader2D::defineBoundaryVertices() {
-//     for (auto boundary = this->gridData->boundaries.begin(); boundary < this->gridData->boundaries.end(); boundary++) {
-//         std::set<int> vertices;
-//         std::vector<std::array<int, 3>> boundaryConnectivity(this->gridData->lineConnectivity.cbegin() + boundary->begin - this->elements.size(), this->gridData->lineConnectivity.cbegin() + boundary->end - this->elements.size());
-//         for (unsigned j = 0; j < boundaryConnectivity.size(); j++)
-//             for (unsigned k = 0; k != 2u; k++)
-//                 vertices.insert(boundaryConnectivity[j][k]);
-//         boundary->vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
-//     }
-// }
 
 void MshReader2D::defineBoundaryVertices() {
     for (auto& boundary : this->gridData->boundaries) {
