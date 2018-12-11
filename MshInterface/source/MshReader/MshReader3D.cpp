@@ -2,8 +2,9 @@
 
 MshReader3D::MshReader3D(std::string filePath) : MshReader(filePath) {
     this->gridData->dimension = 3;
+    this->readPhysicalNames();
+    this->addPhysicalEntities();
     this->readNodes();
-    this->readPhysicalEntities();
     this->readElements();
     this->determineNumberOfFacets();
     this->divideConnectivities();
@@ -14,52 +15,25 @@ MshReader3D::MshReader3D(std::string filePath) : MshReader(filePath) {
     this->defineBoundaryVertices();
 }
 
-void MshReader3D::readPhysicalEntities() {
-    this->file.seekg(0, std::ios::beg);
-    while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof())
-        this->file >> this->buffer;
-    if (this->file.eof())
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no Physical Entities data in the grid file");
-
-    this->file >> this->numberOfPhysicalEntities;
-    std::vector<int> entitiesTypes;
-    std::vector<int> entitiesIndices;
-    std::vector<std::string> entitiesNames;
+void MshReader3D::addPhysicalEntities() {
     for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
-        int type, index;
-        std::string name;
-        this->file >> type >> index >> name;
-        entitiesTypes.push_back(type - 1);
-        entitiesIndices.push_back(index - 1);
-        entitiesNames.emplace_back(std::string());
-        std::transform(name.begin() + 1, name.end() - 1, std::back_inserter(entitiesNames.back()), ::toupper);
-    }
-
-    std::vector<int> regionsIndices, boundaryIndices;
-    for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
-        switch (entitiesTypes[i]) {
+        switch (this->entitiesTypes[i]) {
             case 1: {
-                boundaryIndices.push_back(entitiesIndices[i]);
+                this->numberOfBoundaries++;
+                this->gridData->boundaries.emplace_back(BoundaryData());
+                this->gridData->boundaries.back().name = this->entitiesNames[i];
                 break;
             }
             case 2: {
-                regionsIndices.push_back(entitiesIndices[i]);
+                this->numberOfRegions++;
+                this->gridData->regions.emplace_back(RegionData());
+                this->gridData->regions.back().name = this->entitiesNames[i];
                 break;
             }
             default:
-                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Physical entity " + std::to_string(entitiesTypes[i]) + " not supported");
+                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Physical entity " + std::to_string(this->entitiesTypes[i]) + " not supported");
         }
     }
-
-    this->numberOfBoundaries = boundaryIndices.size();
-    this->gridData->boundaries.resize(boundaryIndices.size());
-    for (unsigned i = 0; i < boundaryIndices.size(); i++)
-        this->gridData->boundaries[i].name = entitiesNames[boundaryIndices[i]];
-
-    this->numberOfRegions = regionsIndices.size();
-    this->gridData->regions.resize(regionsIndices.size());
-    for (unsigned i = 0; i < regionsIndices.size(); i++)
-        this->gridData->regions[i].name = entitiesNames[regionsIndices[i]];
 }
 
 void MshReader3D::determineNumberOfFacets() {

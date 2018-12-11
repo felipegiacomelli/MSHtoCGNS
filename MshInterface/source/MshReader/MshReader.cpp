@@ -20,6 +20,25 @@ void MshReader::checkFile() {
     this->file = std::ifstream(this->filePath.c_str());
 }
 
+void MshReader::readPhysicalNames() {
+    this->file.seekg(0, std::ios::beg);
+    while (strcmp(this->buffer, "$PhysicalNames") && !this->file.eof())
+        this->file >> this->buffer;
+    if (this->file.eof())
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no Physical Entities data in the grid file");
+
+    this->file >> this->numberOfPhysicalEntities;
+    for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
+        int type, index;
+        std::string name;
+        this->file >> type >> index >> name;
+        this->entitiesTypes.push_back(type - 1);
+        this->entitiesIndices.push_back(index - 1);
+        this->entitiesNames.emplace_back(std::string());
+        std::transform(name.begin() + 1, name.end() - 1, std::back_inserter(this->entitiesNames.back()), ::toupper);
+    }
+}
+
 void MshReader::readNodes() {
     int numberOfVertices, temporary;
     this->file.seekg(0, std::ios::beg);
@@ -81,6 +100,15 @@ void MshReader::readElements() {
     std::stable_sort(this->connectivities.begin(), this->connectivities.end(), [=](const auto& a, const auto& b) {return a[this->sectionIndex] < b[this->sectionIndex];});
     print2D(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities\n\n");
 
+    std::vector<int> range;
+    for (const auto& connectivity : connectivities)
+        range.emplace_back(connectivity[2]);
+
+    for (auto index : this->entitiesIndices) {
+        auto its = std::equal_range(range.cbegin(), range.cend(), index+1);
+        printf("\n\t%2i: %3li - %3li\n", index+1, std::distance(range.cbegin(), its.first), std::distance(range.cbegin(), its.second));
+    }
+
     for (auto& connectivity : this->connectivities)
         for (auto& index : connectivity)
             --index;
@@ -88,13 +116,13 @@ void MshReader::readElements() {
 
 void MshReader::divideConnectivities() {
     this->elements = std::vector<std::vector<int>>(this->connectivities.begin() + this->numberOfFacets, this->connectivities.end());
-    std::stable_sort(this->elements.begin(), this->elements.end(), [=](const auto& a, const auto& b) {return a[this->sectionIndex] < b[this->sectionIndex];});
+    std::stable_sort(this->elements.begin(), this->elements.end(), [=](const auto& a, const auto& b){return a[this->sectionIndex] < b[this->sectionIndex];});
     for (unsigned i = 0; i < this->elements.size(); i++)
         this->elements[i].push_back(i);
     int numberOfElements = elements.size();
 
     this->facets = std::vector<std::vector<int>>(this->connectivities.begin(), this->connectivities.begin() + this->numberOfFacets);
-    std::stable_sort(this->facets.begin(), this->facets.end(), [=](const auto& a, const auto& b) {return a[this->sectionIndex] < b[this->sectionIndex];});
+    std::stable_sort(this->facets.begin(), this->facets.end(), [=](const auto& a, const auto& b){return a[this->sectionIndex] < b[this->sectionIndex];});
     for (unsigned i = 0; i < this->facets.size(); i++)
         this->facets[i].push_back(numberOfElements + i);
 }

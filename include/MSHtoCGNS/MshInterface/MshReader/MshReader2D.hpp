@@ -10,7 +10,7 @@ class MshReader2D : public MshReader {
         ~MshReader2D() = default;
 
     private:
-        void readPhysicalEntities() override;
+        void addPhysicalEntities() override;
         void determineNumberOfFacets() override;
         void addRegions() override;
         void addBoundaries() override;

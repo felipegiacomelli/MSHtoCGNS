@@ -20,8 +20,9 @@ class MshReader {
 
     protected:
         void checkFile();
+        void readPhysicalNames();
+        virtual void addPhysicalEntities() = 0;
         void readNodes();
-        virtual void readPhysicalEntities() = 0;
         void readElements();
         virtual void determineNumberOfFacets() = 0;
         void divideConnectivities();
@@ -34,11 +35,18 @@ class MshReader {
         std::string filePath;
         std::ifstream file;
         char buffer[1024];
-        int numberOfPhysicalEntities, numberOfBoundaries, numberOfRegions, numberOfFacets;
+        int numberOfPhysicalEntities, numberOfFacets;
+        int numberOfBoundaries = 0;
+        int numberOfRegions = 0;
         std::vector<std::vector<int>> connectivities, elements, facets, regionElements, boundaryFacets;
+
         int sectionIndex = 2;
         int typeIndex = 1;
         int nodeIndex = 3;
+
+        std::vector<int> entitiesTypes;
+        std::vector<int> entitiesIndices;
+        std::vector<std::string> entitiesNames;
 };
 
 #endif
