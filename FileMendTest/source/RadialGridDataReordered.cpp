@@ -27,31 +27,31 @@ TestCase(RadialGridDataReorderedTest) {
 
     checkEqual(reordered->coordinates.size(), 370u);
 
-    checkEqual(reordered->tetrahedronConnectivity.size(),   0u);
-    checkEqual(reordered->hexahedronConnectivity.size() , 216u);
-    checkEqual(reordered->prismConnectivity.size()      , 108u);
-    checkEqual(reordered->pyramidConnectivity.size()    ,   0u);
+    checkEqual(reordered->tetrahedronConnectivity.size(), 0u);
+    checkEqual(reordered->hexahedronConnectivity.size(), 216u);
+    checkEqual(reordered->prismConnectivity.size(), 108u);
+    checkEqual(reordered->pyramidConnectivity.size(), 0u);
 
-    checkEqual(reordered->triangleConnectivity.size()  ,  24u);
+    checkEqual(reordered->triangleConnectivity.size(),  24u);
     checkEqual(reordered->quadrangleConnectivity.size(), 156u);
 
     checkEqual(reordered->lineConnectivity.size(), 9u);
 
-    checkEqual(reordered->boundaries.size(),  3u);
-    checkEqual(reordered->regions.size()   ,  1u);
-    checkEqual(reordered->wells.size()     ,  1u);
+    checkEqual(reordered->boundaries.size(), 3u);
+    checkEqual(reordered->regions.size(), 1u);
+    checkEqual(reordered->wells.size(), 1u);
 
     checkEqual(reordered->boundaries[0].begin, 324);
-    checkEqual(reordered->boundaries[0].end  , 432);
+    checkEqual(reordered->boundaries[0].end, 432);
 
     checkEqual(reordered->boundaries[1].begin, 432);
-    checkEqual(reordered->boundaries[1].end  , 468);
+    checkEqual(reordered->boundaries[1].end, 468);
 
     checkEqual(reordered->boundaries[2].begin, 468);
-    checkEqual(reordered->boundaries[2].end  , 504);
+    checkEqual(reordered->boundaries[2].end, 504);
 
     checkEqual(reordered->wells[0].begin, 504);
-    checkEqual(reordered->wells[0].end  , 513);
+    checkEqual(reordered->wells[0].end, 513);
     checkEqual(reordered->wells[0].vertices.size(), 10u);
     for (int j = 0; j < 10; j++)
         checkEqual(reordered->wells[0].vertices[j], j * 37);

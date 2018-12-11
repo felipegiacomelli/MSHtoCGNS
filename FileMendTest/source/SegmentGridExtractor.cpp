@@ -30,40 +30,40 @@ TestCase(SegmentGridExtractorTest) {
 
     checkEqual(segmentGrid->coordinates.size(), 74u);
 
-    checkEqual(segmentGrid->tetrahedronConnectivity.size(),  0u);
-    checkEqual(segmentGrid->hexahedronConnectivity.size() , 24u);
-    checkEqual(segmentGrid->prismConnectivity.size()      , 12u);
-    checkEqual(segmentGrid->pyramidConnectivity.size()    ,  0u);
+    checkEqual(segmentGrid->tetrahedronConnectivity.size(), 0u);
+    checkEqual(segmentGrid->hexahedronConnectivity.size(), 24u);
+    checkEqual(segmentGrid->prismConnectivity.size(), 12u);
+    checkEqual(segmentGrid->pyramidConnectivity.size(), 0u);
 
-    checkEqual(segmentGrid->triangleConnectivity.size()  , 24u);
+    checkEqual(segmentGrid->triangleConnectivity.size(), 24u);
     checkEqual(segmentGrid->quadrangleConnectivity.size(), 60u);
 
     checkEqual(segmentGrid->lineConnectivity.size(), 1u);
 
-    checkEqual(segmentGrid->boundaries.size(),  3u);
-    checkEqual(segmentGrid->regions.size()   ,  1u);
-    checkEqual(segmentGrid->wells.size()     ,  1u);
+    checkEqual(segmentGrid->boundaries.size(), 3u);
+    checkEqual(segmentGrid->regions.size(), 1u);
+    checkEqual(segmentGrid->wells.size(), 1u);
 
     auto boundary = segmentGrid->boundaries[0];
     checkEqual(boundary.begin, 36);
-    checkEqual(boundary.end  , 48);
+    checkEqual(boundary.end, 48);
     checkEqual(boundary.vertices.size(), 24u);
     check(std::all_of(boundary.vertices.cbegin(), boundary.vertices.cend(), [=](auto v){return v >= 0 && v < 74;}));
 
     boundary = segmentGrid->boundaries[1];
     checkEqual(boundary.begin, 48);
-    checkEqual(boundary.end  , 84);
+    checkEqual(boundary.end, 84);
     checkEqual(boundary.vertices.size(), 37u);
     check(std::all_of(boundary.vertices.cbegin(), boundary.vertices.cend(), [=](auto v){return v >= 0 && v < 37;}));
 
     boundary = segmentGrid->boundaries[2];
     checkEqual(boundary.begin,  84);
-    checkEqual(boundary.end  , 120);
+    checkEqual(boundary.end, 120);
     checkEqual(boundary.vertices.size(), 37u);
     check(std::all_of(boundary.vertices.cbegin(), boundary.vertices.cend(), [=](auto v){return v >= 37 && v < 74;}));
 
     checkEqual(segmentGrid->wells[0].begin, 120);
-    checkEqual(segmentGrid->wells[0].end  , 121);
+    checkEqual(segmentGrid->wells[0].end, 121);
     checkEqual(segmentGrid->wells[0].vertices.size(), 2u);
     checkEqual(segmentGrid->wells[0].vertices[0],  0);
     checkEqual(segmentGrid->wells[0].vertices[1], 37);
