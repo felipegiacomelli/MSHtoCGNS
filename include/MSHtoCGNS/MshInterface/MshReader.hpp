@@ -22,7 +22,7 @@ class MshReader {
         void checkFile();
         void readNodes();
         virtual void readPhysicalEntities() = 0;
-        void readConnectivities();
+        void readElements();
         virtual void determineNumberOfFacets() = 0;
         void divideConnectivities();
         void assignElementsToRegions();

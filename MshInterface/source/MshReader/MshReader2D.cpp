@@ -4,7 +4,7 @@ MshReader2D::MshReader2D(std::string filePath) : MshReader(filePath) {
     this->gridData->dimension = 2;
     this->readNodes();
     this->readPhysicalEntities();
-    this->readConnectivities();
+    this->readElements();
     this->determineNumberOfFacets();
     this->divideConnectivities();
     this->assignElementsToRegions();

@@ -34,7 +34,7 @@ void MshReader::readNodes() {
         this->file >> temporary >> this->gridData->coordinates[i][0] >> this->gridData->coordinates[i][1] >> this->gridData->coordinates[i][2];
 }
 
-void MshReader::readConnectivities() {
+void MshReader::readElements() {
     int numberOfElements;
     this->file.seekg(0, std::ios::beg);
     while (strcmp(this->buffer, "$Elements") && !this->file.eof())
@@ -78,7 +78,8 @@ void MshReader::readConnectivities() {
     }
 
     // index, type, physical-entity-index, node-number-list
-    // print2D(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities\n\n");
+    std::stable_sort(this->connectivities.begin(), this->connectivities.end(), [=](const auto& a, const auto& b) {return a[this->sectionIndex] < b[this->sectionIndex];});
+    print2D(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities\n\n");
 
     for (auto& connectivity : this->connectivities)
         for (auto& index : connectivity)
