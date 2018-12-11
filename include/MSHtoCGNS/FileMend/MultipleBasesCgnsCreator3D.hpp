@@ -9,10 +9,6 @@ class MultipleBasesCgnsCreator3D : public CgnsCreator3D {
 
     private:
         void initialize();
-        void writeSections() override;
-        void writeRegions() override;
-        void writeBoundaries() override;
-        void writeWells();
 
         std::vector<boost::shared_ptr<GridData>> gridDatas;
         std::vector<std::string> baseNames;
