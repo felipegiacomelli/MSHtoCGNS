@@ -36,9 +36,9 @@ class MshReader {
         int numberOfPhysicalEntities;
         std::vector<std::vector<int>> connectivities;
 
-        int sectionIndex = 2;
-        int typeIndex = 1;
-        int nodeIndex = 3;
+        int typeIndex = 0;
+        int sectionIndex = 1;
+        int nodeIndex = 2;
 
         std::vector<int> entitiesTypes;
         std::vector<int> entitiesIndices;

@@ -31,7 +31,7 @@ void MshReader::readPhysicalNames() {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no Physical Entities data in the grid file");
 
     this->file >> this->numberOfPhysicalEntities;
-    for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
+    for (int i = 0; i < this->numberOfPhysicalEntities; ++i) {
         int type, index;
         std::string name;
         this->file >> type >> index >> name;
@@ -65,7 +65,7 @@ void MshReader::readElements() {
         this->file.clear();
     else {
         this->file >> numberOfElements;
-        for (int i = 0; i < numberOfElements+1; i++) {
+        for (int i = 0; i < numberOfElements+1; ++i) {
             std::string line;
             std::getline(this->file, line);
             std::istringstream stream(line);
@@ -84,13 +84,14 @@ void MshReader::readElements() {
     // Before
     // index, type, number-of-tags, physical-entity-index, geometrical-entity-index, node-number-list
 
-    for (unsigned i = 0; i < this->connectivities.size(); i++) {
+    for (unsigned i = 0; i < this->connectivities.size(); ++i) {
         this->connectivities[i].erase(this->connectivities[i].begin() + 4);
         this->connectivities[i].erase(this->connectivities[i].begin() + 2);
+        this->connectivities[i].erase(this->connectivities[i].begin());
     }
 
     // After
-    // index, type, physical-entity-index, node-number-list
+    // type, physical-entity-index, node-number-list
 }
 
 void MshReader::determinePhysicalEntitiesRange() {
@@ -98,9 +99,9 @@ void MshReader::determinePhysicalEntitiesRange() {
 
     std::vector<int> indices;
     for (const auto& connectivity : this->connectivities)
-        indices.emplace_back(connectivity[2]);
+        indices.emplace_back(connectivity[this->sectionIndex]);
 
-    for (auto index : this->entitiesIndices) {
+    for (int index : this->entitiesIndices) {
         auto range = std::equal_range(indices.cbegin(), indices.cend(), index);
         this->physicalEntitiesRange.emplace_back(std::array<int, 2>{static_cast<int>(std::distance(indices.cbegin(), range.first)), static_cast<int>(std::distance(indices.cbegin(), range.second))});
     }

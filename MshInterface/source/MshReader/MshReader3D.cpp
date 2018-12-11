@@ -9,38 +9,38 @@ MshReader3D::MshReader3D(std::string filePath) : MshReader(filePath) {
 }
 
 void MshReader3D::addPhysicalEntities() {
-    for (int i = 0; i < this->numberOfPhysicalEntities; i++) {
-        switch (this->entitiesTypes[i]) {
+    for (int physicalEntity = 0; physicalEntity < this->numberOfPhysicalEntities; ++physicalEntity) {
+        switch (this->entitiesTypes[physicalEntity]) {
             case 1: {
-                this->addBoundary(this->entitiesNames[i], this->physicalEntitiesRange[i].front(), this->physicalEntitiesRange[i].back());
+                this->addBoundary(this->entitiesNames[physicalEntity], this->physicalEntitiesRange[physicalEntity].front(), this->physicalEntitiesRange[physicalEntity].back());
                 break;
             }
             case 2: {
-                this->addRegion(this->entitiesNames[i], this->physicalEntitiesRange[i].front(), this->physicalEntitiesRange[i].back());
+                this->addRegion(this->entitiesNames[physicalEntity], this->physicalEntitiesRange[physicalEntity].front(), this->physicalEntitiesRange[physicalEntity].back());
                 break;
             }
             default:
-                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Physical entity " + std::to_string(this->entitiesTypes[i]) + " not supported");
+                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Physical entity " + std::to_string(this->entitiesTypes[physicalEntity]) + " not supported");
         }
     }
 }
 
 void MshReader3D::addElements() {
     for (auto& region : this->gridData->regions) {
-        auto regionBegin = this->connectivities.begin() + region.begin;
-        auto regionEnd = this->connectivities.begin() + region.end;
+        auto begin = this->connectivities.begin() + region.begin;
+        auto end = this->connectivities.begin() + region.end;
         region.begin = this->shift;
-        for (auto element = regionBegin; element != regionEnd; element++) {
-            element->push_back(this->shift++);
-            switch ((*element)[this->typeIndex]) {
+        while (begin != end) {
+            begin->push_back(this->shift++);
+            switch ((*begin)[this->typeIndex]) {
                 case 3: {
                     this->gridData->tetrahedronConnectivity.emplace_back(std::array<int, 5>());
-                    std::copy_n(element->begin() + this->nodeIndex, 5, std::begin(this->gridData->tetrahedronConnectivity.back()));
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 5, std::begin(this->gridData->tetrahedronConnectivity.back()));
                     break;
                 }
                 case 4: {
                     this->gridData->hexahedronConnectivity.emplace_back(std::array<int, 9>());
-                    std::copy_n(element->begin() + this->nodeIndex, 9, std::begin(this->gridData->hexahedronConnectivity.back()));
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 9, std::begin(this->gridData->hexahedronConnectivity.back()));
                     break;
                 }
                 default:
@@ -53,20 +53,20 @@ void MshReader3D::addElements() {
 
 void MshReader3D::addFacets() {
     for (auto& boundary : this->gridData->boundaries) {
-        auto boundaryBegin = this->connectivities.begin() + boundary.begin;
-        auto boundaryEnd = this->connectivities.begin() + boundary.end;
+        auto begin = this->connectivities.begin() + boundary.begin;
+        auto end = this->connectivities.begin() + boundary.end;
         boundary.begin = this->shift;
-        for (auto facet = boundaryBegin; facet != boundaryEnd; facet++) {
-            facet->push_back(this->shift++);
-            switch ((*facet)[this->typeIndex]) {
+        while (begin != end) {
+            begin->push_back(this->shift++);
+            switch ((*begin)[this->typeIndex]) {
                 case 1: {
                     this->gridData->triangleConnectivity.emplace_back(std::array<int, 4>());
-                    std::copy_n(facet->begin() + this->nodeIndex, 4, std::begin(this->gridData->triangleConnectivity.back()));
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 4, std::begin(this->gridData->triangleConnectivity.back()));
                     break;
                 }
                 case 2: {
                     this->gridData->quadrangleConnectivity.emplace_back(std::array<int, 5>());
-                    std::copy_n(facet->begin() + this->nodeIndex, 5, std::begin(this->gridData->quadrangleConnectivity.back()));
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 5, std::begin(this->gridData->quadrangleConnectivity.back()));
                     break;
                 }
                 default:
