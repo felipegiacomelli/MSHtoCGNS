@@ -54,7 +54,6 @@ void CgnsWriter::writePermanentSolution(std::string solutionName) {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write permanent solution " + solutionName);
 }
 
-
 void CgnsWriter::writePermanentField(std::string fieldName, const std::vector<double>& fieldValues){
     if (cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->permanentSolutionIndex, RealDouble, fieldName.c_str(), &fieldValues[0], &this->permanentFieldIndex))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write field " + fieldName);

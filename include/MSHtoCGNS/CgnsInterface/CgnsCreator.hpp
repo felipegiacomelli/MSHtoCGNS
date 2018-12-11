@@ -33,7 +33,7 @@ class CgnsCreator {
         int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
         int sizes[3];
         int coordinateIndex, sectionIndex, boundaryIndex;
-        int elementStart, end;
+        int elementStart, elementEnd;
 
         std::vector<std::vector<int>> globalConnectivities;
 };

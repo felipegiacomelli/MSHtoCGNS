@@ -195,12 +195,11 @@ void CgnsReader3D::readSections() {
     }
 }
 
-void CgnsReader3D::addWell(std::string&& name, int elementStart, int end) {
-    WellData well;
-    well.name = name;
-    well.begin = elementStart;
-    well.end = end;
-    this->gridData->wells.emplace_back(std::move(well));
+void CgnsReader3D::addWell(std::string&& name, int start, int end) {
+    this->gridData->wells.emplace_back(WellData());
+    std::transform(name.begin(), name.end(), std::back_inserter(this->gridData->wells.back().name), ::toupper);
+    this->gridData->wells.back().begin = start;
+    this->gridData->wells.back().end = end;
 }
 
 void CgnsReader3D::findBoundaryVertices() {

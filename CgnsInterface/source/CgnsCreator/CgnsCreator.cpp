@@ -1,7 +1,7 @@
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator.hpp"
 #include <cgnslib.h>
 
-CgnsCreator::CgnsCreator(boost::shared_ptr<GridData> gridData, std::string folderPath) : gridData(gridData), folderPath(folderPath), elementStart(1), end(0) {
+CgnsCreator::CgnsCreator(boost::shared_ptr<GridData> gridData, std::string folderPath) : gridData(gridData), folderPath(folderPath), elementStart(1), elementEnd(0) {
     this->baseName = "BASE";
     this->zoneName = "ZONE";
 }

@@ -7,7 +7,7 @@ class CgnsCreator2D : public CgnsCreator {
     public:
         CgnsCreator2D(boost::shared_ptr<GridData> gridData, std::string folderPath);
 
-    private:
+    protected:
         void checkDimension() override;
         void setDimensions() override;
         void writeCoordinates() override;
