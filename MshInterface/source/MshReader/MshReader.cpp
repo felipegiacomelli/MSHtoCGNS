@@ -1,5 +1,4 @@
 #include "MSHtoCGNS/MshInterface/MshReader.hpp"
-#include "MSHtoCGNS/Utilities/Print.hpp"
 
 MshReader::MshReader(std::string filePath) : filePath(filePath) {
     this->checkFile();
@@ -81,37 +80,27 @@ void MshReader::readElements() {
     // $Elements
     // index, type, number-of-tags, physical-entity-index, geometrical-entity-index, node-number-list
 
-    for (auto& connectivity : this->connectivities)
-        for (auto& index : connectivity)
-            ++index;
-
-    // index, type, number-of-tags, physical-entity-index, geometrical-entity-index, node-number-list
-    // print2D(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities\n\n");
-
-    // if (connectivities[0][2] != 1)
-        // throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Elements must have exactly 2 tags");
+    if (connectivities[0][2] != 1)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Elements must have exactly 2 tags");
 
     for (unsigned i = 0; i < this->connectivities.size(); i++) {
         this->connectivities[i].erase(this->connectivities[i].begin() + 4);
         this->connectivities[i].erase(this->connectivities[i].begin() + 2);
     }
-
     // index, type, physical-entity-index, node-number-list
-    std::stable_sort(this->connectivities.begin(), this->connectivities.end(), [=](const auto& a, const auto& b) {return a[this->sectionIndex] < b[this->sectionIndex];});
-    print2D(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities\n\n");
+}
 
-    std::vector<int> range;
-    for (const auto& connectivity : connectivities)
-        range.emplace_back(connectivity[2]);
+void MshReader::determinePhysicalEntitiesRange() {
+    std::stable_sort(this->connectivities.begin(), this->connectivities.end(), [=](const auto& a, const auto& b) {return a[this->sectionIndex] < b[this->sectionIndex];});
+
+    std::vector<int> indices;
+    for (const auto& connectivity : this->connectivities)
+        indices.emplace_back(connectivity[2]);
 
     for (auto index : this->entitiesIndices) {
-        auto its = std::equal_range(range.cbegin(), range.cend(), index+1);
-        printf("\n\t%2i: %3li - %3li\n", index+1, std::distance(range.cbegin(), its.first), std::distance(range.cbegin(), its.second));
+        auto range = std::equal_range(indices.cbegin(), indices.cend(), index);
+        this->physicalEntitiesRange.emplace_back(std::array<int, 2>{static_cast<int>(std::distance(indices.cbegin(), range.first)), static_cast<int>(std::distance(indices.cbegin(), range.second))});
     }
-
-    for (auto& connectivity : this->connectivities)
-        for (auto& index : connectivity)
-            --index;
 }
 
 void MshReader::divideConnectivities() {

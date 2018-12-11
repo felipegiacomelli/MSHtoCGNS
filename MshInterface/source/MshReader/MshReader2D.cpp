@@ -1,11 +1,13 @@
 #include "MSHtoCGNS/MshInterface/MshReader/MshReader2D.hpp"
+#include "MSHtoCGNS/Utilities/Print.hpp"
 
 MshReader2D::MshReader2D(std::string filePath) : MshReader(filePath) {
     this->gridData->dimension = 2;
     this->readPhysicalNames();
-    this->addPhysicalEntities();
     this->readNodes();
     this->readElements();
+    this->determinePhysicalEntitiesRange();
+    this->addPhysicalEntities();
     this->determineNumberOfFacets();
     this->divideConnectivities();
     this->assignElementsToRegions();
@@ -22,12 +24,16 @@ void MshReader2D::addPhysicalEntities() {
                 this->numberOfBoundaries++;
                 this->gridData->boundaries.emplace_back(BoundaryData());
                 this->gridData->boundaries.back().name = this->entitiesNames[i];
+                this->gridData->boundaries.back().begin = this->physicalEntitiesRange[i].front();
+                this->gridData->boundaries.back().end = this->physicalEntitiesRange[i].back();
                 break;
             }
             case 1: {
                 this->numberOfRegions++;
                 this->gridData->regions.emplace_back(RegionData());
                 this->gridData->regions.back().name = this->entitiesNames[i];
+                this->gridData->regions.back().begin = this->physicalEntitiesRange[i].front();
+                this->gridData->regions.back().end = this->physicalEntitiesRange[i].back();
                 break;
             }
             default:

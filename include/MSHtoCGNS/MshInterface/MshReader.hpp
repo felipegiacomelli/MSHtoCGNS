@@ -21,9 +21,10 @@ class MshReader {
     protected:
         void checkFile();
         void readPhysicalNames();
-        virtual void addPhysicalEntities() = 0;
         void readNodes();
         void readElements();
+        void determinePhysicalEntitiesRange();
+        virtual void addPhysicalEntities() = 0;
         virtual void determineNumberOfFacets() = 0;
         void divideConnectivities();
         void assignElementsToRegions();
@@ -47,6 +48,8 @@ class MshReader {
         std::vector<int> entitiesTypes;
         std::vector<int> entitiesIndices;
         std::vector<std::string> entitiesNames;
+
+        std::vector<std::array<int, 2>> physicalEntitiesRange;
 };
 
 #endif
