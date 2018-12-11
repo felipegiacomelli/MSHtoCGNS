@@ -1,7 +1,7 @@
 #include "MSHtoCGNS/FileMend/MultipleBasesCgnsCreator3D.hpp"
 #include <cgnslib.h>
 
-MultipleBasesCgnsCreator3D::MultipleBasesCgnsCreator3D(std::vector<boost::shared_ptr<GridData>> gridDatas, std::vector<std::string> baseNames, std::string folderPath) : CgnsCreator(nullptr, folderPath), gridDatas(gridDatas), baseNames(baseNames), firstCall(true) {
+MultipleBasesCgnsCreator3D::MultipleBasesCgnsCreator3D(std::vector<boost::shared_ptr<GridData>> gridDatas, std::vector<std::string> baseNames, std::string folderPath) : CgnsCreator3D(nullptr, folderPath, false), gridDatas(gridDatas), baseNames(baseNames), firstCall(true) {
     this->initialize();
 }
 
@@ -12,8 +12,8 @@ void MultipleBasesCgnsCreator3D::initialize() {
         this->checkDimension();
         this->setDimensions();
 
-        if (firstCall) {
-            firstCall = false;
+        if (this->firstCall) {
+            this->firstCall = false;
             this->setupFile();
         }
 
@@ -33,39 +33,6 @@ void MultipleBasesCgnsCreator3D::initialize() {
         this->elementStart = 1;
         this->elementEnd = 0;
     }
-}
-
-void MultipleBasesCgnsCreator3D::checkDimension() {
-    if (this->gridData->dimension != 3)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData dimension must be equal to 3 and not " + std::to_string(this->gridData->dimension));
-}
-
-void MultipleBasesCgnsCreator3D::setDimensions() {
-    this->physicalDimension = this->gridData->dimension;
-    this->cellDimension = this->gridData->dimension;
-    this->sizes[0] = this->gridData->coordinates.size();
-    this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size();
-    this->sizes[2] = 0;
-}
-
-void MultipleBasesCgnsCreator3D::writeCoordinates() {
-    std::vector<double> coordinatesX(this->sizes[0]);
-    std::vector<double> coordinatesY(this->sizes[0]);
-    std::vector<double> coordinatesZ(this->sizes[0]);
-    for (int i = 0; i < this->sizes[0]; i++) {
-        coordinatesX[i] = this->gridData->coordinates[i][0];
-        coordinatesY[i] = this->gridData->coordinates[i][1];
-        coordinatesZ[i] = this->gridData->coordinates[i][2];
-    }
-
-    if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateX", &coordinatesX[0], &this->coordinateIndex))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write CoordinateX");
-
-    if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateY", &coordinatesY[0], &this->coordinateIndex))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write CoordinateY");
-
-    if (cg_coord_write(this->fileIndex, this->baseIndex, this->zoneIndex, RealDouble, "CoordinateZ", &coordinatesZ[0], &this->coordinateIndex))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write CoordinateZ");
 }
 
 void MultipleBasesCgnsCreator3D::writeSections() {
