@@ -5,7 +5,7 @@
 
 class CgnsCreator3D : public CgnsCreator {
     public:
-        CgnsCreator3D(boost::shared_ptr<GridData> gridData, std::string folderPath);
+        CgnsCreator3D(boost::shared_ptr<GridData> gridData, std::string folderPath, bool createInConstructor = true);
 
     protected:
         void checkDimension() override;

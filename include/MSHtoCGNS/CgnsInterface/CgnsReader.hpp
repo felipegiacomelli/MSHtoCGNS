@@ -28,14 +28,14 @@ class CgnsReader {
         void createGridData();
         virtual void readCoordinates() = 0;
         virtual void readSections() = 0;
-        void addRegion(std::string&& name, int elementStart, int end);
-        void addBoundary(std::string&& name, int elementStart, int end);
+        void addRegion(std::string&& name, int start, int end);
+        void addBoundary(std::string&& name, int start, int end);
         virtual void findBoundaryVertices() = 0;
         virtual void findRegionVertices() = 0;
         int readSolutionIndex(std::string solutionName);
 
         std::string filePath;
-        char buffer[800];
+        char buffer[1024];
         int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
         int sizes[3];
         int numberOfSections, numberOfBoundaries;

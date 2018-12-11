@@ -10,7 +10,7 @@ class CgnsReader3D : public CgnsReader {
     protected:
         void readCoordinates() override;
         void readSections() override;
-        void addWell(std::string&& name, int elementStart, int end);
+        void addWell(std::string&& name, int start, int end);
         void findBoundaryVertices() override;
         void findRegionVertices() override;
         void findWellVertices();

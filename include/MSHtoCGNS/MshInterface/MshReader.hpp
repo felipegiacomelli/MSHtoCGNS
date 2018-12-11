@@ -33,7 +33,7 @@ class MshReader {
 
         std::string filePath;
         std::ifstream file;
-        char buffer[800];
+        char buffer[1024];
         int numberOfPhysicalEntities, numberOfBoundaries, numberOfRegions, numberOfFacets;
         std::vector<std::vector<int>> connectivities, elements, facets, regionElements, boundaryFacets;
 };
