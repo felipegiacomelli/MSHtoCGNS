@@ -49,10 +49,8 @@ void MshReader::readConnectivities() {
             std::istringstream stream(line);
             std::vector<int> connectivity;
             int value;
-            while (stream >> value) {
-                value--;
-                connectivity.push_back(value);
-            }
+            while (stream >> value)
+                connectivity.push_back(value - 1);
             this->connectivities.emplace_back(std::move(connectivity));
         }
     }
@@ -64,18 +62,27 @@ void MshReader::readConnectivities() {
     // $Elements
     // index, type, number-of-tags, physical-entity-index, geometrical-entity-index, node-number-list
 
-    print(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities");
+    for (auto& connectivity : this->connectivities)
+        for (auto& index : connectivity)
+            ++index;
 
-    if (connectivities[0][2] != 1)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Elements must have exactly 2 tags");
+    // index, type, number-of-tags, physical-entity-index, geometrical-entity-index, node-number-list
+    print2D(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities\n\n");
+
+    // if (connectivities[0][2] != 1)
+        // throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Elements must have exactly 2 tags");
 
     for (unsigned i = 0; i < this->connectivities.size(); i++) {
         this->connectivities[i].erase(this->connectivities[i].begin()    );
         this->connectivities[i].erase(this->connectivities[i].begin() + 1);
         this->connectivities[i].erase(this->connectivities[i].begin() + 2);
     }
+    // type, physical-entity-index, node-number-list
+    print2D(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities\n\n");
 
-    print(this->connectivities.cbegin(), this->connectivities.cend(), "\n\tconnectivities");
+    for (auto& connectivity : this->connectivities)
+        for (auto& index : connectivity)
+            --index;
 }
 
 void MshReader::divideConnectivities() {

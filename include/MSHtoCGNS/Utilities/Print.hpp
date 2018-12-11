@@ -24,22 +24,20 @@ std::string cyan(std::string message) {
     return "\033[1;36m" + message + "\033[0m";
 }
 
-template<typename T>
-void print(const std::vector<T>& a, std::string&& message) {
-    std::cout << std::fixed << std::setprecision(3);
-    std::cout << "\t" << message << std::endl << "\t";
-    for (auto i = a.cbegin(); i != a.cend(); i++)
-        std::cout << "\t" << *i;
+template<typename InputIt>
+void print1D(InputIt cbegin, InputIt cend, std::string&& message) {
+    std::cout << message;
+    while (cbegin++ != cend)
+        std::cout << "\t" << std::setw(3) << std::right << *cbegin;
     std::cout << std::endl;
 }
 
 template<typename InputIt>
-void print(InputIt cbegin, InputIt cend, std::string&& message) {
-    std::cout << std::fixed << std::setprecision(3);
-    std::cout << "\t" << message << std::endl << std::endl;
-    for (auto i = cbegin; i != cend; i++) {
-        for (auto j = i->cbegin(); j != i->cend(); j++) {
-            std::cout << "\t" << std::setw(3) << std::right <<*j;
+void print2D(InputIt cbegin, InputIt cend, std::string&& message) {
+    std::cout << message;
+    for (auto i = cbegin; i != cend; ++i) {
+        for (auto j = i->cbegin(); j != i->cend(); ++j) {
+            std::cout << "\t" << std::setw(3) << std::right << *j;
         }
         std::cout << std::endl;
     }
