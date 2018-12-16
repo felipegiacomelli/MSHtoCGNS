@@ -3,7 +3,7 @@
 Master: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=master)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS)
 Develop: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=develop)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS)
 
-Generate a gmsh format grid using [gmsh](http://gmsh.info/):
+Generate a msh format grid using [gmsh 3.0.6](http://gmsh.info/):
 
 <img src="Zeta/Images/grid_gmsh.png" alt="gmsh" height=250 width=600  />
 

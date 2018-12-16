@@ -1,0 +1,13 @@
+{
+
+    "indices" : [
+        0
+    ],
+
+    "inputs" :
+    [
+        "/home/felipe/Felipe/gmsh/mandel_3d/28283.msh"
+    ],
+
+    "output": "."
+}

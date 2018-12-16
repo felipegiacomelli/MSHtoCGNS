@@ -17,6 +17,8 @@ class MshReader {
 
         boost::shared_ptr<GridData> gridData;
 
+        std::vector<int> entitiesTypes;
+
     protected:
         void checkFile();
         void readPhysicalNames();
@@ -40,7 +42,6 @@ class MshReader {
         int sectionIndex = 1;
         int nodeIndex = 2;
 
-        std::vector<int> entitiesTypes;
         std::vector<int> entitiesIndices;
         std::vector<std::string> entitiesNames;
 

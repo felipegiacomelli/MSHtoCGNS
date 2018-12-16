@@ -1,7 +1,0 @@
-{
-    "path" :
-    {
-        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/MshInterface/2D-Region4-ElementType1/11v_10e.msh",
-        "output" : "./"
-    }
-}
