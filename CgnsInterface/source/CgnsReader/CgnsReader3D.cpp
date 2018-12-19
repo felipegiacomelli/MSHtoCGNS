@@ -79,39 +79,33 @@ void CgnsReader3D::readSections() {
                     element.emplace_back(elementStart - 1 + e);
                     switch (connectivities[position]) {
                         case TETRA_4: {
-                            std::array<int, 5> tetrahedron;
-                            std::copy_n(std::begin(element), 5, std::begin(tetrahedron));
-                            this->gridData->tetrahedronConnectivity.emplace_back(std::move(tetrahedron));
+                            this->gridData->tetrahedronConnectivity.emplace_back(std::array<int, 5>());
+                            std::copy_n(std::begin(element), 5, std::begin(this->gridData->tetrahedronConnectivity.back()));
                             break;
                         }
                         case HEXA_8: {
-                            std::array<int, 9> hexahedron;
-                            std::copy_n(std::begin(element), 9, std::begin(hexahedron));
-                            this->gridData->hexahedronConnectivity.emplace_back(std::move(hexahedron));
+                            this->gridData->hexahedronConnectivity.emplace_back(std::array<int, 9>());
+                            std::copy_n(std::begin(element), 9, std::begin(this->gridData->hexahedronConnectivity.back()));
                             break;
                         }
                         case PENTA_6: {
-                            std::array<int, 7> prism;
-                            std::copy_n(std::begin(element), 7, std::begin(prism));
-                            this->gridData->prismConnectivity.emplace_back(std::move(prism));
+                            this->gridData->prismConnectivity.emplace_back(std::array<int, 7>());
+                            std::copy_n(std::begin(element), 7, std::begin(this->gridData->prismConnectivity.back()));
                             break;
                         }
                         case PYRA_5: {
-                            std::array<int, 6> pyramid;
-                            std::copy_n(std::begin(element), 6, std::begin(pyramid));
-                            this->gridData->pyramidConnectivity.emplace_back(std::move(pyramid));
+                            this->gridData->pyramidConnectivity.emplace_back(std::array<int, 6>());
+                            std::copy_n(std::begin(element), 6, std::begin(this->gridData->pyramidConnectivity.back()));
                             break;
                         }
                         case TRI_3: {
-                            std::array<int, 4> triangle;
-                            std::copy_n(std::begin(element), 4, std::begin(triangle));
-                            this->gridData->triangleConnectivity.emplace_back(std::move(triangle));
+                            this->gridData->triangleConnectivity.emplace_back(std::array<int, 4>());
+                            std::copy_n(std::begin(element), 4, std::begin(this->gridData->triangleConnectivity.back()));
                             break;
                         }
                         case QUAD_4: {
-                            std::array<int, 5> quadrangle;
-                            std::copy_n(std::begin(element), 5, std::begin(quadrangle));
-                            this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));
+                            this->gridData->quadrangleConnectivity.emplace_back(std::array<int, 5>());
+                            std::copy_n(std::begin(element), 5, std::begin(this->gridData->quadrangleConnectivity.back()));
                             break;
                         }
                     }
@@ -121,71 +115,64 @@ void CgnsReader3D::readSections() {
             }
             case TETRA_4: {
                 for (int e = 0; e < numberOfElements; e++) {
-                    std::array<int, 5> tetrahedron;
+                    this->gridData->tetrahedronConnectivity.emplace_back(std::array<int, 5>());
                     for (int k = 0; k < numberOfVertices; k++)
-                        tetrahedron[k] = connectivities[e*numberOfVertices+k] - 1;
-                    tetrahedron.back() = (elementStart - 1 + e);
-                    this->gridData->tetrahedronConnectivity.emplace_back(std::move(tetrahedron));
+                        this->gridData->tetrahedronConnectivity.back()[k] = connectivities[e * numberOfVertices + k] - 1;
+                    this->gridData->tetrahedronConnectivity.back().back() = elementStart - 1 + e;
                 }
                 break;
             }
             case HEXA_8: {
                 for (int e = 0; e < numberOfElements; e++) {
-                    std::array<int, 9> hexahedron;
+                    this->gridData->hexahedronConnectivity.emplace_back(std::array<int, 9>());
                     for (int k = 0; k < numberOfVertices; k++)
-                        hexahedron[k] = connectivities[e*numberOfVertices+k] - 1;
-                    hexahedron.back() = (elementStart - 1 + e);
-                    this->gridData->hexahedronConnectivity.emplace_back(std::move(hexahedron));
+                        this->gridData->hexahedronConnectivity.back()[k] = connectivities[e * numberOfVertices + k] - 1;
+                    this->gridData->hexahedronConnectivity.back().back() = elementStart - 1 + e;
                 }
                 break;
             }
             case PENTA_6: {
                 for (int e = 0; e < numberOfElements; e++) {
-                    std::array<int, 7> prism;
+                    this->gridData->prismConnectivity.emplace_back(std::array<int, 7>());
                     for (int k = 0; k < numberOfVertices; k++)
-                        prism[k] = connectivities[e*numberOfVertices+k] - 1;
-                    prism.back() = (elementStart - 1 + e);
-                    this->gridData->prismConnectivity.emplace_back(std::move(prism));
+                        this->gridData->prismConnectivity.back()[k] = connectivities[e * numberOfVertices + k] - 1;
+                    this->gridData->prismConnectivity.back().back() = elementStart - 1 + e;
                 }
                 break;
             }
-            case PYRA_5: {
+           case PYRA_5: {
                 for (int e = 0; e < numberOfElements; e++) {
-                    std::array<int, 6> pyramid;
+                    this->gridData->pyramidConnectivity.emplace_back(std::array<int, 6>());
                     for (int k = 0; k < numberOfVertices; k++)
-                        pyramid[k] = connectivities[e*numberOfVertices+k] - 1;
-                    pyramid.back() = (elementStart - 1 + e);
-                    this->gridData->pyramidConnectivity.emplace_back(std::move(pyramid));
+                        this->gridData->pyramidConnectivity.back()[k] = connectivities[e * numberOfVertices + k] - 1;
+                    this->gridData->pyramidConnectivity.back().back() = elementStart - 1 + e;
                 }
                 break;
             }
             case TRI_3: {
                 for (int e = 0; e < numberOfElements; e++) {
-                    std::array<int, 4> triangle;
+                    this->gridData->triangleConnectivity.emplace_back(std::array<int, 4>());
                     for (int k = 0; k < numberOfVertices; k++)
-                        triangle[k] = connectivities[e*numberOfVertices+k] - 1;
-                    triangle.back() = (elementStart - 1 + e);
-                    this->gridData->triangleConnectivity.emplace_back(std::move(triangle));
+                        this->gridData->triangleConnectivity.back()[k] = connectivities[e * numberOfVertices + k] - 1;
+                    this->gridData->triangleConnectivity.back().back() = elementStart - 1 + e;
                 }
                 break;
             }
             case QUAD_4: {
                 for (int e = 0; e < numberOfElements; e++) {
-                    std::array<int, 5> quadrangle;
+                    this->gridData->quadrangleConnectivity.emplace_back(std::array<int, 5>());
                     for (int k = 0; k < numberOfVertices; k++)
-                        quadrangle[k] = connectivities[e*numberOfVertices+k] - 1;
-                    quadrangle.back() = (elementStart - 1 + e);
-                    this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));
+                        this->gridData->quadrangleConnectivity.back()[k] = connectivities[e * numberOfVertices + k] - 1;
+                    this->gridData->quadrangleConnectivity.back().back() = elementStart - 1 + e;
                 }
                 break;
             }
             case BAR_2: {
                 for (int e = 0; e < numberOfElements; e++) {
-                    std::array<int, 3> line;
+                    this->gridData->lineConnectivity.emplace_back(std::array<int, 3>());
                     for (int k = 0; k < numberOfVertices; k++)
-                        line[k] = connectivities[e*numberOfVertices+k] - 1;
-                    line.back() = (elementStart - 1 + e);
-                    this->gridData->lineConnectivity.emplace_back(std::move(line));
+                        this->gridData->lineConnectivity.back()[k] = connectivities[e * numberOfVertices + k] - 1;
+                    this->gridData->lineConnectivity.back().back() = elementStart - 1 + e;
                 }
                 break;
             }
