@@ -62,7 +62,7 @@ void CgnsReader2D::readSections() {
                     cg_npe(ElementType_t(connectivities[position]), &numberOfVertices);
                     std::vector<int> element(numberOfVertices);
                     for (int k = 0; k < numberOfVertices; ++k)
-                        element[k] = connectivities[position+1+k] - 1;
+                        element[k] = connectivities[position + 1 + k] - 1;
                     element.emplace_back(elementStart - 1 + e);
                     switch (connectivities[position]) {
                         case TRI_3: {
