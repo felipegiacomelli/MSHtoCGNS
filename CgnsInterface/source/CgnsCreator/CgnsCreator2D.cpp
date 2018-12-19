@@ -80,10 +80,6 @@ void CgnsCreator2D::writeRegions() {
                 throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write element section " + std::to_string(this->sectionIndex));
 
             for (auto element = regionBegin; element != regionEnd; element++) {
-                // printf("\n\t%lu: \t", element->size());
-                // for (auto i = element->cbegin(); i < element->cend(); ++i)
-                    // std::cout << "\t" << std::right << *i;
-
                 switch (element->size()) {
                     case 3 : {
                         element->insert(element->begin(), TRI_3);

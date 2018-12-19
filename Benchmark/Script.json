@@ -1,0 +1,9 @@
+{
+    "inputs" :
+    [
+        "/home/felipe/Felipe/msh_to_cgns/benchmark/601355v_3494830e.cgns",
+        "/home/felipe/Felipe/msh_to_cgns/benchmark/689875v_3960513e.cgns"
+    ],
+
+    "output": "."
+}

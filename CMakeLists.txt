@@ -137,6 +137,7 @@ add_test (NAME FileMendTest COMMAND FileMendTest)
 add_subdirectory (UtilitiesTest)
 add_test (NAME UtilitiesTest COMMAND UtilitiesTest)
 
+add_subdirectory (Benchmark)
 add_subdirectory (Mender)
 add_subdirectory (MSHtoCGNS)
 add_subdirectory (MultipleBases)
