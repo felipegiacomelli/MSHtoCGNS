@@ -5,7 +5,8 @@ MshReader3D::MshReader3D(std::string filePath) : MshReader(filePath) {
     this->addPhysicalEntities();
     this->addElements();
     this->addFacets();
-    this->defineBoundaryVertices();
+    this->findBoundaryVertices();
+    this->findRegionVertices();
 }
 
 void MshReader3D::addPhysicalEntities() {
@@ -77,7 +78,7 @@ void MshReader3D::addFacets() {
     }
 }
 
-void MshReader3D::defineBoundaryVertices() {
+void MshReader3D::findBoundaryVertices() {
     for (auto& boundary : this->gridData->boundaries) {
         std::set<int> vertices;
 
@@ -90,5 +91,29 @@ void MshReader3D::defineBoundaryVertices() {
                 vertices.insert(quadrangle.cbegin(), quadrangle.cend() - 1);
 
         boundary.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
+    }
+}
+
+void MshReader3D::findRegionVertices() {
+    for (auto& region : this->gridData->regions) {
+        std::set<int> vertices;
+
+        for (const auto& tetrahedron : this->gridData->tetrahedronConnectivity)
+            if (tetrahedron.back() >= region.begin && tetrahedron.back() < region.end)
+                vertices.insert(tetrahedron.cbegin(), tetrahedron.cend() - 1);
+
+        for (const auto& hexahedron : this->gridData->hexahedronConnectivity)
+            if (hexahedron.back() >= region.begin && hexahedron.back() < region.end)
+                vertices.insert(hexahedron.cbegin(), hexahedron.cend() - 1);
+
+        for (const auto& prism : this->gridData->prismConnectivity)
+            if (prism.back() >= region.begin && prism.back() < region.end)
+                vertices.insert(prism.cbegin(), prism.cend() - 1);
+
+        for (const auto& pyramid : this->gridData->pyramidConnectivity)
+            if (pyramid.back() >= region.begin && pyramid.back() < region.end)
+                vertices.insert(pyramid.cbegin(), pyramid.cend() - 1);
+
+        region.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
     }
 }

@@ -30,7 +30,8 @@ class MshReader {
         void addBoundary(std::string name, int begin, int end);
         virtual void addElements() = 0;
         virtual void addFacets() = 0;
-        virtual void defineBoundaryVertices() = 0;
+        virtual void findBoundaryVertices() = 0;
+        virtual void findRegionVertices() = 0;
 
         std::string filePath;
         std::ifstream file;

@@ -58,6 +58,14 @@ TestCase(Geometry) {
 
     checkEqual(region.begin, 0);
     checkEqual(region.end, 4);
+
+    auto vertices = region.vertices;
+    checkEqual(vertices.size(), 5u);
+    checkEqual(vertices[0], 0);
+    checkEqual(vertices[1], 1);
+    checkEqual(vertices[2], 2);
+    checkEqual(vertices[3], 3);
+    checkEqual(vertices[4], 4);
 }
 
 TestCase(Boundaries) {

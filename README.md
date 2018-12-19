@@ -66,13 +66,11 @@ $ make install
 
 ## Converting
 
-The file **Script\*.json** located in *Zeta/* specify the path to the .msh file (**input**) and the path where the directory containing the .cgns file will be created (**output**). Thus, once you have the paths set up, you may execute:
+The file **ScriptMSHtoCGNS.json**, located in *Zeta/*, specifies the paths to the .msh files (**inputs**) and the path where the directory containing the .cgns file will be created (**output**). Thus, once you have set this, you may execute:
 
 ```shell
-$ ./MSHtoCGNS -(dimension)
+$ ./MSHtoCGNS
 ```
-
-Where dimension specifies the msh grid's dimension.
 
 ## Simulate
 

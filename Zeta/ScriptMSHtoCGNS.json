@@ -1,12 +1,16 @@
 {
 
     "indices" : [
-        0
+        0, 1, 2, 3, 4
     ],
 
     "inputs" :
     [
-        "/home/felipe/Felipe/gmsh/mandel_3d/28283.msh"
+        "/home/felipe/Felipe/gmsh/mandel_3d/1.msh",
+        "/home/felipe/Felipe/gmsh/mandel_3d/2.msh",
+        "/home/felipe/Felipe/gmsh/mandel_3d/3.msh",
+        "/home/felipe/Felipe/gmsh/mandel_3d/4.msh",
+        "/home/felipe/Felipe/gmsh/mandel_3d/5.msh"
     ],
 
     "output": "."

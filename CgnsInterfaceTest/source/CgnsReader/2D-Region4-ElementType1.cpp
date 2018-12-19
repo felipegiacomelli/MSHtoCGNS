@@ -78,6 +78,13 @@ TestCase(A) {
 
     checkEqual(region.begin, 0);
     checkEqual(region.end, 1);
+
+    auto vertices = region.vertices;
+    checkEqual(vertices.size(), 4u);
+    checkEqual(vertices[0], 4);
+    checkEqual(vertices[1], 5);
+    checkEqual(vertices[2], 7);
+    checkEqual(vertices[3], 8);
 }
 
 TestCase(B) {
@@ -87,6 +94,14 @@ TestCase(B) {
 
     checkEqual(region.begin, 1);
     checkEqual(region.end, 5);
+
+    auto vertices = region.vertices;
+    checkEqual(vertices.size(), 5u);
+    checkEqual(vertices[0], 3);
+    checkEqual(vertices[1], 4);
+    checkEqual(vertices[2], 6);
+    checkEqual(vertices[3], 7);
+    checkEqual(vertices[4], 9);
 }
 
 TestCase(C) {
@@ -96,6 +111,13 @@ TestCase(C) {
 
     checkEqual(region.begin, 5);
     checkEqual(region.end, 6);
+
+    auto vertices = region.vertices;
+    checkEqual(vertices.size(), 4u);
+    checkEqual(vertices[0], 0);
+    checkEqual(vertices[1], 1);
+    checkEqual(vertices[2], 3);
+    checkEqual(vertices[3], 4);
 }
 
 TestCase(D) {
@@ -105,6 +127,14 @@ TestCase(D) {
 
     checkEqual(region.begin, 6);
     checkEqual(region.end, 10);
+
+    auto vertices = region.vertices;
+    checkEqual(vertices.size(), 5u);
+    checkEqual(vertices[0],  1);
+    checkEqual(vertices[1],  2);
+    checkEqual(vertices[2],  4);
+    checkEqual(vertices[3],  5);
+    checkEqual(vertices[4], 10);
 }
 
 TestCase(Boundaries) {

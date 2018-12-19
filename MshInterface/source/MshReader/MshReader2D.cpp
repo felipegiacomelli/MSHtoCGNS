@@ -5,7 +5,8 @@ MshReader2D::MshReader2D(std::string filePath) : MshReader(filePath) {
     this->addPhysicalEntities();
     this->addElements();
     this->addFacets();
-    this->defineBoundaryVertices();
+    this->findBoundaryVertices();
+    this->findRegionVertices();
 }
 
 void MshReader2D::addPhysicalEntities() {
@@ -72,7 +73,7 @@ void MshReader2D::addFacets() {
     }
 }
 
-void MshReader2D::defineBoundaryVertices() {
+void MshReader2D::findBoundaryVertices() {
     for (auto& boundary : this->gridData->boundaries) {
         std::set<int> vertices;
 
@@ -81,5 +82,21 @@ void MshReader2D::defineBoundaryVertices() {
                 vertices.insert(line.cbegin(), line.cend() - 1);
 
         boundary.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
+    }
+}
+
+void MshReader2D::findRegionVertices() {
+    for (auto& region : this->gridData->regions) {
+        std::set<int> vertices;
+
+        for (const auto& triangle : this->gridData->triangleConnectivity)
+            if (triangle.back() >= region.begin && triangle.back() < region.end)
+                vertices.insert(triangle.cbegin(), triangle.cend() - 1);
+
+        for (const auto& quadrangle : this->gridData->quadrangleConnectivity)
+            if (quadrangle.back() >= region.begin && quadrangle.back() < region.end)
+                vertices.insert(quadrangle.cbegin(), quadrangle.cend() - 1);
+
+        region.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
     }
 }

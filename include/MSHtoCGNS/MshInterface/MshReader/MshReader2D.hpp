@@ -13,7 +13,8 @@ class MshReader2D : public MshReader {
         void addPhysicalEntities() override;
         void addElements() override;
         void addFacets() override;
-        void defineBoundaryVertices() override;
+        void findBoundaryVertices() override;
+        void findRegionVertices() override;
 };
 
 #endif

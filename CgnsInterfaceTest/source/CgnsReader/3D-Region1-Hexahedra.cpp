@@ -122,6 +122,12 @@ TestCase(Geometry) {
 
     checkEqual(region.begin, 0);
     checkEqual(region.end, 8);
+
+    auto vertices = region.vertices;
+    checkEqual(vertices.size(), 27u);
+    for (int v = 0; v < 27; v++) {
+        checkEqual(vertices[v],  v);
+    }
 }
 
 TestCase(Boundaries) {
