@@ -117,29 +117,38 @@ void CgnsReader2D::readSections() {
 }
 
 void CgnsReader2D::findBoundaryVertices() {
-    for (auto& boundary : this->gridData->boundaries) {
-        std::set<int> vertices;
+    int numberOfBoundaries = int(this->gridData->boundaries.size());
+    std::vector<std::set<int>> vertices(numberOfBoundaries);
 
-        for (const auto& line : this->gridData->lineConnectivity)
-            if (line.back() >= boundary.begin && line.back() < boundary.end)
-                vertices.insert(line.cbegin(), line.cend() - 1);
+    for (const auto& line : this->gridData->lineConnectivity)
+            for (int b = 0; b < numberOfBoundaries; b++)
+                if (line.back() >= this->gridData->boundaries[b].begin && line.back() < this->gridData->boundaries[b].end) {
+                    vertices[b].insert(line.cbegin(), line.cend() - 1);
+                    break;
+                }
 
-        boundary.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
-    }
+    for (int b = 0; b < numberOfBoundaries; b++)
+        this->gridData->boundaries[b].vertices = std::vector<int>(vertices[b].begin(), vertices[b].end());
 }
 
 void CgnsReader2D::findRegionVertices() {
-    for (auto& region : this->gridData->regions) {
-        std::set<int> vertices;
+    int numberOfRegions = int(this->gridData->regions.size());
+    std::vector<std::set<int>> vertices(numberOfRegions);
 
-        for (const auto& triangle : this->gridData->triangleConnectivity)
-            if (triangle.back() >= region.begin && triangle.back() < region.end)
-                vertices.insert(triangle.cbegin(), triangle.cend() - 1);
+    for (const auto& triangle : this->gridData->triangleConnectivity)
+            for (int r = 0; r < numberOfRegions; r++)
+                if (triangle.back() >= this->gridData->regions[r].begin && triangle.back() < this->gridData->regions[r].end) {
+                    vertices[r].insert(triangle.cbegin(), triangle.cend() - 1);
+                    break;
+                }
 
-        for (const auto& quadrangle : this->gridData->quadrangleConnectivity)
-            if (quadrangle.back() >= region.begin && quadrangle.back() < region.end)
-                vertices.insert(quadrangle.cbegin(), quadrangle.cend() - 1);
+    for (const auto& quadrangle : this->gridData->quadrangleConnectivity)
+            for (int r = 0; r < numberOfRegions; r++)
+                if (quadrangle.back() >= this->gridData->regions[r].begin && quadrangle.back() < this->gridData->regions[r].end) {
+                    vertices[r].insert(quadrangle.cbegin(), quadrangle.cend() - 1);
+                    break;
+                }
 
-        region.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
-    }
+    for (int r = 0; r < numberOfRegions; r++)
+        this->gridData->regions[r].vertices = std::vector<int>(vertices[r].begin(), vertices[r].end());
 }

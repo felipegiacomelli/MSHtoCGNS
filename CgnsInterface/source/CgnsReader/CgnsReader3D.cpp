@@ -197,53 +197,74 @@ void CgnsReader3D::addWell(std::string&& name, int start, int end) {
 }
 
 void CgnsReader3D::findBoundaryVertices() {
-    for (auto& boundary : this->gridData->boundaries) {
-        std::set<int> vertices;
+    int numberOfBoundaries = int(this->gridData->boundaries.size());
+    std::vector<std::set<int>> vertices(numberOfBoundaries);
 
-        for (const auto& triangle : this->gridData->triangleConnectivity)
-            if (triangle.back() >= boundary.begin && triangle.back() < boundary.end)
-                vertices.insert(triangle.cbegin(), triangle.cend() - 1);
+    for (const auto& triangle : this->gridData->triangleConnectivity)
+            for (int b = 0; b < numberOfBoundaries; b++)
+                if (triangle.back() >= this->gridData->boundaries[b].begin && triangle.back() < this->gridData->boundaries[b].end) {
+                    vertices[b].insert(triangle.cbegin(), triangle.cend() - 1);
+                    break;
+                }
 
-        for (const auto& quadrangle : this->gridData->quadrangleConnectivity)
-            if (quadrangle.back() >= boundary.begin && quadrangle.back() < boundary.end)
-                vertices.insert(quadrangle.cbegin(), quadrangle.cend() - 1);
+    for (const auto& quadrangle : this->gridData->quadrangleConnectivity)
+            for (int b = 0; b < numberOfBoundaries; b++)
+                if (quadrangle.back() >= this->gridData->boundaries[b].begin && quadrangle.back() < this->gridData->boundaries[b].end) {
+                    vertices[b].insert(quadrangle.cbegin(), quadrangle.cend() - 1);
+                    break;
+                }
 
-        boundary.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
-    }
+    for (int b = 0; b < numberOfBoundaries; b++)
+        this->gridData->boundaries[b].vertices = std::vector<int>(vertices[b].begin(), vertices[b].end());
 }
 
 void CgnsReader3D::findRegionVertices() {
-    for (auto& region : this->gridData->regions) {
-        std::set<int> vertices;
+    int numberOfRegions = int(this->gridData->regions.size());
+    std::vector<std::set<int>> vertices(numberOfRegions);
 
-        for (const auto& tetrahedron : this->gridData->tetrahedronConnectivity)
-            if (tetrahedron.back() >= region.begin && tetrahedron.back() < region.end)
-                vertices.insert(tetrahedron.cbegin(), tetrahedron.cend() - 1);
+    for (const auto& tetrahedron : this->gridData->tetrahedronConnectivity)
+            for (int r = 0; r < numberOfRegions; r++)
+                if (tetrahedron.back() >= this->gridData->regions[r].begin && tetrahedron.back() < this->gridData->regions[r].end) {
+                    vertices[r].insert(tetrahedron.cbegin(), tetrahedron.cend() - 1);
+                    break;
+                }
 
-        for (const auto& hexahedron : this->gridData->hexahedronConnectivity)
-            if (hexahedron.back() >= region.begin && hexahedron.back() < region.end)
-                vertices.insert(hexahedron.cbegin(), hexahedron.cend() - 1);
+    for (const auto& hexahedron : this->gridData->hexahedronConnectivity)
+            for (int r = 0; r < numberOfRegions; r++)
+                if (hexahedron.back() >= this->gridData->regions[r].begin && hexahedron.back() < this->gridData->regions[r].end) {
+                    vertices[r].insert(hexahedron.cbegin(), hexahedron.cend() - 1);
+                    break;
+                }
 
-        for (const auto& prism : this->gridData->prismConnectivity)
-            if (prism.back() >= region.begin && prism.back() < region.end)
-                vertices.insert(prism.cbegin(), prism.cend() - 1);
+    for (const auto& prism : this->gridData->prismConnectivity)
+            for (int r = 0; r < numberOfRegions; r++)
+                if (prism.back() >= this->gridData->regions[r].begin && prism.back() < this->gridData->regions[r].end) {
+                    vertices[r].insert(prism.cbegin(), prism.cend() - 1);
+                    break;
+                }
 
-        for (const auto& pyramid : this->gridData->pyramidConnectivity)
-            if (pyramid.back() >= region.begin && pyramid.back() < region.end)
-                vertices.insert(pyramid.cbegin(), pyramid.cend() - 1);
+    for (const auto& pyramid : this->gridData->pyramidConnectivity)
+            for (int r = 0; r < numberOfRegions; r++)
+                if (pyramid.back() >= this->gridData->regions[r].begin && pyramid.back() < this->gridData->regions[r].end) {
+                    vertices[r].insert(pyramid.cbegin(), pyramid.cend() - 1);
+                    break;
+                }
 
-        region.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
-    }
+    for (int r = 0; r < numberOfRegions; r++)
+        this->gridData->regions[r].vertices = std::vector<int>(vertices[r].begin(), vertices[r].end());
 }
 
 void CgnsReader3D::findWellVertices() {
-    for (auto& well : this->gridData->wells) {
-        std::set<int> vertices;
+    int numberOfWells = int(this->gridData->wells.size());
+    std::vector<std::set<int>> vertices(numberOfWells);
 
-        for (const auto& line : this->gridData->lineConnectivity)
-            if (line.back() >= well.begin && line.back() < well.end)
-                vertices.insert(line.cbegin(), line.cend() - 1);
+    for (const auto& line : this->gridData->lineConnectivity)
+            for (int w = 0; w < numberOfWells; w++)
+                if (line.back() >= this->gridData->wells[w].begin && line.back() < this->gridData->wells[w].end) {
+                    vertices[w].insert(line.cbegin(), line.cend() - 1);
+                    break;
+                }
 
-        well.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
-    }
+    for (int w = 0; w < numberOfWells; w++)
+        this->gridData->wells[w].vertices = std::vector<int>(vertices[w].begin(), vertices[w].end());
 }
