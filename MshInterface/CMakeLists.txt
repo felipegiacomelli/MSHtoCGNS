@@ -1,6 +1,6 @@
 project (MshInterface)
 
-set (Dependencies )
+set (Dependencies Utilities)
 
 include_directories (${CMAKE_SOURCE_DIR}/include)
 

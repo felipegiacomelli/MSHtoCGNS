@@ -1,8 +1,7 @@
 {
     "inputs" :
     [
-        "/home/felipe/Felipe/gmsh/mandel_3d/10.msh",
-        "/home/felipe/Felipe/gmsh/terzaghi_3d/10.msh"
+        "/home/felipe/Felipe/gmsh/mandel_3d/mandel.msh"
     ],
 
     "output": "."

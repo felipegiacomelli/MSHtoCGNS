@@ -1,6 +1,6 @@
 project (Mender)
 
-set (Dependencies BoostInterface CgnsInterface FileMend)
+set (Dependencies BoostInterface Utilities CgnsInterface FileMend)
 
 include_directories (${CMAKE_SOURCE_DIR}/include)
 

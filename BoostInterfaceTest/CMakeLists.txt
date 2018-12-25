@@ -1,6 +1,6 @@
 project (BoostInterfaceTest)
 
-set (Dependencies BoostInterface)
+set (Dependencies BoostInterface )
 
 include_directories (${CMAKE_SOURCE_DIR}/include)
 

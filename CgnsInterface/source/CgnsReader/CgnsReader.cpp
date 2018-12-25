@@ -11,26 +11,23 @@ CgnsReader::CgnsReader(std::string filePath) : filePath(filePath) {
 }
 
 void CgnsReader::checkFile() {
-    boost::filesystem::path input(this->filePath);
-    if (!boost::filesystem::exists(input.parent_path()))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path " + input.parent_path().string() + " does not exist");
+    if (!boost::filesystem::exists(this->filePath.parent_path()))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path " + this->filePath.parent_path().string() + " does not exist");
 
     if (!boost::filesystem::exists(this->filePath))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no file in the given path");
 
-    int fileType;
-    if (cg_is_cgns(this->filePath.c_str(), &fileType))
+    if (cg_is_cgns(boost::filesystem::absolute(this->filePath).c_str(), &this->fileType))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The file is not a valid cgns file");
 
-    if (cg_open(this->filePath.c_str(), CG_MODE_READ, &this->fileIndex))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not open the file " + this->filePath);
+    if (cg_open(boost::filesystem::absolute(this->filePath).c_str(), CG_MODE_READ, &this->fileIndex))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not open the file " + boost::filesystem::absolute(this->filePath).string());
 
-    float version;
-    if (cg_version(this->fileIndex, &version))
+    if (cg_version(this->fileIndex, &this->fileVersion))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read file version");
 
-    if (version <= 3.10)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - File version (" + std::to_string(version) + ") is older than 3.11");
+    if (this->fileVersion <= 3.10)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - File version (" + std::to_string(this->fileVersion) + ") is older than 3.11");
 }
 
 void CgnsReader::readBase() {

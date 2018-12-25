@@ -41,5 +41,5 @@ release/
 
 # Application setup files
 Zeta/Libraries
-Zeta/Setup/cgns-3.3.1
-Zeta/Setup/boost-1.68.0
+Zeta/Setup/cgns-*
+Zeta/Setup/boost-*

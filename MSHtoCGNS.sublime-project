@@ -2,7 +2,9 @@
     "folders":
     [
         {
-            "path": "./"
+            "path": "./",
+            "folder_exclude_patterns": ["Zeta/Libraries", "Zeta/Setup/boost-*", "Zeta/Setup/cgns-*"],
+            "file_exclude_patterns": ["*.tar.gz"]
         }
     ],
     "settings":

@@ -1,9 +1,8 @@
 project (MultipleBases)
 
-set (Dependencies BoostInterface MshInterface CgnsInterface FileMend)
+set (Dependencies BoostInterface Utilities MshInterface CgnsInterface FileMend)
 
 include_directories (${CMAKE_SOURCE_DIR}/include)
-include_directories (${PROJECT_SOURCE_DIR}/include)
 
 file (GLOB_RECURSE ${PROJECT_NAME}_sources ${PROJECT_SOURCE_DIR}/source/*.cpp)
 

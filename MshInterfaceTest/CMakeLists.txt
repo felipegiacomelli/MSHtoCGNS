@@ -1,6 +1,6 @@
 project (MshInterfaceTest)
 
-set (Dependencies MshInterface)
+set (Dependencies Utilities MshInterface)
 
 include_directories (${CMAKE_SOURCE_DIR}/include)
 

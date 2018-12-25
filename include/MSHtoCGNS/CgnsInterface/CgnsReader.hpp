@@ -34,7 +34,9 @@ class CgnsReader {
         virtual void findRegionVertices() = 0;
         int readSolutionIndex(std::string solutionName);
 
-        std::string filePath;
+        boost::filesystem::path filePath;
+        int fileType;
+        float fileVersion;
         char buffer[1024];
         int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
         int sizes[3];
