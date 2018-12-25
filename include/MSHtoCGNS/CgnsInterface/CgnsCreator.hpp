@@ -3,6 +3,7 @@
 
 #include <set>
 #include <algorithm>
+
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 #include "MSHtoCGNS/Utilities/Vector.hpp"
 #include "MSHtoCGNS/Grid/GridData.hpp"
@@ -14,6 +15,9 @@ class CgnsCreator {
         std::string getFileName() const;
 
         virtual ~CgnsCreator();
+
+        std::string baseName = "BASE";
+        std::string zoneName = "ZONE";
 
     protected:
         virtual void checkDimension() = 0;
@@ -29,7 +33,9 @@ class CgnsCreator {
         virtual void writeBoundaries() = 0;
 
         boost::shared_ptr<GridData> gridData;
-        std::string folderPath, baseName, zoneName, fileName;
+        boost::filesystem::path folderPath;
+
+        std::string fileName;
         int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
         int sizes[3];
         int coordinateIndex, sectionIndex, boundaryIndex;

@@ -1,21 +1,16 @@
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator.hpp"
 #include <cgnslib.h>
 
-CgnsCreator::CgnsCreator(boost::shared_ptr<GridData> gridData, std::string folderPath) : gridData(gridData), folderPath(folderPath) {
-    this->baseName = "BASE";
-    this->zoneName = "ZONE";
-}
+CgnsCreator::CgnsCreator(boost::shared_ptr<GridData> gridData, std::string folderPath) : gridData(gridData), folderPath(folderPath) {}
 
 void CgnsCreator::setupFile() {
-    boost::filesystem::path input(this->folderPath);
-    if (input.extension() == std::string(".cgns")) {
+    if (this->folderPath.extension() == std::string(".cgns")) {
         if (boost::filesystem::exists(this->folderPath))
             boost::filesystem::remove_all(this->folderPath);
-
-        this->fileName = this->folderPath;
+        this->fileName = this->folderPath.string();
     }
     else {
-        std::string folderName = this->folderPath + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/";
+        std::string folderName = boost::filesystem::absolute(this->folderPath).string() + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/";
         createDirectory(folderName);
         this->fileName = folderName + std::string("Grid.cgns");
     }

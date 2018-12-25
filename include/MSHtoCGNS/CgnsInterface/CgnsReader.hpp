@@ -1,10 +1,11 @@
 #ifndef CGNS_READER_HPP
 #define CGNS_READER_HPP
 
-#include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
-#include "MSHtoCGNS/Grid/GridData.hpp"
 #include <string>
 #include <set>
+
+#include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
+#include "MSHtoCGNS/Grid/GridData.hpp"
 
 class CgnsReader {
     public:
