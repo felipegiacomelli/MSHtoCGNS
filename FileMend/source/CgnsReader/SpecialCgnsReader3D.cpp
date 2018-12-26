@@ -9,7 +9,7 @@ SpecialCgnsReader3D::SpecialCgnsReader3D(std::string filePath) : CgnsReader3D(fi
 }
 
 void SpecialCgnsReader3D::readSections() {
-    for (int sectionIndex = 1; sectionIndex <= this->numberOfSections; sectionIndex++) {
+    for (int sectionIndex = 1; sectionIndex <= this->numberOfSections; ++sectionIndex) {
         ElementType_t elementType;
         int elementStart, end;
         int lastBoundaryElement, parentFlag;
@@ -53,7 +53,7 @@ void SpecialCgnsReader3D::readSections() {
         switch (elementType) {
             case MIXED : {
                 int position = 0;
-                for (int e = 0; e < numberOfElements; e++) {
+                for (int e = 0; e < numberOfElements; ++e) {
                     cg_npe(ElementType_t(connectivities[position]), &numberOfVertices);
                     std::vector<int> element(numberOfVertices);
                     for (int k = 0; k < numberOfVertices; ++k)
@@ -102,9 +102,9 @@ void SpecialCgnsReader3D::readSections() {
                 break;
             }
             case TETRA_4: {
-                for (int e = 0; e < numberOfElements; e++) {
+                for (int e = 0; e < numberOfElements; ++e) {
                     std::array<int, 5> tetrahedron;
-                    for (int k = 0; k < numberOfVertices; k++)
+                    for (int k = 0; k < numberOfVertices; ++k)
                         tetrahedron[k] = connectivities[e*numberOfVertices+k] - 1;
                     tetrahedron.back() = (elementStart + e);
                     this->gridData->tetrahedronConnectivity.emplace_back(std::move(tetrahedron));
@@ -112,9 +112,9 @@ void SpecialCgnsReader3D::readSections() {
                 break;
             }
             case HEXA_8: {
-                for (int e = 0; e < numberOfElements; e++) {
+                for (int e = 0; e < numberOfElements; ++e) {
                     std::array<int, 9> hexahedron;
-                    for (int k = 0; k < numberOfVertices; k++)
+                    for (int k = 0; k < numberOfVertices; ++k)
                         hexahedron[k] = connectivities[e*numberOfVertices+k] - 1;
                     hexahedron.back() = (elementStart + e);
                     this->gridData->hexahedronConnectivity.emplace_back(std::move(hexahedron));
@@ -122,9 +122,9 @@ void SpecialCgnsReader3D::readSections() {
                 break;
             }
             case PENTA_6: {
-                for (int e = 0; e < numberOfElements; e++) {
+                for (int e = 0; e < numberOfElements; ++e) {
                     std::array<int, 7> prism;
-                    for (int k = 0; k < numberOfVertices; k++)
+                    for (int k = 0; k < numberOfVertices; ++k)
                         prism[k] = connectivities[e*numberOfVertices+k] - 1;
                     prism.back() = (elementStart + e);
                     this->gridData->prismConnectivity.emplace_back(std::move(prism));
@@ -132,9 +132,9 @@ void SpecialCgnsReader3D::readSections() {
                 break;
             }
             case PYRA_5: {
-                for (int e = 0; e < numberOfElements; e++) {
+                for (int e = 0; e < numberOfElements; ++e) {
                     std::array<int, 6> pyramid;
-                    for (int k = 0; k < numberOfVertices; k++)
+                    for (int k = 0; k < numberOfVertices; ++k)
                         pyramid[k] = connectivities[e*numberOfVertices+k] - 1;
                     pyramid.back() = (elementStart + e);
                     this->gridData->pyramidConnectivity.emplace_back(std::move(pyramid));
@@ -142,9 +142,9 @@ void SpecialCgnsReader3D::readSections() {
                 break;
             }
             case TRI_3: {
-                for (int e = 0; e < numberOfElements; e++) {
+                for (int e = 0; e < numberOfElements; ++e) {
                     std::array<int, 4> triangle;
-                    for (int k = 0; k < numberOfVertices; k++)
+                    for (int k = 0; k < numberOfVertices; ++k)
                         triangle[k] = connectivities[e*numberOfVertices+k] - 1;
                     triangle.back() = (elementStart + e);
                     this->gridData->triangleConnectivity.emplace_back(std::move(triangle));
@@ -152,9 +152,9 @@ void SpecialCgnsReader3D::readSections() {
                 break;
             }
             case QUAD_4: {
-                for (int e = 0; e < numberOfElements; e++) {
+                for (int e = 0; e < numberOfElements; ++e) {
                     std::array<int, 5> quadrangle;
-                    for (int k = 0; k < numberOfVertices; k++)
+                    for (int k = 0; k < numberOfVertices; ++k)
                         quadrangle[k] = connectivities[e*numberOfVertices+k] - 1;
                     quadrangle.back() = (elementStart + e);
                     this->gridData->quadrangleConnectivity.emplace_back(std::move(quadrangle));

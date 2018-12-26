@@ -16,7 +16,7 @@ struct CgnsWriterFixture {
         this->temperature = std::vector<double>(this->numberOfVertices);
         this->pressure = std::vector<double>(this->numberOfVertices);
 
-        for (int j = 0; j < this->numberOfVertices; j++) {
+        for (int j = 0; j < this->numberOfVertices; ++j) {
             this->temperature[j] = double(j);
             this->pressure[j] = double(j+1);
         }
@@ -24,7 +24,7 @@ struct CgnsWriterFixture {
 
     void advanceTime() {
         this->timeInstant += timePace;
-        for (int j = 0; j < this->numberOfVertices; j++) {
+        for (int j = 0; j < this->numberOfVertices; ++j) {
             this->temperature[j]++;
             this->pressure[j]++;
         }
@@ -82,13 +82,13 @@ TestCase(CgnsWriterTest) {
     cg_field_info(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, 1, &this->datatype, this->buffer);
     checkEqual(this->buffer, "temperature");
     cg_field_read(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, this->buffer, this->datatype, &this->range_min, &this->range_max, this->field);
-    for (int j = 0; j < this->numberOfVertices; j++)
+    for (int j = 0; j < this->numberOfVertices; ++j)
         checkClose(field[j], double(j), TOLERANCE);
 
     cg_field_info(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, 2, &this->datatype, this->buffer);
     checkEqual(this->buffer, "pressure");
     cg_field_read(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, this->buffer, this->datatype, &this->range_min, &this->range_max, this->field);
-    for (int j = 0; j < this->numberOfVertices; j++)
+    for (int j = 0; j < this->numberOfVertices; ++j)
         checkClose(field[j], double(j+1), TOLERANCE);
 
     solutionNumber = 2;
@@ -102,13 +102,13 @@ TestCase(CgnsWriterTest) {
     cg_field_info(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, 1, &this->datatype, this->buffer);
     checkEqual(this->buffer, "temperature");
     cg_field_read(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, this->buffer, this->datatype, &this->range_min, &this->range_max, this->field);
-    for (int j = 0; j < this->numberOfVertices; j++)
+    for (int j = 0; j < this->numberOfVertices; ++j)
         checkClose(field[j], double(j+1), TOLERANCE);
 
     cg_field_info(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, 2, &this->datatype, this->buffer);
     checkEqual(this->buffer, "pressure");
     cg_field_read(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, this->buffer, this->datatype, &this->range_min, &this->range_max, this->field);
-    for (int j = 0; j < this->numberOfVertices; j++)
+    for (int j = 0; j < this->numberOfVertices; ++j)
         checkClose(field[j], double(j+2), TOLERANCE);
 }
 

@@ -13,20 +13,20 @@ TestCase(ReadResults) {
 
     int solutionIndex = 1;
     std::vector<double> field = cgnsReader2D.readField(solutionIndex, "temperature");
-    for (int j = 0; j < numberOfVertices; j++)
+    for (int j = 0; j < numberOfVertices; ++j)
         checkClose(field[j], double(j), TOLERANCE);
 
     field = cgnsReader2D.readField(solutionIndex, "pressure");
-    for (int j = 0; j < numberOfVertices; j++)
+    for (int j = 0; j < numberOfVertices; ++j)
         checkClose(field[j], double(j+1), TOLERANCE);
 
     solutionIndex = 2;
     field = cgnsReader2D.readField(solutionIndex, "temperature");
-    for (int j = 0; j < numberOfVertices; j++)
+    for (int j = 0; j < numberOfVertices; ++j)
         checkClose(field[j], double(j+2), TOLERANCE);
 
     field = cgnsReader2D.readField(solutionIndex, "pressure");
-    for (int j = 0; j < numberOfVertices; j++)
+    for (int j = 0; j < numberOfVertices; ++j)
         checkClose(field[j], double(j+3), TOLERANCE);
 
     std::vector<double> timeInstants = cgnsReader2D.readTimeInstants();

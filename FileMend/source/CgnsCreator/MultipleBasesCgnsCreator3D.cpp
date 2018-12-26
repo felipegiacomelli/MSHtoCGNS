@@ -6,7 +6,7 @@ MultipleBasesCgnsCreator3D::MultipleBasesCgnsCreator3D(std::vector<boost::shared
 }
 
 void MultipleBasesCgnsCreator3D::initialize() {
-    for (unsigned i = 0; i < this->gridDatas.size(); i++) {
+    for (unsigned i = 0; i < this->gridDatas.size(); ++i) {
         this->gridData = this->gridDatas[i];
 
         this->checkDimension();

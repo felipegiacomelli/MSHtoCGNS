@@ -38,7 +38,7 @@ void CgnsCreator2D::setDimensions() {
 void CgnsCreator2D::writeCoordinates() {
     std::vector<double> coordinatesX(this->sizes[0]);
     std::vector<double> coordinatesY(this->sizes[0]);
-    for (int i = 0; i < this->sizes[0]; i++) {
+    for (int i = 0; i < this->sizes[0]; ++i) {
         coordinatesX[i] = this->gridData->coordinates[i][0];
         coordinatesY[i] = this->gridData->coordinates[i][1];
     }
@@ -79,7 +79,7 @@ void CgnsCreator2D::writeRegions() {
             if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
                 throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write element section " + std::to_string(this->sectionIndex));
 
-            for (auto element = regionBegin; element != regionEnd; element++) {
+            for (auto element = regionBegin; element != regionEnd; ++element) {
                 switch (element->size()) {
                     case 3 : {
                         element->insert(element->begin(), TRI_3);

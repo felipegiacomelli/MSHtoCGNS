@@ -68,42 +68,42 @@ TestCase(SegmentGridExtractorTest) {
     checkEqual(segmentGrid->wells[0].vertices[0],  0);
     checkEqual(segmentGrid->wells[0].vertices[1], 37);
 
-    for (int j = 0; j < 12; j++)
+    for (int j = 0; j < 12; ++j)
         checkEqual(segmentGrid->prismConnectivity[j].back(), j);
 
-    for (int j = 0; j < 24; j++)
+    for (int j = 0; j < 24; ++j)
         checkEqual(segmentGrid->hexahedronConnectivity[j].back(), 12 + j);
 
-    for (int j = 0; j < 12; j++)
+    for (int j = 0; j < 12; ++j)
         checkEqual(segmentGrid->quadrangleConnectivity[j].back(), 36 + j);
 
-    for (int j = 0; j < 12; j++) {
+    for (int j = 0; j < 12; ++j) {
         checkEqual(segmentGrid->triangleConnectivity[j     ].back(), 48 + j);
         checkEqual(segmentGrid->triangleConnectivity[j + 12].back(), 84 + j);
     }
 
-    for (int j = 0; j < 24; j++) {
+    for (int j = 0; j < 24; ++j) {
         checkEqual(segmentGrid->quadrangleConnectivity[j + 12].back(), 60 + j);
         checkEqual(segmentGrid->quadrangleConnectivity[j + 36].back(), 96 + j);
     }
 
     checkEqual(segmentGrid->lineConnectivity[0].back(), 120);
 
-    for (int j = 0; j < 12; j++)
+    for (int j = 0; j < 12; ++j)
         check(std::all_of(segmentGrid->triangleConnectivity[j + 12].cbegin(), segmentGrid->triangleConnectivity[j + 12].cend() - 1, [=](auto v){return v >= 37 && v < 74;}));
 
-    for (int j = 0; j < 24; j++)
+    for (int j = 0; j < 24; ++j)
         check(std::all_of(segmentGrid->quadrangleConnectivity[j + 36].cbegin(), segmentGrid->quadrangleConnectivity[j + 36].cend() - 1, [=](auto v){return v >= 37 && v < 74;}));
 
-    for (int j = 0; j < 37; j++) {
+    for (int j = 0; j < 37; ++j) {
         checkSmall(segmentGrid->coordinates[37 * 0 + j][2], TOLERANCE);
         checkClose(segmentGrid->coordinates[37 * 1 + j][2], 5.5555555, TOLERANCE);
     }
 
-    for (int j = 0; j < 37; j++)
+    for (int j = 0; j < 37; ++j)
         checkClose(std::abs(segmentGrid->coordinates[37 * 0 + j][2] - segmentGrid->coordinates[37 *  1 + j][2]), 5.5555555555555554e+00, TOLERANCE);
 
-    for (int j = 0; j < 37; j++)
+    for (int j = 0; j < 37; ++j)
         checkClose(calculateDistance(segmentGrid->coordinates[37 * 0 + j], segmentGrid->coordinates[37 *  1 + j]), 5.5555555555555554e+00, TOLERANCE);
 }
 

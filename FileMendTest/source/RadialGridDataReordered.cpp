@@ -53,37 +53,37 @@ TestCase(RadialGridDataReorderedTest) {
     checkEqual(reordered->wells[0].begin, 504);
     checkEqual(reordered->wells[0].end, 513);
     checkEqual(reordered->wells[0].vertices.size(), 10u);
-    for (int j = 0; j < 10; j++)
+    for (int j = 0; j < 10; ++j)
         checkEqual(reordered->wells[0].vertices[j], j * 37);
 
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 9; ++i) {
         int shift = 36 * i;
 
-        for (int j = 0; j < 12; j++)
+        for (int j = 0; j < 12; ++j)
             checkEqual(reordered->prismConnectivity[12*i + j].back(), shift++);
 
-        for (int j = 0; j < 24; j++)
+        for (int j = 0; j < 24; ++j)
             checkEqual(reordered->hexahedronConnectivity[24*i + j].back(), shift++);
     }
 
-    for (int i = 0; i < 108; i++) {
+    for (int i = 0; i < 108; ++i) {
         checkEqual(reordered->quadrangleConnectivity[i].back(), 324 + i);
     }
 
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < 12; ++i) {
         checkEqual(reordered->triangleConnectivity[i     ].back(), 432 + i);
         checkEqual(reordered->triangleConnectivity[i + 12].back(), 468 + i);
     }
 
-    for (int i = 0; i < 24; i++) {
+    for (int i = 0; i < 24; ++i) {
         checkEqual(reordered->quadrangleConnectivity[i + 108].back(), 444 + i);
         checkEqual(reordered->quadrangleConnectivity[i + 132].back(), 480 + i);
     }
 
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 9; ++i)
         checkEqual(reordered->lineConnectivity[i].back(), 504 + i);
 
-    for (int i = 0; i < 37; i++) {
+    for (int i = 0; i < 37; ++i) {
         checkSmall(reordered->coordinates[37 * 0 + i][2], TOLERANCE);
         checkClose(reordered->coordinates[37 * 1 + i][2], 5.5555555, TOLERANCE);
         checkClose(reordered->coordinates[37 * 2 + i][2], 11.111111, TOLERANCE);
@@ -96,7 +96,7 @@ TestCase(RadialGridDataReorderedTest) {
         checkClose(reordered->coordinates[37 * 9 + i][2], 49.999999, TOLERANCE);
     }
 
-    for (int i = 0; i < 37; i++) {
+    for (int i = 0; i < 37; ++i) {
         checkClose(std::abs(reordered->coordinates[37 * 0 + i][2] - reordered->coordinates[37 *  1 + i][2]), 5.5555555555555554e+00, TOLERANCE);
         checkClose(std::abs(reordered->coordinates[37 * 1 + i][2] - reordered->coordinates[37 *  2 + i][2]), 5.5555555555555554e+00, TOLERANCE);
         checkClose(std::abs(reordered->coordinates[37 * 2 + i][2] - reordered->coordinates[37 *  3 + i][2]), 5.5555555555555536e+00, TOLERANCE);
@@ -108,7 +108,7 @@ TestCase(RadialGridDataReorderedTest) {
         checkClose(std::abs(reordered->coordinates[37 * 8 + i][2] - reordered->coordinates[37 *  9 + i][2]), 5.5555572509765625e+00, TOLERANCE);
     }
 
-    for (int i = 0; i < 37; i++) {
+    for (int i = 0; i < 37; ++i) {
         checkClose(this->calculateDistance(reordered->coordinates[37 * 0 + i], reordered->coordinates[37 *  1 + i]), 5.5555555555555554e+00, TOLERANCE);
         checkClose(this->calculateDistance(reordered->coordinates[37 * 1 + i], reordered->coordinates[37 *  2 + i]), 5.5555555555555554e+00, TOLERANCE);
         checkClose(this->calculateDistance(reordered->coordinates[37 * 2 + i], reordered->coordinates[37 *  3 + i]), 5.5555555555555536e+00, TOLERANCE);

@@ -46,7 +46,7 @@ void WellGenerator::generateWells() {
 
         auto wellRegion = std::find_if(this->gridData->regions.cbegin(), this->gridData->regions.cend(), [=](auto r){return r.name == wellGeneratorData.regionName;});
 
-        for (auto i = this->gridData->prismConnectivity.cbegin(); i != this->gridData->prismConnectivity.cend(); i++)
+        for (auto i = this->gridData->prismConnectivity.cbegin(); i != this->gridData->prismConnectivity.cend(); ++i)
             if (i->back() >= wellRegion->begin && i->back() < wellRegion->end)
                 this->prisms.emplace_back(i->cbegin(), i->cend()-1);
 
@@ -60,9 +60,9 @@ void WellGenerator::generateWells() {
         std::vector<int> vertices;
         vertices.push_back(this->currentIndex);
 
-        for (int k = 0; k < this->numberOfSegments; k++) {
+        for (int k = 0; k < this->numberOfSegments; ++k) {
             std::set<int> wellStartPrisms;
-            for (auto i = 0u; i < this->prisms.size(); i++)
+            for (auto i = 0u; i < this->prisms.size(); ++i)
                 if (std::find(this->prisms[i].cbegin(), this->prisms[i].cend(), this->currentIndex) != this->prisms[i].cend())
                     wellStartPrisms.insert(i);
 
@@ -78,7 +78,7 @@ void WellGenerator::generateWells() {
 
             this->currentIndex = std::find_if(map.cbegin(), map.cend(), [=](auto entry){return entry.first != this->currentIndex && entry.second == numberOfElementsPerSection;})->first;
 
-            for (auto rit = wellStartPrisms.crbegin(); rit != wellStartPrisms.crend(); rit++)
+            for (auto rit = wellStartPrisms.crbegin(); rit != wellStartPrisms.crend(); ++rit)
                 this->prisms.erase(this->prisms.begin() + *rit);
 
             vertices.push_back(this->currentIndex);
@@ -86,7 +86,7 @@ void WellGenerator::generateWells() {
 
         unsigned numberOfLines = vertices.size() - 1;
 
-        for (unsigned i = 0; i < numberOfLines; i++)
+        for (unsigned i = 0; i < numberOfLines; ++i)
             this->gridData->lineConnectivity.emplace_back(std::array<int, 3>{vertices[i], vertices[i+1], int(i) + this->lineConnectivityShift});
 
         std::stable_sort(vertices.begin(), vertices.end());
@@ -104,7 +104,7 @@ void WellGenerator::generateWells() {
 
 void WellGenerator::defineQuantities() {
     std::set<int> wellStartPrisms;
-    for (auto i = 0u; i < this->prisms.size(); i++)
+    for (auto i = 0u; i < this->prisms.size(); ++i)
         if (std::find(this->prisms[i].cbegin(), this->prisms[i].cend(), this->currentIndex) != this->prisms[i].cend())
             wellStartPrisms.insert(i);
 
@@ -116,7 +116,7 @@ void WellGenerator::defineQuantities() {
 bool WellGenerator::isClose(const std::array<double, 3>& coordinate, const std::array<double, 3>& referencePoint) {
     bool close = true;
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; ++i)
         close &= std::abs(coordinate[i] - referencePoint[i]) < this->tolerance;
 
     return close;

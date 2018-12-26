@@ -46,30 +46,30 @@ void GridDataExtractor::readScript() {
 }
 
 void GridDataExtractor::buildElementConnectivities() {
-    for (auto i = this->original->tetrahedronConnectivity.cbegin(); i != this->original->tetrahedronConnectivity.cend(); i++)
+    for (auto i = this->original->tetrahedronConnectivity.cbegin(); i != this->original->tetrahedronConnectivity.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    for (auto i = this->original->hexahedronConnectivity.cbegin(); i != this->original->hexahedronConnectivity.cend(); i++)
+    for (auto i = this->original->hexahedronConnectivity.cbegin(); i != this->original->hexahedronConnectivity.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    for (auto i = this->original->prismConnectivity.cbegin(); i != this->original->prismConnectivity.cend(); i++)
+    for (auto i = this->original->prismConnectivity.cbegin(); i != this->original->prismConnectivity.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    for (auto i = this->original->pyramidConnectivity.cbegin(); i != this->original->pyramidConnectivity.cend(); i++)
+    for (auto i = this->original->pyramidConnectivity.cbegin(); i != this->original->pyramidConnectivity.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    for (auto i = this->original->triangleConnectivity.cbegin(); i != this->original->triangleConnectivity.cend(); i++)
+    for (auto i = this->original->triangleConnectivity.cbegin(); i != this->original->triangleConnectivity.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    for (auto i = this->original->quadrangleConnectivity.cbegin(); i != this->original->quadrangleConnectivity.cend(); i++)
+    for (auto i = this->original->quadrangleConnectivity.cbegin(); i != this->original->quadrangleConnectivity.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    for (auto i = this->original->lineConnectivity.cbegin(); i != this->original->lineConnectivity.cend(); i++)
+    for (auto i = this->original->lineConnectivity.cbegin(); i != this->original->lineConnectivity.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
     std::stable_sort(this->elementConnectivities.begin(), this->elementConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
 
-    for (unsigned i = 0; i < this->elementConnectivities.size(); i++)
+    for (unsigned i = 0; i < this->elementConnectivities.size(); ++i)
         this->elementConnectivities[i].pop_back();
 }
 
@@ -84,7 +84,7 @@ void GridDataExtractor::extractRegions() {
         auto regionBegin = this->elementConnectivities.begin() + region.begin;
         auto regionEnd = this->elementConnectivities.begin() + region.end;
 
-        for (auto element = regionBegin; element != regionEnd; element++) {
+        for (auto element = regionBegin; element != regionEnd; ++element) {
 
             for (auto vertex  : *element)
                 this->vertices.insert(vertex);
@@ -136,19 +136,19 @@ void GridDataExtractor::extractBoundaries() {
         auto boundary(*iterator);
 
         std::vector<int> deleteIndices;
-        for (auto i = this->original->triangleConnectivity.cbegin(); i != this->original->triangleConnectivity.cend(); i++)
+        for (auto i = this->original->triangleConnectivity.cbegin(); i != this->original->triangleConnectivity.cend(); ++i)
             if (i->back() >= boundary.begin && i->back() <= boundary.end)
                 deleteIndices.emplace_back(i -  this->original->triangleConnectivity.cbegin());
 
-        for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); rit++)
+        for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); ++rit)
             this->original->triangleConnectivity.erase(this->original->triangleConnectivity.begin() + *rit);
 
         deleteIndices.clear();
-        for (auto i = this->original->quadrangleConnectivity.cbegin(); i != this->original->quadrangleConnectivity.cend(); i++)
+        for (auto i = this->original->quadrangleConnectivity.cbegin(); i != this->original->quadrangleConnectivity.cend(); ++i)
             if (i->back() >= boundary.begin && i->back() <= boundary.end)
                 deleteIndices.emplace_back(i -  this->original->quadrangleConnectivity.cbegin());
 
-        for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); rit++)
+        for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); ++rit)
             this->original->quadrangleConnectivity.erase(this->original->quadrangleConnectivity.begin() + *rit);
 
         this->original->boundaries.erase(iterator);
@@ -156,7 +156,7 @@ void GridDataExtractor::extractBoundaries() {
         auto boundaryBegin = this->elementConnectivities.begin() + boundary.begin;
         auto boundaryEnd = this->elementConnectivities.begin() + boundary.end;
 
-        for (auto facet = boundaryBegin; facet != boundaryEnd; facet++) {
+        for (auto facet = boundaryBegin; facet != boundaryEnd; ++facet) {
 
             facet->push_back(this->localIndex++);
 
@@ -195,7 +195,7 @@ void GridDataExtractor::extractWells() {
         auto wellBegin = this->elementConnectivities.begin() + well.begin;
         auto wellEnd = this->elementConnectivities.begin() + well.end;
 
-        for (auto element = wellBegin; element != wellEnd; element++) {
+        for (auto element = wellBegin; element != wellEnd; ++element) {
 
             element->push_back(this->localIndex++);
 
@@ -223,31 +223,31 @@ void GridDataExtractor::fixIndices() {
         originalToExtract[vertex] = index++;
 
     for (auto& tetrahedron : this->extract->tetrahedronConnectivity)
-        for (auto vertex = tetrahedron.begin(); vertex != tetrahedron.end() - 1; vertex++)
+        for (auto vertex = tetrahedron.begin(); vertex != tetrahedron.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
     for (auto& hexahedron : this->extract->hexahedronConnectivity)
-        for (auto vertex = hexahedron.begin(); vertex != hexahedron.end() - 1; vertex++)
+        for (auto vertex = hexahedron.begin(); vertex != hexahedron.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
     for (auto& prism : this->extract->prismConnectivity)
-        for (auto vertex = prism.begin(); vertex != prism.end() - 1; vertex++)
+        for (auto vertex = prism.begin(); vertex != prism.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
     for (auto& pyramid : this->extract->pyramidConnectivity)
-        for (auto vertex = pyramid.begin(); vertex != pyramid.end() - 1; vertex++)
+        for (auto vertex = pyramid.begin(); vertex != pyramid.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
     for (auto& triangle : this->extract->triangleConnectivity)
-        for (auto vertex = triangle.begin(); vertex != triangle.end() - 1; vertex++)
+        for (auto vertex = triangle.begin(); vertex != triangle.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
     for (auto& quadrangle : this->extract->quadrangleConnectivity)
-        for (auto vertex = quadrangle.begin(); vertex != quadrangle.end() - 1; vertex++)
+        for (auto vertex = quadrangle.begin(); vertex != quadrangle.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
     for (auto& line : this->extract->lineConnectivity)
-        for (auto vertex = line.begin(); vertex != line.end() - 1; vertex++)
+        for (auto vertex = line.begin(); vertex != line.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
     for (auto& well : this->extract->wells)

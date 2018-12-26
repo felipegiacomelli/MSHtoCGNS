@@ -52,7 +52,7 @@ void MshReader::readNodes() {
 
     this->file >> numberOfVertices;
     this->gridData->coordinates.resize(numberOfVertices, std::array<double, 3>());
-    for (int i = 0; i < numberOfVertices; i++)
+    for (int i = 0; i < numberOfVertices; ++i)
         this->file >> temporary >> this->gridData->coordinates[i][0] >> this->gridData->coordinates[i][1] >> this->gridData->coordinates[i][2];
 }
 

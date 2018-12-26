@@ -94,7 +94,7 @@ int CgnsReader::readSolutionIndex(std::string solutionName) {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of solutions");
 
     int solutionIndex;
-    for (solutionIndex = 1; solutionIndex <= numberOfSolutions; solutionIndex++) {
+    for (solutionIndex = 1; solutionIndex <= numberOfSolutions; ++solutionIndex) {
         GridLocation_t gridLocation;
         if (cg_sol_info(this->fileIndex, this->baseIndex, this->zoneIndex, solutionIndex, this->buffer, &gridLocation))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read solution " + std::to_string(solutionIndex) + " information");

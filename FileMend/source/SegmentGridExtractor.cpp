@@ -69,44 +69,44 @@ void SegmentGridExtractor::createSegmentGrid() {
 }
 
 void SegmentGridExtractor::copyVertices() {
-    for (int vertex = 0; vertex < 2 * this->numberOfVerticesPerSection; vertex++)
+    for (int vertex = 0; vertex < 2 * this->numberOfVerticesPerSection; ++vertex)
         this->segmentGrid->coordinates.emplace_back(this->gridData->coordinates[vertex]);
 }
 
 void SegmentGridExtractor::copyElements() {
-    for (int prism = 0; prism < this->numberOfPrismsPerSegment; prism++) {
+    for (int prism = 0; prism < this->numberOfPrismsPerSegment; ++prism) {
         this->segmentGrid->prismConnectivity.emplace_back(this->gridData->prismConnectivity[prism]);
         this->segmentGrid->prismConnectivity[prism].back() = this->elementShift++;
     }
 
-    for (int hexahedron = 0; hexahedron < this->numberOfHexahedronsPerSegment; hexahedron++) {
+    for (int hexahedron = 0; hexahedron < this->numberOfHexahedronsPerSegment; ++hexahedron) {
         this->segmentGrid->hexahedronConnectivity.emplace_back(this->gridData->hexahedronConnectivity[hexahedron]);
         this->segmentGrid->hexahedronConnectivity[hexahedron].back() = this->elementShift++;
     }
 }
 
 void SegmentGridExtractor::copyFacets() {
-    for (int quadrangle = 0; quadrangle < this->numberOfPrismsPerSegment; quadrangle++) {
+    for (int quadrangle = 0; quadrangle < this->numberOfPrismsPerSegment; ++quadrangle) {
         this->segmentGrid->quadrangleConnectivity.emplace_back(this->gridData->quadrangleConnectivity[quadrangle]);
         this->segmentGrid->quadrangleConnectivity[quadrangle].back() = this->elementShift++;
     }
 
-    for (int triangle = 0; triangle < this->numberOfPrismsPerSegment; triangle++) {
+    for (int triangle = 0; triangle < this->numberOfPrismsPerSegment; ++triangle) {
         this->segmentGrid->triangleConnectivity.emplace_back(this->gridData->triangleConnectivity[triangle]);
         this->segmentGrid->triangleConnectivity[triangle].back() = this->elementShift++;
     }
 
-    for (int quadrangle = this->numberOfPrismsPerSegment * this->numberOfSegments; quadrangle < this->numberOfPrismsPerSegment * this->numberOfSegments + this->numberOfHexahedronsPerSegment; quadrangle++) {
+    for (int quadrangle = this->numberOfPrismsPerSegment * this->numberOfSegments; quadrangle < this->numberOfPrismsPerSegment * this->numberOfSegments + this->numberOfHexahedronsPerSegment; ++quadrangle) {
         this->segmentGrid->quadrangleConnectivity.emplace_back(this->gridData->quadrangleConnectivity[quadrangle]);
         this->segmentGrid->quadrangleConnectivity.back().back() = this->elementShift++;
     }
 
-    for (int triangle = this->numberOfPrismsPerSegment; triangle < 2 * this->numberOfPrismsPerSegment; triangle++) {
+    for (int triangle = this->numberOfPrismsPerSegment; triangle < 2 * this->numberOfPrismsPerSegment; ++triangle) {
         this->segmentGrid->triangleConnectivity.emplace_back(this->gridData->triangleConnectivity[triangle]);
         this->segmentGrid->triangleConnectivity[triangle].back() = this->elementShift++;
     }
 
-    for (int quadrangle = this->numberOfPrismsPerSegment * this->numberOfSegments + this->numberOfHexahedronsPerSegment; quadrangle < int(this->gridData->quadrangleConnectivity.size()); quadrangle++) {
+    for (int quadrangle = this->numberOfPrismsPerSegment * this->numberOfSegments + this->numberOfHexahedronsPerSegment; quadrangle < int(this->gridData->quadrangleConnectivity.size()); ++quadrangle) {
         this->segmentGrid->quadrangleConnectivity.emplace_back(this->gridData->quadrangleConnectivity[quadrangle]);
         this->segmentGrid->quadrangleConnectivity.back().back() = this->elementShift++;
     }
@@ -149,14 +149,14 @@ void SegmentGridExtractor::fixBoundaries() {
         vertex = lastToSecond[vertex];
     }
 
-    for (auto triangle = this->segmentGrid->triangleConnectivity.begin(); triangle != this->segmentGrid->triangleConnectivity.end(); triangle++)
+    for (auto triangle = this->segmentGrid->triangleConnectivity.begin(); triangle != this->segmentGrid->triangleConnectivity.end(); ++triangle)
         if (triangle->back() >= boundary->begin && triangle->back() < boundary->end)
-            for (auto vertex = triangle->begin(); vertex != triangle->end() - 1; vertex++)
+            for (auto vertex = triangle->begin(); vertex != triangle->end() - 1; ++vertex)
                 *vertex = lastToSecond[*vertex];
 
-    for (auto quadrangle = this->segmentGrid->quadrangleConnectivity.begin(); quadrangle != this->segmentGrid->quadrangleConnectivity.end(); quadrangle++)
+    for (auto quadrangle = this->segmentGrid->quadrangleConnectivity.begin(); quadrangle != this->segmentGrid->quadrangleConnectivity.end(); ++quadrangle)
         if (quadrangle->back() >= boundary->begin && quadrangle->back() < boundary->end)
-            for (auto vertex = quadrangle->begin(); vertex != quadrangle->end() - 1; vertex++)
+            for (auto vertex = quadrangle->begin(); vertex != quadrangle->end() - 1; ++vertex)
                 *vertex = lastToSecond[*vertex];
 }
 

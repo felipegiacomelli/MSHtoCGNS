@@ -5,8 +5,8 @@
 
 template<class InputIt, class OutputIt>
 void append(InputIt cbegin, InputIt cend, OutputIt output) {
-    for (auto i = cbegin; i != cend; i++)
-        for (auto j = i->cbegin(); j != i->cend(); j++)
+    for (auto i = cbegin; i != cend; ++i)
+        for (auto j = i->cbegin(); j != i->cend(); ++j)
             output = *j;
 }
 

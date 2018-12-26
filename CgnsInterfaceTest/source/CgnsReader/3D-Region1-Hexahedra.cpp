@@ -125,7 +125,7 @@ TestCase(Geometry) {
 
     auto vertices = region.vertices;
     checkEqual(vertices.size(), 27u);
-    for (int v = 0; v < 27; v++) {
+    for (int v = 0; v < 27; ++v) {
         checkEqual(vertices[v],  v);
     }
 }
