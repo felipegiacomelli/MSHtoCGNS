@@ -1,5 +1,5 @@
-#ifndef OUTPUT_HPP
-#define OUTPUT_HPP
+#ifndef __UTILITIES_OUTPUT_HPP__
+#define __UTILITIES_OUTPUT_HPP__
 
 #include <fstream>
 

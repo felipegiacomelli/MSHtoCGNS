@@ -1,7 +1,6 @@
-#ifndef CGNS_CREATOR_HPP
-#define CGNS_CREATOR_HPP
+#ifndef __CGNS_INTERFACE_CGNS_CREATOR_HPP__
+#define __CGNS_INTERFACE_CGNS_CREATOR_HPP__
 
-#include <set>
 #include <algorithm>
 
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"

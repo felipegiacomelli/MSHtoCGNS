@@ -1,5 +1,5 @@
-#ifndef PRINT_HPP
-#define PRINT_HPP
+#ifndef __UTILITIES_PRINT_HPP__
+#define __UTILITIES_PRINT_HPP__
 
 #include <iostream>
 #include <iomanip>

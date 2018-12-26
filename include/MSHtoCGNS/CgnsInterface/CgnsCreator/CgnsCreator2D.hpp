@@ -1,5 +1,5 @@
-#ifndef CGNS_CREATOR_2D_HPP
-#define CGNS_CREATOR_2D_HPP
+#ifndef __CGNS_INTERFACE_CGNS_CREATOR_2D_HPP__
+#define __CGNS_INTERFACE_CGNS_CREATOR_2D_HPP__
 
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator.hpp"
 

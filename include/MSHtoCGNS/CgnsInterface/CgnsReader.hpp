@@ -1,5 +1,5 @@
-#ifndef CGNS_READER_HPP
-#define CGNS_READER_HPP
+#ifndef __CGNS_INTERFACE_CGNS_READER_HPP__
+#define __CGNS_INTERFACE_CGNS_READER_HPP__
 
 #include <string>
 #include <set>

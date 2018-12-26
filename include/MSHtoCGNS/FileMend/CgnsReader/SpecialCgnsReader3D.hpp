@@ -1,5 +1,5 @@
-#ifndef SPECIAL_CGNS_READER_3D_HPP
-#define SPECIAL_CGNS_READER_3D_HPP
+#ifndef __FILE_MEND_SPECIAL_CGNS_READER_3D_HPP__
+#define __FILE_MEND_SPECIAL_CGNS_READER_3D_HPP__
 
 #include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader3D.hpp"
 

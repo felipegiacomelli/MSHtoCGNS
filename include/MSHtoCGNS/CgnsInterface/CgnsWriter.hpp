@@ -1,5 +1,5 @@
-#ifndef CGNS_WRITER_HPP
-#define CGNS_WRITER_HPP
+#ifndef __CGNS_INTERFACE_CGNS_WRITER_HPP__
+#define __CGNS_INTERFACE_CGNS_WRITER_HPP__
 
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 

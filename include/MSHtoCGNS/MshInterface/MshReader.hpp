@@ -1,5 +1,5 @@
-#ifndef MSH_READER_HPP
-#define MSH_READER_HPP
+#ifndef __MSH_INTERFACE_MSH_READER_HPP__
+#define __MSH_INTERFACE_MSH_READER_HPP__
 
 #include <set>
 #include <sstream>

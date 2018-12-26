@@ -1,5 +1,5 @@
-#ifndef ALGORITHM_HPP
-#define ALGORITHM_HPP
+#ifndef __UTILITIES_ALGORITHM_HPP__
+#define __UTILITIES_ALGORITHM_HPP__
 
 #include <algorithm>
 

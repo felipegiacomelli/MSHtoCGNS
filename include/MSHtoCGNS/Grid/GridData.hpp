@@ -1,9 +1,10 @@
-#ifndef GRID_GRID_DATA_HPP
-#define GRID_GRID_DATA_HPP
+#ifndef __GRID_GRID_DATA_HPP__
+#define __GRID_GRID_DATA_HPP__
 
 #include <vector>
 #include <array>
 #include <string>
+
 #include "MSHtoCGNS/BoostInterface/SharedPointer.hpp"
 
 struct RegionData {
@@ -44,5 +45,7 @@ struct GridData {
     std::vector<RegionData> regions;
     std::vector<WellData> wells;
 };
+
+using GridDataPtr = boost::shared_ptr<GridData>;
 
 #endif

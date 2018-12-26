@@ -1,5 +1,5 @@
-#ifndef GRID_DATA_EXTRACTOR_HPP
-#define GRID_DATA_EXTRACTOR_HPP
+#ifndef __FILE_MEND_GRID_DATA_EXTRACTOR_HPP__
+#define __FILE_MEND_GRID_DATA_EXTRACTOR_HPP__
 
 #include <set>
 #include <algorithm>

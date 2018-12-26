@@ -1,5 +1,5 @@
-#ifndef TEST_HPP
-#define TEST_HPP
+#ifndef __BOOST_INTERFACE_TEST_HPP__
+#define __BOOST_INTERFACE_TEST_HPP__
 
 #include <boost/test/execution_monitor.hpp>
 #include <boost/test/unit_test.hpp>
