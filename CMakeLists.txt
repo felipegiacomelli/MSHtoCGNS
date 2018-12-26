@@ -118,10 +118,6 @@ install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/Utilities DESTINATION $
 ##################################################################
 enable_testing ()
 
-add_subdirectory (BoostInterface)
-add_subdirectory (BoostInterfaceTest)
-add_test (NAME BoostInterfaceTest COMMAND BoostInterfaceTest)
-
 add_subdirectory (MshInterface)
 add_subdirectory (MshInterfaceTest)
 add_test (NAME MshInterfaceTest COMMAND MshInterfaceTest)

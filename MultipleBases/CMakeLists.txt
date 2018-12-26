@@ -1,6 +1,6 @@
 project (MultipleBases)
 
-set (Dependencies BoostInterface Utilities MshInterface CgnsInterface FileMend)
+set (Dependencies Utilities MshInterface CgnsInterface FileMend)
 
 include_directories (${CMAKE_SOURCE_DIR}/include)
 

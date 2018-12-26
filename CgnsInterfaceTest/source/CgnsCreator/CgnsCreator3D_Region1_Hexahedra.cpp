@@ -19,7 +19,7 @@ struct Region1_Hexahedra_3D {
 
     ~Region1_Hexahedra_3D() {
         cg_close(this->fileIndex);
-        deleteDirectory("./27v_8e/");
+        boost::filesystem::remove_all("./27v_8e/");
     };
 
     std::string filePath;

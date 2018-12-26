@@ -19,7 +19,7 @@ struct Region4_ElementType1_2D {
 
     ~Region4_ElementType1_2D() {
         cg_close(this->fileIndex);
-        deleteDirectory("./11v_10e/");
+        boost::filesystem::remove_all("./11v_10e/");
     };
 
     std::string filePath;

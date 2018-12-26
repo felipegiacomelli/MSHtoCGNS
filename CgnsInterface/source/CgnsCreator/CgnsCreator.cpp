@@ -10,9 +10,10 @@ void CgnsCreator::setupFile() {
         this->fileName = this->folderPath.string();
     }
     else {
-        std::string folderName = boost::filesystem::absolute(this->folderPath).string() + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/";
-        createDirectory(folderName);
-        this->fileName = folderName + std::string("Grid.cgns");
+        boost::filesystem::path folderName(boost::filesystem::absolute(this->folderPath).string() + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/");
+        if (!boost::filesystem::exists(folderName))
+            boost::filesystem::create_directory(folderName);
+        this->fileName = folderName.string() + std::string("Grid.cgns");
     }
     cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
 }

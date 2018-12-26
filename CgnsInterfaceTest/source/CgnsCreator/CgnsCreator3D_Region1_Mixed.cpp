@@ -19,7 +19,7 @@ struct Region1_Mixed_3D {
 
     ~Region1_Mixed_3D() {
         cg_close(this->fileIndex);
-        deleteDirectory("./12523v_57072e/");
+        boost::filesystem::remove_all("./12523v_57072e/");
     };
 
     std::string filePath;

@@ -1,6 +1,6 @@
 project (CgnsInterface)
 
-set (Dependencies BoostInterface Utilities)
+set (Dependencies Utilities)
 
 include_directories (${CMAKE_SOURCE_DIR}/include)
 

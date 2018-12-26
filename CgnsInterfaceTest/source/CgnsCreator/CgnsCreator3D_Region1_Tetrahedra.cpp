@@ -19,7 +19,7 @@ struct Region1_Tetrahedra_3D {
 
     ~Region1_Tetrahedra_3D() {
         cg_close(this->fileIndex);
-        deleteDirectory("./14v_24e/");
+        boost::filesystem::remove_all("./14v_24e/");
     };
 
     std::string filePath;
