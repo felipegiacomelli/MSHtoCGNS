@@ -44,11 +44,11 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 ##################################################################
 project (MSHtoCGNS)
 set (VERSION_MAJOR "0")
-set (VERSION_MINOR "11")
+set (VERSION_MINOR "12")
 set (VERSION_PATCH "0")
 set (VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set (CMAKE_INSTALL_PREFIX "$ENV{HOME}/Libraries/${PROJECT_NAME}-${VERSION}" CACHE PATH "Installation location" FORCE)
+    set (CMAKE_INSTALL_PREFIX "$ENV{HOME}/Libraries/mshtocgns-${VERSION}" CACHE PATH "Installation location" FORCE)
 endif ()
 
 ##################################################################
@@ -110,8 +110,8 @@ macro (add_library _target)
     install (EXPORT ${Distribution} DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE})
 endmacro ()
 
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/BoostInterface DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE}/include/MSHtoCGNS)
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/Grid DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE}/include/MSHtoCGNS)
-install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/Utilities DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE}/include/MSHtoCGNS)
 
 ##################################################################
 # COMPONENTS

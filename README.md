@@ -111,7 +111,7 @@ target_link_libraries (${_target} ${MSHTOCGNS_LIBRARIES})
 ```
 Usually,
 
-*$ENV{MSHTOCGNS_DIR}* is set to a directory such as **/home/felipe/Libraries/MSHtoCGNS-0.11.0**
+*$ENV{MSHTOCGNS_DIR}* is set to a directory such as **/home/felipe/Libraries/mshtocgns-0.12.0**
 
 *${BUILD_TYPE}* is the lower case ${CMAKE_BUILD_TYPE} - **release** OR **debug**
 
