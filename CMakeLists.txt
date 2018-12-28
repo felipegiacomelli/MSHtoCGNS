@@ -47,9 +47,6 @@ set (VERSION_MAJOR "0")
 set (VERSION_MINOR "12")
 set (VERSION_PATCH "0")
 set (VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
-if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set (CMAKE_INSTALL_PREFIX "$ENV{HOME}/Libraries/mshtocgns-${VERSION}" CACHE PATH "Installation location" FORCE)
-endif ()
 
 ##################################################################
 # EXTERNAL LIBRARIES
