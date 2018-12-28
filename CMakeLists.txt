@@ -102,13 +102,13 @@ macro (add_library _target)
     target_link_libraries (${_target} ${CGNS_LIBRARIES})
     set_target_properties (${_target}  PROPERTIES PREFIX "")
     set_target_properties (${_target}  PROPERTIES VERSION ${VERSION})
-    install (TARGETS ${PROJECT_NAME} EXPORT ${Distribution} DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE}/libs)
-    install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/${PROJECT_NAME} DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE}/include/MSHtoCGNS)
+    install (TARGETS ${PROJECT_NAME} EXPORT ${Distribution} DESTINATION libs)
+    install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/${PROJECT_NAME} DESTINATION include/MSHtoCGNS)
     install (EXPORT ${Distribution} DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE})
 endmacro ()
 
-install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/BoostInterface DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE}/include/MSHtoCGNS)
-install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/Grid DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE}/include/MSHtoCGNS)
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/BoostInterface DESTINATION include/MSHtoCGNS)
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/Grid DESTINATION include/MSHtoCGNS)
 
 ##################################################################
 # COMPONENTS
