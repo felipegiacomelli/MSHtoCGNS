@@ -104,7 +104,7 @@ macro (add_library _target)
     set_target_properties (${_target}  PROPERTIES VERSION ${VERSION})
     install (TARGETS ${PROJECT_NAME} EXPORT ${Distribution} DESTINATION libs)
     install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/${PROJECT_NAME} DESTINATION include/MSHtoCGNS)
-    install (EXPORT ${Distribution} DESTINATION ${BUILD_TYPE}/${LIBRARY_TYPE})
+    install (EXPORT ${Distribution})
 endmacro ()
 
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/BoostInterface DESTINATION include/MSHtoCGNS)
