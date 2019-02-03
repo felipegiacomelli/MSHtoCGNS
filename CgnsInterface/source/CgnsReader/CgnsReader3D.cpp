@@ -32,17 +32,17 @@ void CgnsReader3D::readCoordinates() {
     }
 }
 
-bool CgnsReader3D::skipSection(int) {
+bool CgnsReader3D::skipSection() {
     return false;
 }
 
-void CgnsReader3D::addEntity(int elementType, int elementStart, int elementEnd) {
+void CgnsReader3D::addEntity(int elementType) {
     if (elementType == TETRA_4 || elementType == HEXA_8 || elementType == PENTA_6 || elementType == PYRA_5)
-            this->addRegion(std::string(this->buffer), elementStart - 1, elementEnd);
+            this->addRegion(std::string(this->buffer), this->elementStart - 1, this->elementEnd);
     else if (elementType == TRI_3 || elementType == QUAD_4)
-        this->addBoundary(std::string(this->buffer), elementStart - 1, elementEnd);
+        this->addBoundary(std::string(this->buffer), this->elementStart - 1, this->elementEnd);
     else if (elementType == BAR_2)
-        this->addWell(std::string(this->buffer), elementStart - 1, elementEnd);
+        this->addWell(std::string(this->buffer), this->elementStart - 1, this->elementEnd);
 }
 
 

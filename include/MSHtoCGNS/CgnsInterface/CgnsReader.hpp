@@ -31,11 +31,11 @@ class CgnsReader {
         virtual void readCoordinates() = 0;
 
         void readSections();
-        virtual bool skipSection(int elementType) = 0;
-        virtual void addEntity(int elementType, int elementStart, int elementEnd) = 0;
+        virtual bool skipSection() = 0;
+        void addConnectivities(const std::vector<int> connectivities);
+        virtual void addEntity(int elementType) = 0;
         void addRegion(std::string&& name, int begin, int end);
         void addBoundary(std::string&& name, int begin, int end);
-        void addConnectivities(int elementType, int elementStart, int elementEnd, const std::vector<int> connectivities);
 
         template<typename T, typename U>
         void findVertices(const std::vector<T>& connectivities, const std::vector<U>& entities, std::vector<std::set<int>>& vertices) {
@@ -59,6 +59,7 @@ class CgnsReader {
         int sizes[3];
         int numberOfSections, numberOfBoundaries;
         int one = 1;
+        int elementType, elementStart, elementEnd;
 };
 
 #endif

@@ -8,7 +8,7 @@ class SpecialCgnsReader3D : public CgnsReader3D {
         SpecialCgnsReader3D(std::string filePath);
 
     private:
-        bool skipSection(int elementType) override;
+        bool skipSection() override;
         void addWell(std::string&& name, int elementStart, int end) = delete;
 };
 

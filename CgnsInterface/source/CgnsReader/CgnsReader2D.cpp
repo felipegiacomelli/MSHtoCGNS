@@ -26,15 +26,15 @@ void CgnsReader2D::readCoordinates() {
     }
 }
 
-bool CgnsReader2D::skipSection(int) {
+bool CgnsReader2D::skipSection() {
     return false;
 }
 
-void CgnsReader2D::addEntity(int elementType, int elementStart, int elementEnd) {
+void CgnsReader2D::addEntity(int elementType) {
     if (elementType == TRI_3 || elementType == QUAD_4)
-        this->addRegion(std::string(this->buffer), elementStart - 1, elementEnd);
+        this->addRegion(std::string(this->buffer), this->elementStart - 1, this->elementEnd);
     else if (elementType == BAR_2)
-        this->addBoundary(std::string(this->buffer), elementStart - 1, elementEnd);
+        this->addBoundary(std::string(this->buffer), this->elementStart - 1, this->elementEnd);
 }
 
 void CgnsReader2D::findBoundaryVertices() {

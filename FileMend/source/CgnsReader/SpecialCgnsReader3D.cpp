@@ -8,11 +8,11 @@ SpecialCgnsReader3D::SpecialCgnsReader3D(std::string filePath) : CgnsReader3D(fi
     this->findRegionVertices();
 }
 
-bool SpecialCgnsReader3D::skipSection(int elementType) {
+bool SpecialCgnsReader3D::skipSection() {
     std::string sectionName(this->buffer);
     if (sectionName.substr(sectionName.length() - 3) == "_1D" || sectionName.substr(sectionName.length() - 3) == "_0D")
         return true;
-    else if (elementType == BAR_2)
+    else if (this->elementType == BAR_2)
         return true;
     else
         return false;

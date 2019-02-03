@@ -76,13 +76,15 @@ void CgnsReader::createGridData() {
 
 void CgnsReader::readSections() {
     for (int sectionIndex = 1; sectionIndex <= this->numberOfSections; ++sectionIndex) {
-        ElementType_t elementType;
-        int elementStart, elementEnd;
-        int lastBoundaryElement, parentFlag;
-        if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag))
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section");
+        {
+            ElementType_t elementType;
+            int lastBoundaryElement, parentFlag;
+            if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &this->elementStart, &this->elementEnd, &lastBoundaryElement, &parentFlag))
+                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section");
+            this->elementType = elementType;
+        }
 
-        if (this->skipSection(elementType))
+        if (this->skipSection())
             continue;
 
         int size;
@@ -93,12 +95,12 @@ void CgnsReader::readSections() {
         if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], nullptr))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section elements");
 
-        this->addConnectivities(elementType, elementStart, elementEnd, connectivities);
+        this->addConnectivities(connectivities);
 
-        if (elementType == MIXED)
-            this->addEntity(ElementType_t(connectivities[0]), elementStart, elementEnd);
+        if (this->elementType == MIXED)
+            this->addEntity(ElementType_t(connectivities[0]));
         else
-            this->addEntity(elementType, elementStart, elementEnd);
+            this->addEntity(this->elementType);
     }
 }
 
@@ -116,14 +118,14 @@ void CgnsReader::addBoundary(std::string&& name, int begin, int end) {
     this->gridData->boundaries.back().end = end;
 }
 
-void CgnsReader::addConnectivities(int elementType, int elementStart, int elementEnd, const std::vector<int> connectivities) {
+void CgnsReader::addConnectivities(const std::vector<int> connectivities) {
     int numberOfVertices;
-    if (cg_npe(ElementType_t(elementType), &numberOfVertices))
+    if (cg_npe(ElementType_t(this->elementType), &numberOfVertices))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element number of vertices");
 
-    int numberOfElements = elementEnd - elementStart + 1;
+    int numberOfElements = this->elementEnd - this->elementStart + 1;
 
-    switch (ElementType_t(elementType)) {
+    switch (this->elementType) {
         case MIXED : {
             int position = 0;
             for (int e = 0; e < numberOfElements; ++e) {
@@ -131,7 +133,7 @@ void CgnsReader::addConnectivities(int elementType, int elementStart, int elemen
                 std::vector<int> element(numberOfVertices);
                 for (int k = 0; k < numberOfVertices; ++k)
                     element[k] = connectivities[position + 1 + k] - 1;
-                element.emplace_back(elementStart - 1 + e);
+                element.emplace_back(this->elementStart - 1 + e);
                 switch (connectivities[position]) {
                     case TETRA_4: {
                         this->gridData->tetrahedronConnectivity.emplace_back(std::array<int, 5>());
@@ -174,7 +176,7 @@ void CgnsReader::addConnectivities(int elementType, int elementStart, int elemen
                 auto& tetrahedron = this->gridData->tetrahedronConnectivity.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     tetrahedron[k] = connectivities[e * numberOfVertices + k] - 1;
-                tetrahedron.back() = elementStart - 1 + e;
+                tetrahedron.back() = this->elementStart - 1 + e;
             }
             break;
         }
@@ -184,7 +186,7 @@ void CgnsReader::addConnectivities(int elementType, int elementStart, int elemen
                 auto& hexahedron = this->gridData->hexahedronConnectivity.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     hexahedron[k] = connectivities[e * numberOfVertices + k] - 1;
-                hexahedron.back() = elementStart - 1 + e;
+                hexahedron.back() = this->elementStart - 1 + e;
             }
             break;
         }
@@ -194,7 +196,7 @@ void CgnsReader::addConnectivities(int elementType, int elementStart, int elemen
                 auto& prism = this->gridData->prismConnectivity.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     prism[k] = connectivities[e * numberOfVertices + k] - 1;
-                prism.back() = elementStart - 1 + e;
+                prism.back() = this->elementStart - 1 + e;
             }
             break;
         }
@@ -204,7 +206,7 @@ void CgnsReader::addConnectivities(int elementType, int elementStart, int elemen
                 auto& pyramid = this->gridData->pyramidConnectivity.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     pyramid[k] = connectivities[e * numberOfVertices + k] - 1;
-                pyramid.back() = elementStart - 1 + e;
+                pyramid.back() = this->elementStart - 1 + e;
             }
             break;
         }
@@ -214,7 +216,7 @@ void CgnsReader::addConnectivities(int elementType, int elementStart, int elemen
                 auto& triangle = this->gridData->triangleConnectivity.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     triangle[k] = connectivities[e * numberOfVertices + k] - 1;
-                triangle.back() = elementStart - 1 + e;
+                triangle.back() = this->elementStart - 1 + e;
             }
             break;
         }
@@ -224,7 +226,7 @@ void CgnsReader::addConnectivities(int elementType, int elementStart, int elemen
                 auto& quadrangle = this->gridData->quadrangleConnectivity.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     quadrangle[k] = connectivities[e * numberOfVertices + k] - 1;
-                quadrangle.back() = elementStart - 1 + e;
+                quadrangle.back() = this->elementStart - 1 + e;
             }
             break;
         }
@@ -234,7 +236,7 @@ void CgnsReader::addConnectivities(int elementType, int elementStart, int elemen
                 auto& line = this->gridData->lineConnectivity.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     line[k] = connectivities[e * numberOfVertices + k] - 1;
-                line.back() = elementStart - 1 + e;
+                line.back() = this->elementStart - 1 + e;
             }
             break;
         }

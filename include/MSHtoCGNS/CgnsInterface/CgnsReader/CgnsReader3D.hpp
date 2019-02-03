@@ -9,8 +9,8 @@ class CgnsReader3D : public CgnsReader {
 
     protected:
         void readCoordinates() override;
-        bool skipSection(int elementType) override;
-        void addEntity(int elementType, int elementStart, int elementEnd) override;
+        bool skipSection() override;
+        void addEntity(int elementType) override;
         void addWell(std::string&& name, int start, int end);
         void findBoundaryVertices() override;
         void findRegionVertices() override;
