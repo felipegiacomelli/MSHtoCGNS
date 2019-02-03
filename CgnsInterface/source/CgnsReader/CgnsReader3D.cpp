@@ -12,18 +12,16 @@ CgnsReader3D::CgnsReader3D(std::string filePath, bool readInConstructor) : CgnsR
 }
 
 void CgnsReader3D::readCoordinates() {
-    int one = 1;
-
     std::vector<double> coordinatesX(this->sizes[0]);
-    if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &one, this->sizes, &coordinatesX[0]))
+    if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateX", RealDouble, &this->one, this->sizes, &coordinatesX[0]))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read CoordinateX");
 
     std::vector<double> coordinatesY(this->sizes[0]);
-    if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &one, this->sizes, &coordinatesY[0]))
+    if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateY", RealDouble, &this->one, this->sizes, &coordinatesY[0]))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read CoordinateY");
 
     std::vector<double> coordinatesZ(this->sizes[0]);
-    if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateZ", RealDouble, &one, this->sizes, &coordinatesZ[0]))
+    if (cg_coord_read(this->fileIndex, this->baseIndex, this->zoneIndex, "CoordinateZ", RealDouble, &this->one, this->sizes, &coordinatesZ[0]))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read CoordinateZ");
 
     this->gridData->coordinates.resize(this->sizes[0], std::array<double, 3>());

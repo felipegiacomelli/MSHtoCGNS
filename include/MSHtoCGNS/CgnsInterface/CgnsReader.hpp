@@ -42,6 +42,7 @@ class CgnsReader {
         int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
         int sizes[3];
         int numberOfSections, numberOfBoundaries;
+        int one = 1;
 };
 
 #endif
