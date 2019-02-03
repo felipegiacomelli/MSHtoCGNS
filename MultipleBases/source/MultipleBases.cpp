@@ -45,11 +45,12 @@ int main() {
 
     std::vector<boost::shared_ptr<GridData>> gridDatas{gridData, extract};
     std::vector<std::string> baseNames{"Rock", "Reservoir"};
+    std::vector<std::string> zoneNames{"Rock", "Reservoir"};
 
     printGridDataInformation(extract, red("original gridData"));
 
     start = std::chrono::steady_clock::now();
-    MultipleBasesCgnsCreator3D(gridDatas, baseNames, outputPath.string());
+    MultipleBasesCgnsCreator3D(gridDatas, baseNames, zoneNames, outputPath.string());
     end = std::chrono::steady_clock::now();
 
     elapsedSeconds = end - start;

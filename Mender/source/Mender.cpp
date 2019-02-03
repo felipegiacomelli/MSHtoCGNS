@@ -58,7 +58,7 @@ int main() {
     radialGridData = radialGridData;
 
     start = std::chrono::steady_clock::now();
-    MultipleBasesCgnsCreator3D creator({gridData, radialGridData}, {"Reservoir", "Well"}, outputPath);
+    MultipleBasesCgnsCreator3D creator({gridData, radialGridData}, {"Reservoir", "Well"}, {"Reservoir", "Well"}, outputPath);
     end = std::chrono::steady_clock::now();
     elapsedSeconds = end - start;
     std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";

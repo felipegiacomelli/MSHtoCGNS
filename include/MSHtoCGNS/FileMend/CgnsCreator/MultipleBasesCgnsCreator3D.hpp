@@ -5,13 +5,14 @@
 
 class MultipleBasesCgnsCreator3D : public CgnsCreator3D {
     public:
-        MultipleBasesCgnsCreator3D(std::vector<boost::shared_ptr<GridData>> gridDatas, std::vector<std::string> baseNames, std::string folderPath);
+        MultipleBasesCgnsCreator3D(std::vector<boost::shared_ptr<GridData>> gridDatas, std::vector<std::string> baseNames, std::vector<std::string> zoneNames, std::string folderPath);
 
     private:
         void initialize();
 
         std::vector<boost::shared_ptr<GridData>> gridDatas;
         std::vector<std::string> baseNames;
+        std::vector<std::string> zoneNames;
         bool firstCall = true;
 };
 

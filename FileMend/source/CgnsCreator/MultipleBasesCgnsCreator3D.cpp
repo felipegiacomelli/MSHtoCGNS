@@ -1,7 +1,9 @@
 #include "MSHtoCGNS/FileMend/CgnsCreator/MultipleBasesCgnsCreator3D.hpp"
 #include <cgnslib.h>
 
-MultipleBasesCgnsCreator3D::MultipleBasesCgnsCreator3D(std::vector<boost::shared_ptr<GridData>> gridDatas, std::vector<std::string> baseNames, std::string folderPath) : CgnsCreator3D(nullptr, folderPath, false), gridDatas(gridDatas), baseNames(baseNames) {
+MultipleBasesCgnsCreator3D::MultipleBasesCgnsCreator3D(std::vector<boost::shared_ptr<GridData>> gridDatas, std::vector<std::string> baseNames, std::vector<std::string> zoneNames, std::string folderPath) :
+    CgnsCreator3D(nullptr, folderPath, false), gridDatas(gridDatas), baseNames(baseNames), zoneNames(zoneNames)
+{
     this->initialize();
 }
 
@@ -20,8 +22,8 @@ void MultipleBasesCgnsCreator3D::initialize() {
         std::transform(this->baseNames[i].begin(), this->baseNames[i].end(), this->baseNames[i].begin(), ::toupper);
         this->baseName = this->baseNames[i];
 
-        std::transform(this->baseNames[i].begin(), this->baseNames[i].end(), this->baseNames[i].begin(), ::toupper);
-        this->zoneName = this->baseNames[i];
+        std::transform(this->zoneNames[i].begin(), this->zoneNames[i].end(), this->zoneNames[i].begin(), ::toupper);
+        this->zoneName = this->zoneNames[i];
 
         this->writeBase();
         this->writeZone();
