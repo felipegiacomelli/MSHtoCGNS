@@ -34,11 +34,6 @@ void CgnsReader2D::readSections() {
         if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section");
 
-        if (elementType == MIXED || elementType == TRI_3 || elementType == QUAD_4)
-            this->addRegion(std::string(this->buffer), elementStart - 1, elementEnd);
-        else if (elementType == BAR_2)
-            this->addBoundary(std::string(this->buffer), elementStart - 1, elementEnd);
-
         int size;
         if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element data size");
@@ -47,71 +42,20 @@ void CgnsReader2D::readSections() {
         if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], nullptr))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section elements");
 
-        int numberOfVertices;
-        if (cg_npe(elementType, &numberOfVertices))
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element number of vertices");
+        if (elementType == MIXED)
+            this->addEntity(ElementType_t(connectivities[0]), elementStart, elementEnd);
+        else
+            this->addEntity(elementType, elementStart, elementEnd);
 
-        int numberOfElements = elementEnd - elementStart + 1;
-
-        switch (elementType) {
-            case MIXED : {
-                int position = 0;
-                for (int e = 0; e < numberOfElements; ++e) {
-                    cg_npe(ElementType_t(connectivities[position]), &numberOfVertices);
-                    std::vector<int> element(numberOfVertices);
-                    for (int k = 0; k < numberOfVertices; ++k)
-                        element[k] = connectivities[position + 1 + k] - 1;
-                    element.emplace_back(elementStart - 1 + e);
-                    switch (connectivities[position]) {
-                        case TRI_3: {
-                            this->gridData->triangleConnectivity.emplace_back(std::array<int, 4>());
-                            std::copy_n(std::begin(element), 4, std::begin(this->gridData->triangleConnectivity.back()));
-                            break;
-                        }
-                        case QUAD_4: {
-                            this->gridData->quadrangleConnectivity.emplace_back(std::array<int, 5>());
-                            std::copy_n(std::begin(element), 5, std::begin(this->gridData->quadrangleConnectivity.back()));
-                            break;
-                        }
-                    }
-                    position += numberOfVertices + 1;
-                }
-                break;
-            }
-            case TRI_3: {
-                for (int e = 0; e < numberOfElements; ++e) {
-                    this->gridData->triangleConnectivity.emplace_back(std::array<int, 4>());
-                    auto& triangle = this->gridData->triangleConnectivity.back();
-                    for (int k = 0; k < numberOfVertices; ++k)
-                        triangle[k] = connectivities[e * numberOfVertices + k] - 1;
-                    triangle.back() = elementStart - 1 + e;
-                }
-                break;
-            }
-            case QUAD_4: {
-                for (int e = 0; e < numberOfElements; ++e) {
-                    this->gridData->quadrangleConnectivity.emplace_back(std::array<int, 5>());
-                    auto& quadrangle = this->gridData->quadrangleConnectivity.back();
-                    for (int k = 0; k < numberOfVertices; ++k)
-                        quadrangle[k] = connectivities[e * numberOfVertices + k] - 1;
-                    quadrangle.back() = elementStart - 1 + e;
-                }
-                break;
-            }
-            case BAR_2: {
-                for (int e = 0; e < numberOfElements; ++e) {
-                    this->gridData->lineConnectivity.emplace_back(std::array<int, 3>());
-                    auto& line = this->gridData->lineConnectivity.back();
-                    for (int k = 0; k < numberOfVertices; ++k)
-                        line[k] = connectivities[e * numberOfVertices + k] - 1;
-                    line.back() = elementStart - 1 + e;
-                }
-                break;
-            }
-            default:
-                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Section element type not supported");
-        }
+        this->addConnectivities(elementType, elementStart, elementEnd, connectivities);
     }
+}
+
+void CgnsReader2D::addEntity(int elementType, int elementStart, int elementEnd) {
+    if (elementType == TRI_3 || elementType == QUAD_4)
+        this->addRegion(std::string(this->buffer), elementStart - 1, elementEnd);
+    else if (elementType == BAR_2)
+        this->addBoundary(std::string(this->buffer), elementStart - 1, elementEnd);
 }
 
 void CgnsReader2D::findBoundaryVertices() {

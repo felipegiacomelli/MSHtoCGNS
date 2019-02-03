@@ -29,10 +29,13 @@ class CgnsReader {
         void createGridData();
         virtual void readCoordinates() = 0;
         virtual void readSections() = 0;
+        virtual void addEntity(int elementType, int elementStart, int elementEnd) = 0;
         void addRegion(std::string&& name, int begin, int end);
         void addBoundary(std::string&& name, int begin, int end);
+        void addConnectivities(int elementType, int elementStart, int elementEnd, const std::vector<int> connectivities);
         virtual void findBoundaryVertices() = 0;
         virtual void findRegionVertices() = 0;
+
         int readSolutionIndex(std::string solutionName);
 
         template<typename T, typename U>

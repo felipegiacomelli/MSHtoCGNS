@@ -10,6 +10,7 @@ class CgnsReader2D : public CgnsReader {
     protected:
         void readCoordinates() override;
         void readSections() override;
+        void addEntity(int elementType, int elementStart, int elementEnd) override;
         void findBoundaryVertices() override;
         void findRegionVertices() override;
 };

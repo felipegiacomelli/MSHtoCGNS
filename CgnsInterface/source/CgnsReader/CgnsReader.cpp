@@ -88,6 +88,133 @@ void CgnsReader::addBoundary(std::string&& name, int begin, int end) {
     this->gridData->boundaries.back().end = end;
 }
 
+void CgnsReader::addConnectivities(int elementType, int elementStart, int elementEnd, const std::vector<int> connectivities) {
+    int numberOfVertices;
+    if (cg_npe(ElementType_t(elementType), &numberOfVertices))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element number of vertices");
+
+    int numberOfElements = elementEnd - elementStart + 1;
+
+    switch (ElementType_t(elementType)) {
+        case MIXED : {
+            int position = 0;
+            for (int e = 0; e < numberOfElements; ++e) {
+                cg_npe(ElementType_t(connectivities[position]), &numberOfVertices);
+                std::vector<int> element(numberOfVertices);
+                for (int k = 0; k < numberOfVertices; ++k)
+                    element[k] = connectivities[position + 1 + k] - 1;
+                element.emplace_back(elementStart - 1 + e);
+                switch (connectivities[position]) {
+                    case TETRA_4: {
+                        this->gridData->tetrahedronConnectivity.emplace_back(std::array<int, 5>());
+                        std::copy_n(std::begin(element), 5, std::begin(this->gridData->tetrahedronConnectivity.back()));
+                        break;
+                    }
+                    case HEXA_8: {
+                        this->gridData->hexahedronConnectivity.emplace_back(std::array<int, 9>());
+                        std::copy_n(std::begin(element), 9, std::begin(this->gridData->hexahedronConnectivity.back()));
+                        break;
+                    }
+                    case PENTA_6: {
+                        this->gridData->prismConnectivity.emplace_back(std::array<int, 7>());
+                        std::copy_n(std::begin(element), 7, std::begin(this->gridData->prismConnectivity.back()));
+                        break;
+                    }
+                    case PYRA_5: {
+                        this->gridData->pyramidConnectivity.emplace_back(std::array<int, 6>());
+                        std::copy_n(std::begin(element), 6, std::begin(this->gridData->pyramidConnectivity.back()));
+                        break;
+                    }
+                    case TRI_3: {
+                        this->gridData->triangleConnectivity.emplace_back(std::array<int, 4>());
+                        std::copy_n(std::begin(element), 4, std::begin(this->gridData->triangleConnectivity.back()));
+                        break;
+                    }
+                    case QUAD_4: {
+                        this->gridData->quadrangleConnectivity.emplace_back(std::array<int, 5>());
+                        std::copy_n(std::begin(element), 5, std::begin(this->gridData->quadrangleConnectivity.back()));
+                        break;
+                    }
+                }
+                position += numberOfVertices + 1;
+            }
+            break;
+        }
+        case TETRA_4: {
+            for (int e = 0; e < numberOfElements; ++e) {
+                this->gridData->tetrahedronConnectivity.emplace_back(std::array<int, 5>());
+                auto& tetrahedron = this->gridData->tetrahedronConnectivity.back();
+                for (int k = 0; k < numberOfVertices; ++k)
+                    tetrahedron[k] = connectivities[e * numberOfVertices + k] - 1;
+                tetrahedron.back() = elementStart - 1 + e;
+            }
+            break;
+        }
+        case HEXA_8: {
+            for (int e = 0; e < numberOfElements; ++e) {
+                this->gridData->hexahedronConnectivity.emplace_back(std::array<int, 9>());
+                auto& hexahedron = this->gridData->hexahedronConnectivity.back();
+                for (int k = 0; k < numberOfVertices; ++k)
+                    hexahedron[k] = connectivities[e * numberOfVertices + k] - 1;
+                hexahedron.back() = elementStart - 1 + e;
+            }
+            break;
+        }
+        case PENTA_6: {
+            for (int e = 0; e < numberOfElements; ++e) {
+                this->gridData->prismConnectivity.emplace_back(std::array<int, 7>());
+                auto& prism = this->gridData->prismConnectivity.back();
+                for (int k = 0; k < numberOfVertices; ++k)
+                    prism[k] = connectivities[e * numberOfVertices + k] - 1;
+                prism.back() = elementStart - 1 + e;
+            }
+            break;
+        }
+       case PYRA_5: {
+            for (int e = 0; e < numberOfElements; ++e) {
+                this->gridData->pyramidConnectivity.emplace_back(std::array<int, 6>());
+                auto& pyramid = this->gridData->pyramidConnectivity.back();
+                for (int k = 0; k < numberOfVertices; ++k)
+                    pyramid[k] = connectivities[e * numberOfVertices + k] - 1;
+                pyramid.back() = elementStart - 1 + e;
+            }
+            break;
+        }
+        case TRI_3: {
+            for (int e = 0; e < numberOfElements; ++e) {
+                this->gridData->triangleConnectivity.emplace_back(std::array<int, 4>());
+                auto& triangle = this->gridData->triangleConnectivity.back();
+                for (int k = 0; k < numberOfVertices; ++k)
+                    triangle[k] = connectivities[e * numberOfVertices + k] - 1;
+                triangle.back() = elementStart - 1 + e;
+            }
+            break;
+        }
+        case QUAD_4: {
+            for (int e = 0; e < numberOfElements; ++e) {
+                this->gridData->quadrangleConnectivity.emplace_back(std::array<int, 5>());
+                auto& quadrangle = this->gridData->quadrangleConnectivity.back();
+                for (int k = 0; k < numberOfVertices; ++k)
+                    quadrangle[k] = connectivities[e * numberOfVertices + k] - 1;
+                quadrangle.back() = elementStart - 1 + e;
+            }
+            break;
+        }
+        case BAR_2: {
+            for (int e = 0; e < numberOfElements; ++e) {
+                this->gridData->lineConnectivity.emplace_back(std::array<int, 3>());
+                auto& line = this->gridData->lineConnectivity.back();
+                for (int k = 0; k < numberOfVertices; ++k)
+                    line[k] = connectivities[e * numberOfVertices + k] - 1;
+                line.back() = elementStart - 1 + e;
+            }
+            break;
+        }
+        default:
+            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Section " + std::string(this->buffer) + " element type " + std::to_string(elementType) + " not supported");
+    }
+}
+
 int CgnsReader::readSolutionIndex(std::string solutionName) {
     int numberOfSolutions;
     if (cg_nsols(this->fileIndex, this->baseIndex, this->zoneIndex, &numberOfSolutions))
