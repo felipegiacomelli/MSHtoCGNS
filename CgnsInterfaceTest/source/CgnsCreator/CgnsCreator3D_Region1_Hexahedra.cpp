@@ -101,8 +101,8 @@ TestCase(Elements) {
     checkEqual(hexahedra[7][8], 7);
 
     cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
-    check(std::string(this->name) == std::string("GEOMETRY"));
-    check(this->type == HEXA_8);
+    checkEqual(std::string(this->name), std::string("GEOMETRY"));
+    checkEqual(this->type, HEXA_8);
     checkEqual(this->elementStart, 1);
     checkEqual(this->elementEnd  , 8);
 }
@@ -143,7 +143,7 @@ TestCase(Regions) {
 TestCase(Geometry) {
     auto region = this->gridData->regions[0];
 
-    check(region.name == std::string("GEOMETRY"));
+    checkEqual(region.name, std::string("GEOMETRY"));
 
     checkEqual(region.begin, 0);
     checkEqual(region.end, 8);
@@ -156,7 +156,7 @@ TestCase(Boundaries) {
 TestCase(West) {
     auto boundary = this->gridData->boundaries[0];
 
-    check(boundary.name == std::string("WEST"));
+    checkEqual(boundary.name, std::string("WEST"));
 
     checkEqual(boundary.begin, 8);
     checkEqual(boundary.end, 12);
@@ -181,7 +181,7 @@ TestCase(West) {
 TestCase(East) {
     auto boundary = this->gridData->boundaries[1];
 
-    check(boundary.name == std::string("EAST"));
+    checkEqual(boundary.name, std::string("EAST"));
 
     checkEqual(boundary.begin, 12);
     checkEqual(boundary.end, 16);
@@ -206,7 +206,7 @@ TestCase(East) {
 TestCase(South) {
     auto boundary = this->gridData->boundaries[2];
 
-    check(boundary.name == std::string("SOUTH"));
+    checkEqual(boundary.name, std::string("SOUTH"));
 
     checkEqual(boundary.begin, 16);
     checkEqual(boundary.end, 20);
@@ -231,7 +231,7 @@ TestCase(South) {
 TestCase(North) {
     auto boundary = this->gridData->boundaries[3];
 
-    check(boundary.name == std::string("NORTH"));
+    checkEqual(boundary.name, std::string("NORTH"));
 
     checkEqual(boundary.begin, 20);
     checkEqual(boundary.end, 24);
@@ -256,7 +256,7 @@ TestCase(North) {
 TestCase(Bottom) {
     auto boundary = this->gridData->boundaries[4];
 
-    check(boundary.name == std::string("BOTTOM"));
+    checkEqual(boundary.name, std::string("BOTTOM"));
 
     checkEqual(boundary.begin, 24);
     checkEqual(boundary.end, 28);
@@ -281,7 +281,7 @@ TestCase(Bottom) {
 TestCase(Top) {
     auto boundary = this->gridData->boundaries[5];
 
-    check(boundary.name == std::string("TOP"));
+    checkEqual(boundary.name, std::string("TOP"));
 
     checkEqual(boundary.begin, 28);
     checkEqual(boundary.end, 32);

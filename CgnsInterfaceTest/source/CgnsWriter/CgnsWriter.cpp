@@ -73,7 +73,7 @@ TestCase(CgnsWriterTest) {
     int solutionNumber = 1;
     cg_sol_info(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, this->buffer, &this->location);
     checkEqual(this->buffer, "TimeStep1");
-    check(location == Vertex);
+    checkEqual(location, Vertex);
 
     int numberOfFields;
     cg_nfields(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, &numberOfFields);
@@ -94,7 +94,7 @@ TestCase(CgnsWriterTest) {
     solutionNumber = 2;
     cg_sol_info(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, this->buffer, &this->location);
     checkEqual(this->buffer, "TimeStep2");
-    check(location == Vertex);
+    checkEqual(location, Vertex);
 
     cg_nfields(this->fileIndex, this->baseIndex, this->zoneIndex, solutionNumber, &numberOfFields);
     checkEqual(numberOfFields, 2);

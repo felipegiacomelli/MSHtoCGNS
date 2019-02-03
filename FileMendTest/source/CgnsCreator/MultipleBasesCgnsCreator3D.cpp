@@ -55,7 +55,7 @@ TestCase(Base1Case) {
 
     int baseIndex = 1;
     cg_base_read(this->fileIndex, baseIndex, this->buffer, &this->cellDimension, &this->physicalDimension);
-    check(std::string(this->buffer) == "ROCK");
+    checkEqual(std::string(this->buffer), "ROCK");
 
     int numberOfZones;
     cg_nzones(this->fileIndex, baseIndex, &numberOfZones);
@@ -63,7 +63,7 @@ TestCase(Base1Case) {
 
     int zoneIndex = 1;
     cg_zone_read(this->fileIndex, baseIndex, zoneIndex, this->buffer, this->sizes);
-    check(std::string(this->buffer) == "ROCK");
+    checkEqual(std::string(this->buffer), "ROCK");
     checkEqual(this->sizes[0], 152);
     checkEqual(this->sizes[1], 72);
     checkEqual(this->sizes[2], 0);
@@ -80,7 +80,7 @@ TestCase(Base2Case) {
 
     int baseIndex = 2;
     cg_base_read(this->fileIndex, baseIndex, this->buffer, &this->cellDimension, &this->physicalDimension);
-    check(std::string(this->buffer) == "RESERVOIR");
+    checkEqual(std::string(this->buffer), "RESERVOIR");
 
     int numberOfZones;
     cg_nzones(this->fileIndex, baseIndex, &numberOfZones);
@@ -88,7 +88,7 @@ TestCase(Base2Case) {
 
     int zoneIndex = 1;
     cg_zone_read(this->fileIndex, baseIndex, zoneIndex, this->buffer, this->sizes);
-    check(std::string(this->buffer) == "RESERVOIR");
+    checkEqual(std::string(this->buffer), "RESERVOIR");
     checkEqual(this->sizes[0], 27);
     checkEqual(this->sizes[1], 8);
     checkEqual(this->sizes[2], 0);

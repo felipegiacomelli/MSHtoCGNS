@@ -74,7 +74,7 @@ TestCase(Regions) {
 TestCase(A) {
     auto region = this->gridData->regions[0];
 
-    check(region.name == std::string("A"));
+    checkEqual(region.name, std::string("A"));
 
     checkEqual(region.begin, 0);
     checkEqual(region.end, 1);
@@ -90,7 +90,7 @@ TestCase(A) {
 TestCase(B) {
     auto region = this->gridData->regions[1];
 
-    check(region.name == std::string("B"));
+    checkEqual(region.name, std::string("B"));
 
     checkEqual(region.begin, 1);
     checkEqual(region.end, 5);
@@ -107,7 +107,7 @@ TestCase(B) {
 TestCase(C) {
     auto region = this->gridData->regions[2];
 
-    check(region.name == std::string("C"));
+    checkEqual(region.name, std::string("C"));
 
     checkEqual(region.begin, 5);
     checkEqual(region.end, 6);
@@ -123,7 +123,7 @@ TestCase(C) {
 TestCase(D) {
     auto region = this->gridData->regions[3];
 
-    check(region.name == std::string("D"));
+    checkEqual(region.name, std::string("D"));
 
     checkEqual(region.begin, 6);
     checkEqual(region.end, 10);
@@ -144,7 +144,7 @@ TestCase(Boundaries) {
 TestCase(West) {
     auto boundary = this->gridData->boundaries[0];
 
-    check(boundary.name == std::string("WEST"));
+    checkEqual(boundary.name, std::string("WEST"));
 
     checkEqual(boundary.begin, 10);
     checkEqual(boundary.end, 12);
@@ -159,7 +159,7 @@ TestCase(West) {
 TestCase(East) {
     auto boundary = this->gridData->boundaries[1];
 
-    check(boundary.name == std::string("EAST"));
+    checkEqual(boundary.name, std::string("EAST"));
 
     checkEqual(boundary.begin, 12);
     checkEqual(boundary.end, 14);
@@ -174,7 +174,7 @@ TestCase(East) {
 TestCase(South) {
     auto boundary = this->gridData->boundaries[2];
 
-    check(boundary.name == std::string("SOUTH"));
+    checkEqual(boundary.name, std::string("SOUTH"));
 
     checkEqual(boundary.begin, 14);
     checkEqual(boundary.end, 16);
@@ -189,7 +189,7 @@ TestCase(South) {
 TestCase(North) {
     auto boundary = this->gridData->boundaries[3];
 
-    check(boundary.name == std::string("NORTH"));
+    checkEqual(boundary.name, std::string("NORTH"));
 
     checkEqual(boundary.begin, 16);
     checkEqual(boundary.end, 18);
