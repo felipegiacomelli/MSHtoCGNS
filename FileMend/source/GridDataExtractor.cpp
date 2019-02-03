@@ -35,14 +35,17 @@ void GridDataExtractor::checkGridData() {
 void GridDataExtractor::readScript() {
     this->gridDataExtractorDatum.emplace_back();
 
-    for (auto region : this->propertyTree.get_child("regions"))
-        this->gridDataExtractorDatum.back().regions.emplace_back(region.second.get_value<std::string>());
+    if (this->propertyTree.get_child_optional("regions"))
+        for (auto region : this->propertyTree.get_child("regions"))
+            this->gridDataExtractorDatum.back().regions.emplace_back(region.second.get_value<std::string>());
 
-    for (auto boundary : this->propertyTree.get_child("boundaries"))
-        this->gridDataExtractorDatum.back().boundaries.emplace_back(boundary.second.get_value<std::string>());
+    if (this->propertyTree.get_child_optional("boundaries"))
+        for (auto boundary : this->propertyTree.get_child("boundaries"))
+            this->gridDataExtractorDatum.back().boundaries.emplace_back(boundary.second.get_value<std::string>());
 
-    for (auto wells : this->propertyTree.get_child("wells"))
-        this->gridDataExtractorDatum.back().wells.emplace_back(wells.second.get_value<std::string>());
+    if (this->propertyTree.get_child_optional("wells"))
+        for (auto wells : this->propertyTree.get_child("wells"))
+            this->gridDataExtractorDatum.back().wells.emplace_back(wells.second.get_value<std::string>());
 }
 
 void GridDataExtractor::buildElementConnectivities() {
