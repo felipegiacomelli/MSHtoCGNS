@@ -9,7 +9,6 @@ class CgnsReader3D : public CgnsReader {
 
     protected:
         void readCoordinates() override;
-        void readSections() override;
         bool skipSection(int elementType) override;
         void addEntity(int elementType, int elementStart, int elementEnd) override;
         void addWell(std::string&& name, int start, int end);

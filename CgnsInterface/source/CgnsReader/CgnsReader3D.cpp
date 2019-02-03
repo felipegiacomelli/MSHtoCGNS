@@ -32,34 +32,6 @@ void CgnsReader3D::readCoordinates() {
     }
 }
 
-void CgnsReader3D::readSections() {
-    for (int sectionIndex = 1; sectionIndex <= this->numberOfSections; ++sectionIndex) {
-        ElementType_t elementType;
-        int elementStart, elementEnd;
-        int lastBoundaryElement, parentFlag;
-        if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag))
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section");
-
-        if (this->skipSection(elementType))
-            continue;
-
-        int size;
-        if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element data size");
-
-        std::vector<int> connectivities(size);
-        if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], nullptr))
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section elements");
-
-        if (elementType == MIXED)
-            this->addEntity(ElementType_t(connectivities[0]), elementStart, elementEnd);
-        else
-            this->addEntity(elementType, elementStart, elementEnd);
-
-        this->addConnectivities(elementType, elementStart, elementEnd, connectivities);
-    }
-}
-
 bool CgnsReader3D::skipSection(int) {
     return false;
 }
