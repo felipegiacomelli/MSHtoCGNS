@@ -31,12 +31,14 @@ void CgnsReader::checkFile() {
 }
 
 void CgnsReader::readBase() {
-    if (cg_nbases(this->fileIndex, &this->baseIndex))
+    int numberOfBases;
+    if (cg_nbases(this->fileIndex, &numberOfBases))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of bases");
 
-    if (this->baseIndex != 1)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has more than one base");
+    if (numberOfBases < 1)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has no base");
 
+    this->baseIndex = 1;
     if (cg_base_read(this->fileIndex, this->baseIndex, this->buffer, &this->cellDimension, &this->physicalDimension))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read base");
 }
