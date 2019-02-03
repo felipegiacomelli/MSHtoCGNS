@@ -35,6 +35,16 @@ class CgnsReader {
         virtual void findRegionVertices() = 0;
         int readSolutionIndex(std::string solutionName);
 
+        template<typename T, typename U>
+        void findVertices(const std::vector<T>& connectivities, const std::vector<U>& entities, std::vector<std::set<int>>& vertices) {
+            for (const auto& connectivity : connectivities)
+                    for (unsigned e = 0u; e < entities.size(); ++e)
+                        if (connectivity.back() >= entities[e].begin && connectivity.back() < entities[e].end) {
+                            vertices[e].insert(connectivity.cbegin(), connectivity.cend() - 1);
+                            break;
+                        }
+        }
+
         boost::filesystem::path filePath;
         int fileType;
         float fileVersion;
