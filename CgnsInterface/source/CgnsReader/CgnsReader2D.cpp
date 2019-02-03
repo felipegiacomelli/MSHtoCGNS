@@ -34,6 +34,9 @@ void CgnsReader2D::readSections() {
         if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &elementEnd, &lastBoundaryElement, &parentFlag))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section");
 
+        if (this->skipSection(elementType))
+            continue;
+
         int size;
         if (cg_ElementDataSize(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &size))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element data size");
@@ -49,6 +52,10 @@ void CgnsReader2D::readSections() {
 
         this->addConnectivities(elementType, elementStart, elementEnd, connectivities);
     }
+}
+
+bool CgnsReader2D::skipSection(int) {
+    return false;
 }
 
 void CgnsReader2D::addEntity(int elementType, int elementStart, int elementEnd) {

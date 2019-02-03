@@ -9,6 +9,7 @@ class SpecialCgnsReader3D : public CgnsReader3D {
 
     private:
         void readSections() override;
+        bool skipSection(int elementType) override;
         void addWell(std::string&& name, int elementStart, int end) = delete;
 };
 

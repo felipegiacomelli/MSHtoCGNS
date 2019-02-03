@@ -74,6 +74,10 @@ void CgnsReader::createGridData() {
     this->gridData->dimension = this->cellDimension;
 }
 
+bool CgnsReader::skipSection(int) {
+    return false;
+}
+
 void CgnsReader::addRegion(std::string&& name, int begin, int end) {
     this->gridData->regions.emplace_back(RegionData());
     std::transform(name.begin(), name.end(), std::back_inserter(this->gridData->regions.back().name), ::toupper);

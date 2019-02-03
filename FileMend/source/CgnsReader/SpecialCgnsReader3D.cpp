@@ -16,12 +16,7 @@ void SpecialCgnsReader3D::readSections() {
         if (cg_section_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, this->buffer, &elementType, &elementStart, &end, &lastBoundaryElement, &parentFlag))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section");
 
-        std::string sectionName(this->buffer);
-        if (sectionName.substr(sectionName.length() - 3) == "_1D")
-            continue;
-        if (sectionName.substr(sectionName.length() - 3) == "_0D")
-            continue;
-        if (elementType == BAR_2)
+        if (this->skipSection(elementType))
             continue;
 
         int numberOfElements = end - elementStart + 1;
@@ -165,4 +160,14 @@ void SpecialCgnsReader3D::readSections() {
                 throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Section " + std::string(this->buffer) + " element type " + std::to_string(elementType) + " not supported");
         }
     }
+}
+
+bool SpecialCgnsReader3D::skipSection(int elementType) {
+    std::string sectionName(this->buffer);
+    if (sectionName.substr(sectionName.length() - 3) == "_1D" || sectionName.substr(sectionName.length() - 3) == "_0D")
+        return true;
+    else if (elementType == BAR_2)
+        return true;
+    else
+        return false;
 }
