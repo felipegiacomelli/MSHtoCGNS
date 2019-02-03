@@ -1,25 +1,19 @@
 #include "MSHtoCGNS/FileMend/GridDataExtractor.hpp"
 
 GridDataExtractor::GridDataExtractor(boost::shared_ptr<GridData> original, std::string gridDataExtractorScript) : original(original) {
-    this->checkGridData();
     boost::property_tree::read_json(gridDataExtractorScript, this->propertyTree);
-    this->readScript();
-    this->buildElementConnectivities();
-    this->extract = boost::make_shared<GridData>();
-    this->extract->dimension = 3;
-    this->extractRegions();
-    this->extractBoundaries();
-    this->extractWells();
-    this->extractVertices();
-    this->fixIndices();
+    this->initialize();
 }
 
 GridDataExtractor::GridDataExtractor(boost::shared_ptr<GridData> original, boost::property_tree::ptree propertyTree) : original(original), propertyTree(propertyTree) {
+    this->initialize();
+}
+
+void GridDataExtractor::initialize() {
     this->checkGridData();
     this->readScript();
     this->buildElementConnectivities();
-    this->extract = boost::make_shared<GridData>();
-    this->extract->dimension = 3;
+    this->createExtract();
     this->extractRegions();
     this->extractBoundaries();
     this->extractWells();
@@ -76,6 +70,11 @@ void GridDataExtractor::buildElementConnectivities() {
         this->elementConnectivities[i].pop_back();
 }
 
+void GridDataExtractor::createExtract() {
+    this->extract = boost::make_shared<GridData>();
+    this->extract->dimension = 3;
+}
+
 void GridDataExtractor::extractRegions() {
     for (auto name : this->gridDataExtractorDatum.back().regions) {
 
@@ -89,7 +88,7 @@ void GridDataExtractor::extractRegions() {
 
         for (auto element = regionBegin; element != regionEnd; ++element) {
 
-            for (auto vertex  : *element)
+            for (auto vertex : *element)
                 this->vertices.insert(vertex);
 
             element->push_back(this->localIndex++);
@@ -141,7 +140,7 @@ void GridDataExtractor::extractBoundaries() {
         std::vector<int> deleteIndices;
         for (auto i = this->original->triangleConnectivity.cbegin(); i != this->original->triangleConnectivity.cend(); ++i)
             if (i->back() >= boundary.begin && i->back() <= boundary.end)
-                deleteIndices.emplace_back(i -  this->original->triangleConnectivity.cbegin());
+                deleteIndices.emplace_back(i - this->original->triangleConnectivity.cbegin());
 
         for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); ++rit)
             this->original->triangleConnectivity.erase(this->original->triangleConnectivity.begin() + *rit);
@@ -149,7 +148,7 @@ void GridDataExtractor::extractBoundaries() {
         deleteIndices.clear();
         for (auto i = this->original->quadrangleConnectivity.cbegin(); i != this->original->quadrangleConnectivity.cend(); ++i)
             if (i->back() >= boundary.begin && i->back() <= boundary.end)
-                deleteIndices.emplace_back(i -  this->original->quadrangleConnectivity.cbegin());
+                deleteIndices.emplace_back(i - this->original->quadrangleConnectivity.cbegin());
 
         for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); ++rit)
             this->original->quadrangleConnectivity.erase(this->original->quadrangleConnectivity.begin() + *rit);

@@ -27,8 +27,10 @@ class GridDataExtractor {
         boost::shared_ptr<GridData> extract;
 
     private:
+        void initialize();
         void checkGridData();
         void readScript();
+        void createExtract();
         void buildElementConnectivities();
         void extractRegions();
         void extractBoundaries();
