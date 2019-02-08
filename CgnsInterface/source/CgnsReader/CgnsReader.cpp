@@ -100,7 +100,7 @@ void CgnsReader::readSections() {
         this->addConnectivities(connectivities);
 
         if (this->elementType == MIXED)
-            this->addEntity(ElementType_t(connectivities[0]));
+            this->addEntity(connectivities[0]);
         else
             this->addEntity(this->elementType);
     }
