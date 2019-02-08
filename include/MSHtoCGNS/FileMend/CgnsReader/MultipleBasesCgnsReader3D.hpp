@@ -6,6 +6,16 @@
 class MultipleBasesCgnsReader3D : public CgnsReader3D {
     public:
         MultipleBasesCgnsReader3D(std::string filePath);
+
+        boost::shared_ptr<GridData> read(std::string name);
+        boost::shared_ptr<GridData> read(int baseIndex);
+
+        ~MultipleBasesCgnsReader3D();
+
+    private:
+        void readBases();
+
+        std::unordered_map<std::string, int> bases;
 };
 
 #endif

@@ -3,6 +3,7 @@
 
 CgnsReader::CgnsReader(std::string filePath) : filePath(filePath) {
     this->checkFile();
+    this->readNumberOfBases();
     this->readBase();
     this->readZone();
     this->readNumberOfSections();
@@ -30,15 +31,15 @@ void CgnsReader::checkFile() {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - File version (" + std::to_string(this->fileVersion) + ") is older than 3.11");
 }
 
-void CgnsReader::readBase() {
-    int numberOfBases;
-    if (cg_nbases(this->fileIndex, &numberOfBases))
+void CgnsReader::readNumberOfBases() {
+    if (cg_nbases(this->fileIndex, &this->numberOfBases))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of bases");
 
-    if (numberOfBases < 1)
+    if (this->numberOfBases < 1)
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has no base");
+}
 
-    this->baseIndex = 1;
+void CgnsReader::readBase() {
     if (cg_base_read(this->fileIndex, this->baseIndex, this->buffer, &this->cellDimension, &this->physicalDimension))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read base");
 }

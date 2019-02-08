@@ -22,6 +22,7 @@ class CgnsReader {
 
     protected:
         void checkFile();
+        void readNumberOfBases();
         void readBase();
         void readZone();
         void readNumberOfSections();
@@ -53,9 +54,11 @@ class CgnsReader {
 
         boost::filesystem::path filePath;
         int fileType;
+        int fileIndex;
         float fileVersion;
+        int numberOfBases;
         char buffer[1024];
-        int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
+        int baseIndex = 1, zoneIndex, cellDimension, physicalDimension;
         int sizes[3];
         int numberOfSections, numberOfBoundaries;
         int one = 1;
