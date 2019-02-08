@@ -1,5 +1,4 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
-#include "MSHtoCGNS/GridData/GridData.hpp"
 #include "MSHtoCGNS/MshInterface/MshReader/MshReader2D.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader2D.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator/CgnsCreator2D.hpp"
