@@ -20,8 +20,8 @@ void WellGenerator::checkGridData() {
     if (this->gridData->wells.size() != 0u)
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of wells in gridData must be 0 and not " + std::to_string(this->gridData->wells.size()));
 
-    if (this->gridData->lineConnectivity.size() != 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->lineConnectivity.size()));
+    if (this->gridData->lines.size() != 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->lines.size()));
 }
 
 void WellGenerator::readScript() {
@@ -39,14 +39,14 @@ void WellGenerator::readScript() {
 }
 
 void WellGenerator::generateWells() {
-        this->lineConnectivityShift = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size()
-                                        + this->gridData->pyramidConnectivity.size() + this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
+        this->linesShift = this->gridData->tetrahedrons.size() + this->gridData->hexahedrons.size() + this->gridData->prisms.size()
+                                        + this->gridData->pyramids.size() + this->gridData->triangles.size() + this->gridData->quadrangles.size();
 
     for (auto wellGeneratorData : this->wellGeneratorDatum) {
 
         auto wellRegion = std::find_if(this->gridData->regions.cbegin(), this->gridData->regions.cend(), [=](auto r){return r.name == wellGeneratorData.regionName;});
 
-        for (auto i = this->gridData->prismConnectivity.cbegin(); i != this->gridData->prismConnectivity.cend(); ++i)
+        for (auto i = this->gridData->prisms.cbegin(); i != this->gridData->prisms.cend(); ++i)
             if (i->back() >= wellRegion->begin && i->back() < wellRegion->end)
                 this->prisms.emplace_back(i->cbegin(), i->cend()-1);
 
@@ -87,18 +87,18 @@ void WellGenerator::generateWells() {
         unsigned numberOfLines = vertices.size() - 1;
 
         for (unsigned i = 0; i < numberOfLines; ++i)
-            this->gridData->lineConnectivity.emplace_back(std::array<int, 3>{vertices[i], vertices[i+1], int(i) + this->lineConnectivityShift});
+            this->gridData->lines.emplace_back(std::array<int, 3>{vertices[i], vertices[i+1], int(i) + this->linesShift});
 
         std::stable_sort(vertices.begin(), vertices.end());
 
         WellData well;
         well.name = wellGeneratorData.wellName;
-        well.begin = this->lineConnectivityShift;
-        well.end = this->lineConnectivityShift +  numberOfLines;
+        well.begin = this->linesShift;
+        well.end = this->linesShift +  numberOfLines;
         well.vertices = std::move(vertices);
         this->gridData->wells.emplace_back(std::move(well));
 
-        this->lineConnectivityShift +=  numberOfLines;
+        this->linesShift +=  numberOfLines;
     }
 }
 

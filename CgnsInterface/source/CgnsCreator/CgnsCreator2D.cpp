@@ -14,24 +14,24 @@ void CgnsCreator2D::checkDimension() {
     if (this->gridData->dimension != 2)
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData dimension must be equal to 2 and not " + std::to_string(this->gridData->dimension));
 
-    if (this->gridData->tetrahedronConnectivity.size() != 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->tetrahedronConnectivity.size()));
+    if (this->gridData->tetrahedrons.size() != 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->tetrahedrons.size()));
 
-    if (this->gridData->hexahedronConnectivity.size() != 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->hexahedronConnectivity.size()));
+    if (this->gridData->hexahedrons.size() != 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->hexahedrons.size()));
 
-    if (this->gridData->prismConnectivity.size() != 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->prismConnectivity.size()));
+    if (this->gridData->prisms.size() != 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->prisms.size()));
 
-    if (this->gridData->pyramidConnectivity.size() != 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->pyramidConnectivity.size()));
+    if (this->gridData->pyramids.size() != 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->pyramids.size()));
 }
 
 void CgnsCreator2D::setDimensions() {
     this->physicalDimension = this->gridData->dimension;
     this->cellDimension = this->gridData->dimension;
     this->sizes[0] = this->gridData->coordinates.size();
-    this->sizes[1] = this->gridData->triangleConnectivity.size() + this->gridData->quadrangleConnectivity.size();
+    this->sizes[1] = this->gridData->triangles.size() + this->gridData->quadrangles.size();
     this->sizes[2] = 0;
 }
 

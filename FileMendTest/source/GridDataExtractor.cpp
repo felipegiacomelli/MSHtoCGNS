@@ -25,15 +25,15 @@ TestCase(GridDataExtractorTest) {
 
     checkEqual(this->gridData->coordinates.size(), 152u);
 
-    checkEqual(this->gridData->tetrahedronConnectivity.size(), 0u);
-    checkEqual(this->gridData->hexahedronConnectivity.size(), 72u);
-    checkEqual(this->gridData->prismConnectivity.size(), 0u);
-    checkEqual(this->gridData->pyramidConnectivity.size(), 0u);
+    checkEqual(this->gridData->tetrahedrons.size(), 0u);
+    checkEqual(this->gridData->hexahedrons.size(), 72u);
+    checkEqual(this->gridData->prisms.size(), 0u);
+    checkEqual(this->gridData->pyramids.size(), 0u);
 
-    checkEqual(this->gridData->triangleConnectivity.size(), 0u);
-    checkEqual(this->gridData->quadrangleConnectivity.size(), 96u);
+    checkEqual(this->gridData->triangles.size(), 0u);
+    checkEqual(this->gridData->quadrangles.size(), 96u);
 
-    checkEqual(this->gridData->lineConnectivity.size(), 0u);
+    checkEqual(this->gridData->lines.size(), 0u);
 
     checkEqual(this->gridData->boundaries.size(), 6u);
     checkEqual(this->gridData->regions.size(), 2u);
@@ -67,15 +67,15 @@ TestCase(GridDataExtractorTest) {
 
     checkEqual(extract->coordinates.size(), 27u);
 
-    checkEqual(extract->tetrahedronConnectivity.size(), 0u);
-    checkEqual(extract->hexahedronConnectivity.size(), 8u);
-    checkEqual(extract->prismConnectivity.size(), 0u);
-    checkEqual(extract->pyramidConnectivity.size(), 0u);
+    checkEqual(extract->tetrahedrons.size(), 0u);
+    checkEqual(extract->hexahedrons.size(), 8u);
+    checkEqual(extract->prisms.size(), 0u);
+    checkEqual(extract->pyramids.size(), 0u);
 
-    checkEqual(extract->triangleConnectivity.size(), 0u);
-    checkEqual(extract->quadrangleConnectivity.size(), 24u);
+    checkEqual(extract->triangles.size(), 0u);
+    checkEqual(extract->quadrangles.size(), 24u);
 
-    checkEqual(extract->lineConnectivity.size(), 0u);
+    checkEqual(extract->lines.size(), 0u);
 
     checkEqual(extract->boundaries.size(), 6u);
     checkEqual(extract->regions.size(), 1u);
@@ -130,7 +130,7 @@ TestCase(GridDataExtractorTest) {
     checkClose(extract->coordinates[25][0], 5.0000e-01, TOLERANCE); checkClose(extract->coordinates[25][1], 5.0000e-01, TOLERANCE); checkClose(extract->coordinates[25][2], 7.5000e-01, TOLERANCE);
     checkClose(extract->coordinates[26][0], 5.0000e-01, TOLERANCE); checkClose(extract->coordinates[26][1], 5.0000e-01, TOLERANCE); checkClose(extract->coordinates[26][2], 5.0000e-01, TOLERANCE);
 
-    auto hexahedra = extract->hexahedronConnectivity;
+    auto hexahedra = extract->hexahedrons;
 
     checkEqual(hexahedra[0][0], 20); checkEqual(hexahedra[0][1], 19); checkEqual(hexahedra[0][2],  7); checkEqual(hexahedra[0][3], 12);
     checkEqual(hexahedra[1][0], 26); checkEqual(hexahedra[1][1], 23); checkEqual(hexahedra[1][2], 15); checkEqual(hexahedra[1][3], 25);
@@ -159,7 +159,7 @@ TestCase(GridDataExtractorTest) {
     checkEqual(hexahedra[6][8], 6);
     checkEqual(hexahedra[7][8], 7);
 
-    auto quadrangles = extract->quadrangleConnectivity;
+    auto quadrangles = extract->quadrangles;
 
     checkEqual(quadrangles[ 0][0],  7); checkEqual(quadrangles[ 0][1], 19); checkEqual(quadrangles[ 0][2], 20); checkEqual(quadrangles[ 0][3], 12); checkEqual(quadrangles[ 0][4],  8);
     checkEqual(quadrangles[ 1][0], 12); checkEqual(quadrangles[ 1][1], 20); checkEqual(quadrangles[ 1][2], 18); checkEqual(quadrangles[ 1][3],  4); checkEqual(quadrangles[ 1][4],  9);
@@ -209,15 +209,15 @@ TestCase(GridDataExtractorWithWellTest) {
 
     checkEqual(extract->coordinates.size(), 2886u);
 
-    checkEqual(extract->tetrahedronConnectivity.size(), 0u);
-    checkEqual(extract->hexahedronConnectivity.size(),  1848u);
-    checkEqual(extract->prismConnectivity.size(),   924u);
-    checkEqual(extract->pyramidConnectivity.size(), 0u);
+    checkEqual(extract->tetrahedrons.size(), 0u);
+    checkEqual(extract->hexahedrons.size(),  1848u);
+    checkEqual(extract->prisms.size(),   924u);
+    checkEqual(extract->pyramids.size(), 0u);
 
-    checkEqual(extract->triangleConnectivity.size(), 0u);
-    checkEqual(extract->quadrangleConnectivity.size(), 0u);
+    checkEqual(extract->triangles.size(), 0u);
+    checkEqual(extract->quadrangles.size(), 0u);
 
-    checkEqual(extract->lineConnectivity.size(), 77u);
+    checkEqual(extract->lines.size(), 77u);
 
     checkEqual(extract->boundaries.size(), 0u);
     checkEqual(extract->regions.size(), 1u);

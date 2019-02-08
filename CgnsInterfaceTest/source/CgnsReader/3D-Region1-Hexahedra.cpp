@@ -50,7 +50,7 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-    auto hexahedra = this->gridData->hexahedronConnectivity;
+    auto hexahedra = this->gridData->hexahedrons;
 
     checkEqual(hexahedra.size(), 8u);
 
@@ -83,7 +83,7 @@ TestCase(Elements) {
 }
 
 TestCase(Facets) {
-    auto quadrangles = this->gridData->quadrangleConnectivity;
+    auto quadrangles = this->gridData->quadrangles;
 
     checkEqual(quadrangles[ 0][0],  0); checkEqual(quadrangles[ 0][1],  9); checkEqual(quadrangles[ 0][2], 12); checkEqual(quadrangles[ 0][3],  3); checkEqual(quadrangles[ 0][4],  8);
     checkEqual(quadrangles[ 1][0],  3); checkEqual(quadrangles[ 1][1], 12); checkEqual(quadrangles[ 1][2], 15); checkEqual(quadrangles[ 1][3],  6); checkEqual(quadrangles[ 1][4],  9);

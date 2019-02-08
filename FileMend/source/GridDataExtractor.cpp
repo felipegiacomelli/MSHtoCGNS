@@ -43,25 +43,25 @@ void GridDataExtractor::readScript() {
 }
 
 void GridDataExtractor::buildElementConnectivities() {
-    for (auto i = this->original->tetrahedronConnectivity.cbegin(); i != this->original->tetrahedronConnectivity.cend(); ++i)
+    for (auto i = this->original->tetrahedrons.cbegin(); i != this->original->tetrahedrons.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    for (auto i = this->original->hexahedronConnectivity.cbegin(); i != this->original->hexahedronConnectivity.cend(); ++i)
+    for (auto i = this->original->hexahedrons.cbegin(); i != this->original->hexahedrons.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    for (auto i = this->original->prismConnectivity.cbegin(); i != this->original->prismConnectivity.cend(); ++i)
+    for (auto i = this->original->prisms.cbegin(); i != this->original->prisms.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    for (auto i = this->original->pyramidConnectivity.cbegin(); i != this->original->pyramidConnectivity.cend(); ++i)
+    for (auto i = this->original->pyramids.cbegin(); i != this->original->pyramids.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    for (auto i = this->original->triangleConnectivity.cbegin(); i != this->original->triangleConnectivity.cend(); ++i)
+    for (auto i = this->original->triangles.cbegin(); i != this->original->triangles.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    for (auto i = this->original->quadrangleConnectivity.cbegin(); i != this->original->quadrangleConnectivity.cend(); ++i)
+    for (auto i = this->original->quadrangles.cbegin(); i != this->original->quadrangles.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    for (auto i = this->original->lineConnectivity.cbegin(); i != this->original->lineConnectivity.cend(); ++i)
+    for (auto i = this->original->lines.cbegin(); i != this->original->lines.cend(); ++i)
         this->elementConnectivities.emplace_back(i->cbegin(), i->cend());
 
     std::stable_sort(this->elementConnectivities.begin(), this->elementConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
@@ -97,25 +97,25 @@ void GridDataExtractor::extractRegions() {
                 case 5: {
                     std::array<int, 5> tetrahedron;
                     std::copy_n(element->cbegin(), 5, std::begin(tetrahedron));
-                    this->extract->tetrahedronConnectivity.emplace_back(std::move(tetrahedron));
+                    this->extract->tetrahedrons.emplace_back(std::move(tetrahedron));
                     break;
                 }
                 case 9: {
                     std::array<int, 9> hexahedron;
                     std::copy_n(element->cbegin(), 9, std::begin(hexahedron));
-                    this->extract->hexahedronConnectivity.emplace_back(std::move(hexahedron));
+                    this->extract->hexahedrons.emplace_back(std::move(hexahedron));
                     break;
                 }
                 case 7: {
                     std::array<int, 7> prism;
                     std::copy_n(element->cbegin(), 7, std::begin(prism));
-                    this->extract->prismConnectivity.emplace_back(std::move(prism));
+                    this->extract->prisms.emplace_back(std::move(prism));
                     break;
                 }
                 case 6: {
                     std::array<int, 6> pyramid;
                     std::copy_n(element->cbegin(), 6, std::begin(pyramid));
-                    this->extract->pyramidConnectivity.emplace_back(std::move(pyramid));
+                    this->extract->pyramids.emplace_back(std::move(pyramid));
                     break;
                 }
             }
@@ -138,20 +138,20 @@ void GridDataExtractor::extractBoundaries() {
         auto boundary(*iterator);
 
         std::vector<int> deleteIndices;
-        for (auto i = this->original->triangleConnectivity.cbegin(); i != this->original->triangleConnectivity.cend(); ++i)
+        for (auto i = this->original->triangles.cbegin(); i != this->original->triangles.cend(); ++i)
             if (i->back() >= boundary.begin && i->back() <= boundary.end)
-                deleteIndices.emplace_back(i - this->original->triangleConnectivity.cbegin());
+                deleteIndices.emplace_back(i - this->original->triangles.cbegin());
 
         for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); ++rit)
-            this->original->triangleConnectivity.erase(this->original->triangleConnectivity.begin() + *rit);
+            this->original->triangles.erase(this->original->triangles.begin() + *rit);
 
         deleteIndices.clear();
-        for (auto i = this->original->quadrangleConnectivity.cbegin(); i != this->original->quadrangleConnectivity.cend(); ++i)
+        for (auto i = this->original->quadrangles.cbegin(); i != this->original->quadrangles.cend(); ++i)
             if (i->back() >= boundary.begin && i->back() <= boundary.end)
-                deleteIndices.emplace_back(i - this->original->quadrangleConnectivity.cbegin());
+                deleteIndices.emplace_back(i - this->original->quadrangles.cbegin());
 
         for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); ++rit)
-            this->original->quadrangleConnectivity.erase(this->original->quadrangleConnectivity.begin() + *rit);
+            this->original->quadrangles.erase(this->original->quadrangles.begin() + *rit);
 
         this->original->boundaries.erase(iterator);
 
@@ -166,13 +166,13 @@ void GridDataExtractor::extractBoundaries() {
                 case 4: {
                     std::array<int, 4> triangle;
                     std::copy_n(facet->cbegin(), 4, std::begin(triangle));
-                    this->extract->triangleConnectivity.emplace_back(std::move(triangle));
+                    this->extract->triangles.emplace_back(std::move(triangle));
                     break;
                 }
                 case 5: {
                     std::array<int, 5> quadrangle;
                     std::copy_n(facet->cbegin(), 5, std::begin(quadrangle));
-                    this->extract->quadrangleConnectivity.emplace_back(std::move(quadrangle));
+                    this->extract->quadrangles.emplace_back(std::move(quadrangle));
                     break;
                 }
             }
@@ -203,7 +203,7 @@ void GridDataExtractor::extractWells() {
 
             std::array<int, 3> line;
             std::copy_n(element->cbegin(), 3, std::begin(line));
-            this->extract->lineConnectivity.emplace_back(std::move(line));
+            this->extract->lines.emplace_back(std::move(line));
         }
 
         well.begin = wellBegin->back();
@@ -224,31 +224,31 @@ void GridDataExtractor::fixIndices() {
     for (auto vertex : vertices)
         originalToExtract[vertex] = index++;
 
-    for (auto& tetrahedron : this->extract->tetrahedronConnectivity)
+    for (auto& tetrahedron : this->extract->tetrahedrons)
         for (auto vertex = tetrahedron.begin(); vertex != tetrahedron.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
-    for (auto& hexahedron : this->extract->hexahedronConnectivity)
+    for (auto& hexahedron : this->extract->hexahedrons)
         for (auto vertex = hexahedron.begin(); vertex != hexahedron.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
-    for (auto& prism : this->extract->prismConnectivity)
+    for (auto& prism : this->extract->prisms)
         for (auto vertex = prism.begin(); vertex != prism.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
-    for (auto& pyramid : this->extract->pyramidConnectivity)
+    for (auto& pyramid : this->extract->pyramids)
         for (auto vertex = pyramid.begin(); vertex != pyramid.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
-    for (auto& triangle : this->extract->triangleConnectivity)
+    for (auto& triangle : this->extract->triangles)
         for (auto vertex = triangle.begin(); vertex != triangle.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
-    for (auto& quadrangle : this->extract->quadrangleConnectivity)
+    for (auto& quadrangle : this->extract->quadrangles)
         for (auto vertex = quadrangle.begin(); vertex != quadrangle.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 
-    for (auto& line : this->extract->lineConnectivity)
+    for (auto& line : this->extract->lines)
         for (auto vertex = line.begin(); vertex != line.end() - 1; ++vertex)
             *vertex = originalToExtract[*vertex];
 

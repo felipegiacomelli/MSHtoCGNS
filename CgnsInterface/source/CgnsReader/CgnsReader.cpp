@@ -138,33 +138,33 @@ void CgnsReader::addConnectivities(const std::vector<int> connectivities) {
                 element.emplace_back(this->elementStart - 1 + e);
                 switch (connectivities[position]) {
                     case TETRA_4: {
-                        this->gridData->tetrahedronConnectivity.emplace_back(std::array<int, 5>());
-                        std::copy_n(std::begin(element), 5, std::begin(this->gridData->tetrahedronConnectivity.back()));
+                        this->gridData->tetrahedrons.emplace_back(std::array<int, 5>());
+                        std::copy_n(std::begin(element), 5, std::begin(this->gridData->tetrahedrons.back()));
                         break;
                     }
                     case HEXA_8: {
-                        this->gridData->hexahedronConnectivity.emplace_back(std::array<int, 9>());
-                        std::copy_n(std::begin(element), 9, std::begin(this->gridData->hexahedronConnectivity.back()));
+                        this->gridData->hexahedrons.emplace_back(std::array<int, 9>());
+                        std::copy_n(std::begin(element), 9, std::begin(this->gridData->hexahedrons.back()));
                         break;
                     }
                     case PENTA_6: {
-                        this->gridData->prismConnectivity.emplace_back(std::array<int, 7>());
-                        std::copy_n(std::begin(element), 7, std::begin(this->gridData->prismConnectivity.back()));
+                        this->gridData->prisms.emplace_back(std::array<int, 7>());
+                        std::copy_n(std::begin(element), 7, std::begin(this->gridData->prisms.back()));
                         break;
                     }
                     case PYRA_5: {
-                        this->gridData->pyramidConnectivity.emplace_back(std::array<int, 6>());
-                        std::copy_n(std::begin(element), 6, std::begin(this->gridData->pyramidConnectivity.back()));
+                        this->gridData->pyramids.emplace_back(std::array<int, 6>());
+                        std::copy_n(std::begin(element), 6, std::begin(this->gridData->pyramids.back()));
                         break;
                     }
                     case TRI_3: {
-                        this->gridData->triangleConnectivity.emplace_back(std::array<int, 4>());
-                        std::copy_n(std::begin(element), 4, std::begin(this->gridData->triangleConnectivity.back()));
+                        this->gridData->triangles.emplace_back(std::array<int, 4>());
+                        std::copy_n(std::begin(element), 4, std::begin(this->gridData->triangles.back()));
                         break;
                     }
                     case QUAD_4: {
-                        this->gridData->quadrangleConnectivity.emplace_back(std::array<int, 5>());
-                        std::copy_n(std::begin(element), 5, std::begin(this->gridData->quadrangleConnectivity.back()));
+                        this->gridData->quadrangles.emplace_back(std::array<int, 5>());
+                        std::copy_n(std::begin(element), 5, std::begin(this->gridData->quadrangles.back()));
                         break;
                     }
                 }
@@ -174,8 +174,8 @@ void CgnsReader::addConnectivities(const std::vector<int> connectivities) {
         }
         case TETRA_4: {
             for (int e = 0; e < numberOfElements; ++e) {
-                this->gridData->tetrahedronConnectivity.emplace_back(std::array<int, 5>());
-                auto& tetrahedron = this->gridData->tetrahedronConnectivity.back();
+                this->gridData->tetrahedrons.emplace_back(std::array<int, 5>());
+                auto& tetrahedron = this->gridData->tetrahedrons.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     tetrahedron[k] = connectivities[e * numberOfVertices + k] - 1;
                 tetrahedron.back() = this->elementStart - 1 + e;
@@ -184,8 +184,8 @@ void CgnsReader::addConnectivities(const std::vector<int> connectivities) {
         }
         case HEXA_8: {
             for (int e = 0; e < numberOfElements; ++e) {
-                this->gridData->hexahedronConnectivity.emplace_back(std::array<int, 9>());
-                auto& hexahedron = this->gridData->hexahedronConnectivity.back();
+                this->gridData->hexahedrons.emplace_back(std::array<int, 9>());
+                auto& hexahedron = this->gridData->hexahedrons.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     hexahedron[k] = connectivities[e * numberOfVertices + k] - 1;
                 hexahedron.back() = this->elementStart - 1 + e;
@@ -194,8 +194,8 @@ void CgnsReader::addConnectivities(const std::vector<int> connectivities) {
         }
         case PENTA_6: {
             for (int e = 0; e < numberOfElements; ++e) {
-                this->gridData->prismConnectivity.emplace_back(std::array<int, 7>());
-                auto& prism = this->gridData->prismConnectivity.back();
+                this->gridData->prisms.emplace_back(std::array<int, 7>());
+                auto& prism = this->gridData->prisms.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     prism[k] = connectivities[e * numberOfVertices + k] - 1;
                 prism.back() = this->elementStart - 1 + e;
@@ -204,8 +204,8 @@ void CgnsReader::addConnectivities(const std::vector<int> connectivities) {
         }
        case PYRA_5: {
             for (int e = 0; e < numberOfElements; ++e) {
-                this->gridData->pyramidConnectivity.emplace_back(std::array<int, 6>());
-                auto& pyramid = this->gridData->pyramidConnectivity.back();
+                this->gridData->pyramids.emplace_back(std::array<int, 6>());
+                auto& pyramid = this->gridData->pyramids.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     pyramid[k] = connectivities[e * numberOfVertices + k] - 1;
                 pyramid.back() = this->elementStart - 1 + e;
@@ -214,8 +214,8 @@ void CgnsReader::addConnectivities(const std::vector<int> connectivities) {
         }
         case TRI_3: {
             for (int e = 0; e < numberOfElements; ++e) {
-                this->gridData->triangleConnectivity.emplace_back(std::array<int, 4>());
-                auto& triangle = this->gridData->triangleConnectivity.back();
+                this->gridData->triangles.emplace_back(std::array<int, 4>());
+                auto& triangle = this->gridData->triangles.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     triangle[k] = connectivities[e * numberOfVertices + k] - 1;
                 triangle.back() = this->elementStart - 1 + e;
@@ -224,8 +224,8 @@ void CgnsReader::addConnectivities(const std::vector<int> connectivities) {
         }
         case QUAD_4: {
             for (int e = 0; e < numberOfElements; ++e) {
-                this->gridData->quadrangleConnectivity.emplace_back(std::array<int, 5>());
-                auto& quadrangle = this->gridData->quadrangleConnectivity.back();
+                this->gridData->quadrangles.emplace_back(std::array<int, 5>());
+                auto& quadrangle = this->gridData->quadrangles.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     quadrangle[k] = connectivities[e * numberOfVertices + k] - 1;
                 quadrangle.back() = this->elementStart - 1 + e;
@@ -234,8 +234,8 @@ void CgnsReader::addConnectivities(const std::vector<int> connectivities) {
         }
         case BAR_2: {
             for (int e = 0; e < numberOfElements; ++e) {
-                this->gridData->lineConnectivity.emplace_back(std::array<int, 3>());
-                auto& line = this->gridData->lineConnectivity.back();
+                this->gridData->lines.emplace_back(std::array<int, 3>());
+                auto& line = this->gridData->lines.back();
                 for (int k = 0; k < numberOfVertices; ++k)
                     line[k] = connectivities[e * numberOfVertices + k] - 1;
                 line.back() = this->elementStart - 1 + e;

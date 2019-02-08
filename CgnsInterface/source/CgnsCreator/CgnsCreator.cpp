@@ -37,33 +37,33 @@ void CgnsCreator::writeZone() {
 }
 
 void CgnsCreator::buildGlobalConnectivities() {
-    for (auto i = this->gridData->tetrahedronConnectivity.cbegin(); i != this->gridData->tetrahedronConnectivity.cend(); ++i) {
+    for (auto i = this->gridData->tetrahedrons.cbegin(); i != this->gridData->tetrahedrons.cend(); ++i) {
         this->globalConnectivities.emplace_back(std::vector<int>());
         std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
     }
-    for (auto i = this->gridData->hexahedronConnectivity.cbegin(); i != this->gridData->hexahedronConnectivity.cend(); ++i) {
+    for (auto i = this->gridData->hexahedrons.cbegin(); i != this->gridData->hexahedrons.cend(); ++i) {
         this->globalConnectivities.emplace_back(std::vector<int>());
         std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
     }
-    for (auto i = this->gridData->prismConnectivity.cbegin(); i != this->gridData->prismConnectivity.cend(); ++i) {
+    for (auto i = this->gridData->prisms.cbegin(); i != this->gridData->prisms.cend(); ++i) {
         this->globalConnectivities.emplace_back(std::vector<int>());
         std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
     }
-    for (auto i = this->gridData->pyramidConnectivity.cbegin(); i != this->gridData->pyramidConnectivity.cend(); ++i) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
-    }
-
-    for (auto i = this->gridData->triangleConnectivity.cbegin(); i != this->gridData->triangleConnectivity.cend(); ++i) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
-    }
-    for (auto i = this->gridData->quadrangleConnectivity.cbegin(); i != this->gridData->quadrangleConnectivity.cend(); ++i) {
+    for (auto i = this->gridData->pyramids.cbegin(); i != this->gridData->pyramids.cend(); ++i) {
         this->globalConnectivities.emplace_back(std::vector<int>());
         std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
     }
 
-    for (auto i = this->gridData->lineConnectivity.cbegin(); i != this->gridData->lineConnectivity.cend(); ++i) {
+    for (auto i = this->gridData->triangles.cbegin(); i != this->gridData->triangles.cend(); ++i) {
+        this->globalConnectivities.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+    }
+    for (auto i = this->gridData->quadrangles.cbegin(); i != this->gridData->quadrangles.cend(); ++i) {
+        this->globalConnectivities.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+    }
+
+    for (auto i = this->gridData->lines.cbegin(); i != this->gridData->lines.cend(); ++i) {
         this->globalConnectivities.emplace_back(std::vector<int>());
         std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
     }

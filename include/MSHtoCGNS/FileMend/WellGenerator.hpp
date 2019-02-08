@@ -39,7 +39,7 @@ class WellGenerator {
         boost::property_tree::ptree propertyTree;
 
         std::vector<WellGeneratorData> wellGeneratorDatum;
-        int lineConnectivityShift;
+        int linesShift;
 
         int currentIndex = -1;
         std::vector<std::vector<int>> prisms;

@@ -55,7 +55,7 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-    auto tetrahedra = this->gridData->tetrahedronConnectivity;
+    auto tetrahedra = this->gridData->tetrahedrons;
 
     checkEqual(tetrahedra.size(), 24u);
     checkEqual(tetrahedra[ 0][0], 13); checkEqual(tetrahedra[ 0][1],  9); checkEqual(tetrahedra[ 0][2], 10); checkEqual(tetrahedra[ 0][3], 12);
@@ -91,7 +91,7 @@ TestCase(Elements) {
 }
 
 TestCase(Facets) {
-    auto triangles = this->gridData->triangleConnectivity;
+    auto triangles = this->gridData->triangles;
 
     checkEqual(triangles.size(), 24u);
     checkEqual(triangles[ 0][0],  0); checkEqual(triangles[ 0][1],  8); checkEqual(triangles[ 0][2],  3); checkEqual(triangles[ 0][3], 24);

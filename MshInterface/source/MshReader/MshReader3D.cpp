@@ -35,13 +35,13 @@ void MshReader3D::addElements() {
             begin->push_back(this->shift++);
             switch ((*begin)[this->typeIndex]) {
                 case 3: {
-                    this->gridData->tetrahedronConnectivity.emplace_back(std::array<int, 5>());
-                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 5, std::begin(this->gridData->tetrahedronConnectivity.back()));
+                    this->gridData->tetrahedrons.emplace_back(std::array<int, 5>());
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 5, std::begin(this->gridData->tetrahedrons.back()));
                     break;
                 }
                 case 4: {
-                    this->gridData->hexahedronConnectivity.emplace_back(std::array<int, 9>());
-                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 9, std::begin(this->gridData->hexahedronConnectivity.back()));
+                    this->gridData->hexahedrons.emplace_back(std::array<int, 9>());
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 9, std::begin(this->gridData->hexahedrons.back()));
                     break;
                 }
                 default:
@@ -61,13 +61,13 @@ void MshReader3D::addFacets() {
             begin->push_back(this->shift++);
             switch ((*begin)[this->typeIndex]) {
                 case 1: {
-                    this->gridData->triangleConnectivity.emplace_back(std::array<int, 4>());
-                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 4, std::begin(this->gridData->triangleConnectivity.back()));
+                    this->gridData->triangles.emplace_back(std::array<int, 4>());
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 4, std::begin(this->gridData->triangles.back()));
                     break;
                 }
                 case 2: {
-                    this->gridData->quadrangleConnectivity.emplace_back(std::array<int, 5>());
-                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 5, std::begin(this->gridData->quadrangleConnectivity.back()));
+                    this->gridData->quadrangles.emplace_back(std::array<int, 5>());
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 5, std::begin(this->gridData->quadrangles.back()));
                     break;
                 }
                 default:
@@ -82,11 +82,11 @@ void MshReader3D::findBoundaryVertices() {
     for (auto& boundary : this->gridData->boundaries) {
         std::set<int> vertices;
 
-        for (const auto& triangle : this->gridData->triangleConnectivity)
+        for (const auto& triangle : this->gridData->triangles)
             if (triangle.back() >= boundary.begin && triangle.back() < boundary.end)
                 vertices.insert(triangle.cbegin(), triangle.cend() - 1);
 
-        for (const auto& quadrangle : this->gridData->quadrangleConnectivity)
+        for (const auto& quadrangle : this->gridData->quadrangles)
             if (quadrangle.back() >= boundary.begin && quadrangle.back() < boundary.end)
                 vertices.insert(quadrangle.cbegin(), quadrangle.cend() - 1);
 
@@ -98,19 +98,19 @@ void MshReader3D::findRegionVertices() {
     for (auto& region : this->gridData->regions) {
         std::set<int> vertices;
 
-        for (const auto& tetrahedron : this->gridData->tetrahedronConnectivity)
+        for (const auto& tetrahedron : this->gridData->tetrahedrons)
             if (tetrahedron.back() >= region.begin && tetrahedron.back() < region.end)
                 vertices.insert(tetrahedron.cbegin(), tetrahedron.cend() - 1);
 
-        for (const auto& hexahedron : this->gridData->hexahedronConnectivity)
+        for (const auto& hexahedron : this->gridData->hexahedrons)
             if (hexahedron.back() >= region.begin && hexahedron.back() < region.end)
                 vertices.insert(hexahedron.cbegin(), hexahedron.cend() - 1);
 
-        for (const auto& prism : this->gridData->prismConnectivity)
+        for (const auto& prism : this->gridData->prisms)
             if (prism.back() >= region.begin && prism.back() < region.end)
                 vertices.insert(prism.cbegin(), prism.cend() - 1);
 
-        for (const auto& pyramid : this->gridData->pyramidConnectivity)
+        for (const auto& pyramid : this->gridData->pyramids)
             if (pyramid.back() >= region.begin && pyramid.back() < region.end)
                 vertices.insert(pyramid.cbegin(), pyramid.cend() - 1);
 

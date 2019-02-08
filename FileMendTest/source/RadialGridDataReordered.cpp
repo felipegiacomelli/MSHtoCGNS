@@ -27,15 +27,15 @@ TestCase(RadialGridDataReorderedTest) {
 
     checkEqual(reordered->coordinates.size(), 370u);
 
-    checkEqual(reordered->tetrahedronConnectivity.size(), 0u);
-    checkEqual(reordered->hexahedronConnectivity.size(), 216u);
-    checkEqual(reordered->prismConnectivity.size(), 108u);
-    checkEqual(reordered->pyramidConnectivity.size(), 0u);
+    checkEqual(reordered->tetrahedrons.size(), 0u);
+    checkEqual(reordered->hexahedrons.size(), 216u);
+    checkEqual(reordered->prisms.size(), 108u);
+    checkEqual(reordered->pyramids.size(), 0u);
 
-    checkEqual(reordered->triangleConnectivity.size(),  24u);
-    checkEqual(reordered->quadrangleConnectivity.size(), 156u);
+    checkEqual(reordered->triangles.size(),  24u);
+    checkEqual(reordered->quadrangles.size(), 156u);
 
-    checkEqual(reordered->lineConnectivity.size(), 9u);
+    checkEqual(reordered->lines.size(), 9u);
 
     checkEqual(reordered->boundaries.size(), 3u);
     checkEqual(reordered->regions.size(), 1u);
@@ -60,28 +60,28 @@ TestCase(RadialGridDataReorderedTest) {
         int shift = 36 * i;
 
         for (int j = 0; j < 12; ++j)
-            checkEqual(reordered->prismConnectivity[12*i + j].back(), shift++);
+            checkEqual(reordered->prisms[12*i + j].back(), shift++);
 
         for (int j = 0; j < 24; ++j)
-            checkEqual(reordered->hexahedronConnectivity[24*i + j].back(), shift++);
+            checkEqual(reordered->hexahedrons[24*i + j].back(), shift++);
     }
 
     for (int i = 0; i < 108; ++i) {
-        checkEqual(reordered->quadrangleConnectivity[i].back(), 324 + i);
+        checkEqual(reordered->quadrangles[i].back(), 324 + i);
     }
 
     for (int i = 0; i < 12; ++i) {
-        checkEqual(reordered->triangleConnectivity[i     ].back(), 432 + i);
-        checkEqual(reordered->triangleConnectivity[i + 12].back(), 468 + i);
+        checkEqual(reordered->triangles[i     ].back(), 432 + i);
+        checkEqual(reordered->triangles[i + 12].back(), 468 + i);
     }
 
     for (int i = 0; i < 24; ++i) {
-        checkEqual(reordered->quadrangleConnectivity[i + 108].back(), 444 + i);
-        checkEqual(reordered->quadrangleConnectivity[i + 132].back(), 480 + i);
+        checkEqual(reordered->quadrangles[i + 108].back(), 444 + i);
+        checkEqual(reordered->quadrangles[i + 132].back(), 480 + i);
     }
 
     for (int i = 0; i < 9; ++i)
-        checkEqual(reordered->lineConnectivity[i].back(), 504 + i);
+        checkEqual(reordered->lines[i].back(), 504 + i);
 
     for (int i = 0; i < 37; ++i) {
         checkSmall(reordered->coordinates[37 * 0 + i][2], TOLERANCE);

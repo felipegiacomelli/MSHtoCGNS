@@ -40,7 +40,7 @@ void CgnsReader2D::addEntity(int elementType) {
 void CgnsReader2D::findBoundaryVertices() {
     std::vector<std::set<int>> vertices(this->gridData->boundaries.size());
 
-    this->findVertices(this->gridData->lineConnectivity, this->gridData->boundaries, vertices);
+    this->findVertices(this->gridData->lines, this->gridData->boundaries, vertices);
 
     for (unsigned b = 0u; b < this->gridData->boundaries.size(); ++b)
         this->gridData->boundaries[b].vertices = std::vector<int>(vertices[b].begin(), vertices[b].end());
@@ -49,8 +49,8 @@ void CgnsReader2D::findBoundaryVertices() {
 void CgnsReader2D::findRegionVertices() {
     std::vector<std::set<int>> vertices(this->gridData->regions.size());
 
-    this->findVertices(this->gridData->triangleConnectivity, this->gridData->regions, vertices);
-    this->findVertices(this->gridData->quadrangleConnectivity, this->gridData->regions, vertices);
+    this->findVertices(this->gridData->triangles, this->gridData->regions, vertices);
+    this->findVertices(this->gridData->quadrangles, this->gridData->regions, vertices);
 
     for (unsigned r = 0u; r < this->gridData->regions.size(); ++r)
         this->gridData->regions[r].vertices = std::vector<int>(vertices[r].begin(), vertices[r].end());

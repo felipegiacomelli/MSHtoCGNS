@@ -30,15 +30,15 @@ TestCase(SegmentGridExtractorTest) {
 
     checkEqual(segmentGrid->coordinates.size(), 74u);
 
-    checkEqual(segmentGrid->tetrahedronConnectivity.size(), 0u);
-    checkEqual(segmentGrid->hexahedronConnectivity.size(), 24u);
-    checkEqual(segmentGrid->prismConnectivity.size(), 12u);
-    checkEqual(segmentGrid->pyramidConnectivity.size(), 0u);
+    checkEqual(segmentGrid->tetrahedrons.size(), 0u);
+    checkEqual(segmentGrid->hexahedrons.size(), 24u);
+    checkEqual(segmentGrid->prisms.size(), 12u);
+    checkEqual(segmentGrid->pyramids.size(), 0u);
 
-    checkEqual(segmentGrid->triangleConnectivity.size(), 24u);
-    checkEqual(segmentGrid->quadrangleConnectivity.size(), 60u);
+    checkEqual(segmentGrid->triangles.size(), 24u);
+    checkEqual(segmentGrid->quadrangles.size(), 60u);
 
-    checkEqual(segmentGrid->lineConnectivity.size(), 1u);
+    checkEqual(segmentGrid->lines.size(), 1u);
 
     checkEqual(segmentGrid->boundaries.size(), 3u);
     checkEqual(segmentGrid->regions.size(), 1u);
@@ -69,31 +69,31 @@ TestCase(SegmentGridExtractorTest) {
     checkEqual(segmentGrid->wells[0].vertices[1], 37);
 
     for (int j = 0; j < 12; ++j)
-        checkEqual(segmentGrid->prismConnectivity[j].back(), j);
+        checkEqual(segmentGrid->prisms[j].back(), j);
 
     for (int j = 0; j < 24; ++j)
-        checkEqual(segmentGrid->hexahedronConnectivity[j].back(), 12 + j);
+        checkEqual(segmentGrid->hexahedrons[j].back(), 12 + j);
 
     for (int j = 0; j < 12; ++j)
-        checkEqual(segmentGrid->quadrangleConnectivity[j].back(), 36 + j);
+        checkEqual(segmentGrid->quadrangles[j].back(), 36 + j);
 
     for (int j = 0; j < 12; ++j) {
-        checkEqual(segmentGrid->triangleConnectivity[j     ].back(), 48 + j);
-        checkEqual(segmentGrid->triangleConnectivity[j + 12].back(), 84 + j);
+        checkEqual(segmentGrid->triangles[j     ].back(), 48 + j);
+        checkEqual(segmentGrid->triangles[j + 12].back(), 84 + j);
     }
 
     for (int j = 0; j < 24; ++j) {
-        checkEqual(segmentGrid->quadrangleConnectivity[j + 12].back(), 60 + j);
-        checkEqual(segmentGrid->quadrangleConnectivity[j + 36].back(), 96 + j);
+        checkEqual(segmentGrid->quadrangles[j + 12].back(), 60 + j);
+        checkEqual(segmentGrid->quadrangles[j + 36].back(), 96 + j);
     }
 
-    checkEqual(segmentGrid->lineConnectivity[0].back(), 120);
+    checkEqual(segmentGrid->lines[0].back(), 120);
 
     for (int j = 0; j < 12; ++j)
-        check(std::all_of(segmentGrid->triangleConnectivity[j + 12].cbegin(), segmentGrid->triangleConnectivity[j + 12].cend() - 1, [=](auto v){return v >= 37 && v < 74;}));
+        check(std::all_of(segmentGrid->triangles[j + 12].cbegin(), segmentGrid->triangles[j + 12].cend() - 1, [=](auto v){return v >= 37 && v < 74;}));
 
     for (int j = 0; j < 24; ++j)
-        check(std::all_of(segmentGrid->quadrangleConnectivity[j + 36].cbegin(), segmentGrid->quadrangleConnectivity[j + 36].cend() - 1, [=](auto v){return v >= 37 && v < 74;}));
+        check(std::all_of(segmentGrid->quadrangles[j + 36].cbegin(), segmentGrid->quadrangles[j + 36].cend() - 1, [=](auto v){return v >= 37 && v < 74;}));
 
     for (int j = 0; j < 37; ++j) {
         checkSmall(segmentGrid->coordinates[37 * 0 + j][2], TOLERANCE);

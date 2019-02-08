@@ -46,7 +46,7 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-    auto triangles = this->gridData->triangleConnectivity;
+    auto triangles = this->gridData->triangles;
 
     checkEqual(triangles.size(), 4u);
     checkEqual(triangles[0][0], 0); checkEqual(triangles[0][1], 1); checkEqual(triangles[0][2], 4); checkEqual(triangles[0][3], 0);
@@ -62,7 +62,7 @@ TestCase(Elements) {
 }
 
 TestCase(Facets) {
-    auto lines = this->gridData->lineConnectivity;
+    auto lines = this->gridData->lines;
 
     checkEqual(lines.size(), 4u);
     checkEqual(lines[0][0], 3); checkEqual(lines[0][1], 0); checkEqual(lines[0][2], 4);

@@ -32,7 +32,7 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-    auto quadrangles = this->gridData->quadrangleConnectivity;
+    auto quadrangles = this->gridData->quadrangles;
 
     checkEqual(quadrangles.size(), 4u);
     checkEqual(quadrangles[0][0], 0); checkEqual(quadrangles[0][1], 4); checkEqual(quadrangles[0][2], 8); checkEqual(quadrangles[0][3], 7); checkEqual(quadrangles[0][4], 0);
@@ -42,7 +42,7 @@ TestCase(Elements) {
 }
 
 TestCase(Facets) {
-    auto lines = this->gridData->lineConnectivity;
+    auto lines = this->gridData->lines;
 
     checkEqual(lines.size(), 8u);
     checkEqual(lines[0][0], 3); checkEqual(lines[0][1], 7); checkEqual(lines[0][2],  4);

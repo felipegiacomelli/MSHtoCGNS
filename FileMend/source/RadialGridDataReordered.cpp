@@ -19,26 +19,26 @@ void RadialGridDataReordered::checkGridData() {
     if (this->gridData->dimension != 3)
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData dimension must be 3 and not " + std::to_string(this->gridData->dimension));
 
-    if (this->gridData->tetrahedronConnectivity.size() != 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData tetrahedronConnectivity size must be 0 and not " + std::to_string(this->gridData->tetrahedronConnectivity.size()));
+    if (this->gridData->tetrahedrons.size() != 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData tetrahedrons size must be 0 and not " + std::to_string(this->gridData->tetrahedrons.size()));
 
-    if (this->gridData->hexahedronConnectivity.size() == 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData hexahedronConnectivity size must not be 0");
+    if (this->gridData->hexahedrons.size() == 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData hexahedrons size must not be 0");
 
-    if (this->gridData->prismConnectivity.size() == 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData prismConnectivity size must not be 0");
+    if (this->gridData->prisms.size() == 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData prisms size must not be 0");
 
-    if (this->gridData->pyramidConnectivity.size() != 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData pyramidConnectivity size must be 0 and not " + std::to_string(this->gridData->pyramidConnectivity.size()));
+    if (this->gridData->pyramids.size() != 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData pyramids size must be 0 and not " + std::to_string(this->gridData->pyramids.size()));
 
-    if (this->gridData->triangleConnectivity.size() == 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData triangleConnectivity size must not be 0");
+    if (this->gridData->triangles.size() == 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData triangles size must not be 0");
 
-    if (this->gridData->quadrangleConnectivity.size() == 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData quadrangleConnectivity size must not be 0");
+    if (this->gridData->quadrangles.size() == 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData quadrangles size must not be 0");
 
-    if (this->gridData->lineConnectivity.size() == 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData lineConnectivity size must not be 0");
+    if (this->gridData->lines.size() == 0u)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData lines size must not be 0");
 
     if (this->gridData->boundaries.size() != 3u)
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData boundaries size must be 1 and not " + std::to_string(this->gridData->boundaries.size()));
@@ -51,20 +51,20 @@ void RadialGridDataReordered::checkGridData() {
 }
 
 void RadialGridDataReordered::defineQuantities() {
-    this->numberOfSegments = this->gridData->lineConnectivity.size();
-    this->numberOfPrismsPerSegment = this->gridData->prismConnectivity.size() / this->numberOfSegments;
-    this->numberOfHexahedronsPerSegment = this->gridData->hexahedronConnectivity.size() / this->numberOfSegments;
+    this->numberOfSegments = this->gridData->lines.size();
+    this->numberOfPrismsPerSegment = this->gridData->prisms.size() / this->numberOfSegments;
+    this->numberOfHexahedronsPerSegment = this->gridData->hexahedrons.size() / this->numberOfSegments;
     this->numberOfHexahedronsPerRadius = this->numberOfHexahedronsPerSegment / this->numberOfPrismsPerSegment;
-    this->numberOfVerticesPerSection = this->gridData->coordinates.size() / (this->gridData->lineConnectivity.size() + 1);
+    this->numberOfVerticesPerSection = this->gridData->coordinates.size() / (this->gridData->lines.size() + 1);
 }
 
 void RadialGridDataReordered::createReordered() {
     this->reordered = boost::make_shared<GridData>();
     this->reordered->dimension = this->gridData->dimension;
 
-    this->reordered->triangleConnectivity = this->gridData->triangleConnectivity;
-    this->reordered->quadrangleConnectivity = this->gridData->quadrangleConnectivity;
-    this->reordered->lineConnectivity = this->gridData->lineConnectivity;
+    this->reordered->triangles = this->gridData->triangles;
+    this->reordered->quadrangles = this->gridData->quadrangles;
+    this->reordered->lines = this->gridData->lines;
 
     this->reordered->boundaries = this->gridData->boundaries;
 
@@ -74,8 +74,8 @@ void RadialGridDataReordered::createReordered() {
 }
 
 void RadialGridDataReordered::reorderBoundaries() {
-    int firstVertex = this->gridData->lineConnectivity.front()[0];
-    int lastVertex  = this->gridData->lineConnectivity.back()[1];
+    int firstVertex = this->gridData->lines.front()[0];
+    int lastVertex  = this->gridData->lines.back()[1];
     auto boundary = std::find_if(this->reordered->boundaries.begin(), this->reordered->boundaries.end(),
                                     [=](auto b){return !hasElement(b.vertices.cbegin(), b.vertices.cend(), firstVertex) && !hasElement(b.vertices.cbegin(), b.vertices.cend(), lastVertex);});
     std::iter_swap(this->reordered->boundaries.begin(), boundary);
@@ -88,21 +88,21 @@ void RadialGridDataReordered::reorderBoundaries() {
 }
 
 void RadialGridDataReordered::copyData() {
-    this->hexahedra = this->gridData->hexahedronConnectivity;
+    this->hexahedra = this->gridData->hexahedrons;
     for (auto i = 0u; i < this->hexahedra.size(); ++i)
         this->hexahedra[i].back() = i;
 
-    this->prisms = this->gridData->prismConnectivity;
+    this->prisms = this->gridData->prisms;
     for (auto i = 0u; i < this->prisms.size(); ++i)
         this->prisms[i].back() = i;
 
     auto boundary = this->reordered->boundaries.begin() + 1;
 
-    for (auto triangle = this->gridData->triangleConnectivity.cbegin(); triangle != this->gridData->triangleConnectivity.cend(); ++triangle)
+    for (auto triangle = this->gridData->triangles.cbegin(); triangle != this->gridData->triangles.cend(); ++triangle)
         if (triangle->back() >= boundary->begin && triangle->back() < boundary->end)
             this->triangles.emplace_back(*triangle);
 
-    for (auto quadrangle = this->gridData->quadrangleConnectivity.cbegin(); quadrangle != this->gridData->quadrangleConnectivity.cend(); ++quadrangle)
+    for (auto quadrangle = this->gridData->quadrangles.cbegin(); quadrangle != this->gridData->quadrangles.cend(); ++quadrangle)
         if (quadrangle->back() >= boundary->begin && quadrangle->back() < boundary->end)
             this->quadrangles.emplace_back(*quadrangle);
 }
@@ -184,12 +184,12 @@ void RadialGridDataReordered::updateQuadrangle(std::vector<std::array<int, 9>>::
 }
 
 void RadialGridDataReordered::copyPrism(std::vector<std::array<int, 7>>::iterator prism) {
-    this->reordered->prismConnectivity.push_back(this->gridData->prismConnectivity[prism->back()]);
+    this->reordered->prisms.push_back(this->gridData->prisms[prism->back()]);
     prism = this->prisms.erase(prism);
 }
 
 void RadialGridDataReordered::copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron) {
-    this->reordered->hexahedronConnectivity.push_back(this->gridData->hexahedronConnectivity[hexahedron->back()]);
+    this->reordered->hexahedrons.push_back(this->gridData->hexahedrons[hexahedron->back()]);
     hexahedron = this->hexahedra.erase(hexahedron);
 }
 
@@ -204,23 +204,23 @@ void RadialGridDataReordered::fixVerticesIndices() {
     for (auto vertex : this->vertices)
         originalToFinal[vertex.first] = vertex.second;
 
-    for (auto& hexahedron : this->reordered->hexahedronConnectivity)
+    for (auto& hexahedron : this->reordered->hexahedrons)
         for (auto vertex = hexahedron.begin(); vertex != hexahedron.end() - 1; ++vertex)
             *vertex = originalToFinal[*vertex];
 
-    for (auto& prism : this->reordered->prismConnectivity)
+    for (auto& prism : this->reordered->prisms)
         for (auto vertex = prism.begin(); vertex != prism.end() - 1; ++vertex)
             *vertex = originalToFinal[*vertex];
 
-    for (auto& triangle : this->reordered->triangleConnectivity)
+    for (auto& triangle : this->reordered->triangles)
         for (auto vertex = triangle.begin(); vertex != triangle.end() - 1; ++vertex)
             *vertex = originalToFinal[*vertex];
 
-    for (auto& quadrangle : this->reordered->quadrangleConnectivity)
+    for (auto& quadrangle : this->reordered->quadrangles)
         for (auto vertex = quadrangle.begin(); vertex != quadrangle.end() - 1; ++vertex)
             *vertex = originalToFinal[*vertex];
 
-    for (auto& line : this->reordered->lineConnectivity)
+    for (auto& line : this->reordered->lines)
         for (auto vertex = line.begin(); vertex != line.end() - 1; ++vertex)
             *vertex = originalToFinal[*vertex];
 
@@ -238,10 +238,10 @@ void RadialGridDataReordered::fixVerticesIndices() {
 void RadialGridDataReordered::fixElementIndices() {
     for (int s = 0; s < this->numberOfSegments; ++s) {
         for (int p = 0; p < this->numberOfPrismsPerSegment; ++p)
-            this->reordered->prismConnectivity[s * this->numberOfPrismsPerSegment + p].back() = this->elementShift++;
+            this->reordered->prisms[s * this->numberOfPrismsPerSegment + p].back() = this->elementShift++;
 
         for (int h = 0; h < this->numberOfHexahedronsPerSegment; ++h)
-            this->reordered->hexahedronConnectivity[s * this->numberOfHexahedronsPerSegment + h].back() = this->elementShift++;
+            this->reordered->hexahedrons[s * this->numberOfHexahedronsPerSegment + h].back() = this->elementShift++;
     }
 }
 
@@ -250,7 +250,7 @@ void RadialGridDataReordered::fixFacetIndices() {
     this->triangles.clear();
 
     auto boundary = this->reordered->boundaries.begin();
-    for (auto quadrangle = this->reordered->quadrangleConnectivity.cbegin(); quadrangle != this->reordered->quadrangleConnectivity.cend(); ++quadrangle)
+    for (auto quadrangle = this->reordered->quadrangles.cbegin(); quadrangle != this->reordered->quadrangles.cend(); ++quadrangle)
         if (quadrangle->back() >= boundary->begin && quadrangle->back() < boundary->end)
             this->quadrangles.emplace_back(*quadrangle);
 
@@ -265,13 +265,13 @@ void RadialGridDataReordered::fixFacetIndices() {
 
     boundary = this->reordered->boundaries.begin() + 1;
     boundary->begin = this->elementShift;
-    for (auto triangle = this->reordered->triangleConnectivity.cbegin(); triangle != this->reordered->triangleConnectivity.cend(); ++triangle)
+    for (auto triangle = this->reordered->triangles.cbegin(); triangle != this->reordered->triangles.cend(); ++triangle)
         if (triangle->back() >= boundary->begin && triangle->back() < boundary->end) {
             this->triangles.emplace_back(*triangle);
             this->triangles.back().back() = this->elementShift++;
         }
 
-    for (auto quadrangle = this->reordered->quadrangleConnectivity.cbegin(); quadrangle != this->reordered->quadrangleConnectivity.cend(); ++quadrangle)
+    for (auto quadrangle = this->reordered->quadrangles.cbegin(); quadrangle != this->reordered->quadrangles.cend(); ++quadrangle)
         if (quadrangle->back() >= boundary->begin && quadrangle->back() < boundary->end) {
             this->quadrangles.emplace_back(*quadrangle);
             this->quadrangles.back().back() = this->elementShift++;
@@ -280,26 +280,26 @@ void RadialGridDataReordered::fixFacetIndices() {
 
     boundary = this->reordered->boundaries.begin() + 2;
     boundary->begin = this->elementShift;
-    for (auto triangle = this->reordered->triangleConnectivity.cbegin(); triangle != this->reordered->triangleConnectivity.cend(); ++triangle)
+    for (auto triangle = this->reordered->triangles.cbegin(); triangle != this->reordered->triangles.cend(); ++triangle)
         if (triangle->back() >= boundary->begin && triangle->back() < boundary->end) {
             this->triangles.emplace_back(*triangle);
             this->triangles.back().back() = this->elementShift++;
         }
 
-    for (auto quadrangle = this->reordered->quadrangleConnectivity.cbegin(); quadrangle != this->reordered->quadrangleConnectivity.cend(); ++quadrangle)
+    for (auto quadrangle = this->reordered->quadrangles.cbegin(); quadrangle != this->reordered->quadrangles.cend(); ++quadrangle)
         if (quadrangle->back() >= boundary->begin && quadrangle->back() < boundary->end) {
             this->quadrangles.emplace_back(*quadrangle);
             this->quadrangles.back().back() = this->elementShift++;
         }
     boundary->end = this->elementShift;
 
-    this->reordered->quadrangleConnectivity = std::move(this->quadrangles);
-    this->reordered->triangleConnectivity = std::move(this->triangles);
+    this->reordered->quadrangles = std::move(this->quadrangles);
+    this->reordered->triangles = std::move(this->triangles);
 }
 
 void RadialGridDataReordered::fixLineIndices() {
     this->reordered->wells[0].begin = this->elementShift;
     for (int s = 0; s < this->numberOfSegments; ++s)
-        this->reordered->lineConnectivity[s].back() = this->elementShift++;
+        this->reordered->lines[s].back() = this->elementShift++;
     this->reordered->wells[0].end = this->elementShift;
 }

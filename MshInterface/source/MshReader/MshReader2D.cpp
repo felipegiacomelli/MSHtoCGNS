@@ -35,13 +35,13 @@ void MshReader2D::addElements() {
             begin->push_back(this->shift++);
             switch ((*begin)[this->typeIndex]) {
                 case 1: {
-                    this->gridData->triangleConnectivity.emplace_back(std::array<int, 4>());
-                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 4, std::begin(this->gridData->triangleConnectivity.back()));
+                    this->gridData->triangles.emplace_back(std::array<int, 4>());
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 4, std::begin(this->gridData->triangles.back()));
                     break;
                 }
                 case 2: {
-                    this->gridData->quadrangleConnectivity.emplace_back(std::array<int, 5>());
-                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 5, std::begin(this->gridData->quadrangleConnectivity.back()));
+                    this->gridData->quadrangles.emplace_back(std::array<int, 5>());
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 5, std::begin(this->gridData->quadrangles.back()));
                     break;
                 }
                 default:
@@ -61,8 +61,8 @@ void MshReader2D::addFacets() {
             begin->push_back(this->shift++);
             switch ((*begin)[this->typeIndex]) {
                 case 0: {
-                    this->gridData->lineConnectivity.emplace_back(std::array<int, 3>());
-                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 3, std::begin(this->gridData->lineConnectivity.back()));
+                    this->gridData->lines.emplace_back(std::array<int, 3>());
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 3, std::begin(this->gridData->lines.back()));
                     break;
                 }
                 default:
@@ -77,7 +77,7 @@ void MshReader2D::findBoundaryVertices() {
     for (auto& boundary : this->gridData->boundaries) {
         std::set<int> vertices;
 
-        for (const auto& line : this->gridData->lineConnectivity)
+        for (const auto& line : this->gridData->lines)
             if (line.back() >= boundary.begin && line.back() < boundary.end)
                 vertices.insert(line.cbegin(), line.cend() - 1);
 
@@ -89,11 +89,11 @@ void MshReader2D::findRegionVertices() {
     for (auto& region : this->gridData->regions) {
         std::set<int> vertices;
 
-        for (const auto& triangle : this->gridData->triangleConnectivity)
+        for (const auto& triangle : this->gridData->triangles)
             if (triangle.back() >= region.begin && triangle.back() < region.end)
                 vertices.insert(triangle.cbegin(), triangle.cend() - 1);
 
-        for (const auto& quadrangle : this->gridData->quadrangleConnectivity)
+        for (const auto& quadrangle : this->gridData->quadrangles)
             if (quadrangle.back() >= region.begin && quadrangle.back() < region.end)
                 vertices.insert(quadrangle.cbegin(), quadrangle.cend() - 1);
 

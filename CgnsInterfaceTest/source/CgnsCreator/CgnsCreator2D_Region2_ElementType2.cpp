@@ -52,7 +52,7 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-    auto triangles = this->gridData->triangleConnectivity;
+    auto triangles = this->gridData->triangles;
     checkEqual(triangles.size(), 8u);
     checkEqual(triangles[0][0], 3); checkEqual(triangles[0][1],  4); checkEqual(triangles[0][2],  9); checkEqual(triangles[0][3], 0);
     checkEqual(triangles[1][0], 3); checkEqual(triangles[1][1],  9); checkEqual(triangles[1][2],  6); checkEqual(triangles[1][3], 1);
@@ -63,14 +63,14 @@ TestCase(Elements) {
     checkEqual(triangles[6][0], 2); checkEqual(triangles[6][1],  5); checkEqual(triangles[6][2], 10); checkEqual(triangles[6][3], 7);
     checkEqual(triangles[7][0], 4); checkEqual(triangles[7][1], 10); checkEqual(triangles[7][2],  5); checkEqual(triangles[7][3], 8);
 
-    auto quadrangles = this->gridData->quadrangleConnectivity;
+    auto quadrangles = this->gridData->quadrangles;
     checkEqual(quadrangles.size(), 2u);
     checkEqual(quadrangles[0][0], 4); checkEqual(quadrangles[0][1], 5); checkEqual(quadrangles[0][2], 8); checkEqual(quadrangles[0][3], 7); checkEqual(quadrangles[0][4], 4);
     checkEqual(quadrangles[1][0], 0); checkEqual(quadrangles[1][1], 1); checkEqual(quadrangles[1][2], 4); checkEqual(quadrangles[1][3], 3); checkEqual(quadrangles[1][4], 9);
 }
 
 TestCase(Facets) {
-    auto lines = this->gridData->lineConnectivity;
+    auto lines = this->gridData->lines;
 
     checkEqual(lines.size(), 8u);
     checkEqual(lines[0][0], 6); checkEqual(lines[0][1], 3); checkEqual(lines[0][2], 10);

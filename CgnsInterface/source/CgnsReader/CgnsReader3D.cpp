@@ -56,8 +56,8 @@ void CgnsReader3D::addWell(std::string&& name, int start, int end) {
 void CgnsReader3D::findBoundaryVertices() {
     std::vector<std::set<int>> vertices(this->gridData->boundaries.size());
 
-    this->findVertices(this->gridData->triangleConnectivity, this->gridData->boundaries, vertices);
-    this->findVertices(this->gridData->quadrangleConnectivity, this->gridData->boundaries, vertices);
+    this->findVertices(this->gridData->triangles, this->gridData->boundaries, vertices);
+    this->findVertices(this->gridData->quadrangles, this->gridData->boundaries, vertices);
 
     for (unsigned b = 0u; b < this->gridData->boundaries.size(); ++b)
         this->gridData->boundaries[b].vertices = std::vector<int>(vertices[b].begin(), vertices[b].end());
@@ -66,10 +66,10 @@ void CgnsReader3D::findBoundaryVertices() {
 void CgnsReader3D::findRegionVertices() {
     std::vector<std::set<int>> vertices(this->gridData->regions.size());
 
-    this->findVertices(this->gridData->tetrahedronConnectivity, this->gridData->regions, vertices);
-    this->findVertices(this->gridData->hexahedronConnectivity, this->gridData->regions, vertices);
-    this->findVertices(this->gridData->prismConnectivity, this->gridData->regions, vertices);
-    this->findVertices(this->gridData->pyramidConnectivity, this->gridData->regions, vertices);
+    this->findVertices(this->gridData->tetrahedrons, this->gridData->regions, vertices);
+    this->findVertices(this->gridData->hexahedrons, this->gridData->regions, vertices);
+    this->findVertices(this->gridData->prisms, this->gridData->regions, vertices);
+    this->findVertices(this->gridData->pyramids, this->gridData->regions, vertices);
 
     for (unsigned r = 0u; r < this->gridData->regions.size(); ++r)
         this->gridData->regions[r].vertices = std::vector<int>(vertices[r].begin(), vertices[r].end());
@@ -78,7 +78,7 @@ void CgnsReader3D::findRegionVertices() {
 void CgnsReader3D::findWellVertices() {
     std::vector<std::set<int>> vertices(this->gridData->wells.size());
 
-    this->findVertices(this->gridData->lineConnectivity, this->gridData->wells, vertices);
+    this->findVertices(this->gridData->lines, this->gridData->wells, vertices);
 
     for (unsigned w = 0u; w < this->gridData->wells.size(); ++w)
         this->gridData->wells[w].vertices = std::vector<int>(vertices[w].begin(), vertices[w].end());

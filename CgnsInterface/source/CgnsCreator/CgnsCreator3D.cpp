@@ -19,7 +19,7 @@ void CgnsCreator3D::setDimensions() {
     this->physicalDimension = this->gridData->dimension;
     this->cellDimension = this->gridData->dimension;
     this->sizes[0] = this->gridData->coordinates.size();
-    this->sizes[1] = this->gridData->tetrahedronConnectivity.size() + this->gridData->hexahedronConnectivity.size() + this->gridData->prismConnectivity.size() + this->gridData->pyramidConnectivity.size();
+    this->sizes[1] = this->gridData->tetrahedrons.size() + this->gridData->hexahedrons.size() + this->gridData->prisms.size() + this->gridData->pyramids.size();
     this->sizes[2] = 0;
 }
 
