@@ -1,7 +1,7 @@
 #include <chrono>
 
 #include "MSHtoCGNS/BoostInterface/PropertyTree.hpp"
-#include "MSHtoCGNS/Grid/GridData.hpp"
+#include "MSHtoCGNS/GridData/GridData.hpp"
 #include "MSHtoCGNS/MshInterface/MshReader/MshReader3D.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader3D.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"

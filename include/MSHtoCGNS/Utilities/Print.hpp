@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "MSHtoCGNS/Grid/GridData.hpp"
+#include "MSHtoCGNS/GridData/GridData.hpp"
 
 template<typename InputIt>
 void print1D(InputIt cbegin, InputIt cend, std::string&& message) {

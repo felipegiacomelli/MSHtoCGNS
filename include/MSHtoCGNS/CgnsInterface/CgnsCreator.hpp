@@ -5,7 +5,7 @@
 
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 #include "MSHtoCGNS/Utilities/Vector.hpp"
-#include "MSHtoCGNS/Grid/GridData.hpp"
+#include "MSHtoCGNS/GridData/GridData.hpp"
 
 class CgnsCreator {
     public:

@@ -5,7 +5,7 @@
 #include <set>
 
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
-#include "MSHtoCGNS/Grid/GridData.hpp"
+#include "MSHtoCGNS/GridData/GridData.hpp"
 
 class CgnsReader {
     public:

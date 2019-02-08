@@ -8,7 +8,7 @@
 
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 #include "MSHtoCGNS/Utilities/Algorithm.hpp"
-#include "MSHtoCGNS/Grid/GridData.hpp"
+#include "MSHtoCGNS/GridData/GridData.hpp"
 
 class SegmentGridExtractor {
     public:

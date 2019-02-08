@@ -2,7 +2,7 @@
 
 #include "MSHtoCGNS/Utilities/Output.hpp"
 #include "MSHtoCGNS/Utilities/Print.hpp"
-#include "MSHtoCGNS/Grid/GridData.hpp"
+#include "MSHtoCGNS/GridData/GridData.hpp"
 #include "MSHtoCGNS/FileMend/CgnsReader/SpecialCgnsReader3D.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
 #include "MSHtoCGNS/FileMend/WellGenerator.hpp"

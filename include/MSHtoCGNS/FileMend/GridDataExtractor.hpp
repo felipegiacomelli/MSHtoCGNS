@@ -8,7 +8,7 @@
 
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 #include "MSHtoCGNS/BoostInterface/PropertyTree.hpp"
-#include "MSHtoCGNS/Grid/GridData.hpp"
+#include "MSHtoCGNS/GridData/GridData.hpp"
 
 struct GridDataExtractorData {
     std::vector<std::string> regions;
