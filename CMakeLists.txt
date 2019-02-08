@@ -108,7 +108,7 @@ macro (add_library _target)
 endmacro ()
 
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/BoostInterface DESTINATION ${CMAKE_INSTALL_PREFIX}/include/MSHtoCGNS)
-install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/Grid DESTINATION ${CMAKE_INSTALL_PREFIX}/include/MSHtoCGNS)
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/GridData DESTINATION ${CMAKE_INSTALL_PREFIX}/include/MSHtoCGNS)
 
 ##################################################################
 # COMPONENTS
