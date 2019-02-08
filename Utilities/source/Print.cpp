@@ -21,8 +21,8 @@ void printGridDataInformation(boost::shared_ptr<GridData> gD, std::string messag
 
     int numberOfElements = gD->tetrahedrons.size() + gD->hexahedrons.size() + gD->prisms.size() + gD->pyramids.size();
     std::cout << std::endl << "\t\tnumberOfElements: " << numberOfElements;
-    std::cout << std::endl << "\t\t\ttetrahedra: " << std::setw(6) << std::setfill(' ') << std::right << gD->tetrahedrons.size();
-    std::cout << std::endl << "\t\t\thexahedra : " << std::setw(6) << std::setfill(' ') << std::right << gD->hexahedrons.size();
+    std::cout << std::endl << "\t\t\ttetrahedrons: " << std::setw(6) << std::setfill(' ') << std::right << gD->tetrahedrons.size();
+    std::cout << std::endl << "\t\t\thexahedrons : " << std::setw(6) << std::setfill(' ') << std::right << gD->hexahedrons.size();
     std::cout << std::endl << "\t\t\tprisms    : " << std::setw(6) << std::setfill(' ') << std::right << gD->prisms.size();
     std::cout << std::endl << "\t\t\tpyramids  : " << std::setw(6) << std::setfill(' ') << std::right << gD->pyramids.size() << std::endl;
 

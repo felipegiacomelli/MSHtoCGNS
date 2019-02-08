@@ -46,7 +46,7 @@ class RadialGridDataReordered {
         int numberOfHexahedronsPerRadius;
         int numberOfVerticesPerSection;
 
-        std::vector<std::array<int, 9>> hexahedra;
+        std::vector<std::array<int, 9>> hexahedrons;
         std::vector<std::array<int, 7>> prisms;
         std::vector<std::array<int, 4>> triangles;
         std::vector<std::array<int, 5>> quadrangles;

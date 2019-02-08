@@ -68,36 +68,36 @@ TestCase(Coordinates) {
 }
 
 TestCase(Elements) {
-    auto hexahedra = this->gridData->hexahedrons;
+    auto hexahedrons = this->gridData->hexahedrons;
 
-    checkEqual(hexahedra.size(), 8u);
+    checkEqual(hexahedrons.size(), 8u);
 
-    checkEqual(hexahedra[0][0],  0); checkEqual(hexahedra[0][1],  1); checkEqual(hexahedra[0][2],  4); checkEqual(hexahedra[0][3],  3);
-    checkEqual(hexahedra[1][0],  1); checkEqual(hexahedra[1][1],  2); checkEqual(hexahedra[1][2],  5); checkEqual(hexahedra[1][3],  4);
-    checkEqual(hexahedra[2][0],  3); checkEqual(hexahedra[2][1],  4); checkEqual(hexahedra[2][2],  7); checkEqual(hexahedra[2][3],  6);
-    checkEqual(hexahedra[3][0],  4); checkEqual(hexahedra[3][1],  5); checkEqual(hexahedra[3][2],  8); checkEqual(hexahedra[3][3],  7);
-    checkEqual(hexahedra[4][0],  9); checkEqual(hexahedra[4][1], 10); checkEqual(hexahedra[4][2], 13); checkEqual(hexahedra[4][3], 12);
-    checkEqual(hexahedra[5][0], 10); checkEqual(hexahedra[5][1], 11); checkEqual(hexahedra[5][2], 14); checkEqual(hexahedra[5][3], 13);
-    checkEqual(hexahedra[6][0], 12); checkEqual(hexahedra[6][1], 13); checkEqual(hexahedra[6][2], 16); checkEqual(hexahedra[6][3], 15);
-    checkEqual(hexahedra[7][0], 13); checkEqual(hexahedra[7][1], 14); checkEqual(hexahedra[7][2], 17); checkEqual(hexahedra[7][3], 16);
+    checkEqual(hexahedrons[0][0],  0); checkEqual(hexahedrons[0][1],  1); checkEqual(hexahedrons[0][2],  4); checkEqual(hexahedrons[0][3],  3);
+    checkEqual(hexahedrons[1][0],  1); checkEqual(hexahedrons[1][1],  2); checkEqual(hexahedrons[1][2],  5); checkEqual(hexahedrons[1][3],  4);
+    checkEqual(hexahedrons[2][0],  3); checkEqual(hexahedrons[2][1],  4); checkEqual(hexahedrons[2][2],  7); checkEqual(hexahedrons[2][3],  6);
+    checkEqual(hexahedrons[3][0],  4); checkEqual(hexahedrons[3][1],  5); checkEqual(hexahedrons[3][2],  8); checkEqual(hexahedrons[3][3],  7);
+    checkEqual(hexahedrons[4][0],  9); checkEqual(hexahedrons[4][1], 10); checkEqual(hexahedrons[4][2], 13); checkEqual(hexahedrons[4][3], 12);
+    checkEqual(hexahedrons[5][0], 10); checkEqual(hexahedrons[5][1], 11); checkEqual(hexahedrons[5][2], 14); checkEqual(hexahedrons[5][3], 13);
+    checkEqual(hexahedrons[6][0], 12); checkEqual(hexahedrons[6][1], 13); checkEqual(hexahedrons[6][2], 16); checkEqual(hexahedrons[6][3], 15);
+    checkEqual(hexahedrons[7][0], 13); checkEqual(hexahedrons[7][1], 14); checkEqual(hexahedrons[7][2], 17); checkEqual(hexahedrons[7][3], 16);
 
-    checkEqual(hexahedra[0][4],  9); checkEqual(hexahedra[0][5], 10); checkEqual(hexahedra[0][6], 13); checkEqual(hexahedra[0][7], 12);
-    checkEqual(hexahedra[1][4], 10); checkEqual(hexahedra[1][5], 11); checkEqual(hexahedra[1][6], 14); checkEqual(hexahedra[1][7], 13);
-    checkEqual(hexahedra[2][4], 12); checkEqual(hexahedra[2][5], 13); checkEqual(hexahedra[2][6], 16); checkEqual(hexahedra[2][7], 15);
-    checkEqual(hexahedra[3][4], 13); checkEqual(hexahedra[3][5], 14); checkEqual(hexahedra[3][6], 17); checkEqual(hexahedra[3][7], 16);
-    checkEqual(hexahedra[4][4], 18); checkEqual(hexahedra[4][5], 19); checkEqual(hexahedra[4][6], 22); checkEqual(hexahedra[4][7], 21);
-    checkEqual(hexahedra[5][4], 19); checkEqual(hexahedra[5][5], 20); checkEqual(hexahedra[5][6], 23); checkEqual(hexahedra[5][7], 22);
-    checkEqual(hexahedra[6][4], 21); checkEqual(hexahedra[6][5], 22); checkEqual(hexahedra[6][6], 25); checkEqual(hexahedra[6][7], 24);
-    checkEqual(hexahedra[7][4], 22); checkEqual(hexahedra[7][5], 23); checkEqual(hexahedra[7][6], 26); checkEqual(hexahedra[7][7], 25);
+    checkEqual(hexahedrons[0][4],  9); checkEqual(hexahedrons[0][5], 10); checkEqual(hexahedrons[0][6], 13); checkEqual(hexahedrons[0][7], 12);
+    checkEqual(hexahedrons[1][4], 10); checkEqual(hexahedrons[1][5], 11); checkEqual(hexahedrons[1][6], 14); checkEqual(hexahedrons[1][7], 13);
+    checkEqual(hexahedrons[2][4], 12); checkEqual(hexahedrons[2][5], 13); checkEqual(hexahedrons[2][6], 16); checkEqual(hexahedrons[2][7], 15);
+    checkEqual(hexahedrons[3][4], 13); checkEqual(hexahedrons[3][5], 14); checkEqual(hexahedrons[3][6], 17); checkEqual(hexahedrons[3][7], 16);
+    checkEqual(hexahedrons[4][4], 18); checkEqual(hexahedrons[4][5], 19); checkEqual(hexahedrons[4][6], 22); checkEqual(hexahedrons[4][7], 21);
+    checkEqual(hexahedrons[5][4], 19); checkEqual(hexahedrons[5][5], 20); checkEqual(hexahedrons[5][6], 23); checkEqual(hexahedrons[5][7], 22);
+    checkEqual(hexahedrons[6][4], 21); checkEqual(hexahedrons[6][5], 22); checkEqual(hexahedrons[6][6], 25); checkEqual(hexahedrons[6][7], 24);
+    checkEqual(hexahedrons[7][4], 22); checkEqual(hexahedrons[7][5], 23); checkEqual(hexahedrons[7][6], 26); checkEqual(hexahedrons[7][7], 25);
 
-    checkEqual(hexahedra[0][8], 0);
-    checkEqual(hexahedra[1][8], 1);
-    checkEqual(hexahedra[2][8], 2);
-    checkEqual(hexahedra[3][8], 3);
-    checkEqual(hexahedra[4][8], 4);
-    checkEqual(hexahedra[5][8], 5);
-    checkEqual(hexahedra[6][8], 6);
-    checkEqual(hexahedra[7][8], 7);
+    checkEqual(hexahedrons[0][8], 0);
+    checkEqual(hexahedrons[1][8], 1);
+    checkEqual(hexahedrons[2][8], 2);
+    checkEqual(hexahedrons[3][8], 3);
+    checkEqual(hexahedrons[4][8], 4);
+    checkEqual(hexahedrons[5][8], 5);
+    checkEqual(hexahedrons[6][8], 6);
+    checkEqual(hexahedrons[7][8], 7);
 
     cg_section_read(this->fileIndex, 1, 1, 1, this->name, &this->type, &this->elementStart, &this->elementEnd, &this->nbndry, &this->parent_flag);
     checkEqual(std::string(this->name), std::string("GEOMETRY"));

@@ -88,9 +88,9 @@ void RadialGridDataReordered::reorderBoundaries() {
 }
 
 void RadialGridDataReordered::copyData() {
-    this->hexahedra = this->gridData->hexahedrons;
-    for (auto i = 0u; i < this->hexahedra.size(); ++i)
-        this->hexahedra[i].back() = i;
+    this->hexahedrons = this->gridData->hexahedrons;
+    for (auto i = 0u; i < this->hexahedrons.size(); ++i)
+        this->hexahedrons[i].back() = i;
 
     this->prisms = this->gridData->prisms;
     for (auto i = 0u; i < this->prisms.size(); ++i)
@@ -125,7 +125,7 @@ void RadialGridDataReordered::reorder() {
                     prism++;
 
         for (auto quadrangle = this->quadrangles.begin(); quadrangle != this->quadrangles.end(); ++quadrangle)
-            for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
+            for (auto hexahedron = this->hexahedrons.begin(); hexahedron != this->hexahedrons.end();)
                 if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
                     this->addVertex((*hexahedron)[3], segment + 1);
                     this->addVertex((*hexahedron)[2], segment + 1);
@@ -153,7 +153,7 @@ void RadialGridDataReordered::buildFirstSection() {
                 prism++;
 
     for (auto quadrangle = this->quadrangles.begin(); quadrangle != this->quadrangles.end(); ++quadrangle)
-        for (auto hexahedron = this->hexahedra.begin(); hexahedron != this->hexahedra.end();)
+        for (auto hexahedron = this->hexahedrons.begin(); hexahedron != this->hexahedrons.end();)
             if (hasElements(hexahedron->cbegin(), hexahedron->cend()-1, quadrangle->cbegin(), quadrangle->cend()-1)) {
                 this->addVertex((*hexahedron)[0], 0);
                 this->addVertex((*hexahedron)[1], 0);
@@ -190,7 +190,7 @@ void RadialGridDataReordered::copyPrism(std::vector<std::array<int, 7>>::iterato
 
 void RadialGridDataReordered::copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron) {
     this->reordered->hexahedrons.push_back(this->gridData->hexahedrons[hexahedron->back()]);
-    hexahedron = this->hexahedra.erase(hexahedron);
+    hexahedron = this->hexahedrons.erase(hexahedron);
 }
 
 void RadialGridDataReordered::copyVertices() {
