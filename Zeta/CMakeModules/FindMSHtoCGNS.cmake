@@ -3,12 +3,8 @@
 # MSHTOCGNS_LIBRARIES
 
 include (${MSHTOCGNS_DIR}/MSHtoCGNSConfig.cmake)
-find_path (MSHTOCGNS_INCLUDE_DIR MSHtoCGNS/CgnsInterface/CgnsCreator.hpp ${MSHTOCGNS_DIR}/include)
-if (BUILD_SHARED_LIBS)
-    find_library (MSHTOCGNS_LIBRARY_DIR CgnsInterface.so ${MSHTOCGNS_DIR}/libs)
-else ()
-    find_library (MSHTOCGNS_LIBRARY_DIR CgnsInterface.a ${MSHTOCGNS_DIR}/libs)
-endif()
+find_path (MSHTOCGNS_INCLUDE_DIR MSHtoCGNS/CgnsInterface/CgnsCreator.hpp HINTS ${MSHTOCGNS_DIR}/include NO_DEFAULT_PATH)
+find_library (MSHTOCGNS_LIBRARY_DIR NAMES CgnsInterface.so CgnsInterface.a HINTS ${MSHTOCGNS_DIR}/libs NO_DEFAULT_PATH)
 
 set (MSHTOCGNS_COMPONENTS Utilities MshInterface CgnsInterface FileMend)
 
@@ -21,8 +17,7 @@ if (MSHTOCGNS_INCLUDE_DIR)
     endif ()
 endif ()
 
-if (MSHTOCGNS_FOUND)
-    message (STATUS "Found MSHtoCGNS: ${MSHTOCGNS_DIR}")
-else ()
-    message (STATUS "Could NOT find MSHtoCGNS")
-endif ()
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(MSHtoCGNS REQUIRED_VARS MSHTOCGNS_LIBRARY_DIR MSHTOCGNS_LIBRARIES MSHTOCGNS_INCLUDE_DIR VERSION_VAR ${MSHTOCGNS_VERSION})
+
+mark_as_advanced(MSHTOCGNS_INCLUDE_DIR MSHTOCGNS_LIBRARY_DIR)
