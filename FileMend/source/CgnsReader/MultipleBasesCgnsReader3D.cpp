@@ -9,8 +9,14 @@ void MultipleBasesCgnsReader3D::readBases() {
     for (int base = 1; base <= this->numberOfBases; ++base) {
         if (cg_base_read(this->fileIndex, base, this->buffer, &this->cellDimension, &this->physicalDimension))
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read base");
+
         this->bases[std::string(this->buffer)] = base;
     }
+}
+
+void MultipleBasesCgnsReader3D::print() const {
+    for (auto entry : this->bases)
+        std::cout << std::endl << "\t" << std::left << std::setw(15) << entry.first << " : " << entry.second << std::endl;
 }
 
 boost::shared_ptr<GridData> MultipleBasesCgnsReader3D::read(std::string name) {
@@ -19,6 +25,7 @@ boost::shared_ptr<GridData> MultipleBasesCgnsReader3D::read(std::string name) {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Base " + name + " not found");
 
     this->baseIndex = entry->second;
+
     this->readBase();
     this->readZone();
     this->readNumberOfSections();
@@ -40,6 +47,7 @@ boost::shared_ptr<GridData> MultipleBasesCgnsReader3D::read(int baseIndex) {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Base " + std::to_string(baseIndex) + " not found");
 
     this->baseIndex = entry->second;
+
     this->readBase();
     this->readZone();
     this->readNumberOfSections();
@@ -53,9 +61,4 @@ boost::shared_ptr<GridData> MultipleBasesCgnsReader3D::read(int baseIndex) {
     this->findWellVertices();
 
     return boost::make_shared<GridData>(*this->gridData);
-}
-
-MultipleBasesCgnsReader3D::~MultipleBasesCgnsReader3D() {
-    for (auto entry : this->bases)
-        printf("\n\t%10s : %i\n", entry.first.c_str(), entry.second);
 }
