@@ -13,7 +13,6 @@ set (CMAKE_CXX_STANDARD 17)
 # OPERATIONAL SYSTEMS CONFIGURATION
 ##################################################################
 if (UNIX)
-    message (STATUS "UNIX has been detected.")
     set (CMAKE_C_COMPILER gcc)
     set (CMAKE_CXX_COMPILER g++)
     set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64 -std=c++17 -Wall -Wextra -Wnon-virtual-dtor -pedantic -Wno-parentheses" CACHE STRING "Setting default compiler flags.")
@@ -51,9 +50,11 @@ set (VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 ##################################################################
 # EXTERNAL LIBRARIES
 ##################################################################
-set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Zeta/CMakeModules)
-set (BOOST_VERSION "1.68.0")
-set (CGNS_VERSION  "3.3.1" )
+if (DEFINED ENV{CMAKE_MODULE_PATH})
+    set (CMAKE_MODULE_PATH $ENV{CMAKE_MODULES})
+else ()
+    set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Zeta/CMakeModules)
+endif()
 
 ##############
 # BOOST
@@ -64,8 +65,10 @@ else ()
     set (BOOST_ROOT ${CMAKE_SOURCE_DIR}/Zeta/Libraries/boost-${BOOST_VERSION}/${BUILD_TYPE})
 endif()
 
+set (BOOST_VERSION "1.68.0")
 set (Components_Boost system filesystem unit_test_framework test_exec_monitor)
 set (Boost_USE_MULTITHREADED ON)
+
 find_package (Boost COMPONENTS ${Components_Boost} REQUIRED)
 if (Boost_FOUND)
     include_directories (${Boost_INCLUDE_DIRS})
@@ -79,6 +82,8 @@ if (DEFINED ENV{CGNS_DIR})
 else ()
     set (CGNS_DIR ${CMAKE_SOURCE_DIR}/Zeta/Libraries/cgns-${CGNS_VERSION}/${BUILD_TYPE})
 endif()
+
+set (CGNS_VERSION  "3.3.1")
 
 find_package (CGNS REQUIRED)
 if (CGNS_FOUND)
