@@ -15,7 +15,7 @@ set (CMAKE_CXX_STANDARD 17)
 if (UNIX)
     set (CMAKE_C_COMPILER gcc)
     set (CMAKE_CXX_COMPILER g++)
-    set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64 -std=c++17 -Wall -Wextra -Wnon-virtual-dtor -pedantic -Wno-parentheses" CACHE STRING "Setting default compiler flags.")
+    set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64 -std=c++17 -Wall -Wextra -Wnon-virtual-dtor -pedantic -Wno-parentheses" CACHE STRING "Setting default compiler flags")
 
     if (NOT CMAKE_BUILD_TYPE)
         set (CMAKE_BUILD_TYPE "Release")
@@ -23,13 +23,13 @@ if (UNIX)
     string (TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
 
     if (BUILD_SHARED_LIBS)
-        set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fPIC" CACHE STRING "Setting default compiler flags.")
+        set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fPIC" CACHE STRING "Setting default compiler flags")
         set (LIBRARY_TYPE "shared")
     else ()
         set (LIBRARY_TYPE "static")
     endif ()
 
-    set (CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} "-g -DDEBUG" CACHE STRING "Setting default compiler flags.")
+    set (CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} "-g -DDEBUG" CACHE STRING "Setting default compiler flags")
     set (CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3 -DNDEBUG" CACHE STRING "Setting default compiler flags")
 else ()
     message (FATAL_ERROR "CMAKE HAS NOT BEEN CONFIGURED FOR THE CURRENT OPERATIONAL SYSTEM.\n")
@@ -78,7 +78,7 @@ endif ()
 ##############
 # CGNS
 ##############
-set (CGNS_VERSION  "3.3.1")
+set (CGNS_VERSION "3.3.1")
 
 if (DEFINED ENV{CGNS_DIR})
     set (CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
@@ -100,7 +100,8 @@ macro (add_executable _target)
     target_link_libraries (${_target} ${CGNS_LIBRARIES})
 endmacro ()
 
-set (Distribution "${PROJECT_NAME}Config")
+set (ProjectConfig "${PROJECT_NAME}Config")
+set (VersionConfig "${PROJECT_NAME}Version.cmake")
 
 macro (add_library _target)
     _add_library (${_target} ${ARGN})
@@ -108,14 +109,17 @@ macro (add_library _target)
     target_link_libraries (${_target} ${CGNS_LIBRARIES})
     set_target_properties (${_target}  PROPERTIES PREFIX "")
     set_target_properties (${_target}  PROPERTIES VERSION ${VERSION})
-    install (TARGETS ${PROJECT_NAME} EXPORT ${Distribution} DESTINATION ${CMAKE_INSTALL_PREFIX}/libs)
+    install (TARGETS ${PROJECT_NAME} EXPORT ${ProjectConfig} DESTINATION ${CMAKE_INSTALL_PREFIX}/libs)
     install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/MSHtoCGNS)
-    install (EXPORT ${Distribution} DESTINATION ${CMAKE_INSTALL_PREFIX})
+    install (EXPORT ${ProjectConfig} DESTINATION ${CMAKE_INSTALL_PREFIX})
 endmacro ()
 
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/BoostInterface DESTINATION ${CMAKE_INSTALL_PREFIX}/include/MSHtoCGNS)
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/GridData DESTINATION ${CMAKE_INSTALL_PREFIX}/include/MSHtoCGNS)
 
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${VersionConfig} VERSION ${VERSION} COMPATIBILITY ExactVersion)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${VersionConfig} DESTINATION ${CMAKE_INSTALL_PREFIX})
 ##################################################################
 # COMPONENTS
 ##################################################################
