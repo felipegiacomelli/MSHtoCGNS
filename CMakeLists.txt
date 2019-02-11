@@ -59,13 +59,14 @@ endif()
 ##############
 # BOOST
 ##############
+set (BOOST_VERSION "1.68.0")
+
 if (DEFINED ENV{BOOST_DIR})
     set (BOOST_ROOT $ENV{BOOST_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
 else ()
     set (BOOST_ROOT ${CMAKE_SOURCE_DIR}/Zeta/Libraries/boost-${BOOST_VERSION}/${BUILD_TYPE})
 endif()
 
-set (BOOST_VERSION "1.68.0")
 set (Components_Boost system filesystem unit_test_framework test_exec_monitor)
 set (Boost_USE_MULTITHREADED ON)
 
@@ -77,13 +78,13 @@ endif ()
 ##############
 # CGNS
 ##############
+set (CGNS_VERSION  "3.3.1")
+
 if (DEFINED ENV{CGNS_DIR})
     set (CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
 else ()
     set (CGNS_DIR ${CMAKE_SOURCE_DIR}/Zeta/Libraries/cgns-${CGNS_VERSION}/${BUILD_TYPE})
 endif()
-
-set (CGNS_VERSION  "3.3.1")
 
 find_package (CGNS REQUIRED)
 if (CGNS_FOUND)
