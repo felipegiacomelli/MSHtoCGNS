@@ -91,19 +91,16 @@ if (CGNS_FOUND)
     include_directories (${CGNS_INCLUDE_DIR})
 endif ()
 
-##############
+##################################################################
 # MACROS
-##############
+##################################################################
 macro (add_executable _target)
     _add_executable (${_target} ${ARGN})
     target_link_libraries (${_target} ${Boost_LIBRARIES})
     target_link_libraries (${_target} ${CGNS_LIBRARIES})
 endmacro ()
 
-set (TemplateConfig "${CMAKE_SOURCE_DIR}/Zeta/CMake/${PROJECT_NAME}Config.cmake.in")
-set (ProjectConfig "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake")
-set (VersionConfig "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Version.cmake")
-set (TargetsConfig "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Targets.cmake")
+set (TargetsConfig "${PROJECT_NAME}Targets")
 
 set (INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include)
 set (LIB_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/libs)
@@ -115,24 +112,8 @@ macro (add_library _target)
     set_target_properties (${_target}  PROPERTIES PREFIX "")
     set_target_properties (${_target}  PROPERTIES VERSION ${VERSION})
     install (TARGETS ${PROJECT_NAME} EXPORT ${TargetsConfig} DESTINATION ${LIB_INSTALL_DIR})
-    export(TARGETS ${PROJECT_NAME} FILE ${TargetsConfig})
 endmacro ()
 
-# export(PACKAGE MSHtoCGNS)
-
-include (CMakePackageConfigHelpers)
-configure_package_config_file (${TemplateConfig} ${ProjectConfig} INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX} PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR)
-
-write_basic_package_version_file (${VersionConfig} VERSION ${VERSION} COMPATIBILITY ExactVersion)
-
-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/MSHtoCGNSConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/MSHtoCGNSVersion.cmake DESTINATION ${CMAKE_INSTALL_PREFIX})
-install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS DESTINATION ${INCLUDE_INSTALL_DIR})
-# install (EXPORT ${TargetsConfig} DESTINATION "${CMAKE_INSTALL_PREFIX}")
-
-message ("\n\t${CMAKE_CURRENT_BINARY_DIR}")
-message ("\n\t${CMAKE_CURRENT_SOURCE_DIR}")
-
-# install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${VersionConfig} DESTINATION ${CMAKE_INSTALL_PREFIX} D)
 ##################################################################
 # COMPONENTS
 ##################################################################
@@ -157,6 +138,22 @@ add_test (NAME UtilitiesTest COMMAND UtilitiesTest)
 add_subdirectory (Mender)
 add_subdirectory (MSHtoCGNS)
 add_subdirectory (MultipleBases)
+
+##################################################################
+# INSTALLATION
+##################################################################
+set (TemplateConfig "${CMAKE_SOURCE_DIR}/Zeta/CMake/${PROJECT_NAME}Config.cmake.in")
+set (ProjectConfig "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake")
+set (VersionConfig "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
+
+include (CMakePackageConfigHelpers)
+configure_package_config_file (${TemplateConfig} ${ProjectConfig} INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX} PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR)
+
+write_basic_package_version_file (${VersionConfig} VERSION ${VERSION} COMPATIBILITY ExactVersion)
+
+install (FILES ${ProjectConfig} ${VersionConfig} DESTINATION ${CMAKE_INSTALL_PREFIX})
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS DESTINATION ${INCLUDE_INSTALL_DIR})
+install (EXPORT ${TargetsConfig} DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 ##################################################################
 # DISPLAY INFORMATION
