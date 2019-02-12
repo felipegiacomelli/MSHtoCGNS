@@ -100,8 +100,13 @@ macro (add_executable _target)
     target_link_libraries (${_target} ${CGNS_LIBRARIES})
 endmacro ()
 
-set (ProjectConfig "${PROJECT_NAME}Config")
-set (VersionConfig "${PROJECT_NAME}Version.cmake")
+set (TemplateConfig "${CMAKE_SOURCE_DIR}/Zeta/CMake/${PROJECT_NAME}Config.cmake.in")
+set (ProjectConfig "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake")
+set (VersionConfig "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Version.cmake")
+set (TargetsConfig "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Targets.cmake")
+
+set (INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include)
+set (LIB_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/libs)
 
 macro (add_library _target)
     _add_library (${_target} ${ARGN})
@@ -111,15 +116,24 @@ macro (add_library _target)
     set_target_properties (${_target}  PROPERTIES VERSION ${VERSION})
     install (TARGETS ${PROJECT_NAME} EXPORT ${ProjectConfig} DESTINATION ${CMAKE_INSTALL_PREFIX}/libs)
     install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/MSHtoCGNS)
-    install (EXPORT ${ProjectConfig} DESTINATION ${CMAKE_INSTALL_PREFIX})
+    # export(TARGETS ${PROJECT_NAME})
+    # install (EXPORT ${ProjectConfig} DESTINATION ${CMAKE_INSTALL_PREFIX})
 endmacro ()
 
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/BoostInterface DESTINATION ${CMAKE_INSTALL_PREFIX}/include/MSHtoCGNS)
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/include/MSHtoCGNS/GridData DESTINATION ${CMAKE_INSTALL_PREFIX}/include/MSHtoCGNS)
 
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${VersionConfig} VERSION ${VERSION} COMPATIBILITY ExactVersion)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${VersionConfig} DESTINATION ${CMAKE_INSTALL_PREFIX})
+include (CMakePackageConfigHelpers)
+configure_package_config_file (${TemplateConfig} ${ProjectConfig} INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX} PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR)
+
+write_basic_package_version_file (${VersionConfig} VERSION ${VERSION} COMPATIBILITY ExactVersion)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/MSHtoCGNSConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/MSHtoCGNSVersion.cmake DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+message ("\n\t${CMAKE_CURRENT_BINARY_DIR}")
+message ("\n\t${CMAKE_CURRENT_SOURCE_DIR}")
+
+# install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${VersionConfig} DESTINATION ${CMAKE_INSTALL_PREFIX} D)
 ##################################################################
 # COMPONENTS
 ##################################################################
