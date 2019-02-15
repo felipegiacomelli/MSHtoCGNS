@@ -1,8 +1,8 @@
 {
     "inputs" :
     [
-        "/home/felipe/Felipe/gmsh/mandel_3d/mandel.msh"
+        "/home/felipe/Downloads/cube_inside_cube/cube_inside_cube.msh"
     ],
 
-    "output": "."
+    "output": "/home/felipe/Downloads/cube_inside_cube/"
 }
