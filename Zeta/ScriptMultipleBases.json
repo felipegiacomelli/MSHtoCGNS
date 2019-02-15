@@ -1,14 +1,14 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/FileMend/GridDataExtractor/4x4x4_2x2x2.msh",
-        "output" : "/home/felipe/Downloads/"
+        "input"  : "/home/felipe/Downloads/cube_inside_cube/cube_inside_cube.msh",
+        "output" : "/home/felipe/Downloads/cube_inside_cube/multiple_bases/"
     },
 
     "ScriptGridDataExtractor" :
     {
-        "regions" : ["LIMESTONE"],
-        "boundaries" : ["RESERVOIR_WEST", "RESERVOIR_EAST", "RESERVOIR_SOUTH", "RESERVOIR_NORTH", "RESERVOIR_BOTTOM", "RESERVOIR_TOP"],
+        "regions" : ["NONPAY"],
+        "boundaries" : [],
         "wells": []
     }
 }
