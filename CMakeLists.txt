@@ -41,7 +41,7 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 ##################################################################
 # ABOUT THE PROJECT
 ##################################################################
-project (MSHtoCGNS)
+project (MSHtoCGNS HOMEPAGE_URL "https://github.com/felipegiacomelli/MSHtoCGNS")
 set (VERSION_MAJOR "0")
 set (VERSION_MINOR "15")
 set (VERSION_PATCH "0")
@@ -104,7 +104,6 @@ macro (add_executable _target)
 endmacro ()
 
 set (TargetsConfig "${PROJECT_NAME}Targets")
-
 set (INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include)
 set (LIB_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/libs)
 
@@ -114,6 +113,7 @@ macro (add_library _target)
     target_link_libraries (${_target} ${CGNS_LIBRARIES})
     set_target_properties (${_target}  PROPERTIES PREFIX "")
     set_target_properties (${_target}  PROPERTIES VERSION ${VERSION})
+    set_property (GLOBAL APPEND PROPERTY GlobalTargetList ${_target})
     install (TARGETS ${PROJECT_NAME} EXPORT ${TargetsConfig} DESTINATION ${LIB_INSTALL_DIR})
 endmacro ()
 
@@ -148,9 +148,11 @@ add_subdirectory (MultipleBases)
 set (TemplateConfig "${CMAKE_SOURCE_DIR}/Zeta/CMake/${PROJECT_NAME}Config.cmake.in")
 set (ProjectConfig "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake")
 set (VersionConfig "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
+string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
+get_property (PROJECT_LIBRARIES GLOBAL PROPERTY GlobalTargetList)
 
 include (CMakePackageConfigHelpers)
-configure_package_config_file (${TemplateConfig} ${ProjectConfig} INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX} PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR)
+configure_package_config_file (${TemplateConfig} ${ProjectConfig} INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX} PATH_VARS PROJECT_NAME_UPPER PROJECT_NAME INCLUDE_INSTALL_DIR LIB_INSTALL_DIR PROJECT_LIBRARIES)
 
 write_basic_package_version_file (${VersionConfig} VERSION ${VERSION} COMPATIBILITY ExactVersion)
 
