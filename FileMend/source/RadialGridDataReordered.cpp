@@ -9,7 +9,7 @@ RadialGridDataReordered::RadialGridDataReordered(boost::shared_ptr<GridData> gri
     this->copyData();
     this->reorder();
     this->copyVertices();
-    this->fixVerticesIndices();
+    this->rectifyConnectivities();
     this->fixElementIndices();
     this->fixFacetIndices();
     this->fixLineIndices();
@@ -199,39 +199,25 @@ void RadialGridDataReordered::copyVertices() {
         this->reordered->coordinates.emplace_back(this->gridData->coordinates[vertex.first]);
 }
 
-void RadialGridDataReordered::fixVerticesIndices() {
-    std::unordered_map<int, int> originalToFinal;
+void RadialGridDataReordered::rectifyConnectivities() {
+    std::unordered_map<int, int> originalToReordered;
     for (auto vertex : this->vertices)
-        originalToFinal[vertex.first] = vertex.second;
+        originalToReordered[vertex.first] = vertex.second;
 
-    for (auto& hexahedron : this->reordered->hexahedrons)
-        for (auto vertex = hexahedron.begin(); vertex != hexahedron.end() - 1; ++vertex)
-            *vertex = originalToFinal[*vertex];
-
-    for (auto& prism : this->reordered->prisms)
-        for (auto vertex = prism.begin(); vertex != prism.end() - 1; ++vertex)
-            *vertex = originalToFinal[*vertex];
-
-    for (auto& triangle : this->reordered->triangles)
-        for (auto vertex = triangle.begin(); vertex != triangle.end() - 1; ++vertex)
-            *vertex = originalToFinal[*vertex];
-
-    for (auto& quadrangle : this->reordered->quadrangles)
-        for (auto vertex = quadrangle.begin(); vertex != quadrangle.end() - 1; ++vertex)
-            *vertex = originalToFinal[*vertex];
-
-    for (auto& line : this->reordered->lines)
-        for (auto vertex = line.begin(); vertex != line.end() - 1; ++vertex)
-            *vertex = originalToFinal[*vertex];
+    this->rectifyConnectivity(originalToReordered, this->reordered->hexahedrons);
+    this->rectifyConnectivity(originalToReordered, this->reordered->prisms);
+    this->rectifyConnectivity(originalToReordered, this->reordered->triangles);
+    this->rectifyConnectivity(originalToReordered, this->reordered->quadrangles);
+    this->rectifyConnectivity(originalToReordered, this->reordered->lines);
 
     for (auto& boundary : this->reordered->boundaries) {
         for (auto& vertex : boundary.vertices)
-            vertex = originalToFinal[vertex];
+            vertex = originalToReordered[vertex];
         std::stable_sort(boundary.vertices.begin(), boundary.vertices.end());
     }
 
     for (auto& vertex : this->reordered->wells[0].vertices)
-        vertex = originalToFinal[vertex];
+        vertex = originalToReordered[vertex];
     std::stable_sort(this->reordered->wells[0].vertices.begin(), this->reordered->wells[0].vertices.end());
 }
 

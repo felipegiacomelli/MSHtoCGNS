@@ -33,7 +33,16 @@ class RadialGridDataReordered {
         void copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron);
         void copyPrism(std::vector<std::array<int, 7>>::iterator prism);
         void copyVertices();
-        void fixVerticesIndices();
+
+        void rectifyConnectivities();
+        template<typename T>
+        void rectifyConnectivity(std::unordered_map<int, int> conversionTable, std::vector<T>& connectivities) {
+            for (auto& connectivity : connectivities) {
+                for (auto index = connectivity.begin(); index != connectivity.end() - 1; ++index)
+                    *index = conversionTable[*index];
+            }
+        }
+
         void fixElementIndices();
         void fixFacetIndices();
         void fixLineIndices();

@@ -2,8 +2,7 @@
 #include <cgnslib.h>
 
 MultipleBasesCgnsCreator3D::MultipleBasesCgnsCreator3D(std::vector<boost::shared_ptr<GridData>> gridDatas, std::vector<std::string> baseNames, std::vector<std::string> zoneNames, std::string folderPath) :
-    CgnsCreator3D(nullptr, folderPath, false), gridDatas(gridDatas), baseNames(baseNames), zoneNames(zoneNames)
-{
+    CgnsCreator3D(nullptr, folderPath, false), gridDatas(gridDatas), baseNames(baseNames), zoneNames(zoneNames) {
     this->initialize();
 }
 
