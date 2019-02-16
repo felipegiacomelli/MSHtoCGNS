@@ -35,7 +35,7 @@ int main() {
     std::cout << std::endl << "\tGrid path: " << inputPath.string();
     std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
 
-    printGridDataInformation(gridData, red("original gridData"));
+    printGridDataInformation(gridData, purple("original gridData"));
 
     boost::shared_ptr<GridData> extract;
     if (script.get_child_optional("ScriptGridDataExtractor")) {
@@ -47,7 +47,7 @@ int main() {
     std::vector<std::string> baseNames{"Rock", "Reservoir"};
     std::vector<std::string> zoneNames{"Rock", "Reservoir"};
 
-    printGridDataInformation(extract, red("original gridData"));
+    printGridDataInformation(extract, purple("extract gridData"));
 
     start = std::chrono::steady_clock::now();
     MultipleBasesCgnsCreator3D(gridDatas, baseNames, zoneNames, outputPath.string());

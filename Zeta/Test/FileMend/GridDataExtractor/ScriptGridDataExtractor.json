@@ -1,4 +1,4 @@
 {
-    "regions" : ["LIMESTONE"],
-    "boundaries" : ["RESERVOIR_WEST", "RESERVOIR_EAST", "RESERVOIR_SOUTH", "RESERVOIR_NORTH", "RESERVOIR_BOTTOM", "RESERVOIR_TOP"]
+    "regions" : ["PAY"],
+    "boundaries" : ["INTERFACE"]
 }

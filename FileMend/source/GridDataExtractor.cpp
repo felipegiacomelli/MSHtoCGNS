@@ -137,26 +137,6 @@ void GridDataExtractor::extractBoundaries() {
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no boundary " + name + " in gridData");
         auto boundary(*iterator);
 
-        //
-        std::vector<int> deleteIndices;
-        for (auto i = this->original->triangles.cbegin(); i != this->original->triangles.cend(); ++i)
-            if (i->back() >= boundary.begin && i->back() <= boundary.end)
-                deleteIndices.emplace_back(i - this->original->triangles.cbegin());
-
-        for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); ++rit)
-            this->original->triangles.erase(this->original->triangles.begin() + *rit);
-
-        deleteIndices.clear();
-        for (auto i = this->original->quadrangles.cbegin(); i != this->original->quadrangles.cend(); ++i)
-            if (i->back() >= boundary.begin && i->back() <= boundary.end)
-                deleteIndices.emplace_back(i - this->original->quadrangles.cbegin());
-
-        for (auto rit = deleteIndices.crbegin(); rit != deleteIndices.crend(); ++rit)
-            this->original->quadrangles.erase(this->original->quadrangles.begin() + *rit);
-
-        this->original->boundaries.erase(iterator);
-        //
-
         auto boundaryBegin = this->elementConnectivities.begin() + boundary.begin;
         auto boundaryEnd = this->elementConnectivities.begin() + boundary.end;
 

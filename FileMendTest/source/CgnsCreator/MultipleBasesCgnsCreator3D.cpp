@@ -1,6 +1,6 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
 #include "MSHtoCGNS/BoostInterface/PropertyTree.hpp"
-#include "MSHtoCGNS/MshInterface/MshReader/MshReader3D.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader3D.hpp"
 #include "MSHtoCGNS/FileMend/GridDataExtractor.hpp"
 #include "MSHtoCGNS/FileMend/CgnsCreator/MultipleBasesCgnsCreator3D.hpp"
 #include <cgnslib.h>
@@ -9,13 +9,13 @@
 
 struct MultipleBasesCgnsCreator3DFixture {
     MultipleBasesCgnsCreator3DFixture() {
-        MshReader3D mshReader3D(this->inputPath);
-
         boost::property_tree::ptree script;
         boost::property_tree::read_json(this->multipleBasesScript, script);
-        GridDataExtractor gridDataExtractor(mshReader3D.gridData, script.get_child("ScriptGridDataExtractor"));
 
-        this->gridDatas.emplace_back(mshReader3D.gridData);
+        CgnsReader3D cgnsReader3D(std::string(TEST_INPUT_DIRECTORY) + script.get<std::string>("path.input"));
+        GridDataExtractor gridDataExtractor(cgnsReader3D.gridData, script.get_child("ScriptGridDataExtractor"));
+
+        this->gridDatas.emplace_back(cgnsReader3D.gridData);
         this->gridDatas.emplace_back(gridDataExtractor.extract);
 
         MultipleBasesCgnsCreator3D multipleBasesCgnsCreator3D(this->gridDatas, this->baseNames, this->zoneNames, "./");
@@ -26,10 +26,10 @@ struct MultipleBasesCgnsCreator3DFixture {
 
     ~MultipleBasesCgnsCreator3DFixture() {
         cg_close(this->fileIndex);
-        boost::filesystem::remove_all("./152v_72e");
+        boost::filesystem::remove_all("./125v_64e");
     };
 
-    std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractor/4x4x4_2x2x2.msh";
+    std::string inputPath =  + "";
     std::string multipleBasesScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/MultipleBasesCgnsCreator3D/ScriptMultipleBases.json";
     std::vector<boost::shared_ptr<GridData>> gridDatas;
     std::vector<std::string> baseNames{"ROCK_BASE", "RESERVOIR_BASE"};
@@ -65,20 +65,16 @@ TestCase(Base1Case) {
     int zoneIndex = 1;
     cg_zone_read(this->fileIndex, baseIndex, zoneIndex, this->buffer, this->sizes);
     checkEqual(std::string(this->buffer), "ROCK_ZONE");
-    checkEqual(this->sizes[0], 152);
-    checkEqual(this->sizes[1], 72);
+    checkEqual(this->sizes[0], 125);
+    checkEqual(this->sizes[1], 64);
     checkEqual(this->sizes[2], 0);
 
     int numberOfSections;
     cg_nsections(this->fileIndex, baseIndex, zoneIndex, &numberOfSections);
-    checkEqual(numberOfSections, 8);
+    checkEqual(numberOfSections, 9);
 }
 
 TestCase(Base2Case) {
-    int numberOfBases;
-    cg_nbases(this->fileIndex, &numberOfBases);
-    checkEqual(numberOfBases, 2);
-
     int baseIndex = 2;
     cg_base_read(this->fileIndex, baseIndex, this->buffer, &this->cellDimension, &this->physicalDimension);
     checkEqual(std::string(this->buffer), "RESERVOIR_BASE");
@@ -96,7 +92,7 @@ TestCase(Base2Case) {
 
     int numberOfSections;
     cg_nsections(this->fileIndex, baseIndex, zoneIndex, &numberOfSections);
-    checkEqual(numberOfSections, 7);
+    checkEqual(numberOfSections, 2);
 }
 
 TestSuiteEnd()

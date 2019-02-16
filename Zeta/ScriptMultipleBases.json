@@ -1,14 +1,14 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Downloads/cube_inside_cube/cube_inside_cube.msh",
-        "output" : "/home/felipe/Downloads/cube_inside_cube/multiple_bases/"
+        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/FileMend/GridDataExtractor/125v_64e.cgns",
+        "output" : "./"
     },
 
     "ScriptGridDataExtractor" :
     {
-        "regions" : ["NONPAY"],
-        "boundaries" : [],
+        "regions" : ["PAY"],
+        "boundaries" : ["INTERFACE"],
         "wells": []
     }
 }

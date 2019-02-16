@@ -1,5 +1,4 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
-#include "MSHtoCGNS/MshInterface/MshReader/MshReader3D.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader3D.hpp"
 #include "MSHtoCGNS/FileMend/GridDataExtractor.hpp"
 
@@ -7,11 +6,11 @@
 
 struct GridDataExtractorFixture {
     GridDataExtractorFixture() {
-        MshReader3D mshReader3D(this->inputPath);
-        this->gridData = mshReader3D.gridData;
+        CgnsReader3D cgnsReader3D(this->inputPath);
+        this->gridData = cgnsReader3D.gridData;
     }
 
-    std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractor/4x4x4_2x2x2.msh";
+    std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractor/125v_64e.cgns";
     boost::shared_ptr<GridData> gridData;
     std::string gridDataExtractorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractor/ScriptGridDataExtractor.json";
 };
@@ -19,49 +18,48 @@ struct GridDataExtractorFixture {
 FixtureTestSuite(GridDataExtractorSuite, GridDataExtractorFixture)
 
 TestCase(GridDataExtractorTest) {
-    checkEqual(this->gridData->coordinates.size(), 152u);
-
     GridDataExtractor gridDataExtractor(this->gridData, this->gridDataExtractorScript);
 
-    checkEqual(this->gridData->coordinates.size(), 152u);
+    checkEqual(this->gridData->coordinates.size(), 125u);
 
     checkEqual(this->gridData->tetrahedrons.size(), 0u);
-    checkEqual(this->gridData->hexahedrons.size(), 72u);
+    checkEqual(this->gridData->hexahedrons.size(), 64u);
     checkEqual(this->gridData->prisms.size(), 0u);
     checkEqual(this->gridData->pyramids.size(), 0u);
-
     checkEqual(this->gridData->triangles.size(), 0u);
-    checkEqual(this->gridData->quadrangles.size(), 96u);
-
+    checkEqual(this->gridData->quadrangles.size(), 120u);
     checkEqual(this->gridData->lines.size(), 0u);
 
-    checkEqual(this->gridData->boundaries.size(), 6u);
     checkEqual(this->gridData->regions.size(), 2u);
+    checkEqual(this->gridData->boundaries.size(), 7u);
     checkEqual(this->gridData->wells.size(), 0u);
 
-    checkEqual(this->gridData->boundaries[0].begin, 72);
-    checkEqual(this->gridData->boundaries[0].end, 88);
+    checkEqual(this->gridData->regions[0].begin, 0);
+    checkEqual(this->gridData->regions[0].end, 8);
 
-    checkEqual(this->gridData->boundaries[1].begin,  88);
-    checkEqual(this->gridData->boundaries[1].end, 104);
+    checkEqual(this->gridData->regions[1].begin, 8);
+    checkEqual(this->gridData->regions[1].end, 64);
 
-    checkEqual(this->gridData->boundaries[2].begin, 104);
-    checkEqual(this->gridData->boundaries[2].end, 120);
+    checkEqual(this->gridData->boundaries[0].begin, 64);
+    checkEqual(this->gridData->boundaries[0].end, 80);
 
-    checkEqual(this->gridData->boundaries[3].begin, 120);
-    checkEqual(this->gridData->boundaries[3].end, 136);
+    checkEqual(this->gridData->boundaries[1].begin,  80);
+    checkEqual(this->gridData->boundaries[1].end, 96);
 
-    checkEqual(this->gridData->boundaries[4].begin, 136);
-    checkEqual(this->gridData->boundaries[4].end, 152);
+    checkEqual(this->gridData->boundaries[2].begin, 96);
+    checkEqual(this->gridData->boundaries[2].end, 112);
 
-    checkEqual(this->gridData->boundaries[5].begin, 152);
-    checkEqual(this->gridData->boundaries[5].end, 168);
+    checkEqual(this->gridData->boundaries[3].begin, 112);
+    checkEqual(this->gridData->boundaries[3].end, 128);
 
-    checkEqual(this->gridData->regions[0].begin,  0);
-    checkEqual(this->gridData->regions[0].end, 64);
+    checkEqual(this->gridData->boundaries[4].begin, 128);
+    checkEqual(this->gridData->boundaries[4].end, 144);
 
-    checkEqual(this->gridData->regions[1].begin, 64);
-    checkEqual(this->gridData->regions[1].end, 72);
+    checkEqual(this->gridData->boundaries[5].begin, 144);
+    checkEqual(this->gridData->boundaries[5].end, 160);
+
+    checkEqual(this->gridData->boundaries[6].begin,  160);
+    checkEqual(this->gridData->boundaries[6].end, 184);
 
     boost::shared_ptr<GridData> extract = gridDataExtractor.extract;
 
@@ -71,36 +69,19 @@ TestCase(GridDataExtractorTest) {
     checkEqual(extract->hexahedrons.size(), 8u);
     checkEqual(extract->prisms.size(), 0u);
     checkEqual(extract->pyramids.size(), 0u);
-
     checkEqual(extract->triangles.size(), 0u);
     checkEqual(extract->quadrangles.size(), 24u);
-
     checkEqual(extract->lines.size(), 0u);
 
-    checkEqual(extract->boundaries.size(), 6u);
     checkEqual(extract->regions.size(), 1u);
+    checkEqual(extract->boundaries.size(), 1u);
     checkEqual(extract->wells.size(), 0u);
-
-    checkEqual(extract->boundaries[0].begin,  8);
-    checkEqual(extract->boundaries[0].end, 12);
-
-    checkEqual(extract->boundaries[1].begin, 12);
-    checkEqual(extract->boundaries[1].end, 16);
-
-    checkEqual(extract->boundaries[2].begin, 16);
-    checkEqual(extract->boundaries[2].end, 20);
-
-    checkEqual(extract->boundaries[3].begin, 20);
-    checkEqual(extract->boundaries[3].end, 24);
-
-    checkEqual(extract->boundaries[4].begin, 24);
-    checkEqual(extract->boundaries[4].end, 28);
-
-    checkEqual(extract->boundaries[5].begin, 28);
-    checkEqual(extract->boundaries[5].end, 32);
 
     checkEqual(extract->regions[0].begin, 0);
     checkEqual(extract->regions[0].end, 8);
+
+    checkEqual(extract->boundaries[0].begin,  8);
+    checkEqual(extract->boundaries[0].end, 32);
 
     checkClose(extract->coordinates[ 0][0], 2.5000e-01, TOLERANCE); checkClose(extract->coordinates[ 0][1], 2.5000e-01, TOLERANCE); checkClose(extract->coordinates[ 0][2], 2.5000e-01, TOLERANCE);
     checkClose(extract->coordinates[ 1][0], 7.5000e-01, TOLERANCE); checkClose(extract->coordinates[ 1][1], 2.5000e-01, TOLERANCE); checkClose(extract->coordinates[ 1][2], 2.5000e-01, TOLERANCE);
