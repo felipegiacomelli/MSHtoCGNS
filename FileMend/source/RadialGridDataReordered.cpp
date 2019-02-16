@@ -122,7 +122,7 @@ void RadialGridDataReordered::reorder() {
                     break;
                 }
                 else
-                    prism++;
+                    ++prism;
 
         for (auto quadrangle = this->quadrangles.begin(); quadrangle != this->quadrangles.end(); ++quadrangle)
             for (auto hexahedron = this->hexahedrons.begin(); hexahedron != this->hexahedrons.end();)
@@ -136,7 +136,7 @@ void RadialGridDataReordered::reorder() {
                     break;
                 }
                 else
-                    hexahedron++;
+                    ++hexahedron;
     }
 }
 
@@ -150,7 +150,7 @@ void RadialGridDataReordered::buildFirstSection() {
                 break;
             }
             else
-                prism++;
+                ++prism;
 
     for (auto quadrangle = this->quadrangles.begin(); quadrangle != this->quadrangles.end(); ++quadrangle)
         for (auto hexahedron = this->hexahedrons.begin(); hexahedron != this->hexahedrons.end();)
@@ -162,7 +162,7 @@ void RadialGridDataReordered::buildFirstSection() {
                 break;
             }
             else
-                hexahedron++;
+                ++hexahedron;
 }
 
 void RadialGridDataReordered::addVertex(int vertex, int section) {

@@ -123,7 +123,7 @@ void GridDataExtractor::extractRegions() {
         }
 
         region.begin = regionBegin->back();
-        region.end = (regionEnd - 1)->back() + 1;
+        region.end = (--regionEnd)->back() + 1;
 
         this->extract->regions.emplace_back(region);
     }
@@ -137,6 +137,7 @@ void GridDataExtractor::extractBoundaries() {
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no boundary " + name + " in gridData");
         auto boundary(*iterator);
 
+        //
         std::vector<int> deleteIndices;
         for (auto i = this->original->triangles.cbegin(); i != this->original->triangles.cend(); ++i)
             if (i->back() >= boundary.begin && i->back() <= boundary.end)
@@ -154,6 +155,7 @@ void GridDataExtractor::extractBoundaries() {
             this->original->quadrangles.erase(this->original->quadrangles.begin() + *rit);
 
         this->original->boundaries.erase(iterator);
+        //
 
         auto boundaryBegin = this->elementConnectivities.begin() + boundary.begin;
         auto boundaryEnd = this->elementConnectivities.begin() + boundary.end;
@@ -180,7 +182,7 @@ void GridDataExtractor::extractBoundaries() {
         }
 
         boundary.begin = boundaryBegin->back();
-        boundary.end = (boundaryEnd - 1)->back() + 1;
+        boundary.end = (--boundaryEnd)->back() + 1;
 
         this->extract->boundaries.emplace_back(boundary);
     }
@@ -207,7 +209,7 @@ void GridDataExtractor::extractWells() {
         }
 
         well.begin = wellBegin->back();
-        well.end = (wellEnd - 1)->back() + 1;
+        well.end = (--wellEnd)->back() + 1;
 
         this->extract->wells.emplace_back(well);
     }
