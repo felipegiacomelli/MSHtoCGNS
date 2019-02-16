@@ -31,18 +31,25 @@ class GridDataExtractor {
         void checkGridData();
         void readScript();
         void createExtract();
-        void buildElementConnectivities();
+        void buildGlobalConnectivities();
         void extractRegions();
         void extractBoundaries();
         void extractWells();
         void extractVertices();
-        void fixIndices();
+        void rectifyConnectivities();
+        template<typename T>
+        void rectifyConnectivity(std::unordered_map<int, int> conversionTable, std::vector<T>& connectivities) {
+            for (auto& connectivity : connectivities) {
+                for (auto index = connectivity.begin(); index != connectivity.end() - 1; ++index)
+                    *index = conversionTable[*index];
+            }
+        }
 
         boost::shared_ptr<GridData> original;
         boost::property_tree::ptree propertyTree;
 
         std::vector<GridDataExtractorData> gridDataExtractorDatum;
-        std::vector<std::vector<int>> elementConnectivities;
+        std::vector<std::vector<int>> globalConnectivities;
         std::set<int> vertices;
         int localIndex = 0;
 };
