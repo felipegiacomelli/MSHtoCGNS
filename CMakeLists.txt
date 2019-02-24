@@ -41,7 +41,7 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 ##################################################################
 # ABOUT THE PROJECT
 ##################################################################
-project (MSHtoCGNS HOMEPAGE_URL "https://github.com/felipegiacomelli/MSHtoCGNS")
+project (MSHtoCGNS)
 set (VERSION_MAJOR "0")
 set (VERSION_MINOR "15")
 set (VERSION_PATCH "0")
