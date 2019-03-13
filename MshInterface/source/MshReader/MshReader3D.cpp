@@ -5,6 +5,7 @@ MshReader3D::MshReader3D(std::string filePath) : MshReader(filePath) {
     this->addPhysicalEntities();
     this->addElements();
     this->addFacets();
+    this->addLines();
     this->findBoundaryVertices();
     this->findRegionVertices();
 }
@@ -12,6 +13,10 @@ MshReader3D::MshReader3D(std::string filePath) : MshReader(filePath) {
 void MshReader3D::addPhysicalEntities() {
     for (int physicalEntity = 0; physicalEntity < this->numberOfPhysicalEntities; ++physicalEntity) {
         switch (this->entitiesTypes[physicalEntity]) {
+            case 0: {
+                this->addWell(this->entitiesNames[physicalEntity], this->physicalEntitiesRange[physicalEntity].front(), this->physicalEntitiesRange[physicalEntity].back());
+                break;
+            }
             case 1: {
                 this->addBoundary(this->entitiesNames[physicalEntity], this->physicalEntitiesRange[physicalEntity].front(), this->physicalEntitiesRange[physicalEntity].back());
                 break;
@@ -115,5 +120,33 @@ void MshReader3D::findRegionVertices() {
                 vertices.insert(pyramid.cbegin(), pyramid.cend() - 1);
 
         region.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
+    }
+}
+
+void MshReader3D::addWell(std::string name, int begin, int end) {
+    this->gridData->wells.emplace_back(WellData());
+    this->gridData->wells.back().name = name;
+    this->gridData->wells.back().begin = begin;
+    this->gridData->wells.back().end = end;
+}
+
+void MshReader3D::addLines() {
+    for (auto& well : this->gridData->wells) {
+        auto begin = this->connectivities.begin() + well.begin;
+        auto end = this->connectivities.begin() + well.end;
+        well.begin = this->shift;
+        while (begin != end) {
+            begin->push_back(this->shift++);
+            switch ((*begin)[this->typeIndex]) {
+                case 0: {
+                    this->gridData->lines.emplace_back(std::array<int, 3>());
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 3, std::begin(this->gridData->lines.back()));
+                    break;
+                }
+                default:
+                    throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Non supported facet found");
+            }
+        }
+        well.end = this->shift;
     }
 }

@@ -11,8 +11,10 @@ class MshReader3D : public MshReader {
 
     private:
         void addPhysicalEntities() override;
+        void addWell(std::string name, int begin, int end);
         void addElements() override;
         void addFacets() override;
+        void addLines();
         void findBoundaryVertices() override;
         void findRegionVertices() override;
 };

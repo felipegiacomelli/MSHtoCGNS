@@ -1,8 +1,8 @@
 {
     "inputs" :
     [
-        "/home/felipe/Downloads/cube_inside_cube/cube_inside_cube.msh"
+        "/home/felipe/Downloads/cartesian/cartesian.msh"
     ],
 
-    "output": "/home/felipe/Downloads/cube_inside_cube/"
+    "output": "/home/felipe/Downloads/cartesian/"
 }
