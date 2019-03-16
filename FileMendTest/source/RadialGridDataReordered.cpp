@@ -1,6 +1,7 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader3D.hpp"
 #include "MSHtoCGNS/FileMend/RadialGridDataReordered.hpp"
+#include <cmath>
 
 #define TOLERANCE 1e-4
 

@@ -8,7 +8,6 @@
 #define TestSuite BOOST_AUTO_TEST_SUITE
 #define TestSuiteEnd BOOST_AUTO_TEST_SUITE_END
 
-#define GlobalFixture BOOST_GLOBAL_FIXTURE
 #define FixtureTestCase BOOST_FIXTURE_TEST_CASE
 #define FixtureTestSuite BOOST_FIXTURE_TEST_SUITE
 
