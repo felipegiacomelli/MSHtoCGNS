@@ -8,6 +8,7 @@ MshReader3D::MshReader3D(std::string filePath) : MshReader(filePath) {
     this->addLines();
     this->findBoundaryVertices();
     this->findRegionVertices();
+    this->findWellVertices();
 }
 
 void MshReader3D::addPhysicalEntities() {
@@ -29,6 +30,13 @@ void MshReader3D::addPhysicalEntities() {
                 throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Physical entity " + std::to_string(this->entitiesTypes[physicalEntity]) + " not supported");
         }
     }
+}
+
+void MshReader3D::addWell(std::string name, int begin, int end) {
+    this->gridData->wells.emplace_back(WellData());
+    this->gridData->wells.back().name = name;
+    this->gridData->wells.back().begin = begin;
+    this->gridData->wells.back().end = end;
 }
 
 void MshReader3D::addElements() {
@@ -83,6 +91,27 @@ void MshReader3D::addFacets() {
     }
 }
 
+void MshReader3D::addLines() {
+    for (auto& well : this->gridData->wells) {
+        auto begin = this->connectivities.begin() + well.begin;
+        auto end = this->connectivities.begin() + well.end;
+        well.begin = this->shift;
+        while (begin != end) {
+            begin->push_back(this->shift++);
+            switch ((*begin)[this->typeIndex]) {
+                case 0: {
+                    this->gridData->lines.emplace_back(std::array<int, 3>());
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 3, std::begin(this->gridData->lines.back()));
+                    break;
+                }
+                default:
+                    throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Non supported facet found");
+            }
+        }
+        well.end = this->shift;
+    }
+}
+
 void MshReader3D::findBoundaryVertices() {
     for (auto& boundary : this->gridData->boundaries) {
         std::set<int> vertices;
@@ -123,30 +152,14 @@ void MshReader3D::findRegionVertices() {
     }
 }
 
-void MshReader3D::addWell(std::string name, int begin, int end) {
-    this->gridData->wells.emplace_back(WellData());
-    this->gridData->wells.back().name = name;
-    this->gridData->wells.back().begin = begin;
-    this->gridData->wells.back().end = end;
-}
-
-void MshReader3D::addLines() {
+void MshReader3D::findWellVertices() {
     for (auto& well : this->gridData->wells) {
-        auto begin = this->connectivities.begin() + well.begin;
-        auto end = this->connectivities.begin() + well.end;
-        well.begin = this->shift;
-        while (begin != end) {
-            begin->push_back(this->shift++);
-            switch ((*begin)[this->typeIndex]) {
-                case 0: {
-                    this->gridData->lines.emplace_back(std::array<int, 3>());
-                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 3, std::begin(this->gridData->lines.back()));
-                    break;
-                }
-                default:
-                    throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Non supported facet found");
-            }
-        }
-        well.end = this->shift;
+        std::set<int> vertices;
+
+        for (const auto& line : this->gridData->lines)
+            if (line.back() >= well.begin && line.back() < well.end)
+                vertices.insert(line.cbegin(), line.cend() - 1);
+
+        well.vertices = std::vector<int>(vertices.cbegin(), vertices.cend());
     }
 }

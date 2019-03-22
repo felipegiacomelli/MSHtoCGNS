@@ -17,6 +17,7 @@ class MshReader3D : public MshReader {
         void addLines();
         void findBoundaryVertices() override;
         void findRegionVertices() override;
+        void findWellVertices();
 };
 
 #endif
