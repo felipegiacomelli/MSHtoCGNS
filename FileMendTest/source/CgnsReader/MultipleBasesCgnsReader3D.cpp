@@ -110,4 +110,9 @@ TestCase(Base3Case) {
     checkEqual(gridData->wells[0].end, 51);
 }
 
+TestCase(ExistsCase) {
+    check(this->multipleBasesCgnsReader3D.exists("SEGMENT"));
+    check(!this->multipleBasesCgnsReader3D.exists("YELLOW"));
+}
+
 TestSuiteEnd()

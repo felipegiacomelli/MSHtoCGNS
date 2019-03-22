@@ -13,6 +13,8 @@ class MultipleBasesCgnsReader3D : public CgnsReader3D {
 
         void print() const;
 
+        bool exists(std::string name) const;
+
         boost::shared_ptr<GridData> read(std::string name);
         boost::shared_ptr<GridData> read(int baseIndex);
 

@@ -19,6 +19,10 @@ void MultipleBasesCgnsReader3D::print() const {
         std::cout << std::endl << "\t" << std::left << std::setw(15) << entry.first << " : " << entry.second << std::endl;
 }
 
+bool MultipleBasesCgnsReader3D::exists(std::string name) const {
+    return this->bases.cend() != std::find_if(this->bases.cbegin(), this->bases.cend(), [=](auto e){return e.first == name;});
+}
+
 boost::shared_ptr<GridData> MultipleBasesCgnsReader3D::read(std::string name) {
     auto entry = std::find_if(this->bases.cbegin(), this->bases.cend(), [=](auto e){return e.first == name;});
     if (entry == this->bases.cend())
