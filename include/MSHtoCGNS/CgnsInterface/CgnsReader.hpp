@@ -33,7 +33,25 @@ class CgnsReader {
 
         void readSections();
         virtual bool skipSection() = 0;
-        void addConnectivities(const std::vector<int> connectivities);
+        void addConnectivities(const std::vector<int>& connectivities);
+
+        template<typename T>
+        void addConnectivity(std::vector<T>& connectivities, const std::vector<int>& connectivity) {
+            connectivities.emplace_back(T{});
+            std::copy_n(std::cbegin(connectivity), connectivity.size(), std::begin(connectivities.back()));
+        }
+
+        template<typename T>
+        void addConnectivity(std::vector<T>& connectivities, const std::vector<int>& connectivity, int numberOfElements, int numberOfVertices) {
+            for (int e = 0; e < numberOfElements; ++e) {
+                connectivities.emplace_back(T{});
+                auto& element = connectivities.back();
+                for (int k = 0; k < numberOfVertices; ++k)
+                    element[k] = connectivity[e * numberOfVertices + k] - 1;
+                element.back() = this->elementStart - 1 + e;
+            }
+        }
+
         virtual void addEntity(int elementType) = 0;
         void addRegion(std::string&& name, int begin, int end);
         void addBoundary(std::string&& name, int begin, int end);

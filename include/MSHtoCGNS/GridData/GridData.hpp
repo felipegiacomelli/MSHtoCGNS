@@ -33,13 +33,14 @@ struct GridData {
 
     std::vector<std::array<double, 3>> coordinates;
 
-    std::vector<std::array<int, 3>> lines;
-    std::vector<std::array<int, 4>> triangles;
-    std::vector<std::array<int, 5>> quadrangles;
     std::vector<std::array<int, 5>> tetrahedrons;
     std::vector<std::array<int, 9>> hexahedrons;
     std::vector<std::array<int, 7>> prisms;
     std::vector<std::array<int, 6>> pyramids;
+    std::vector<std::array<int, 4>> triangles;
+    std::vector<std::array<int, 5>> quadrangles;
+    std::vector<std::array<int, 3>> lines;
+    std::vector<std::array<int, 2>> points;
 
     std::vector<BoundaryData> boundaries;
     std::vector<RegionData> regions;
