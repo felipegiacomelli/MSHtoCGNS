@@ -38,6 +38,12 @@ int main() {
 }
 
 boost::shared_ptr<GridData> read(std::string path) {
+    if (!boost::filesystem::exists(boost::filesystem::path(path).parent_path()))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path does not exist");
+
+    if (!boost::filesystem::exists(path))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no file in the given path");
+
     char buffer[1024];
     std::ifstream file = std::ifstream(path.c_str());
     file.seekg(0, std::ios::beg);
