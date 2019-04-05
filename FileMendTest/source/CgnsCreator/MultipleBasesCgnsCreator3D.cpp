@@ -30,7 +30,7 @@ struct MultipleBasesCgnsCreator3DFixture {
     };
 
     std::string inputPath =  + "";
-    std::string multipleBasesScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/MultipleBasesCgnsCreator3D/ScriptMultipleBases.json";
+    std::string multipleBasesScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/MultipleBasesCgnsCreator3D/MultipleBases.json";
     std::vector<boost::shared_ptr<GridData>> gridDatas;
     std::vector<std::string> baseNames{"ROCK_BASE", "RESERVOIR_BASE"};
     std::vector<std::string> zoneNames{"ROCK_ZONE", "RESERVOIR_ZONE"};

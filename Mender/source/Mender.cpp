@@ -27,7 +27,7 @@ void applyRatio(boost::shared_ptr<GridData> gridData, const double& ratio) {
 
 int main() {
     boost::property_tree::ptree menderScript;
-    boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMender.json", menderScript);
+    boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "Mender.json", menderScript);
     std::string inputPath  = menderScript.get<std::string>("path.input");
     std::string outputPath = menderScript.get<std::string>("path.output");
 

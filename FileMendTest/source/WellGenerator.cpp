@@ -10,7 +10,7 @@ struct WellGeneratorFixture {
 
     std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/WellGenerator/9821v_45841e.cgns";
     boost::shared_ptr<GridData> gridData;
-    std::string wellGeneratorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/WellGenerator/ScriptWellGenerator.json";
+    std::string wellGeneratorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/WellGenerator/WellGenerator.json";
 };
 
 FixtureTestSuite(WellGeneratorSuite, WellGeneratorFixture)

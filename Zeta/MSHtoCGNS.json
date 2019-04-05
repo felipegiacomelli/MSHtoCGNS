@@ -1,0 +1,8 @@
+{
+    "inputs" :
+    [
+        "/home/felipe/Downloads/porous/hybrid_square.msh"
+    ],
+
+    "output": "/home/felipe/Downloads/porous/Grids"
+}

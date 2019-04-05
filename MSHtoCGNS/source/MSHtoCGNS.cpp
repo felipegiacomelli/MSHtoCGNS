@@ -15,7 +15,7 @@ std::string create(boost::shared_ptr<GridData> gridData, std::string path);
 
 int main() {
     boost::property_tree::ptree propertyTree;
-    boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMSHtoCGNS.json", propertyTree);
+    boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "MSHtoCGNS.json", propertyTree);
 
     std::vector<std::string> inputs;
     for (auto input : propertyTree.get_child("inputs")) {

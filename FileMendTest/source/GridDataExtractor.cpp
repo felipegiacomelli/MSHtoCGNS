@@ -12,7 +12,7 @@ struct GridDataExtractorFixture {
 
     std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractor/125v_64e.cgns";
     boost::shared_ptr<GridData> gridData;
-    std::string gridDataExtractorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractor/ScriptGridDataExtractor.json";
+    std::string gridDataExtractorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractor/GridDataExtractor.json";
 };
 
 FixtureTestSuite(GridDataExtractorSuite, GridDataExtractorFixture)
@@ -178,7 +178,7 @@ struct GridDataExtractorWithWellFixture {
 
     std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractorWithWell/12523v_57072e.cgns";
     boost::shared_ptr<GridData> gridData;
-    std::string gridDataExtractorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractorWithWell/ScriptGridDataExtractor.json";
+    std::string gridDataExtractorScript = std::string(TEST_INPUT_DIRECTORY) + "FileMend/GridDataExtractorWithWell/GridDataExtractor.json";
 };
 
 FixtureTestSuite(GridDataExtractorWithWellSuite, GridDataExtractorWithWellFixture)

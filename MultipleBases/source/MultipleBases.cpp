@@ -11,7 +11,7 @@
 
 int main() {
     boost::property_tree::ptree script;
-    boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "ScriptMultipleBases.json", script);
+    boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "MultipleBases.json", script);
     boost::filesystem::path inputPath(script.get<std::string>("path.input"));
     boost::filesystem::path outputPath(script.get<std::string>("path.output"));
 
