@@ -21,8 +21,6 @@ TestCase(Lines) {
     checkEqual(this->gridData->lines.size(), 1u);
 
     checkEqual(this->gridData->lines[0][0], 4); checkEqual(this->gridData->lines[0][1], 3); checkEqual(this->gridData->lines[0][2], 116);
-
-    printGridDataInformation(this->gridData, "a\n");
 }
 
 TestCase(Wells) {

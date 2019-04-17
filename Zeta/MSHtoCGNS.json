@@ -1,8 +1,9 @@
 {
     "inputs" :
     [
-        "/home/felipe/Downloads/porous/hybrid_square.msh"
+        "/home/felipe/Downloads/Samples/Prism/Grid.msh",
+        "/home/felipe/Downloads/Samples/Pyrams/Grid.msh"
     ],
 
-    "output": "/home/felipe/Downloads/porous/Grids"
+    "output": "/home/felipe/Downloads/Samples/"
 }

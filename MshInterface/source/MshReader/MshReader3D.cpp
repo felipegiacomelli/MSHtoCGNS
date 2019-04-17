@@ -57,6 +57,16 @@ void MshReader3D::addElements() {
                     std::copy_n(std::begin(*begin++) + this->nodeIndex, 9, std::begin(this->gridData->hexahedrons.back()));
                     break;
                 }
+                case 5: {
+                    this->gridData->prisms.emplace_back(std::array<int, 7>());
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 7, std::begin(this->gridData->prisms.back()));
+                    break;
+                }
+                case 6: {
+                    this->gridData->pyramids.emplace_back(std::array<int, 6>());
+                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 6, std::begin(this->gridData->pyramids.back()));
+                    break;
+                }
                 default:
                     throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Non supported element found");
             }

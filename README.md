@@ -3,7 +3,7 @@
 Master: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=master)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS)
 Develop: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=develop)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS)
 
-Generate a msh format grid using [gmsh 3.0.6](http://gmsh.info/):
+Generate a msh grid using [gmsh 3.0.6](http://gmsh.info/):
 
 <img src="Zeta/Images/grid_gmsh.png" alt="gmsh" height=250 width=600  />
 
@@ -13,19 +13,16 @@ Convert it to the CGNS format and open it with [paraview](https://www.paraview.o
 
 This project currently supports:
 
-## 2D grids
-- hybrid grids (triangles and quadrangles)
-- multiple physical surfaces
-
-## 3D grids
-- hybrid grids (tetrahedra and hexahedra)
-- multiple physical volumes
+## MSH IO
+- [msh 2.2](http://www.manpagez.com/info/gmsh/gmsh-2.2.6/gmsh_63.php/)
+- read 2D / 3D single element or hybrid unstructured grids
+- supports Physical Line, Physical Surface and Physical Volume
 
 ## CGNS IO
-- read 2D single element or mixed element unstructured grids
-- read 3D single element or hybrid unstructured grids
-- read well in 3D unstructured grids
-- write simulation results
+- [cgns 3.10 - 3.3.1](https://cgns.github.io/)
+- read 2D / 3D single element or hybrid unstructured grids
+- write 2D / 3D single element or hybrid unstructured grids
+- write simulation data
 
 <img src="Zeta/Images/paraview_hybrid_3d_with_well.png"  height=250 width=600  />
 
@@ -50,7 +47,7 @@ Simply execute:
 ```shell
 $ mkdir build
 $ cd build
-$ cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=TRUE
+$ cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=TRUE
 $ make
 ```
 
@@ -66,7 +63,7 @@ $ make install
 
 ## Converting
 
-The file **ScriptMSHtoCGNS.json**, located in *Zeta/*, specifies the paths to the .msh files (**inputs**) and the path where the directory containing the .cgns file will be created (**output**). Thus, once you have set this, you may execute:
+The file **MSHtoCGNS.json**, located in *Zeta/*, specifies the paths to the msh files (**inputs**) and the path where the directory containing the cgns file will be created (**output**). Thus, once you have set this, you may execute:
 
 ```shell
 $ ./MSHtoCGNS
@@ -111,7 +108,7 @@ target_link_libraries (${_target} ${MSHTOCGNS_LIBRARIES})
 ```
 Usually,
 
-*$ENV{MSHTOCGNS_DIR}* is set to a directory such as **/home/felipe/Libraries/mshtocgns-0.12.0**
+*$ENV{MSHTOCGNS_DIR}* is set to a directory such as **/home/felipe/Libraries/mshtocgns-0.16.0**
 
 *${BUILD_TYPE}* is the lower case ${CMAKE_BUILD_TYPE} - **release** OR **debug**
 
