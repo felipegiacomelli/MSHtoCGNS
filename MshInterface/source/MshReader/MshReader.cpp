@@ -1,5 +1,41 @@
 #include "MSHtoCGNS/MshInterface/MshReader.hpp"
 
+namespace msh {
+    int getMshGridDimension(std::string path) {
+        if (!boost::filesystem::exists(boost::filesystem::path(path).parent_path()))
+            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path does not exist");
+
+        if (!boost::filesystem::exists(path))
+            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no file in the given path");
+
+        char buffer[1024];
+        std::ifstream file(std::ifstream(path.c_str()));
+
+        file.seekg(0, std::ios::beg);
+        while (strcmp(buffer, "$PhysicalNames") && !file.eof())
+            file >> buffer;
+
+        if (file.eof())
+            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no Physical Entities data in the grid file");
+
+        int numberOfPhysicalEntities;
+        file >> numberOfPhysicalEntities;
+        std::vector<int> dimensions;
+        for (int i = 0; i < numberOfPhysicalEntities; ++i) {
+            int type;
+            int index;
+            std::string name;
+            file >> type >> index >> name;
+            dimensions.push_back(type);
+        }
+
+        int dimension = *std::max_element(dimensions.cbegin(), dimensions.cend());
+        if (dimension == 2 || dimension == 3)
+            return dimension;
+        else
+            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Dimension must be either 2 or 3, not " + std::to_string(dimension));
+    }
+}
 MshReader::MshReader(std::string filePath) : filePath(filePath) {
     this->checkFile();
     this->gridData = boost::make_shared<GridData>();

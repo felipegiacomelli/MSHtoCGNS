@@ -38,41 +38,7 @@ int main() {
 }
 
 boost::shared_ptr<GridData> read(std::string path) {
-    if (!boost::filesystem::exists(boost::filesystem::path(path).parent_path()))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path does not exist");
-
-    if (!boost::filesystem::exists(path))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no file in the given path");
-
-    char buffer[1024];
-    std::ifstream file = std::ifstream(path.c_str());
-
-    // double version;
-    // file.seekg(0, std::ios::beg);
-    // while (strcmp(buffer, "$MeshFormat") && !file.eof())
-    //     file >> buffer;
-    // file >> version;
-    // std::cout << std::endl << "\tVERSION: " << version << std::endl;
-
-    file.seekg(0, std::ios::beg);
-    while (strcmp(buffer, "$PhysicalNames") && !file.eof())
-        file >> buffer;
-
-    if (file.eof())
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no Physical Entities data in the grid file");
-
-    int numberOfPhysicalEntities;
-    file >> numberOfPhysicalEntities;
-    std::vector<int> dimensions;
-    for (int i = 0; i < numberOfPhysicalEntities; ++i) {
-        int type;
-        int index;
-        std::string name;
-        file >> type >> index >> name;
-        dimensions.push_back(type);
-    }
-
-    switch (*std::max_element(dimensions.cbegin(), dimensions.cend())) {
+    switch (msh::getMshGridDimension(path)) {
         case 2: {
             MshReader2D mshReader2D(path);
             return mshReader2D.gridData;
@@ -82,7 +48,6 @@ boost::shared_ptr<GridData> read(std::string path) {
             return mshReader3D.gridData;
         }
     }
-
     return nullptr;
 }
 
@@ -97,6 +62,5 @@ std::string create(boost::shared_ptr<GridData> gridData, std::string path) {
             return cgnsCreator3D.getFileName();
         }
     }
-
     return std::string();
 }

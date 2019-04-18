@@ -9,6 +9,10 @@
 #include "MSHtoCGNS/GridData/GridData.hpp"
 #include "MSHtoCGNS/Utilities/Vector.hpp"
 
+namespace msh {
+    int getMshGridDimension(std::string path);
+}
+
 class MshReader {
     public:
         MshReader(std::string filePath);
