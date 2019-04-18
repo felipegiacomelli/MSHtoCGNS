@@ -43,3 +43,4 @@ release/
 Zeta/Libraries
 Zeta/Setup/cgns-*
 Zeta/Setup/boost-*
+!*.sh
