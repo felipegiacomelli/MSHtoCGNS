@@ -1,8 +1,8 @@
 {
     "inputs" :
     [
-        "/home/felipe/Downloads/Samples/Prism/Grid.msh",
-        "/home/felipe/Downloads/Samples/Pyrams/Grid.msh"
+        "/home/felipe/Github/MSHtoCGNS/Zeta/Test/MshInterface/3D-Region1-Prism/27v_16e.msh",
+        "/home/felipe/Github/MSHtoCGNS/Zeta/Test/MshInterface/3D-Region1-Pyramid/35v_48e.msh"
     ],
 
     "output": "/home/felipe/Downloads/Samples/"

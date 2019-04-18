@@ -46,6 +46,14 @@ boost::shared_ptr<GridData> read(std::string path) {
 
     char buffer[1024];
     std::ifstream file = std::ifstream(path.c_str());
+
+    // double version;
+    // file.seekg(0, std::ios::beg);
+    // while (strcmp(buffer, "$MeshFormat") && !file.eof())
+    //     file >> buffer;
+    // file >> version;
+    // std::cout << std::endl << "\tVERSION: " << version << std::endl;
+
     file.seekg(0, std::ios::beg);
     while (strcmp(buffer, "$PhysicalNames") && !file.eof())
         file >> buffer;
