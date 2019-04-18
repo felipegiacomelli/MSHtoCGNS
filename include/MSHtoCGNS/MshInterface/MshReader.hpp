@@ -34,6 +34,7 @@ class MshReader {
         virtual void findRegionVertices() = 0;
 
         std::string filePath;
+        double version;
         std::ifstream file;
         char buffer[1024];
         int numberOfPhysicalEntities;

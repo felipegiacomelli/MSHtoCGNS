@@ -21,6 +21,14 @@ void MshReader::checkFile() {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The file extension is not .msh");
 
     this->file = std::ifstream(this->filePath.c_str());
+
+    this->file.seekg(0, std::ios::beg);
+    while (strcmp(buffer, "$MeshFormat") && !this->file.eof())
+        this->file >> this->buffer;
+    this->file >> this->version;
+
+    if (this->version != 2.2)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - File version (" + std::to_string(this->version) + ") is older than 2.2");
 }
 
 void MshReader::readPhysicalNames() {
