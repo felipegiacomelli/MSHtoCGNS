@@ -1,21 +1,13 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
-#include "MSHtoCGNS/MshInterface/MshReader/MshReader3D.hpp"
-#include "MSHtoCGNS/Utilities/Print.hpp"
+#include "MSHtoCGNS/MshInterface/MshReaderFixture.hpp"
 
 #define TOLERANCE 1e-12
 
-struct Region1_ElementType1_Well1_3D_Msh {
-    Region1_ElementType1_Well1_3D_Msh() {
-        MshReader3D mshReader3D(std::string(TEST_INPUT_DIRECTORY) + "MshInterface/3D-Region3-ElementType1-Well1/88v_30e.msh");
-        this->gridData = mshReader3D.gridData;
-    }
-
-    ~Region1_ElementType1_Well1_3D_Msh() = default;
-
-    boost::shared_ptr<GridData> gridData;
+struct Region1_Hexahedrons_Well1_3D_Msh : public MshReaderFixture {
+    Region1_Hexahedrons_Well1_3D_Msh() : MshReaderFixture("MshInterface/3D-Region3-Hexahedrons-Well1/88v_30e.msh") {}
 };
 
-FixtureTestSuite(ReadMsh_Region3_ElementType1_Well1_3D, Region1_ElementType1_Well1_3D_Msh)
+FixtureTestSuite(ReadMsh_Region3_Hexahedrons_Well1_3D, Region1_Hexahedrons_Well1_3D_Msh)
 
 TestCase(Lines) {
     checkEqual(this->gridData->lines.size(), 1u);

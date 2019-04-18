@@ -5,10 +5,11 @@
 #include "MSHtoCGNS/MshInterface/MshReader/MshReader3D.hpp"
 
 struct MshReaderFixture {
-    MshReaderFixture();
+    MshReaderFixture(std::string path);
 
     ~MshReaderFixture() = default;
 
+    std::string path;
     boost::shared_ptr<GridData> gridData;
 };
 

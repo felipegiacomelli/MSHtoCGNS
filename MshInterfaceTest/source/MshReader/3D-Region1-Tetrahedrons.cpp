@@ -1,20 +1,13 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
-#include "MSHtoCGNS/MshInterface/MshReader/MshReader3D.hpp"
+#include "MSHtoCGNS/MshInterface/MshReaderFixture.hpp"
 
 #define TOLERANCE 1e-12
 
-struct Region1_ElementType1_3D_Msh {
-    Region1_ElementType1_3D_Msh() {
-        MshReader3D mshReader3D(std::string(TEST_INPUT_DIRECTORY) + "MshInterface/3D-Region1-ElementType1/14v_24e.msh");
-        this->gridData = mshReader3D.gridData;
-    }
-
-    ~Region1_ElementType1_3D_Msh() = default;
-
-    boost::shared_ptr<GridData> gridData;
+struct Read_Region1_Tetrahedrons_3D_Fixture : public MshReaderFixture {
+    Read_Region1_Tetrahedrons_3D_Fixture() : MshReaderFixture("MshInterface/3D-Region1-Tetrahedrons/14v_24e.msh") {}
 };
 
-FixtureTestSuite(ReadMsh_Region1_ElementType1_3D, Region1_ElementType1_3D_Msh)
+FixtureTestSuite(Read_Region1_Tetrahedrons_3D_Suite, Read_Region1_Tetrahedrons_3D_Fixture)
 
 TestCase(Coordinates) {
     auto coordinates = this->gridData->coordinates;
