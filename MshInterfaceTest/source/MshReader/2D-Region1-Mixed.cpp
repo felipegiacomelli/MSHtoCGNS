@@ -1,20 +1,13 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
-#include "MSHtoCGNS/MshInterface/MshReader/MshReader2D.hpp"
+#include "MSHtoCGNS/MshInterface/MshReaderFixture.hpp"
 
 #define TOLERANCE 1e-12
 
-struct Region1_ElementType2_2D_Msh {
-    Region1_ElementType2_2D_Msh() {
-        MshReader2D mshReader2D(std::string(TEST_INPUT_DIRECTORY) + "MshInterface/2D-Region1-ElementType2/11v_10e.msh");
-        this->gridData = mshReader2D.gridData;
-    }
-
-    ~Region1_ElementType2_2D_Msh() = default;
-
-    boost::shared_ptr<GridData> gridData;
+struct Read_Region1_Mixed_2D_Fixture : public MshReaderFixture {
+    Read_Region1_Mixed_2D_Fixture() : MshReaderFixture("MshInterface/2D-Region1-ElementType2/11v_10e.msh") {}
 };
 
-FixtureTestSuite(ReadMsh_Region1_ElementType2_2D, Region1_ElementType2_2D_Msh)
+FixtureTestSuite(Read_Region1_Mixed_2D_Suite, Read_Region1_Mixed_2D_Fixture)
 
 TestCase(Coordinates) {
     auto coordinates = this->gridData->coordinates;

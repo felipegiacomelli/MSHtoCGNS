@@ -3,11 +3,11 @@
 
 #define TOLERANCE 1e-12
 
-struct Read_Region1_ElementType1_2D_Fixture : public MshReaderFixture {
-    Read_Region1_ElementType1_2D_Fixture() : MshReaderFixture("MshInterface/2D-Region1-ElementType1/5v_4e.msh") {}
+struct Read_Region1_Triangles_2D_Fixture : public MshReaderFixture {
+    Read_Region1_Triangles_2D_Fixture() : MshReaderFixture("MshInterface/2D-Region1-ElementType1/5v_4e.msh") {}
 };
 
-FixtureTestSuite(Read_Region1_ElementType1_2D_Suite, Read_Region1_ElementType1_2D_Fixture)
+FixtureTestSuite(Read_Region1_Triangles_2D_Suite, Read_Region1_Triangles_2D_Fixture)
 
 TestCase(Coordinates) {
     auto coordinates = this->gridData->coordinates;
