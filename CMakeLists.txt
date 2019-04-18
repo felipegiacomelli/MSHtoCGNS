@@ -62,7 +62,7 @@ endif()
 ##############
 # BOOST
 ##############
-set (BOOST_VERSION "1.68.0")
+set (BOOST_VERSION "1.70.0")
 
 if (DEFINED ENV{BOOST_DIR})
     set (BOOST_ROOT $ENV{BOOST_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})

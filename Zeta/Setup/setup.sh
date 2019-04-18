@@ -18,4 +18,4 @@ cd $SETUP_DIRECTORY
 
 cd $SETUP_DIRECTORY
 
-. boost-1.68.0.sh
+. boost-1.70.0.sh
