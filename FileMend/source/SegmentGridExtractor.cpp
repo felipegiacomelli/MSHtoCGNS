@@ -58,86 +58,86 @@ void SegmentGridExtractor::defineQuantities() {
 }
 
 void SegmentGridExtractor::createSegmentGrid() {
-    this->segmentGrid = boost::make_shared<GridData>();
-    this->segmentGrid->dimension = this->gridData->dimension;
+    this->segment = boost::make_shared<GridData>();
+    this->segment->dimension = this->gridData->dimension;
 
-    this->segmentGrid->boundaries = this->gridData->boundaries;
+    this->segment->boundaries = this->gridData->boundaries;
 
-    this->segmentGrid->regions = this->gridData->regions;
+    this->segment->regions = this->gridData->regions;
 
-    this->segmentGrid->wells = this->gridData->wells;
+    this->segment->wells = this->gridData->wells;
 }
 
 void SegmentGridExtractor::copyVertices() {
     for (int vertex = 0; vertex < 2 * this->numberOfVerticesPerSection; ++vertex)
-        this->segmentGrid->coordinates.emplace_back(this->gridData->coordinates[vertex]);
+        this->segment->coordinates.emplace_back(this->gridData->coordinates[vertex]);
 }
 
 void SegmentGridExtractor::copyElements() {
     for (int prism = 0; prism < this->numberOfPrismsPerSegment; ++prism) {
-        this->segmentGrid->prisms.emplace_back(this->gridData->prisms[prism]);
-        this->segmentGrid->prisms[prism].back() = this->elementShift++;
+        this->segment->prisms.emplace_back(this->gridData->prisms[prism]);
+        this->segment->prisms[prism].back() = this->elementShift++;
     }
 
     for (int hexahedron = 0; hexahedron < this->numberOfHexahedronsPerSegment; ++hexahedron) {
-        this->segmentGrid->hexahedrons.emplace_back(this->gridData->hexahedrons[hexahedron]);
-        this->segmentGrid->hexahedrons[hexahedron].back() = this->elementShift++;
+        this->segment->hexahedrons.emplace_back(this->gridData->hexahedrons[hexahedron]);
+        this->segment->hexahedrons[hexahedron].back() = this->elementShift++;
     }
 }
 
 void SegmentGridExtractor::copyFacets() {
     for (int quadrangle = 0; quadrangle < this->numberOfPrismsPerSegment; ++quadrangle) {
-        this->segmentGrid->quadrangles.emplace_back(this->gridData->quadrangles[quadrangle]);
-        this->segmentGrid->quadrangles[quadrangle].back() = this->elementShift++;
+        this->segment->quadrangles.emplace_back(this->gridData->quadrangles[quadrangle]);
+        this->segment->quadrangles[quadrangle].back() = this->elementShift++;
     }
 
     for (int triangle = 0; triangle < this->numberOfPrismsPerSegment; ++triangle) {
-        this->segmentGrid->triangles.emplace_back(this->gridData->triangles[triangle]);
-        this->segmentGrid->triangles[triangle].back() = this->elementShift++;
+        this->segment->triangles.emplace_back(this->gridData->triangles[triangle]);
+        this->segment->triangles[triangle].back() = this->elementShift++;
     }
 
     for (int quadrangle = this->numberOfPrismsPerSegment * this->numberOfSegments; quadrangle < this->numberOfPrismsPerSegment * this->numberOfSegments + this->numberOfHexahedronsPerSegment; ++quadrangle) {
-        this->segmentGrid->quadrangles.emplace_back(this->gridData->quadrangles[quadrangle]);
-        this->segmentGrid->quadrangles.back().back() = this->elementShift++;
+        this->segment->quadrangles.emplace_back(this->gridData->quadrangles[quadrangle]);
+        this->segment->quadrangles.back().back() = this->elementShift++;
     }
 
     for (int triangle = this->numberOfPrismsPerSegment; triangle < 2 * this->numberOfPrismsPerSegment; ++triangle) {
-        this->segmentGrid->triangles.emplace_back(this->gridData->triangles[triangle]);
-        this->segmentGrid->triangles[triangle].back() = this->elementShift++;
+        this->segment->triangles.emplace_back(this->gridData->triangles[triangle]);
+        this->segment->triangles[triangle].back() = this->elementShift++;
     }
 
     for (int quadrangle = this->numberOfPrismsPerSegment * this->numberOfSegments + this->numberOfHexahedronsPerSegment; quadrangle < int(this->gridData->quadrangles.size()); ++quadrangle) {
-        this->segmentGrid->quadrangles.emplace_back(this->gridData->quadrangles[quadrangle]);
-        this->segmentGrid->quadrangles.back().back() = this->elementShift++;
+        this->segment->quadrangles.emplace_back(this->gridData->quadrangles[quadrangle]);
+        this->segment->quadrangles.back().back() = this->elementShift++;
     }
 }
 
 void SegmentGridExtractor::copyLine() {
-    this->segmentGrid->lines.emplace_back(this->gridData->lines[0]);
-    this->segmentGrid->lines[0].back() = this->elementShift++;
+    this->segment->lines.emplace_back(this->gridData->lines[0]);
+    this->segment->lines[0].back() = this->elementShift++;
 }
 
 void SegmentGridExtractor::fixRegion() {
     this->elementShift = this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
-    this->segmentGrid->regions[0].begin = 0;
-    this->segmentGrid->regions[0].end = this->elementShift;
+    this->segment->regions[0].begin = 0;
+    this->segment->regions[0].end = this->elementShift;
 }
 
 void SegmentGridExtractor::fixBoundaries() {
     // cylinder surface
-    auto boundary = this->segmentGrid->boundaries.begin();
+    auto boundary = this->segment->boundaries.begin();
     boundary->begin = this->elementShift;
     boundary->end = boundary->begin + this->numberOfPrismsPerSegment;
     boundary->vertices.erase(std::remove_if(boundary->vertices.begin(), boundary->vertices.end(), [=](auto v){return v >= 2 * this->numberOfVerticesPerSection;}), boundary->vertices.end());
 
     // first lid
-    boundary = this->segmentGrid->boundaries.begin() + 1;
+    boundary = this->segment->boundaries.begin() + 1;
     boundary->begin = this->elementShift + this->numberOfPrismsPerSegment;
     boundary->end = boundary->begin + this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
     std::stable_sort(boundary->vertices.begin(), boundary->vertices.end());
 
     // last lid
-    boundary = this->segmentGrid->boundaries.begin() + 2;
+    boundary = this->segment->boundaries.begin() + 2;
     boundary->begin = this->elementShift + this->numberOfPrismsPerSegment + this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
     boundary->end = boundary->begin + this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
     std::stable_sort(boundary->vertices.begin(), boundary->vertices.end());
@@ -149,19 +149,19 @@ void SegmentGridExtractor::fixBoundaries() {
         vertex = lastToSecond[vertex];
     }
 
-    for (auto triangle = this->segmentGrid->triangles.begin(); triangle != this->segmentGrid->triangles.end(); ++triangle)
+    for (auto triangle = this->segment->triangles.begin(); triangle != this->segment->triangles.end(); ++triangle)
         if (triangle->back() >= boundary->begin && triangle->back() < boundary->end)
             for (auto vertex = triangle->begin(); vertex != triangle->end() - 1; ++vertex)
                 *vertex = lastToSecond[*vertex];
 
-    for (auto quadrangle = this->segmentGrid->quadrangles.begin(); quadrangle != this->segmentGrid->quadrangles.end(); ++quadrangle)
+    for (auto quadrangle = this->segment->quadrangles.begin(); quadrangle != this->segment->quadrangles.end(); ++quadrangle)
         if (quadrangle->back() >= boundary->begin && quadrangle->back() < boundary->end)
             for (auto vertex = quadrangle->begin(); vertex != quadrangle->end() - 1; ++vertex)
                 *vertex = lastToSecond[*vertex];
 }
 
 void SegmentGridExtractor::fixWell() {
-    this->segmentGrid->wells[0].begin = this->segmentGrid->boundaries[2].end;
-    this->segmentGrid->wells[0].end = this->segmentGrid->wells[0].begin + 1;
-    this->segmentGrid->wells[0].vertices = std::vector<int>{this->segmentGrid->lines[0][0], this->segmentGrid->lines[0][1]};
+    this->segment->wells[0].begin = this->segment->boundaries[2].end;
+    this->segment->wells[0].end = this->segment->wells[0].begin + 1;
+    this->segment->wells[0].vertices = std::vector<int>{this->segment->lines[0][0], this->segment->lines[0][1]};
 }

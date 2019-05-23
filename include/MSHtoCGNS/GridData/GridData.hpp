@@ -8,6 +8,9 @@
 #include "MSHtoCGNS/BoostInterface/SharedPointer.hpp"
 
 struct RegionData {
+    RegionData() = default;
+    RegionData(std::string name, int begin, int end) : name(name), begin(begin), end(end) {}
+
     std::string name;
     int begin;
     int end;
@@ -15,6 +18,9 @@ struct RegionData {
 };
 
 struct BoundaryData {
+    BoundaryData() = default;
+    BoundaryData(std::string name, int begin, int end) : name(name), begin(begin), end(end) {}
+
     std::string name;
     int begin;
     int end;
@@ -22,6 +28,9 @@ struct BoundaryData {
 };
 
 struct WellData {
+    WellData() = default;
+    WellData(std::string name, int begin, int end) : name(name), begin(begin), end(end) {}
+
     std::string name;
     int begin;
     int end;
@@ -45,6 +54,9 @@ struct GridData {
     std::vector<BoundaryData> boundaries;
     std::vector<RegionData> regions;
     std::vector<WellData> wells;
+
+    int numberOfLocalVertices;
+    std::vector<int> globalIndices;
 };
 
 using GridDataPtr = boost::shared_ptr<GridData>;

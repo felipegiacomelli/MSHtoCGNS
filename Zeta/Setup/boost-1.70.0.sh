@@ -20,4 +20,4 @@ cd $LIBRARY
 
 ./bootstrap.sh --with-libraries=system,filesystem,test --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY/$BUILD_TYPE
 
-./b2 variant=$BUILD_TYPE --cxxflags=-fPIC link=shared runtime-link=shared threading=multi -j $NUMBER_OF_CORES --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY/$BUILD_TYPE install
+./b2 variant=$BUILD_TYPE --cxxflags=-fPIC link=shared runtime-link=shared threading=multi -j $NUMBER_OF_CORES --prefix=$LIBRARY_INSTALL_DIRECTORY/$LIBRARY/$BUILD_TYPE install > /dev/null 2>&1

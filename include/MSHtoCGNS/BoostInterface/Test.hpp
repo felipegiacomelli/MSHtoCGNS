@@ -10,6 +10,7 @@
 
 #define FixtureTestCase BOOST_FIXTURE_TEST_CASE
 #define FixtureTestSuite BOOST_FIXTURE_TEST_SUITE
+#define TestGlobalFixture BOOST_TEST_GLOBAL_FIXTURE
 
 #define check BOOST_CHECK
 #define checkClose BOOST_CHECK_CLOSE

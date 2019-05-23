@@ -1,8 +1,8 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Felipe/cpp/MSHtoCGNS/Zeta/Test/CgnsInterface/3D-Region1-Mixed/12523v_57072e.cgns",
-        "output" : "/home/felipe/Downloads/msh_to_cgns/mender/"
+        "input"  : "/home/felipe/Downloads/clean/mandel.cgns",
+        "output"  : "/home/felipe/Downloads/clean"
     },
 
     "ScriptWellGenerator" :
@@ -10,19 +10,22 @@
         "wellRegions" :
         [
             {
-                "regionName": "WELL_BODY",
-                "wellStart": [20.0, 125.0, 50.0],
-                "wellName": "LINE_WELL"
+                "regionName": "SOLID",
+                "wellStart": [0.5, 0.5, 1.0],
+                "wellName": "LINE"
             }
         ]
     },
 
+    "extract" : false,
     "ScriptGridDataExtractor" :
     {
-        "regions" : ["WELL_BODY"],
+        "regions" : ["SOLID"],
 
-        "boundaries" : [],
+        "boundaries" : ["INTERFACE", "LID1", "LID2"],
 
-        "wells" : ["LINE_WELL"]
-    }
+        "wells" : ["LINE"]
+    },
+
+    "unifyRegions" : true
 }

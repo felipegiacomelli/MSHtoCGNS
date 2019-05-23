@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <numeric>
 #include <unordered_map>
+#include <cmath>
 
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 #include "MSHtoCGNS/BoostInterface/PropertyTree.hpp"

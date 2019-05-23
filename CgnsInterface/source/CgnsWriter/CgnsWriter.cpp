@@ -1,10 +1,10 @@
 #include "MSHtoCGNS/CgnsInterface/CgnsWriter.hpp"
 #include <cgnslib.h>
 
-CgnsWriter::CgnsWriter(std::string filePath, std::string solutionLocation) : filePath(filePath), isFinalized(false) {
-    if (solutionLocation == std::string("Vertex"))
+CgnsWriter::CgnsWriter(std::string path, std::string gridLocation) : path(path), isFinalized(false) {
+    if (gridLocation == std::string("Vertex"))
         this->gridLocation = 2;
-    else if (solutionLocation == std::string("CellCenter"))
+    else if (gridLocation == std::string("CellCenter"))
         this->gridLocation = 3;
     else
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Solution location must be either Vertex or CellCenter");
@@ -15,15 +15,14 @@ CgnsWriter::CgnsWriter(std::string filePath, std::string solutionLocation) : fil
 }
 
 void CgnsWriter::checkFile() {
-    boost::filesystem::path input(this->filePath);
-    if (!boost::filesystem::exists(input.parent_path()))
+    if (!boost::filesystem::exists(boost::filesystem::path(this->path).parent_path()))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path does not exist");
 
-    if (!boost::filesystem::exists(this->filePath))
+    if (!boost::filesystem::exists(this->path))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no file in the given path");
 
-    if (cg_open(this->filePath.c_str(), CG_MODE_MODIFY, &this->fileIndex))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not open the file " + this->filePath);
+    if (cg_open(this->path.c_str(), CG_MODE_MODIFY, &this->fileIndex))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not open the file " + this->path);
 
     float version;
     if (cg_version(this->fileIndex, &version))
@@ -52,26 +51,31 @@ void CgnsWriter::readZone() {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has more than one zone");
 }
 
-void CgnsWriter::writePermanentSolution(std::string solutionName) {
-    if (cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), GridLocation_t(this->gridLocation), &this->permanentSolutionIndex))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write permanent solution " + solutionName);
+void CgnsWriter::writePermanentSolution(std::string name) {
+    if (cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, name.c_str(), GridLocation_t(this->gridLocation), &this->permanentSolutionIndex))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write permanent solution " + name);
 }
 
-void CgnsWriter::writePermanentField(std::string fieldName, const std::vector<double>& fieldValues){
-    if (cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->permanentSolutionIndex, RealDouble, fieldName.c_str(), &fieldValues[0], &this->permanentFieldIndex))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write field " + fieldName);
+void CgnsWriter::writePermanentField(std::string name, const std::vector<double>& values) {
+    if (cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->permanentSolutionIndex, RealDouble, name.c_str(), &values[0], &this->permanentFieldIndex))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write field " + name);
 }
 
-void CgnsWriter::writeTransientSolution(const double& timeInstant) {
+void CgnsWriter::writePermanentField(std::string name, const std::vector<int>& values) {
+    if (cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->permanentSolutionIndex, Integer, name.c_str(), &values[0], &this->permanentFieldIndex))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write field " + name);
+}
+
+void CgnsWriter::writeTransientSolution(double timeInstant) {
     this->timeInstants.push_back(timeInstant);
     this->solutionIndices.emplace_back(0);
     std::string solutionName = std::string("TimeStep") + std::to_string(timeInstants.size());
     cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), GridLocation_t(this->gridLocation), &this->solutionIndices.back());
 }
 
-void CgnsWriter::writeTransientField(const std::vector<double>& fieldValues, std::string fieldName) {
+void CgnsWriter::writeTransientField(std::string name, const std::vector<double>& values) {
     this->fieldsIndices.emplace_back(0);
-    cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->solutionIndices.back(), RealDouble, fieldName.c_str(), &fieldValues[0], &this->fieldsIndices.back());
+    cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->solutionIndices.back(), RealDouble, name.c_str(), &values[0], &this->fieldsIndices.back());
 }
 
 void CgnsWriter::finalizeTransient() {

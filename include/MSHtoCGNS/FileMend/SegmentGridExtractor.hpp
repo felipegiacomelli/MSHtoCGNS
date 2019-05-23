@@ -16,7 +16,7 @@ class SegmentGridExtractor {
 
         ~SegmentGridExtractor() = default;
 
-        boost::shared_ptr<GridData> segmentGrid;
+        boost::shared_ptr<GridData> segment;
 
         double tolerance = 1e-4;
 

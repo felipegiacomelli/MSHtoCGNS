@@ -43,7 +43,7 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 ##################################################################
 project (MSHtoCGNS)
 set (VERSION_MAJOR "0")
-set (VERSION_MINOR "16")
+set (VERSION_MINOR "17")
 set (VERSION_PATCH "0")
 set (VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)

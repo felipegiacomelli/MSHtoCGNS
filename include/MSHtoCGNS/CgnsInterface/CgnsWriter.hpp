@@ -6,13 +6,14 @@
 class CgnsWriter {
     public:
         CgnsWriter() = default;
-        CgnsWriter(std::string filePath, std::string solutionLocation);
+        CgnsWriter(std::string path, std::string gridLocation);
 
-        void writePermanentSolution(std::string solutionName);
-        void writePermanentField(std::string scalarFieldName, const std::vector<double>& fieldValues);
+        void writePermanentSolution(std::string name);
+        void writePermanentField(std::string name, const std::vector<double>& values);
+        void writePermanentField(std::string name, const std::vector<int>& values);
 
-        void writeTransientSolution(const double& timeInstant);
-        void writeTransientField(const std::vector<double>& fieldValues, std::string fieldName);
+        void writeTransientSolution(double timeInstant);
+        void writeTransientField(std::string name, const std::vector<double>& values);
 
         void finalizeTransient();
 
@@ -24,7 +25,7 @@ class CgnsWriter {
         void readBase();
         void readZone();
 
-        std::string filePath;
+        std::string path;
         int gridLocation;
         int fileIndex, baseIndex, zoneIndex;
         int permanentSolutionIndex, permanentFieldIndex;

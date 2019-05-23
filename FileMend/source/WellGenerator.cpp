@@ -117,7 +117,7 @@ bool WellGenerator::isClose(const std::array<double, 3>& coordinate, const std::
     bool close = true;
 
     for (int i = 0; i < 3; ++i)
-        close &= std::abs(coordinate[i] - referencePoint[i]) < this->tolerance;
+        close &= fabs(coordinate[i] - referencePoint[i]) < this->tolerance;
 
     return close;
 }
