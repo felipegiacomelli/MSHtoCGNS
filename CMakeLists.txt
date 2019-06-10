@@ -42,8 +42,8 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 # ABOUT THE PROJECT
 ##################################################################
 project (MSHtoCGNS)
-set (VERSION_MAJOR "0")
-set (VERSION_MINOR "17")
+set (VERSION_MAJOR "1")
+set (VERSION_MINOR "0")
 set (VERSION_PATCH "0")
 set (VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -81,7 +81,7 @@ endif ()
 ##############
 # CGNS
 ##############
-set (CGNS_VERSION "3.3.1")
+set (CGNS_VERSION "3.4.0")
 
 if (DEFINED ENV{CGNS_DIR})
     set (CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
