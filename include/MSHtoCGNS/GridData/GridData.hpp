@@ -56,7 +56,7 @@ struct GridData {
     std::vector<WellData> wells;
 
     int numberOfLocalVertices;
-    std::vector<int> globalIndices;
+    std::vector<int> solverIndices;
 };
 
 using GridDataPtr = boost::shared_ptr<GridData>;
