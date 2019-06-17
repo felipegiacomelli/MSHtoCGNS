@@ -79,25 +79,27 @@ void CgnsCreator3D::writeRegions() {
             this->elementStart = this->elementEnd + 1;
         }
         else {
-            if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
-                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write element section " + std::to_string(this->sectionIndex));
-
+            std::vector<int> connectivitiesOffset{0};
             for (auto element = regionBegin; element != regionEnd; ++element) {
                 switch (element->size()) {
                     case 4: {
                         element->insert(element->begin(), TETRA_4);
+                        connectivitiesOffset.emplace_back(connectivitiesOffset.back() + 5);
                         break;
                     }
                     case 8: {
                         element->insert(element->begin(), HEXA_8);
+                        connectivitiesOffset.emplace_back(connectivitiesOffset.back() + 9);
                         break;
                     }
                     case 5: {
                         element->insert(element->begin(), PYRA_5);
+                        connectivitiesOffset.emplace_back(connectivitiesOffset.back() + 6);
                         break;
                     }
                     case 6: {
                         element->insert(element->begin(), PENTA_6);
+                        connectivitiesOffset.emplace_back(connectivitiesOffset.back() + 7);
                         break;
                     }
                     default:
@@ -108,8 +110,8 @@ void CgnsCreator3D::writeRegions() {
             std::vector<int> connectivities;
             append(regionBegin, regionEnd, std::back_inserter(connectivities));
 
-            if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->elementEnd, &connectivities[0]))
-                    throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
+            if (cg_poly_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &connectivitiesOffset[0], &this->sectionIndex))
+                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write element section " + region.name);
 
             this->elementStart = this->elementEnd + 1;
         }
@@ -142,17 +144,17 @@ void CgnsCreator3D::writeBoundaries() {
             this->elementStart = this->elementEnd + 1;
         }
         else {
-            if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
-                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write facet section " + std::to_string(this->sectionIndex));
-
+            std::vector<int> connectivitiesOffset{0};
             for (auto facet = boundaryBegin; facet != boundaryEnd; ++facet) {
                 switch (facet->size()) {
                     case 3: {
                         facet->insert(facet->begin(), TRI_3);
+                        connectivitiesOffset.emplace_back(connectivitiesOffset.back() + 4);
                         break;
                     }
                     case 4: {
                         facet->insert(facet->begin(), QUAD_4);
+                        connectivitiesOffset.emplace_back(connectivitiesOffset.back() + 5);
                         break;
                     }
                     default:
@@ -163,8 +165,8 @@ void CgnsCreator3D::writeBoundaries() {
             std::vector<int> connectivities;
             append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
 
-            if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->elementEnd, &connectivities[0]))
-                    throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write facet " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
+            if (cg_poly_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &connectivitiesOffset[0], &this->sectionIndex))
+                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write element section " + boundary.name);
 
             this->elementStart = this->elementEnd + 1;
         }

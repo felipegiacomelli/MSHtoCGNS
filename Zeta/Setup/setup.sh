@@ -2,7 +2,7 @@
 
 export SETUP_DIRECTORY=$PWD
 export LIBRARY_INSTALL_DIRECTORY=$PWD/../Libraries
-export BUILD_TYPE="Release"
+export BUILD_TYPE="release"
 export NUMBER_OF_CORES=`nproc`
 
 cd ..
@@ -14,7 +14,11 @@ fi
 
 cd $SETUP_DIRECTORY
 
-. cgns-3.3.1.sh
+. hdf5-1.10.5.sh
+
+cd $SETUP_DIRECTORY
+
+. cgns-3.4.0.sh
 
 cd $SETUP_DIRECTORY
 

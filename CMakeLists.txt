@@ -42,8 +42,8 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 # ABOUT THE PROJECT
 ##################################################################
 project (MSHtoCGNS)
-set (VERSION_MAJOR "0")
-set (VERSION_MINOR "17")
+set (VERSION_MAJOR "1")
+set (VERSION_MINOR "0")
 set (VERSION_PATCH "0")
 set (VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -53,7 +53,7 @@ endif ()
 ##################################################################
 # EXTERNAL LIBRARIES
 ##################################################################
-if (DEFINED ENV{CMAKE_MODULE_PATH})
+if (DEFINED ENV{CMAKE_MODULES})
     set (CMAKE_MODULE_PATH $ENV{CMAKE_MODULES})
 else ()
     set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Zeta/CMakeModules)
@@ -81,7 +81,7 @@ endif ()
 ##############
 # CGNS
 ##############
-set (CGNS_VERSION "3.3.1")
+set (CGNS_VERSION "3.4.0")
 
 if (DEFINED ENV{CGNS_DIR})
     set (CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
@@ -89,7 +89,7 @@ else ()
     set (CGNS_DIR ${CMAKE_SOURCE_DIR}/Zeta/Libraries/cgns-${CGNS_VERSION}/${BUILD_TYPE})
 endif()
 
-find_package (CGNS REQUIRED)
+find_package (CGNS ${CGNS_VERSION} EXACT COMPONENTS cgns_${LIBRARY_TYPE} REQUIRED)
 if (CGNS_FOUND)
     include_directories (${CGNS_INCLUDE_DIR})
 endif ()

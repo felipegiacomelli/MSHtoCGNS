@@ -45,7 +45,6 @@ void CgnsReader3D::addEntity(int elementType) {
         this->addWell(std::string(this->buffer), this->elementStart - 1, this->elementEnd);
 }
 
-
 void CgnsReader3D::addWell(std::string&& name, int start, int end) {
     this->gridData->wells.emplace_back(WellData());
     std::transform(name.begin(), name.end(), std::back_inserter(this->gridData->wells.back().name), ::toupper);

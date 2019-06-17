@@ -1,7 +1,8 @@
 #include "MSHtoCGNS/CgnsInterface/CgnsReader.hpp"
 #include <cgnslib.h>
+#include <cgns_io.h>
 
-CgnsReader::CgnsReader(std::string filePath) : filePath(filePath) {
+CgnsReader::CgnsReader(std::string filePath) : filePath(filePath), temporaryFilePath(filePath + ".temp") {
     this->checkFile();
     this->readNumberOfBases();
     this->readBase();
@@ -20,6 +21,25 @@ void CgnsReader::checkFile() {
 
     if (cg_is_cgns(boost::filesystem::absolute(this->filePath).c_str(), &this->fileType))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The file is not a valid cgns file");
+
+    if (this->fileType == 1) {
+        int adfFileIndex;
+        if (cgio_open_file (boost::filesystem::absolute(this->filePath).c_str(), CGIO_MODE_READ, CGIO_FILE_ADF, &adfFileIndex))
+            cgio_error_exit("cgio_open_file (adf)");
+
+        int hdfFileIndex;
+        if (cgio_open_file(boost::filesystem::absolute(this->temporaryFilePath).c_str(), CGIO_MODE_WRITE, CGIO_FILE_HDF5, &hdfFileIndex))
+            cgio_error_exit("cgio_open_file (hdf5)");
+        if (cgio_copy_file(adfFileIndex, hdfFileIndex, 1))
+            cgio_error_exit("cgio_copy_file");
+        if (cgio_close_file(adfFileIndex))
+            cgio_error_exit("cgio_close_file (adf)");
+        if (cgio_close_file(hdfFileIndex))
+            cgio_error_exit("cgio_close_file (hdf5)");
+
+        boost::filesystem::copy_file(this->temporaryFilePath, this->filePath, boost::filesystem::copy_option::overwrite_if_exists);
+        boost::filesystem::remove_all(this->temporaryFilePath);
+    }
 
     if (cg_open(boost::filesystem::absolute(this->filePath).c_str(), CG_MODE_READ, &this->fileIndex))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not open the file " + boost::filesystem::absolute(this->filePath).string());
@@ -95,8 +115,12 @@ void CgnsReader::readSections() {
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element data size");
 
         std::vector<int> connectivities(size);
-        if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], nullptr))
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section elements");
+        std::vector<int> connectivitiesOffset(this->elementEnd - this->elementStart + 2);
+        if (this->elementType == MIXED)
+            cg_poly_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], &connectivitiesOffset[0], nullptr);
+        else
+            if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], nullptr))
+                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section " + this->buffer + " elements");
 
         this->addConnectivities(connectivities);
 

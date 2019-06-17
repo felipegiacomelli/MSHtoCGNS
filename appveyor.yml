@@ -1,0 +1,43 @@
+version: 1.0.{build}
+
+image: ubuntu1804
+
+build: off
+
+init:
+    git config --global core.autocrlf input
+
+install:
+    sudo apt-add-repository ppa:ubuntu-toolchain-r/test
+
+    sudo apt-get -y update
+
+    sudo apt-get -y install gcc-8 g++-8
+
+    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+
+    sudo apt -y autoremove
+
+    cd Zeta/Setup
+
+    ./setup.sh
+
+    cd $APPVEYOR_BUILD_FOLDER
+
+    mkdir build
+
+    cd build
+
+    cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=TRUE
+
+    make -j 2
+
+    cd bin/
+
+    ./CgnsInterfaceTest
+
+    ./FileMendTest
+
+    cd ..
+
+    make test

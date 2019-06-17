@@ -27,11 +27,12 @@ class CgnsWriter {
 
         std::string path;
         int gridLocation;
+        float fileVersion;
         int fileIndex, baseIndex, zoneIndex;
         int permanentSolutionIndex, permanentFieldIndex;
         std::vector<int> solutionIndices, fieldsIndices;
         std::vector<double> timeInstants;
-        bool isFinalized;
+        bool isFinalized = false;
 };
 
 #endif

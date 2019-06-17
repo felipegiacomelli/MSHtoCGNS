@@ -1,7 +1,7 @@
 #include "MSHtoCGNS/CgnsInterface/CgnsWriter.hpp"
 #include <cgnslib.h>
 
-CgnsWriter::CgnsWriter(std::string path, std::string gridLocation) : path(path), isFinalized(false) {
+CgnsWriter::CgnsWriter(std::string path, std::string gridLocation) : path(path) {
     if (gridLocation == std::string("Vertex"))
         this->gridLocation = 2;
     else if (gridLocation == std::string("CellCenter"))
@@ -24,12 +24,11 @@ void CgnsWriter::checkFile() {
     if (cg_open(this->path.c_str(), CG_MODE_MODIFY, &this->fileIndex))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not open the file " + this->path);
 
-    float version;
-    if (cg_version(this->fileIndex, &version))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could read file version");
+    if (cg_version(this->fileIndex, &this->fileVersion))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read file version");
 
-    if (version <= 3.10)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - File version (" + std::to_string(version) + ") is older than 3.11");
+    if (this->fileVersion <= 3.10)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - File version (" + std::to_string(this->fileVersion) + ") is older than 3.11");
 }
 
 void CgnsWriter::readBase() {
