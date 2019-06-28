@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 3.6)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.14)
 
 ##################################################################
 # BUILD FILES OUTPUT LOCATION
@@ -15,7 +15,7 @@ set (CMAKE_CXX_STANDARD 17)
 if (UNIX)
     set (CMAKE_C_COMPILER gcc)
     set (CMAKE_CXX_COMPILER g++)
-    set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64 -std=c++17 -Wall -Wextra -Wnon-virtual-dtor -pedantic -Wno-parentheses" CACHE STRING "Default compiler flags")
+    set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64 -std=c++17 -Wall -Wextra -Wnon-virtual-dtor -pedantic -Wno-parentheses -fsanitize=undefined" CACHE STRING "Default compiler flags")
 
     if (NOT CMAKE_BUILD_TYPE)
         set (CMAKE_BUILD_TYPE "Release")
@@ -53,7 +53,7 @@ endif ()
 ##################################################################
 # EXTERNAL LIBRARIES
 ##################################################################
-if (DEFINED ENV{CMAKE_MODULE_PATH})
+if (DEFINED ENV{CMAKE_MODULES})
     set (CMAKE_MODULE_PATH $ENV{CMAKE_MODULES})
 else ()
     set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Zeta/CMakeModules)
@@ -75,7 +75,7 @@ set (Boost_USE_MULTITHREADED ON)
 
 find_package (Boost ${BOOST_VERSION} EXACT COMPONENTS ${Components_Boost} REQUIRED)
 if (Boost_FOUND)
-    include_directories (${Boost_INCLUDE_DIRS})
+    include_directories (SYSTEM ${Boost_INCLUDE_DIRS})
 endif ()
 
 ##############
@@ -89,7 +89,7 @@ else ()
     set (CGNS_DIR ${CMAKE_SOURCE_DIR}/Zeta/Libraries/cgns-${CGNS_VERSION}/${BUILD_TYPE})
 endif()
 
-find_package (CGNS REQUIRED)
+find_package (CGNS ${CGNS_VERSION} EXACT COMPONENTS cgns_${LIBRARY_TYPE} REQUIRED)
 if (CGNS_FOUND)
     include_directories (${CGNS_INCLUDE_DIR})
 endif ()

@@ -1,26 +1,33 @@
 language: c++
 compiler: gcc
-dist: trusty
+dist: xenial
+
+env:
+    global:
+        - PATH="$TRAVIS_BUILD_DIR/cmake/bin:$PATH"
 
 before_install:
-  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-  - sudo apt-get update -qq
+    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq gcc-8 g++-8
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 60
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/g++-8 60
+    - mkdir cmake
+    - cd cmake
+    - curl -O https://cmake.org/files/v3.14/cmake-3.14.0-rc4-Linux-x86_64.sh && bash cmake-3.14.0-rc4-Linux-x86_64.sh --skip-license && cd ..
 
 install:
-  - sudo apt-get install -qq g++-6
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
-  - cd Zeta/Setup
-  - ./setup.sh
+    - cd Zeta/Setup
+    - ./setup.sh
 
 script:
-  - |
-     cd $TRAVIS_BUILD_DIR
-     mkdir build
-     cd build
-     cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=TRUE
-     make -j 2
-     cd bin/
-     ./CgnsInterfaceTest
-     ./FileMendTest
-     cd ..
-     make test
+    - cd $TRAVIS_BUILD_DIR
+    - mkdir build
+    - cd build
+    - cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=TRUE
+    - make -j 2
+    - cd bin/
+    - ./CgnsInterfaceTest
+    - ./FileMendTest
+    - cd ..
+    - make test

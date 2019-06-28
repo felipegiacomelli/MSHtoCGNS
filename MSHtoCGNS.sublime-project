@@ -3,7 +3,7 @@
     [
         {
             "path": "./",
-            "folder_exclude_patterns": ["Zeta/Libraries", "Zeta/Setup/boost-*", "Zeta/Setup/cgns-*", "release", "debug"],
+            "folder_exclude_patterns": ["Zeta/Libraries", "Zeta/Setup/boost-*", "Zeta/Setup/cgns-*", "Zeta/Setup/hdf5-*",  "release", "debug"],
             "file_exclude_patterns": ["*.tar.gz"]
         }
     ],

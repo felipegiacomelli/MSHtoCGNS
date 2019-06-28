@@ -35,18 +35,19 @@ void MshReader2D::addElements() {
             begin->push_back(this->shift++);
             switch ((*begin)[this->typeIndex]) {
                 case 1: {
-                    this->gridData->triangles.emplace_back(std::array<int, 4>());
-                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 4, std::begin(this->gridData->triangles.back()));
+                    this->gridData->triangles.emplace_back();
+                    std::copy_n(std::begin(*begin) + this->nodeIndex, 4, std::begin(this->gridData->triangles.back()));
                     break;
                 }
                 case 2: {
-                    this->gridData->quadrangles.emplace_back(std::array<int, 5>());
-                    std::copy_n(std::begin(*begin++) + this->nodeIndex, 5, std::begin(this->gridData->quadrangles.back()));
+                    this->gridData->quadrangles.emplace_back();
+                    std::copy_n(std::begin(*begin) + this->nodeIndex, 5, std::begin(this->gridData->quadrangles.back()));
                     break;
                 }
                 default:
                     throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Non supported element found");
             }
+            ++begin;
         }
         region.end = this->shift;
     }

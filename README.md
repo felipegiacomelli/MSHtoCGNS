@@ -1,7 +1,8 @@
 # MSHtoCGNS
 
-Master: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=master)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS)
-Develop: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=develop)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS)
+Master: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=master)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS) [![Build Status](https://ci.appveyor.com/api/projects/status/7eejp0wx0f0rf8qb/branch/master?svg=true)](https://ci.appveyor.com/project/felipegiacomelli/mshtocgns)
+
+Develop: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=develop)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS) [![Build Status](https://ci.appveyor.com/api/projects/status/7eejp0wx0f0rf8qb/branch/develop?svg=true)](https://ci.appveyor.com/project/felipegiacomelli/mshtocgns)
 
 Generate a msh grid using [gmsh 3.0.6](http://gmsh.info/):
 
@@ -19,10 +20,11 @@ This project currently supports:
 - supports Physical Line, Physical Surface and Physical Volume
 
 ## CGNS IO
-- [cgns 3.10 - 3.3.1](https://cgns.github.io/)
+- [cgns 3.10 - 3.4.0](https://cgns.github.io/)
 - read 2D / 3D single element or hybrid unstructured grids
 - write 2D / 3D single element or hybrid unstructured grids
 - write simulation data
+- **HDF mothernode**
 
 <img src="Zeta/Images/paraview_hybrid_3d_with_well.png"  height=250 width=600  />
 
@@ -33,12 +35,13 @@ This project currently supports:
 To build, it is necessary:
 
 - [g++/gcc](https://gcc.gnu.org/) 6.4 (at least)
-- [cmake](https://cmake.org/)
+- [cmake](https://cmake.org/) 3.14.4
 - [make](https://www.gnu.org/software/make/)
-- [CGNS](https://cgns.github.io/index.html) 3.3.1
-- [Boost](https://www.boost.org/) 1.66 (at least)
+- [HDF5](https://www.hdfgroup.org/solutions/hdf5/) 1.10.5
+- [CGNS](https://cgns.github.io/index.html) 3.4.0
+- [Boost](https://www.boost.org/) 1.70
 
-Once you have installed the first three dependecies, you may install **Boost** and **CGNS** by executing **setup.sh** located in *Zeta/Setup/*. This script will install **shared libraries** in **release** variant.
+Once you have installed the first three dependecies, you may install **Boost**, **HDF5**, **CGNS** by executing **setup.sh** located in *Zeta/Setup/*. This script will install **shared libraries** in **release** variant.
 
 ## Building
 
@@ -74,7 +77,6 @@ $ ./MSHtoCGNS
 Simulation results may be easily visualised.
 
 <p float="left">
-    <img src="Zeta/Images/2D/Pressure.jpg"  alt="gmsh" height=150 width=250  />
     <img src="Zeta/Images/2D/VelocityX.jpg" alt="gmsh" height=150 width=250  />
     <img src="Zeta/Images/2D/VelocityY.jpg" alt="gmsh" height=150 width=250  />
 </p>
@@ -82,11 +84,6 @@ Simulation results may be easily visualised.
 <p float="left">
     <img src="Zeta/Images/3D/DisplacementZ-first.png"  alt="gmsh" height=150 width=250  />
     <img src="Zeta/Images/3D/DisplacementZ-last.png" alt="gmsh" height=150 width=250  />
-</p>
-
-<p float="left">
-    <img src="Zeta/Images/3D/Pressure-first.png"  alt="gmsh" height=150 width=250  />
-    <img src="Zeta/Images/3D/Pressure-last.png" alt="gmsh" height=150 width=250  />
 </p>
 
 ---

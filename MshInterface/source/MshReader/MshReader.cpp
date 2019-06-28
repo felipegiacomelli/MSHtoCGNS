@@ -101,23 +101,24 @@ void MshReader::readNodes() {
 }
 
 void MshReader::readElements() {
-    int numberOfElements;
     this->file.seekg(0, std::ios::beg);
     while (strcmp(this->buffer, "$Elements") && !this->file.eof())
         this->file >> this->buffer;
-    if (this->file.eof())
+    if (this->file.eof()) {
         this->file.clear();
+    }
     else {
+        int numberOfElements;
         this->file >> numberOfElements;
+        this->connectivities.reserve(numberOfElements);
         for (int i = 0; i < numberOfElements+1; ++i) {
             std::string line;
             std::getline(this->file, line);
             std::istringstream stream(line);
-            std::vector<int> connectivity;
+            this->connectivities.emplace_back();
             int value;
             while (stream >> value)
-                connectivity.push_back(value - 1);
-            this->connectivities.emplace_back(std::move(connectivity));
+                this->connectivities.back().push_back(value - 1);
         }
     }
     this->connectivities.erase(this->connectivities.begin());
@@ -152,14 +153,14 @@ void MshReader::determinePhysicalEntitiesRange() {
 }
 
 void MshReader::addRegion(std::string name, int begin, int end) {
-    this->gridData->regions.emplace_back(RegionData());
+    this->gridData->regions.emplace_back();
     this->gridData->regions.back().name = name;
     this->gridData->regions.back().begin = begin;
     this->gridData->regions.back().end = end;
 }
 
 void MshReader::addBoundary(std::string name, int begin, int end) {
-    this->gridData->boundaries.emplace_back(BoundaryData());
+    this->gridData->boundaries.emplace_back();
     this->gridData->boundaries.back().name = name;
     this->gridData->boundaries.back().begin = begin;
     this->gridData->boundaries.back().end = end;

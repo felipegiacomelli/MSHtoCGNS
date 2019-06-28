@@ -53,65 +53,40 @@ void CgnsCreator3D::writeRegions() {
     for (auto region : this->gridData->regions) {
         std::transform(region.name.begin(), region.name.end(), region.name.begin(), ::toupper);
 
-        auto regionBegin = this->globalConnectivities.begin() + region.begin;
-        auto regionEnd = this->globalConnectivities.begin() + region.end;
-        this->elementEnd += (regionEnd - regionBegin);
+        this->setElementType(region.begin, region.end, {{4,TETRA_4}, {8,HEXA_8}, {6,PENTA_6}, {5,PYRA_5}});
 
-        ElementType_t elementType = ElementType_t(0);
-        if (std::all_of(regionBegin, regionEnd, [](const auto& connectivity){return connectivity.size() == 4u;}))
-            elementType = TETRA_4;
-        else if (std::all_of(regionBegin, regionEnd, [](const auto& connectivity){return connectivity.size() == 8u;}))
-            elementType = HEXA_8;
-        else if (std::all_of(regionBegin, regionEnd, [](const auto& connectivity){return connectivity.size() == 6u;}))
-            elementType = PENTA_6;
-        else if (std::all_of(regionBegin, regionEnd, [](const auto& connectivity){return connectivity.size() == 5u;}))
-            elementType = PYRA_5;
-        else
-            elementType = MIXED;
-
-        if (elementType != MIXED) {
-            std::vector<int> connectivities;
-            append(regionBegin, regionEnd, std::back_inserter(connectivities));
-
-            if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndex))
-                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write element section " + std::to_string(this->sectionIndex));
-
-            this->elementStart = this->elementEnd + 1;
+        if (this->elementType != MIXED) {
+            this->writeSection(region.begin, region.end, region.name);
         }
         else {
-            if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, region.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
-                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write element section " + std::to_string(this->sectionIndex));
-
-            for (auto element = regionBegin; element != regionEnd; ++element) {
+            std::vector<int> offsets{0};
+            for (auto element = this->global.begin() + region.begin; element != this->global.begin() + region.end; ++element) {
                 switch (element->size()) {
                     case 4: {
                         element->insert(element->begin(), TETRA_4);
+                        offsets.emplace_back(offsets.back() + 5);
                         break;
                     }
                     case 8: {
                         element->insert(element->begin(), HEXA_8);
+                        offsets.emplace_back(offsets.back() + 9);
                         break;
                     }
                     case 5: {
                         element->insert(element->begin(), PYRA_5);
+                        offsets.emplace_back(offsets.back() + 6);
                         break;
                     }
                     case 6: {
                         element->insert(element->begin(), PENTA_6);
+                        offsets.emplace_back(offsets.back() + 7);
                         break;
                     }
                     default:
                         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Element type not supported");
                 }
             }
-
-            std::vector<int> connectivities;
-            append(regionBegin, regionEnd, std::back_inserter(connectivities));
-
-            if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->elementEnd, &connectivities[0]))
-                    throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write element " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
-
-            this->elementStart = this->elementEnd + 1;
+            this->writePolySection(region.begin, region.end, region.name, offsets);
         }
     }
 }
@@ -120,53 +95,30 @@ void CgnsCreator3D::writeBoundaries() {
     for (auto boundary : this->gridData->boundaries) {
         std::transform(boundary.name.begin(), boundary.name.end(), boundary.name.begin(), ::toupper);
 
-        auto boundaryBegin = this->globalConnectivities.begin() + boundary.begin;
-        auto boundaryEnd = this->globalConnectivities.begin() + boundary.end;
-        this->elementEnd = this->elementStart + (boundaryEnd - boundaryBegin) - 1;
+        this->setElementType(boundary.begin, boundary.end, {{3,TRI_3}, {4,QUAD_4}});
 
-        ElementType_t elementType;
-        if (std::all_of(boundaryBegin, boundaryEnd, [](const auto& connectivity){return connectivity.size() == 3u;}))
-            elementType = TRI_3;
-        else if (std::all_of(boundaryBegin, boundaryEnd, [](const auto& connectivity){return connectivity.size() == 4u;}))
-            elementType = QUAD_4;
-        else
-            elementType = MIXED;
-
-        if (elementType != MIXED) {
-            std::vector<int> connectivities;
-            append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
-
-            if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndex))
-                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write facet section " + std::to_string(this->sectionIndex));
-
-            this->elementStart = this->elementEnd + 1;
+        if (this->elementType != MIXED) {
+            this->writeSection(boundary.begin, boundary.end, boundary.name);
         }
         else {
-            if (cg_section_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, boundary.name.c_str(), elementType, this->elementStart, this->elementEnd, sizes[2], &this->sectionIndex))
-                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not partial write facet section " + std::to_string(this->sectionIndex));
-
-            for (auto facet = boundaryBegin; facet != boundaryEnd; ++facet) {
+            std::vector<int> offsets{0};
+            for (auto facet = this->global.begin() + boundary.begin; facet != this->global.begin() + boundary.end; ++facet) {
                 switch (facet->size()) {
                     case 3: {
                         facet->insert(facet->begin(), TRI_3);
+                        offsets.emplace_back(offsets.back() + 4);
                         break;
                     }
                     case 4: {
                         facet->insert(facet->begin(), QUAD_4);
+                        offsets.emplace_back(offsets.back() + 5);
                         break;
                     }
                     default:
                         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Facet type not supported");
                 }
             }
-
-            std::vector<int> connectivities;
-            append(boundaryBegin, boundaryEnd, std::back_inserter(connectivities));
-
-            if (cg_elements_partial_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->sectionIndex, this->elementStart, this->elementEnd, &connectivities[0]))
-                    throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write facet " + std::to_string(this->elementStart) + " in section " + std::to_string(this->sectionIndex));
-
-            this->elementStart = this->elementEnd + 1;
+            this->writePolySection(boundary.begin, boundary.end, boundary.name, offsets);
         }
     }
 }
@@ -174,17 +126,7 @@ void CgnsCreator3D::writeBoundaries() {
 void CgnsCreator3D::writeWells() {
     for (auto well : this->gridData->wells) {
         std::transform(well.name.begin(), well.name.end(), well.name.begin(), ::toupper);
-
-        auto wellBegin = this->globalConnectivities.cbegin() + well.begin;
-        auto wellEnd = this->globalConnectivities.cbegin() + well.end;
-        this->elementEnd = this->elementStart + (wellEnd - wellBegin) - 1;
-
-        std::vector<int> connectivities;
-        append(wellBegin, wellEnd, std::back_inserter(connectivities));
-
-        if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, well.name.c_str(), BAR_2, this->elementStart, this->elementEnd, sizes[2], &connectivities[0], &this->sectionIndex))
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write well section " + std::to_string(this->sectionIndex));
-
-        this->elementStart = this->elementEnd + 1;
+        this->elementType = BAR_2;
+        this->writeSection(well.begin, well.end, well.name);
     }
 }

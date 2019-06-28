@@ -134,13 +134,13 @@ void SegmentGridExtractor::fixBoundaries() {
     boundary = this->segment->boundaries.begin() + 1;
     boundary->begin = this->elementShift + this->numberOfPrismsPerSegment;
     boundary->end = boundary->begin + this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
-    std::stable_sort(boundary->vertices.begin(), boundary->vertices.end());
+    std::sort(boundary->vertices.begin(), boundary->vertices.end());
 
     // last lid
     boundary = this->segment->boundaries.begin() + 2;
     boundary->begin = this->elementShift + this->numberOfPrismsPerSegment + this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
     boundary->end = boundary->begin + this->numberOfPrismsPerSegment + this->numberOfHexahedronsPerSegment;
-    std::stable_sort(boundary->vertices.begin(), boundary->vertices.end());
+    std::sort(boundary->vertices.begin(), boundary->vertices.end());
 
     std::unordered_map<int, int> lastToSecond;
     int shift = 0;

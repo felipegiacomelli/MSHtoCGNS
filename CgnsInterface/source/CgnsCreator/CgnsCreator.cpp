@@ -1,16 +1,16 @@
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator.hpp"
 #include <cgnslib.h>
 
-CgnsCreator::CgnsCreator(boost::shared_ptr<GridData> gridData, std::string folderPath) : gridData(gridData), folderPath(folderPath) {}
+CgnsCreator::CgnsCreator(boost::shared_ptr<GridData> gridData, std::string outputPath) : gridData(gridData), output(outputPath) {}
 
 void CgnsCreator::setupFile() {
-    if (this->folderPath.extension() == std::string(".cgns")) {
-        if (boost::filesystem::exists(this->folderPath))
-            boost::filesystem::remove_all(this->folderPath);
-        this->fileName = this->folderPath.string();
+    if (this->output.extension() == std::string(".cgns")) {
+        if (boost::filesystem::exists(this->output))
+            boost::filesystem::remove_all(this->output);
+        this->fileName = this->output.string();
     }
     else {
-        boost::filesystem::path folderName(boost::filesystem::absolute(this->folderPath).string() + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/");
+        boost::filesystem::path folderName(boost::filesystem::absolute(this->output).string() + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/");
         if (!boost::filesystem::exists(folderName))
             boost::filesystem::create_directory(folderName);
         this->fileName = folderName.string() + std::string("Grid.cgns");
@@ -37,45 +37,80 @@ void CgnsCreator::writeZone() {
 }
 
 void CgnsCreator::buildGlobalConnectivities() {
+    this->global.reserve(this->gridData->tetrahedrons.size() + this->gridData->hexahedrons.size() + this->gridData->prisms.size() + this->gridData->pyramids.size() + this->gridData->triangles.size() + this->gridData->quadrangles.size() + this->gridData->lines.size());
+
     for (auto i = this->gridData->tetrahedrons.cbegin(); i != this->gridData->tetrahedrons.cend(); ++i) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+        this->global.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->global.back()), [](auto x){return x + 1;});
     }
     for (auto i = this->gridData->hexahedrons.cbegin(); i != this->gridData->hexahedrons.cend(); ++i) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+        this->global.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->global.back()), [](auto x){return x + 1;});
     }
     for (auto i = this->gridData->prisms.cbegin(); i != this->gridData->prisms.cend(); ++i) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+        this->global.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->global.back()), [](auto x){return x + 1;});
     }
     for (auto i = this->gridData->pyramids.cbegin(); i != this->gridData->pyramids.cend(); ++i) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+        this->global.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->global.back()), [](auto x){return x + 1;});
     }
 
     for (auto i = this->gridData->triangles.cbegin(); i != this->gridData->triangles.cend(); ++i) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+        this->global.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->global.back()), [](auto x){return x + 1;});
     }
     for (auto i = this->gridData->quadrangles.cbegin(); i != this->gridData->quadrangles.cend(); ++i) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+        this->global.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->global.back()), [](auto x){return x + 1;});
     }
 
     for (auto i = this->gridData->lines.cbegin(); i != this->gridData->lines.cend(); ++i) {
-        this->globalConnectivities.emplace_back(std::vector<int>());
-        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->globalConnectivities.back()), [](auto x){return x + 1;});
+        this->global.emplace_back(std::vector<int>());
+        std::transform(i->cbegin(), i->cend(), std::back_inserter(this->global.back()), [](auto x){return x + 1;});
     }
 
-    std::stable_sort(this->globalConnectivities.begin(), this->globalConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
-    for (unsigned i = 0; i < this->globalConnectivities.size(); ++i)
-        this->globalConnectivities[i].pop_back();
+    std::sort(this->global.begin(), this->global.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
+    for (unsigned i = 0; i < this->global.size(); ++i)
+        this->global[i].pop_back();
 }
 
 void CgnsCreator::writeSections() {
     this->writeRegions();
     this->writeBoundaries();
+}
+
+void CgnsCreator::setElementType(int begin, int end, std::unordered_map<unsigned,int> sizeType) {
+    this->elementType = MIXED;
+    for (auto entry : sizeType)
+        if (std::all_of(this->global.begin() + begin, this->global.begin() + end, [=](const auto& c){return c.size() == entry.first;}))
+            this->elementType = entry.second;
+}
+
+void CgnsCreator::writeSection(int begin, int end, std::string name) {
+    std::vector<int> connectivities;
+    connectivities.reserve(std::accumulate(this->global.begin() + begin, this->global.begin() + end, 0, [](int s, const auto& c){return s + c.size();}));
+    append(this->global.begin() + begin, this->global.begin() + end, std::back_inserter(connectivities));
+
+    this->elementEnd += end - begin;
+
+    if (cg_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, name.c_str(), ElementType_t(this->elementType), this->elementStart, this->elementEnd, this->sizes[2], &connectivities[0], &this->sectionIndex))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write section " + name);
+
+    this->elementStart = this->elementEnd + 1;
+}
+
+void CgnsCreator::writePolySection(int begin, int end, std::string name, const std::vector<int>& offsets) {
+    std::vector<int> connectivities;
+    connectivities.reserve(std::accumulate(this->global.begin() + begin, this->global.begin() + end, 0, [](int s, const auto& c){return s + c.size();}));
+    append(this->global.begin() + begin, this->global.begin() + end, std::back_inserter(connectivities));
+
+    this->elementEnd += end - begin;
+
+    if (cg_poly_section_write(this->fileIndex, this->baseIndex, this->zoneIndex, name.c_str(), MIXED, this->elementStart, this->elementEnd, this->sizes[2], &connectivities[0], &offsets[0], &this->sectionIndex))
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write poly section " + name);
+
+    this->elementStart = this->elementEnd + 1;
 }
 
 std::string CgnsCreator::getFileName() const {

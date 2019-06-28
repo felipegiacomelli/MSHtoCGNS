@@ -4,10 +4,10 @@
 #include <string>
 #include <set>
 
-#include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsOpener.hpp"
 #include "MSHtoCGNS/GridData/GridData.hpp"
 
-class CgnsReader {
+class CgnsReader : public CgnsOpener {
     public:
         CgnsReader(std::string filePath);
 
@@ -18,15 +18,10 @@ class CgnsReader {
 
         boost::shared_ptr<GridData> gridData;
 
-        virtual ~CgnsReader();
+        virtual ~CgnsReader() = default;
 
     protected:
-        void checkFile();
-        void readNumberOfBases();
-        void readBase();
-        void readZone();
         void readNumberOfSections();
-        void readNumberOfBoundaries();
         void createGridData();
 
         virtual void readCoordinates() = 0;
@@ -72,14 +67,6 @@ class CgnsReader {
 
         int readSolutionIndex(std::string solutionName);
 
-        boost::filesystem::path filePath, temporaryFilePath;
-        int fileType;
-        int fileIndex;
-        float fileVersion;
-        int numberOfBases;
-        char buffer[1024];
-        int baseIndex = 1, zoneIndex, cellDimension, physicalDimension;
-        int sizes[3];
         int numberOfSections, numberOfBoundaries;
         int one = 1;
         int elementType, elementStart, elementEnd;

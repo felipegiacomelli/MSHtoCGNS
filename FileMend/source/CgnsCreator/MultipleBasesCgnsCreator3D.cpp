@@ -30,7 +30,7 @@ void MultipleBasesCgnsCreator3D::initialize() {
         this->buildGlobalConnectivities();
         this->writeSections();
 
-        this->globalConnectivities.clear();
+        this->global.clear();
 
         this->elementStart = 1;
         this->elementEnd = 0;

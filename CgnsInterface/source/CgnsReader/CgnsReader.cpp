@@ -1,95 +1,14 @@
 #include "MSHtoCGNS/CgnsInterface/CgnsReader.hpp"
 #include <cgnslib.h>
-#include <cgns_io.h>
 
-CgnsReader::CgnsReader(std::string filePath) : filePath(filePath), temporaryFilePath(filePath + ".temp") {
-    this->checkFile();
-    this->readNumberOfBases();
-    this->readBase();
-    this->readZone();
+CgnsReader::CgnsReader(std::string filePath) : CgnsOpener(filePath, "Read") {
     this->readNumberOfSections();
-    this->readNumberOfBoundaries();
     this->createGridData();
-}
-
-void CgnsReader::checkFile() {
-    if (!boost::filesystem::exists(this->filePath.parent_path()))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path " + this->filePath.parent_path().string() + " does not exist");
-
-    if (!boost::filesystem::exists(this->filePath))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no file in the given path");
-
-    if (cg_is_cgns(boost::filesystem::absolute(this->filePath).c_str(), &this->fileType))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The file is not a valid cgns file");
-
-    printf("\n\n\t%s: %i\n\n", "fileType", this->fileType);
-    if (this->fileType == 1) {
-        int adfFileIndex;
-        if (cgio_open_file (boost::filesystem::absolute(this->filePath).c_str(), CGIO_MODE_READ, CGIO_FILE_ADF, &adfFileIndex))
-            cgio_error_exit("cgio_open_file (adf)");
-
-        int hdfFileIndex;
-        if (cgio_open_file(boost::filesystem::absolute(this->temporaryFilePath).c_str(), CGIO_MODE_WRITE, CGIO_FILE_HDF5, &hdfFileIndex))
-            cgio_error_exit("cgio_open_file (hdf5)");
-        if (cgio_copy_file(adfFileIndex, hdfFileIndex, 1))
-            cgio_error_exit("cgio_copy_file");
-        if (cgio_close_file(adfFileIndex))
-            cgio_error_exit("cgio_close_file (adf)");
-        if (cgio_close_file(hdfFileIndex))
-            cgio_error_exit("cgio_close_file (hdf5)");
-
-        boost::filesystem::copy_file(this->temporaryFilePath, this->filePath, boost::filesystem::copy_option::overwrite_if_exists);
-    }
-
-    if (cg_open(boost::filesystem::absolute(this->filePath).c_str(), CG_MODE_READ, &this->fileIndex))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not open the file " + boost::filesystem::absolute(this->filePath).string());
-
-    if (cg_version(this->fileIndex, &this->fileVersion))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read file version");
-
-    if (this->fileVersion <= 3.10)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - File version (" + std::to_string(this->fileVersion) + ") is older than 3.11");
-}
-
-void CgnsReader::readNumberOfBases() {
-    if (cg_nbases(this->fileIndex, &this->numberOfBases))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of bases");
-
-    if (this->numberOfBases < 1)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has no base");
-}
-
-void CgnsReader::readBase() {
-    if (cg_base_read(this->fileIndex, this->baseIndex, this->buffer, &this->cellDimension, &this->physicalDimension))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read base");
-}
-
-void CgnsReader::readZone() {
-    if (cg_nzones(this->fileIndex, this->baseIndex, &this->zoneIndex))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of zones");
-
-    if (this->zoneIndex != 1)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has more than one zone");
-
-    ZoneType_t zoneType;
-    if (cg_zone_type(this->fileIndex, this->baseIndex, this->zoneIndex, &zoneType))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read zone type");
-
-    if (zoneType != Unstructured)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Only unstructured zones are supported");
-
-    if (cg_zone_read(this->fileIndex, this->baseIndex, this->zoneIndex, this->buffer, this->sizes))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read zone");
 }
 
 void CgnsReader::readNumberOfSections() {
     if (cg_nsections(this->fileIndex, this->baseIndex, this->zoneIndex, &this->numberOfSections))
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of sections");
-}
-
-void CgnsReader::readNumberOfBoundaries() {
-    if (cg_nbocos(this->fileIndex, this->baseIndex, this->zoneIndex, &this->numberOfBoundaries))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of boundaries");
 }
 
 void CgnsReader::createGridData() {
@@ -115,8 +34,12 @@ void CgnsReader::readSections() {
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read element data size");
 
         std::vector<int> connectivities(size);
-        if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], nullptr))
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section elements");
+        std::vector<int> offsets(this->elementEnd - this->elementStart + 2);
+        if (this->elementType == MIXED)
+            cg_poly_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], &offsets[0], nullptr);
+        else
+            if (cg_elements_read(this->fileIndex, this->baseIndex, this->zoneIndex, sectionIndex, &connectivities[0], nullptr))
+                throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read section " + this->buffer + " elements");
 
         this->addConnectivities(connectivities);
 
@@ -278,8 +201,4 @@ std::vector<double> CgnsReader::readTimeInstants() {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read array");
 
     return timeInstants;
-}
-
-CgnsReader::~CgnsReader() {
-    cg_close(this->fileIndex);
 }
