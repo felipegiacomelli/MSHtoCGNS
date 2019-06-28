@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <unordered_map>
 
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 #include "MSHtoCGNS/Utilities/Vector.hpp"
