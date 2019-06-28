@@ -33,7 +33,6 @@ boost::shared_ptr<GridData> MultipleBasesCgnsReader3D::read(std::string name) {
     this->readBase();
     this->readZone();
     this->readNumberOfSections();
-    this->readNumberOfBoundaries();
     this->createGridData();
 
     this->readCoordinates();
@@ -55,7 +54,6 @@ boost::shared_ptr<GridData> MultipleBasesCgnsReader3D::read(int baseIndex) {
     this->readBase();
     this->readZone();
     this->readNumberOfSections();
-    this->readNumberOfBoundaries();
     this->createGridData();
 
     this->readCoordinates();

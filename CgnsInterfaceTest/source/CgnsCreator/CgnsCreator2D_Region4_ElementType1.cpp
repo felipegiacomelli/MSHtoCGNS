@@ -34,23 +34,6 @@ struct Region4_ElementType1_2D {
 
 FixtureTestSuite(Generate_Region4_ElementType1_2D, Region4_ElementType1_2D)
 
-TestCase(Coordinates) {
-    auto coordinates = this->gridData->coordinates;
-
-    checkEqual(coordinates.size(), 11u);
-    checkClose(coordinates[ 0][0], 0.00, TOLERANCE); checkClose(coordinates[ 0][1], 0.00, TOLERANCE); checkClose(coordinates[ 0][2], 0.00, TOLERANCE);
-    checkClose(coordinates[ 1][0], 0.50, TOLERANCE); checkClose(coordinates[ 1][1], 0.00, TOLERANCE); checkClose(coordinates[ 1][2], 0.00, TOLERANCE);
-    checkClose(coordinates[ 2][0], 1.00, TOLERANCE); checkClose(coordinates[ 2][1], 0.00, TOLERANCE); checkClose(coordinates[ 2][2], 0.00, TOLERANCE);
-    checkClose(coordinates[ 3][0], 0.00, TOLERANCE); checkClose(coordinates[ 3][1], 0.50, TOLERANCE); checkClose(coordinates[ 3][2], 0.00, TOLERANCE);
-    checkClose(coordinates[ 4][0], 0.50, TOLERANCE); checkClose(coordinates[ 4][1], 0.50, TOLERANCE); checkClose(coordinates[ 4][2], 0.00, TOLERANCE);
-    checkClose(coordinates[ 5][0], 1.00, TOLERANCE); checkClose(coordinates[ 5][1], 0.50, TOLERANCE); checkClose(coordinates[ 5][2], 0.00, TOLERANCE);
-    checkClose(coordinates[ 6][0], 0.00, TOLERANCE); checkClose(coordinates[ 6][1], 1.00, TOLERANCE); checkClose(coordinates[ 6][2], 0.00, TOLERANCE);
-    checkClose(coordinates[ 7][0], 0.50, TOLERANCE); checkClose(coordinates[ 7][1], 1.00, TOLERANCE); checkClose(coordinates[ 7][2], 0.00, TOLERANCE);
-    checkClose(coordinates[ 8][0], 1.00, TOLERANCE); checkClose(coordinates[ 8][1], 1.00, TOLERANCE); checkClose(coordinates[ 8][2], 0.00, TOLERANCE);
-    checkClose(coordinates[ 9][0], 0.25, TOLERANCE); checkClose(coordinates[ 9][1], 0.75, TOLERANCE); checkClose(coordinates[ 9][2], 0.00, TOLERANCE);
-    checkClose(coordinates[10][0], 0.75, TOLERANCE); checkClose(coordinates[10][1], 0.25, TOLERANCE); checkClose(coordinates[10][2], 0.00, TOLERANCE);
-}
-
 TestCase(Elements) {
     auto triangles = this->gridData->triangles;
 
@@ -147,70 +130,6 @@ TestCase(D) {
     checkEqual(this->elementStart,  7);
     checkEqual(this->elementEnd  , 10);
     checkEqual(this->type, TRI_3);
-}
-
-TestCase(Boundaries) {
-    checkEqual(this->gridData->boundaries.size(), 4u);
-}
-
-TestCase(West) {
-    auto boundary = this->gridData->boundaries[0];
-
-    checkEqual(boundary.name, std::string("WEST"));
-
-    checkEqual(boundary.begin, 10);
-    checkEqual(boundary.end, 12);
-
-    auto vertices = boundary.vertices;
-    checkEqual(vertices.size(), 3u);
-    checkEqual(vertices[0], 0);
-    checkEqual(vertices[1], 3);
-    checkEqual(vertices[2], 6);
-}
-
-TestCase(East) {
-    auto boundary = this->gridData->boundaries[1];
-
-    checkEqual(boundary.name, std::string("EAST"));
-
-    checkEqual(boundary.begin, 12);
-    checkEqual(boundary.end, 14);
-
-    auto vertices = boundary.vertices;
-    checkEqual(vertices.size(), 3u);
-    checkEqual(vertices[0], 2);
-    checkEqual(vertices[1], 5);
-    checkEqual(vertices[2], 8);
-}
-
-TestCase(South) {
-    auto boundary = this->gridData->boundaries[2];
-
-    checkEqual(boundary.name, std::string("SOUTH"));
-
-    checkEqual(boundary.begin, 14);
-    checkEqual(boundary.end, 16);
-
-    auto vertices = boundary.vertices;
-    checkEqual(vertices.size(), 3u);
-    checkEqual(vertices[0], 0);
-    checkEqual(vertices[1], 1);
-    checkEqual(vertices[2], 2);
-}
-
-TestCase(North) {
-    auto boundary = this->gridData->boundaries[3];
-
-    checkEqual(boundary.name, std::string("NORTH"));
-
-    checkEqual(boundary.begin, 16);
-    checkEqual(boundary.end, 18);
-
-    auto vertices = boundary.vertices;
-    checkEqual(vertices.size(), 3u);
-    checkEqual(vertices[0], 6);
-    checkEqual(vertices[1], 7);
-    checkEqual(vertices[2], 8);
 }
 
 TestSuiteEnd()

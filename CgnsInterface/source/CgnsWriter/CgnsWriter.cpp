@@ -1,53 +1,17 @@
 #include "MSHtoCGNS/CgnsInterface/CgnsWriter.hpp"
 #include <cgnslib.h>
 
-CgnsWriter::CgnsWriter(std::string path, std::string gridLocation) : path(path) {
+CgnsWriter::CgnsWriter(std::string filePath, std::string gridLocation) : CgnsOpener(filePath, "Modify") {
+    this->setGridLocation(gridLocation);
+}
+
+void CgnsWriter::setGridLocation(std::string gridLocation) {
     if (gridLocation == std::string("Vertex"))
         this->gridLocation = 2;
     else if (gridLocation == std::string("CellCenter"))
         this->gridLocation = 3;
     else
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Solution location must be either Vertex or CellCenter");
-
-    this->checkFile();
-    this->readBase();
-    this->readZone();
-}
-
-void CgnsWriter::checkFile() {
-    if (!boost::filesystem::exists(boost::filesystem::path(this->path).parent_path()))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path does not exist");
-
-    if (!boost::filesystem::exists(this->path))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no file in the given path");
-
-    if (cg_open(this->path.c_str(), CG_MODE_MODIFY, &this->fileIndex))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not open the file " + this->path);
-
-    if (cg_version(this->fileIndex, &this->fileVersion))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read file version");
-
-    if (this->fileVersion <= 3.10)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - File version (" + std::to_string(this->fileVersion) + ") is older than 3.11");
-}
-
-void CgnsWriter::readBase() {
-    int numberOfBases;
-    if (cg_nbases(this->fileIndex, &numberOfBases))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of bases");
-
-    if (numberOfBases < 1)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has no base");
-
-    this->baseIndex = 1;
-}
-
-void CgnsWriter::readZone() {
-    if (cg_nzones(this->fileIndex, this->baseIndex, &this->zoneIndex))
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not read number of zones");
-
-    if (this->zoneIndex != 1)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The CGNS file has more than one zone");
 }
 
 void CgnsWriter::writePermanentSolution(std::string name) {
@@ -65,29 +29,26 @@ void CgnsWriter::writePermanentField(std::string name, const std::vector<int>& v
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write field " + name);
 }
 
-void CgnsWriter::writeTransientSolution(double timeInstant) {
-    this->timeInstants.push_back(timeInstant);
-    this->solutionIndices.emplace_back(0);
-    std::string solutionName = std::string("TimeStep") + std::to_string(timeInstants.size());
-    cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), GridLocation_t(this->gridLocation), &this->solutionIndices.back());
+void CgnsWriter::writeTransientSolution(double timeValue) {
+    this->timeValues.push_back(timeValue);
+    std::string solutionName = std::string("TimeStep") + std::to_string(timeValues.size());
+    cg_sol_write(this->fileIndex, this->baseIndex, this->zoneIndex, solutionName.c_str(), GridLocation_t(this->gridLocation), &this->solutionIndex);
 }
 
 void CgnsWriter::writeTransientField(std::string name, const std::vector<double>& values) {
-    this->fieldsIndices.emplace_back(0);
-    cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->solutionIndices.back(), RealDouble, name.c_str(), &values[0], &this->fieldsIndices.back());
+    cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->solutionIndex, RealDouble, name.c_str(), &values[0], &this->fieldIndex);
 }
 
 void CgnsWriter::finalizeTransient() {
     if (!this->isFinalized) {
         this->isFinalized = true;
-        if (this->timeInstants.size() > 0) {
-            int numberOfTimeSteps = this->timeInstants.size();
-            cg_biter_write(this->fileIndex, this->baseIndex, "TimeIterativeValues", this->timeInstants.size());
+        if (this->timeValues.size() > 0) {
+            int numberOfTimeSteps = this->timeValues.size();
+            cg_biter_write(this->fileIndex, this->baseIndex, "TimeIterativeValues", this->timeValues.size());
             cg_goto(this->fileIndex, this->baseIndex, "BaseIterativeData_t", 1, nullptr);
-            cg_array_write("TimeValues", RealDouble, 1, &numberOfTimeSteps, &this->timeInstants[0]);
+            cg_array_write("TimeValues", RealDouble, 1, &numberOfTimeSteps, &this->timeValues[0]);
             cg_simulation_type_write(this->fileIndex, this->baseIndex, TimeAccurate);
         }
-        cg_close(this->fileIndex);
     }
 }
 

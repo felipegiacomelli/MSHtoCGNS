@@ -194,7 +194,7 @@ void RadialGridDataReordered::copyHexahedron(std::vector<std::array<int, 9>>::it
 }
 
 void RadialGridDataReordered::copyVertices() {
-    std::stable_sort(this->vertices.begin(), this->vertices.end(), [](auto a, auto b) {return a.second < b.second;});
+    std::sort(this->vertices.begin(), this->vertices.end(), [](auto a, auto b) {return a.second < b.second;});
     for (auto vertex : this->vertices)
         this->reordered->coordinates.emplace_back(this->gridData->coordinates[vertex.first]);
 }
@@ -213,12 +213,12 @@ void RadialGridDataReordered::rectifyConnectivities() {
     for (auto& boundary : this->reordered->boundaries) {
         for (auto& vertex : boundary.vertices)
             vertex = originalToReordered[vertex];
-        std::stable_sort(boundary.vertices.begin(), boundary.vertices.end());
+        std::sort(boundary.vertices.begin(), boundary.vertices.end());
     }
 
     for (auto& vertex : this->reordered->wells[0].vertices)
         vertex = originalToReordered[vertex];
-    std::stable_sort(this->reordered->wells[0].vertices.begin(), this->reordered->wells[0].vertices.end());
+    std::sort(this->reordered->wells[0].vertices.begin(), this->reordered->wells[0].vertices.end());
 }
 
 void RadialGridDataReordered::fixElementIndices() {
@@ -247,7 +247,7 @@ void RadialGridDataReordered::fixFacetIndices() {
                 quadrangle->back() = this->elementShift++;
     }
     boundary->end = this->elementShift;
-    std::stable_sort(this->quadrangles.begin(), this->quadrangles.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
+    std::sort(this->quadrangles.begin(), this->quadrangles.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
 
     boundary = this->reordered->boundaries.begin() + 1;
     boundary->begin = this->elementShift;

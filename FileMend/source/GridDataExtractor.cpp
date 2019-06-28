@@ -64,7 +64,7 @@ void GridDataExtractor::buildGlobalConnectivities() {
     for (auto i = this->original->lines.cbegin(); i != this->original->lines.cend(); ++i)
         this->globalConnectivities.emplace_back(i->cbegin(), i->cend());
 
-    std::stable_sort(this->globalConnectivities.begin(), this->globalConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
+    std::sort(this->globalConnectivities.begin(), this->globalConnectivities.end(), [](const auto& a, const auto& b) {return a.back() < b.back();});
 
     for (unsigned i = 0; i < this->globalConnectivities.size(); ++i)
         this->globalConnectivities[i].pop_back();

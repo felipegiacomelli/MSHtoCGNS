@@ -89,7 +89,7 @@ void WellGenerator::generateWells() {
         for (unsigned i = 0; i < numberOfLines; ++i)
             this->gridData->lines.emplace_back(std::array<int, 3>{vertices[i], vertices[i+1], int(i) + this->linesShift});
 
-        std::stable_sort(vertices.begin(), vertices.end());
+        std::sort(vertices.begin(), vertices.end());
 
         WellData well;
         well.name = wellGeneratorData.wellName;
