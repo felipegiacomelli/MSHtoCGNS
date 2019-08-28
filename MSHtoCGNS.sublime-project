@@ -13,17 +13,16 @@
         {
             "CgnsInterfaceTest":
             {
-                "sublimegdb_workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/CgnsInterfaceTest/source",
-                "workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/debug/bin/Debug",
+                "sublimegdb_workingdir": "/home/felipe/Github/MSHtoCGNS/CgnsInterfaceTest/source",
+                "workingdir": "/home/felipe/Github/MSHtoCGNS/debug/bin",
                 "commandline": "gdb --interpreter=mi ./CgnsInterfaceTest",
-                "arguments": "--run_test=ReadCgns_Region1_Mixed_3D"
+                "arguments": "--run_test=CgnsReader_Mixed2D"
             },
-            "MultipleZones":
+            "Manipulator":
             {
-                "sublimegdb_workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/MultipleZones/source",
-                "workingdir": "/home/felipe/Felipe/cpp/MSHtoCGNS/debug/bin/Debug",
-                "commandline": "gdb --interpreter=mi ./MultipleZones",
-                "arguments": ""
+                "sublimegdb_workingdir": "/home/felipe/Github/MSHtoCGNS/Manipulator/source",
+                "workingdir": "/home/felipe/Github/MSHtoCGNS/debug/bin",
+                "commandline": "gdb --interpreter=mi ./Manipulator"
             }
         }
     }

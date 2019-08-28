@@ -36,7 +36,7 @@ void CgnsOpener::checkFile() {
 
 void CgnsOpener::convertToHdf5() {
     int adfFileIndex;
-    if (cgio_open_file (boost::filesystem::absolute(this->file).c_str(), CGIO_MODE_READ, CGIO_FILE_ADF, &adfFileIndex))
+    if (cgio_open_file(boost::filesystem::absolute(this->file).c_str(), CGIO_MODE_READ, CGIO_FILE_ADF, &adfFileIndex))
         cgio_error_exit("cgio_open_file (adf)");
 
     int hdfFileIndex;

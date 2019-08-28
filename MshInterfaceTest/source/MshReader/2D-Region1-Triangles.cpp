@@ -9,17 +9,6 @@ struct Read_Region1_Triangles_2D_Fixture : public MshReaderFixture {
 
 FixtureTestSuite(Read_Region1_Triangles_2D_Suite, Read_Region1_Triangles_2D_Fixture)
 
-TestCase(Coordinates) {
-    auto coordinates = this->gridData->coordinates;
-
-    checkEqual(coordinates.size(), 5u);
-    checkClose(coordinates[0][0], 0.0, TOLERANCE); checkClose(coordinates[0][1], 0.0, TOLERANCE); checkClose(coordinates[0][2], 0.0, TOLERANCE);
-    checkClose(coordinates[1][0], 1.0, TOLERANCE); checkClose(coordinates[1][1], 0.0, TOLERANCE); checkClose(coordinates[1][2], 0.0, TOLERANCE);
-    checkClose(coordinates[2][0], 1.0, TOLERANCE); checkClose(coordinates[2][1], 1.0, TOLERANCE); checkClose(coordinates[2][2], 0.0, TOLERANCE);
-    checkClose(coordinates[3][0], 0.0, TOLERANCE); checkClose(coordinates[3][1], 1.0, TOLERANCE); checkClose(coordinates[3][2], 0.0, TOLERANCE);
-    checkClose(coordinates[4][0], 0.5, TOLERANCE); checkClose(coordinates[4][1], 0.5, TOLERANCE); checkClose(coordinates[4][2], 0.0, TOLERANCE);
-}
-
 TestCase(Elements) {
     auto triangles = this->gridData->triangles;
 

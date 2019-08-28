@@ -1,13 +1,13 @@
-project (MshInterfaceTest)
+project(MshInterfaceTest)
 
-set (Dependencies Utilities MshInterface)
+set(Dependencies Utilities MshInterface)
 
-include_directories (${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
-file (GLOB_RECURSE ${PROJECT_NAME}_sources ${PROJECT_SOURCE_DIR}/source/*.cpp)
+file(GLOB_RECURSE ${PROJECT_NAME}_sources ${PROJECT_SOURCE_DIR}/source/*.cpp)
 
-add_executable (${PROJECT_NAME} ${${PROJECT_NAME}_sources})
+add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_sources})
 
-foreach (Dependency ${Dependencies})
-    target_link_libraries (${PROJECT_NAME} ${Dependency})
-endforeach ()
+foreach(Dependency ${Dependencies})
+    target_link_libraries(${PROJECT_NAME} ${Dependency})
+endforeach()

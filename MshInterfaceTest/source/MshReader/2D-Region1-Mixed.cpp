@@ -10,8 +10,9 @@ struct Read_Region1_Mixed_2D_Fixture : public MshReaderFixture {
 FixtureTestSuite(Read_Region1_Mixed_2D_Suite, Read_Region1_Mixed_2D_Fixture)
 
 TestCase(Coordinates) {
-    auto coordinates = this->gridData->coordinates;
+    checkEqual(this->gridData->numberOfLocalVertices, 11);
 
+    auto coordinates = this->gridData->coordinates;
     checkEqual(coordinates.size(), 11u);
     checkClose(coordinates[ 0][0], 0.00, TOLERANCE); checkClose(coordinates[ 0][1], 0.00, TOLERANCE); checkClose(coordinates[ 0][2], 0.00, TOLERANCE);
     checkClose(coordinates[ 1][0], 0.50, TOLERANCE); checkClose(coordinates[ 1][1], 0.00, TOLERANCE); checkClose(coordinates[ 1][2], 0.00, TOLERANCE);

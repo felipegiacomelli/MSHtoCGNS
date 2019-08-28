@@ -11,8 +11,8 @@
 template<typename InputIt>
 void print1D(InputIt cbegin, InputIt cend, std::string&& message) {
     std::cout << message;
-    while (cbegin++ != cend)
-        std::cout << "\t" << std::setw(3) << std::right << *cbegin;
+    while (cbegin != cend)
+        std::cout << "\t" << std::setw(3) << std::right << *cbegin++;
     std::cout << std::endl;
 }
 

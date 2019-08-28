@@ -3,10 +3,10 @@
 #include "MSHtoCGNS/BoostInterface/PropertyTree.hpp"
 #include "MSHtoCGNS/GridData/GridData.hpp"
 #include "MSHtoCGNS/MshInterface/MshReader/MshReader3D.hpp"
-#include "MSHtoCGNS/CgnsInterface/CgnsReader/CgnsReader3D.hpp"
-#include "MSHtoCGNS/CgnsInterface/CgnsCreator/CgnsCreator3D.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsReader.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsCreator.hpp"
 #include "MSHtoCGNS/FileMend/GridDataExtractor.hpp"
-#include "MSHtoCGNS/FileMend/CgnsCreator/MultipleBasesCgnsCreator3D.hpp"
+#include "MSHtoCGNS/FileMend/CgnsCreator/MultipleBasesCgnsCreator.hpp"
 #include "MSHtoCGNS/Utilities/Print.hpp"
 
 void removeDuplicatePoints(boost::shared_ptr<GridData> gridData);
@@ -40,7 +40,7 @@ int main() {
         gridData = reader.gridData;
     }
     else if (inputPath.extension() == std::string(".cgns")) {
-        CgnsReader3D reader(inputPath.string());
+        CgnsReader reader(inputPath.string());
         gridData = reader.gridData;
     }
     else
@@ -137,7 +137,7 @@ int main() {
         gridData->boundaries.back().end = 184;
         printGridDataInformation(gridData, purple("mod gridData"));
 
-        CgnsCreator3D(gridData, "/home/felipe/Downloads/");
+        CgnsCreator(gridData, "/home/felipe/Downloads/");
     //
 
     boost::shared_ptr<GridData> extract;
@@ -153,8 +153,8 @@ int main() {
     printGridDataInformation(extract, purple("extract gridData"));
 
     start = std::chrono::steady_clock::now();
-    // MultipleBasesCgnsCreator3D(gridDatas, baseNames, zoneNames, outputPath.string());
-    // MultipleBasesCgnsCreator3D(gridDatas, baseNames, zoneNames, outputPath.string());
+    // MultipleBasesCgnsCreator(gridDatas, baseNames, zoneNames, outputPath.string());
+    // MultipleBasesCgnsCreator(gridDatas, baseNames, zoneNames, outputPath.string());
     end = std::chrono::steady_clock::now();
 
     elapsedSeconds = end - start;

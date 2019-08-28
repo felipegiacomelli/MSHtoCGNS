@@ -1,0 +1,31 @@
+{
+    "path" :
+    {
+        "input"  : "/home/felipe/mandel.cgns",
+        "output"  : "/home/felipe/"
+    },
+
+    "ScriptWellGenerator" :
+    {
+        "wellRegions" :
+        [
+            {
+                "regionName": "SOLID",
+                "wellStart": [0.5, 0.5, 1.0],
+                "wellName": "LINE"
+            }
+        ]
+    },
+
+    "extract" : true,
+    "ScriptGridDataExtractor" :
+    {
+        "regions" : ["SOLID"],
+
+        "boundaries" : ["INTERFACE", "LID1", "LID2"],
+
+        "wells" : ["LINE"]
+    },
+
+    "unifyRegions" : true
+}

@@ -14,10 +14,6 @@ fi
 
 cd $SETUP_DIRECTORY
 
-. hdf5-1.10.5.sh
-
-cd $SETUP_DIRECTORY
-
 . cgns-3.4.0.sh
 
 cd $SETUP_DIRECTORY

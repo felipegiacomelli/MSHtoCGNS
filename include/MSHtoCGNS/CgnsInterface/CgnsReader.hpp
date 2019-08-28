@@ -1,15 +1,16 @@
-#ifndef __CGNS_INTERFACE_CGNS_READER_HPP__
-#define __CGNS_INTERFACE_CGNS_READER_HPP__
+#pragma once
 
 #include <string>
 #include <set>
+#include <boost/algorithm/string/case_conv.hpp>
 
+#include "MSHtoCGNS/Utilities/Vector.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsOpener.hpp"
 #include "MSHtoCGNS/GridData/GridData.hpp"
 
 class CgnsReader : public CgnsOpener {
     public:
-        CgnsReader(std::string filePath);
+        CgnsReader(std::string filePath, bool readInConstructor = true);
 
         std::vector<double> readField(std::string solutionName, std::string fieldName);
         std::vector<double> readField(int solutionIndex, std::string fieldName);
@@ -21,55 +22,29 @@ class CgnsReader : public CgnsOpener {
         virtual ~CgnsReader() = default;
 
     protected:
-        void readNumberOfSections();
         void createGridData();
-
-        virtual void readCoordinates() = 0;
-
+        virtual void read();
+        void readNumberOfSections();
+        void readCoordinates();
         void readSections();
-        virtual bool skipSection() = 0;
-        void addConnectivities(const std::vector<int>& connectivities);
+        virtual bool skipSection(std::string, int);
+        void addConnectivities(const std::vector<int>& connectivities, int elementType);
+        template<typename T> void addConnectivity(std::vector<T>& connectivities, const std::vector<int>& connectivity);
+        template<typename T> void addConnectivity(std::vector<T>& connectivities, const std::vector<int>& connectivity, int numberOfElements, int numberOfVertices);
+        void addEntity(int elementType);
+        void addRegion();
+        void addBoundary();
+        void addWell();
 
-        template<typename T>
-        void addConnectivity(std::vector<T>& connectivities, const std::vector<int>& connectivity) {
-            connectivities.emplace_back(T{});
-            std::copy_n(std::cbegin(connectivity), connectivity.size(), std::begin(connectivities.back()));
-        }
-
-        template<typename T>
-        void addConnectivity(std::vector<T>& connectivities, const std::vector<int>& connectivity, int numberOfElements, int numberOfVertices) {
-            for (int e = 0; e < numberOfElements; ++e) {
-                connectivities.emplace_back(T{});
-                auto& element = connectivities.back();
-                for (int k = 0; k < numberOfVertices; ++k)
-                    element[k] = connectivity[e * numberOfVertices + k] - 1;
-                element.back() = this->elementStart - 1 + e;
-            }
-        }
-
-        virtual void addEntity(int elementType) = 0;
-        void addRegion(std::string&& name, int begin, int end);
-        void addBoundary(std::string&& name, int begin, int end);
-
-        template<typename T, typename U>
-        void findVertices(const std::vector<T>& connectivities, const std::vector<U>& entities, std::vector<std::set<int>>& vertices) {
-            for (const auto& connectivity : connectivities) {
-                for (unsigned e = 0u; e < entities.size(); ++e) {
-                    if (connectivity.back() >= entities[e].begin && connectivity.back() < entities[e].end) {
-                        vertices[e].insert(connectivity.cbegin(), connectivity.cend() - 1);
-                        break;
-                    }
-                }
-            }
-        }
-        virtual void findBoundaryVertices() = 0;
-        virtual void findRegionVertices() = 0;
+        void buildGlobalConnectivities();
+        void findVertices(std::vector<EntityData>& entities);
 
         int readSolutionIndex(std::string solutionName);
 
-        int numberOfSections, numberOfBoundaries;
+        int numberOfSections;
         int one = 1;
-        int elementType, elementStart, elementEnd;
+        int elementStart, elementEnd;
+        std::vector<std::vector<int>> global;
 };
 
-#endif
+#include "CgnsReader.tpp"

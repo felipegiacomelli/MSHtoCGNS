@@ -1,11 +1,11 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
-#include "MSHtoCGNS/UnitTest/FixtureCgnsCreator3D.hpp"
+#include "MSHtoCGNS/UnitTest/FixtureCgnsCreator.hpp"
 
-struct FixtureMixed : public FixtureCgnsCreator3D {
-    FixtureMixed() : FixtureCgnsCreator3D("CgnsInterface/3D-Region2-Mixed/29v_39e.cgns") {}
+struct FixtureMixed : public FixtureCgnsCreator {
+    FixtureMixed() : FixtureCgnsCreator("CgnsInterface/3D-Region2-Mixed/29v_39e.cgns") {}
 };
 
-FixtureTestSuite(CgnsCreator3D_Mixed, FixtureMixed)
+FixtureTestSuite(CgnsCreator_Mixed, FixtureMixed)
 
 TestCase(Section) {
     int numberOfSections;

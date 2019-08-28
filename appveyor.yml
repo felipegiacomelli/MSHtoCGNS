@@ -18,6 +18,8 @@ install:
 
     sudo apt -y autoremove
 
+    sudo apt-get -y install libhdf5-openmpi-dev
+
     cd Zeta/Setup
 
     ./setup.sh
@@ -36,7 +38,7 @@ install:
 
     ./CgnsInterfaceTest
 
-    ./FileMendTest
+    ./ManipulationTest
 
     cd ..
 

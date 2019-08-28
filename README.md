@@ -1,8 +1,8 @@
 # MSHtoCGNS
 
-Master: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=master)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS) [![Build Status](https://ci.appveyor.com/api/projects/status/7eejp0wx0f0rf8qb/branch/master?svg=true)](https://ci.appveyor.com/project/felipegiacomelli/mshtocgns)
+Master: [![Build Status](https://ci.appveyor.com/api/projects/status/7eejp0wx0f0rf8qb/branch/master?svg=true)](https://ci.appveyor.com/project/felipegiacomelli/mshtocgns)
 
-Develop: [![Build Status](https://travis-ci.org/felipegiacomelli/MSHtoCGNS.svg?branch=develop)](https://travis-ci.org/felipegiacomelli/MSHtoCGNS) [![Build Status](https://ci.appveyor.com/api/projects/status/7eejp0wx0f0rf8qb/branch/develop?svg=true)](https://ci.appveyor.com/project/felipegiacomelli/mshtocgns)
+Develop: [![Build Status](https://ci.appveyor.com/api/projects/status/7eejp0wx0f0rf8qb/branch/develop?svg=true)](https://ci.appveyor.com/project/felipegiacomelli/mshtocgns)
 
 Generate a msh grid using [gmsh 3.0.6](http://gmsh.info/):
 
@@ -34,7 +34,7 @@ This project currently supports:
 
 To build, it is necessary:
 
-- [g++/gcc](https://gcc.gnu.org/) 6.4 (at least)
+- [g++/gcc](https://gcc.gnu.org/) 7.4 (at least)
 - [cmake](https://cmake.org/) 3.14.4
 - [make](https://www.gnu.org/software/make/)
 - [HDF5](https://www.hdfgroup.org/solutions/hdf5/) 1.10.5

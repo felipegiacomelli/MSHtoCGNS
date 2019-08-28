@@ -1,0 +1,138 @@
+#include "MSHtoCGNS/BoostInterface/Test.hpp"
+#include "MSHtoCGNS/UnitTest/FixtureCgnsReader.hpp"
+
+struct ReaderFixtureQuadrangles : public FixtureCgnsReader {
+    ReaderFixtureQuadrangles() : FixtureCgnsReader("CgnsInterface/2D-Region1-ElementType1/9v_4e.cgns") {}
+};
+
+FixtureTestSuite(CgnsReader_Quadrangles, ReaderFixtureQuadrangles)
+
+TestCase(Coordinates) {
+    auto coordinates = this->gridData->coordinates;
+
+    checkEqual(coordinates.size(), 9u);
+    checkClose(coordinates[0][0], 0.0, TOLERANCE); checkClose(coordinates[0][1], 0.0, TOLERANCE); checkClose(coordinates[0][2], 0.0, TOLERANCE);
+    checkClose(coordinates[1][0], 1.0, TOLERANCE); checkClose(coordinates[1][1], 0.0, TOLERANCE); checkClose(coordinates[1][2], 0.0, TOLERANCE);
+    checkClose(coordinates[2][0], 1.0, TOLERANCE); checkClose(coordinates[2][1], 1.0, TOLERANCE); checkClose(coordinates[2][2], 0.0, TOLERANCE);
+    checkClose(coordinates[3][0], 0.0, TOLERANCE); checkClose(coordinates[3][1], 1.0, TOLERANCE); checkClose(coordinates[3][2], 0.0, TOLERANCE);
+    checkClose(coordinates[4][0], 0.5, TOLERANCE); checkClose(coordinates[4][1], 0.0, TOLERANCE); checkClose(coordinates[4][2], 0.0, TOLERANCE);
+    checkClose(coordinates[5][0], 1.0, TOLERANCE); checkClose(coordinates[5][1], 0.5, TOLERANCE); checkClose(coordinates[5][2], 0.0, TOLERANCE);
+    checkClose(coordinates[6][0], 0.5, TOLERANCE); checkClose(coordinates[6][1], 1.0, TOLERANCE); checkClose(coordinates[6][2], 0.0, TOLERANCE);
+    checkClose(coordinates[7][0], 0.0, TOLERANCE); checkClose(coordinates[7][1], 0.5, TOLERANCE); checkClose(coordinates[7][2], 0.0, TOLERANCE);
+    checkClose(coordinates[8][0], 0.5, TOLERANCE); checkClose(coordinates[8][1], 0.5, TOLERANCE); checkClose(coordinates[8][2], 0.0, TOLERANCE);
+}
+
+TestCase(Elements) {
+    auto quadrangles = this->gridData->quadrangles;
+
+    checkEqual(quadrangles.size(), 4u);
+    checkEqual(quadrangles[0][0], 0); checkEqual(quadrangles[0][1], 4); checkEqual(quadrangles[0][2], 8); checkEqual(quadrangles[0][3], 7); checkEqual(quadrangles[0][4], 0);
+    checkEqual(quadrangles[1][0], 7); checkEqual(quadrangles[1][1], 8); checkEqual(quadrangles[1][2], 6); checkEqual(quadrangles[1][3], 3); checkEqual(quadrangles[1][4], 1);
+    checkEqual(quadrangles[2][0], 4); checkEqual(quadrangles[2][1], 1); checkEqual(quadrangles[2][2], 5); checkEqual(quadrangles[2][3], 8); checkEqual(quadrangles[2][4], 2);
+    checkEqual(quadrangles[3][0], 8); checkEqual(quadrangles[3][1], 5); checkEqual(quadrangles[3][2], 2); checkEqual(quadrangles[3][3], 6); checkEqual(quadrangles[3][4], 3);
+}
+
+TestCase(Facets) {
+    auto lines = this->gridData->lines;
+
+    checkEqual(lines.size(), 8u);
+    checkEqual(lines[0][0], 3); checkEqual(lines[0][1], 7); checkEqual(lines[0][2],  4);
+    checkEqual(lines[1][0], 7); checkEqual(lines[1][1], 0); checkEqual(lines[1][2],  5);
+    checkEqual(lines[2][0], 1); checkEqual(lines[2][1], 5); checkEqual(lines[2][2],  6);
+    checkEqual(lines[3][0], 5); checkEqual(lines[3][1], 2); checkEqual(lines[3][2],  7);
+    checkEqual(lines[4][0], 0); checkEqual(lines[4][1], 4); checkEqual(lines[4][2],  8);
+    checkEqual(lines[5][0], 4); checkEqual(lines[5][1], 1); checkEqual(lines[5][2],  9);
+    checkEqual(lines[6][0], 2); checkEqual(lines[6][1], 6); checkEqual(lines[6][2], 10);
+    checkEqual(lines[7][0], 6); checkEqual(lines[7][1], 3); checkEqual(lines[7][2], 11);
+}
+
+TestCase(Regions) {
+    checkEqual(this->gridData->regions.size(), 1u);
+}
+
+TestCase(Geometry) {
+    auto region = this->gridData->regions[0];
+
+    checkEqual(region.name, std::string("GEOMETRY"));
+
+    checkEqual(region.begin, 0);
+    checkEqual(region.end, 4);
+
+    auto vertices = region.vertices;
+    checkEqual(vertices.size(), 9u);
+    checkEqual(vertices[0], 0);
+    checkEqual(vertices[1], 1);
+    checkEqual(vertices[2], 2);
+    checkEqual(vertices[3], 3);
+    checkEqual(vertices[4], 4);
+    checkEqual(vertices[5], 5);
+    checkEqual(vertices[6], 6);
+    checkEqual(vertices[7], 7);
+    checkEqual(vertices[8], 8);
+}
+
+TestCase(Boundaries) {
+    checkEqual(this->gridData->boundaries.size(), 4u);
+}
+
+TestCase(West) {
+    auto boundary = this->gridData->boundaries[0];
+
+    checkEqual(boundary.name, std::string("WEST"));
+
+    checkEqual(boundary.begin, 4);
+    checkEqual(boundary.end, 6);
+
+    auto vertices = boundary.vertices;
+    checkEqual(vertices.size(), 3u);
+    checkEqual(vertices[0], 0);
+    checkEqual(vertices[1], 3);
+    checkEqual(vertices[2], 7);
+}
+
+TestCase(East) {
+    auto boundary = this->gridData->boundaries[1];
+
+    checkEqual(boundary.name, std::string("EAST"));
+
+    checkEqual(boundary.begin, 6);
+    checkEqual(boundary.end, 8);
+
+    auto vertices = boundary.vertices;
+    checkEqual(vertices.size(), 3u);
+    checkEqual(vertices[0], 1);
+    checkEqual(vertices[1], 2);
+    checkEqual(vertices[2], 5);
+}
+
+TestCase(South) {
+    auto boundary = this->gridData->boundaries[2];
+
+    checkEqual(boundary.name, std::string("SOUTH"));
+
+    checkEqual(boundary.begin, 8);
+    checkEqual(boundary.end, 10);
+
+    auto vertices = boundary.vertices;
+    checkEqual(vertices.size(), 3u);
+    checkEqual(vertices[0], 0);
+    checkEqual(vertices[1], 1);
+    checkEqual(vertices[2], 4);
+}
+
+TestCase(North) {
+    auto boundary = this->gridData->boundaries[3];
+
+    checkEqual(boundary.name, std::string("NORTH"));
+
+    checkEqual(boundary.begin, 10);
+    checkEqual(boundary.end, 12);
+
+    auto vertices = boundary.vertices;
+    checkEqual(vertices.size(), 3u);
+    checkEqual(vertices[0], 2);
+    checkEqual(vertices[1], 3);
+    checkEqual(vertices[2], 6);
+}
+
+TestSuiteEnd()

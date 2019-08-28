@@ -33,7 +33,7 @@ void MshReader3D::addPhysicalEntities() {
 }
 
 void MshReader3D::addWell(std::string name, int begin, int end) {
-    this->gridData->wells.emplace_back(WellData());
+    this->gridData->wells.emplace_back(EntityData{name, begin, end});
     this->gridData->wells.back().name = name;
     this->gridData->wells.back().begin = begin;
     this->gridData->wells.back().end = end;

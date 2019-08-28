@@ -1,11 +1,11 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
-#include "MSHtoCGNS/UnitTest/FixtureCgnsCreator3D.hpp"
+#include "MSHtoCGNS/UnitTest/FixtureCgnsCreator.hpp"
 
-struct FixtureTetrahedrons : public FixtureCgnsCreator3D {
-    FixtureTetrahedrons() : FixtureCgnsCreator3D("CgnsInterface/3D-Region1-Tetrahedra/14v_24e.cgns") {}
+struct FixtureTetrahedrons : public FixtureCgnsCreator {
+    FixtureTetrahedrons() : FixtureCgnsCreator("CgnsInterface/3D-Region1-Tetrahedra/14v_24e.cgns") {}
 };
 
-FixtureTestSuite(CgnsCreator3D_Tetrahedrons, FixtureTetrahedrons)
+FixtureTestSuite(CgnsCreator_Tetrahedrons, FixtureTetrahedrons)
 
 TestCase(Base) {
     int numberOfBases;

@@ -1,0 +1,13 @@
+{
+    "path" :
+    {
+        "input"  : "Manipulation/GridDataExtractor/125v_64e.cgns",
+        "output" : "./"
+    },
+
+    "ScriptGridDataExtractor" :
+    {
+        "regions" : ["PAY"],
+        "boundaries" : ["INTERFACE"]
+    }
+}

@@ -7,11 +7,12 @@
 
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 #include "MSHtoCGNS/Utilities/Vector.hpp"
+#include "MSHtoCGNS/Utilities/Error.hpp"
 #include "MSHtoCGNS/GridData/GridData.hpp"
 
 class CgnsCreator {
     public:
-        CgnsCreator(boost::shared_ptr<GridData> gridData, std::string outputPath);
+        CgnsCreator(boost::shared_ptr<GridData> gridData, std::string outputPath, bool createInConstructor = true);
 
         std::string getFileName() const;
 
@@ -21,18 +22,15 @@ class CgnsCreator {
         std::string zoneName = "ZONE";
 
     protected:
-        virtual void checkDimension() = 0;
-        virtual void setDimensions() = 0;
+        void setDimensions();
         void setupFile();
-        virtual void initialize();
+        virtual void create();
         void writeBase();
         void writeZone();
-        virtual void writeCoordinates() = 0;
+        void writeCoordinates();
         void buildGlobalConnectivities();
-        virtual void writeSections();
-        virtual void writeRegions() = 0;
-        virtual void writeBoundaries() = 0;
-        void setElementType(int begin, int end, std::unordered_map<unsigned,int> sizeType);
+        virtual void writeSections(std::vector<EntityData> entities);
+        void setElementType(int begin, int end);
         void writeSection(int begin, int end, std::string name);
         void writePolySection(int begin, int end, std::string name, const std::vector<int>& offsets);
 
@@ -40,7 +38,7 @@ class CgnsCreator {
         boost::filesystem::path output;
 
         std::string fileName;
-        int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension;
+        int fileIndex, baseIndex, zoneIndex, cellDimension, physicalDimension = 3;
         int sizes[3];
         int coordinateIndex, sectionIndex, boundaryIndex;
         int elementType, elementStart = 1, elementEnd = 0;

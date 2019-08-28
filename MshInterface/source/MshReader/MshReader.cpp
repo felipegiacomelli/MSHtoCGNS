@@ -95,6 +95,7 @@ void MshReader::readNodes() {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no Node data in the grid file");
 
     this->file >> numberOfVertices;
+    this->gridData->numberOfLocalVertices = numberOfVertices;
     this->gridData->coordinates.resize(numberOfVertices, std::array<double, 3>());
     for (int i = 0; i < numberOfVertices; ++i)
         this->file >> temporary >> this->gridData->coordinates[i][0] >> this->gridData->coordinates[i][1] >> this->gridData->coordinates[i][2];
@@ -140,7 +141,7 @@ void MshReader::readElements() {
 }
 
 void MshReader::determinePhysicalEntitiesRange() {
-    std::stable_sort(this->connectivities.begin(), this->connectivities.end(), [=](const auto& a, const auto& b) {return a[this->sectionIndex] < b[this->sectionIndex];});
+    std::stable_sort(this->connectivities.begin(), this->connectivities.end(), [=](const auto& a, const auto& b){return a[this->sectionIndex] < b[this->sectionIndex];});
 
     std::vector<int> indices;
     for (const auto& connectivity : this->connectivities)

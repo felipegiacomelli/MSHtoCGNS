@@ -1,0 +1,69 @@
+#ifndef __MANIPULATION_RADIAL_GRID_DATA_REORDERED_HPP__
+#define __MANIPULATION_RADIAL_GRID_DATA_REORDERED_HPP__
+
+#include <set>
+#include <numeric>
+#include <unordered_map>
+
+#include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
+#include "MSHtoCGNS/Utilities/Algorithm.hpp"
+#include "MSHtoCGNS/GridData/GridData.hpp"
+
+class RadialGridDataReordered {
+    public:
+        RadialGridDataReordered(boost::shared_ptr<GridData> gridData);
+
+        ~RadialGridDataReordered() = default;
+
+        boost::shared_ptr<GridData> reordered;
+
+        double tolerance = 1e-4;
+
+    private:
+        void checkGridData();
+        void defineQuantities();
+        void createReordered();
+        void reorderBoundaries();
+        void copyData();
+        void reorder();
+        void buildFirstSection();
+        void addVertex(int vertex, int section);
+        void updateTriangle(std::vector<std::array<int, 7>>::iterator prism, std::vector<std::array<int, 4>>::iterator triangle);
+        void updateQuadrangle(std::vector<std::array<int, 9>>::iterator hexahedron, std::vector<std::array<int, 5>>::iterator quadrangle);
+        void copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron);
+        void copyPrism(std::vector<std::array<int, 7>>::iterator prism);
+        void copyVertices();
+
+        void rectifyConnectivities();
+        template<typename T>
+        void rectifyConnectivity(std::unordered_map<int, int> conversionTable, std::vector<T>& connectivities) {
+            for (auto& connectivity : connectivities) {
+                for (auto index = connectivity.begin(); index != connectivity.end() - 1; ++index)
+                    *index = conversionTable[*index];
+            }
+        }
+
+        void fixElementIndices();
+        void fixFacetIndices();
+        void fixLineIndices();
+
+        boost::shared_ptr<GridData> gridData;
+
+        int numberOfSegments;
+        int numberOfPrismsPerSegment;
+        int numberOfHexahedronsPerSegment;
+        int numberOfHexahedronsPerRadius;
+        int numberOfVerticesPerSection;
+
+        std::vector<std::array<int, 9>> hexahedrons;
+        std::vector<std::array<int, 7>> prisms;
+        std::vector<std::array<int, 4>> triangles;
+        std::vector<std::array<int, 5>> quadrangles;
+
+        std::vector<std::pair<int, int>> vertices;
+
+        int vertexShift = 0;
+        int elementShift = 0;
+};
+
+#endif

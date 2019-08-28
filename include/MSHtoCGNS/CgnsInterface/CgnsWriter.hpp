@@ -8,12 +8,11 @@ class CgnsWriter : public CgnsOpener {
         CgnsWriter() = default;
         CgnsWriter(std::string filePath, std::string gridLocation);
 
-        void writePermanentSolution(std::string name);
-        void writePermanentField(std::string name, const std::vector<double>& values);
-        void writePermanentField(std::string name, const std::vector<int>& values);
+        void writeSolution(std::string name);
+        void writeSolution(double timeValue);
 
-        void writeTransientSolution(double timeValue);
-        void writeTransientField(std::string name, const std::vector<double>& values);
+        void writeField(std::string name, const std::vector<double>& values);
+        void writeField(std::string name, const std::vector<int>& values);
 
         void finalizeTransient();
 
@@ -23,7 +22,6 @@ class CgnsWriter : public CgnsOpener {
         void setGridLocation(std::string gridLocation);
 
         int gridLocation;
-        int permanentSolutionIndex, permanentFieldIndex;
         int solutionIndex, fieldIndex;
         std::vector<double> timeValues;
         bool isFinalized = false;
