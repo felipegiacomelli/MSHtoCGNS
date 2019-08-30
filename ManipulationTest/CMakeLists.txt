@@ -1,6 +1,6 @@
 project(ManipulationTest)
 
-set(Dependencies Utilities MshInterface CgnsInterface Manipulation)
+set(Dependencies Utilities CgnsInterface Manipulation)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 

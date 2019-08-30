@@ -20,9 +20,9 @@ This project currently supports
 
 ## CGNS IO
 - [cgns 3.10 - 3.4.0](https://cgns.github.io/)
+- HDF mothernode
 - read/write unstructured grids composed of linear elements
 - write simulation data
-- **HDF mothernode**
 
 <img src="Zeta/Images/paraview_hybrid_3d_with_well.png"  height=250 width=600  />
 
@@ -59,7 +59,7 @@ $ make install
 ```
 ## Convert
 
-The file **MSHtoCGNS.json**, located in *Zeta/*, specifies the paths to the msh files (**inputs**) and the path where the directory containing the cgns file will be created (**output**). Thus, once you have set this, you may execute
+The file **MSHtoCGNS.json**, located in *Zeta/*, specifies the paths to the msh files (**inputs**) and the path where the directory containing the CGNS files will be created (**output**). Thus, once you have set this, you may execute
 
 ```shell
 $ ./MSHtoCGNS
@@ -133,16 +133,16 @@ class CgnsWriter : public CgnsOpener {
     }
 ```
 
-They may be easily visualised with [paraview](https://www.paraview.org/).
+Easily visualised results with [paraview](https://www.paraview.org/).
 
 <p float="left">
-    <img src="Zeta/Images/2D/VelocityX.jpg" alt="gmsh" height=150 width=250  />
-    <img src="Zeta/Images/2D/VelocityY.jpg" alt="gmsh" height=150 width=250  />
+    <img src="Zeta/Images/2D/VelocityX.jpg" alt="gmsh" height=300 width=400  />
+    <img src="Zeta/Images/2D/VelocityY.jpg" alt="gmsh" height=300 width=400  />
 </p>
 
 <p float="left">
-    <img src="Zeta/Images/3D/DisplacementZ-first.png"  alt="gmsh" height=150 width=250  />
-    <img src="Zeta/Images/3D/DisplacementZ-last.png" alt="gmsh" height=150 width=250  />
+    <img src="Zeta/Images/3D/DisplacementZ-first.png"  alt="gmsh" height=300 width=400  />
+    <img src="Zeta/Images/3D/DisplacementZ-last.png" alt="gmsh" height=300 width=400  />
 </p>
 
 ---

@@ -1,6 +1,6 @@
 project(CgnsInterfaceTest)
 
-set(Dependencies Utilities CgnsInterface MshInterface)
+set(Dependencies Utilities CgnsInterface)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 

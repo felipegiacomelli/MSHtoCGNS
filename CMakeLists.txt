@@ -121,6 +121,7 @@ endmacro()
 # COMPONENTS
 ##################################################################
 enable_testing()
+option(SKIP_MSH "Skip MshInterface build" OFF)
 
 add_subdirectory(CgnsInterface)
 add_subdirectory(CgnsInterfaceTest)
@@ -130,16 +131,18 @@ add_subdirectory(Manipulation)
 add_subdirectory(ManipulationTest)
 add_test(NAME ManipulationTest COMMAND ManipulationTest)
 
-add_subdirectory(MshInterface)
-add_subdirectory(MshInterfaceTest)
-add_test(NAME MshInterfaceTest COMMAND MshInterfaceTest)
-
 add_subdirectory(Utilities)
 add_subdirectory(UtilitiesTest)
 add_test(NAME UtilitiesTest COMMAND UtilitiesTest)
 
-add_subdirectory(Manipulator)
-add_subdirectory(MSHtoCGNS)
+if(NOT SKIP_MSH)
+    add_subdirectory(MshInterface)
+    add_subdirectory(MshInterfaceTest)
+    add_test(NAME MshInterfaceTest COMMAND MshInterfaceTest)
+
+    add_subdirectory(Manipulator)
+    add_subdirectory(MSHtoCGNS)
+endif()
 
 ##################################################################
 # INSTALLATION
