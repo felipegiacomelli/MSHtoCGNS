@@ -105,7 +105,7 @@ endmacro()
 
 set(TargetsConfig "${PROJECT_NAME}Targets")
 set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include)
-set(LIB_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/libs)
+set(LIB_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/lib)
 
 macro(add_library _target)
     _add_library(${_target} ${ARGN})
