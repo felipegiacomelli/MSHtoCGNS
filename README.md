@@ -35,7 +35,7 @@ To build, it is necessary
 - [g++/gcc](https://gcc.gnu.org/) 7.4 (at least)
 - [cmake](https://cmake.org/) 3.14.4
 - [make](https://www.gnu.org/software/make/)
-- [HDF5](https://www.hdfgroup.org/solutions/hdf5/) 1.10.5
+- [HDF5](https://www.hdfgroup.org/solutions/hdf5/) 1.10.0 (at least)
 - [CGNS](https://cgns.github.io/index.html) 3.4.0
 - [Boost](https://www.boost.org/) 1.70
 
