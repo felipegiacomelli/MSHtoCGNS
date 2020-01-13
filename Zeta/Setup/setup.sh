@@ -5,6 +5,9 @@ export LIBRARY_INSTALL_DIRECTORY=$PWD/../Libraries
 export BUILD_TYPE="release"
 export NUMBER_OF_CORES=`nproc`
 
+export BOOST_VERSION="1.72.0"
+export CGNS_VERSION="3.4.0"
+
 cd ..
 
 if [ ! -d Libraries ]
@@ -14,8 +17,8 @@ fi
 
 cd $SETUP_DIRECTORY
 
-. cgns-3.4.0.sh
+. cgns.sh
 
 cd $SETUP_DIRECTORY
 
-. boost-1.70.0.sh
+. boost.sh

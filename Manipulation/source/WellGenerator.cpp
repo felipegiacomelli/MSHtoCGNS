@@ -1,4 +1,5 @@
 #include "MSHtoCGNS/Manipulation/WellGenerator.hpp"
+#include <cgnslib.h>
 
 WellGenerator::WellGenerator(boost::shared_ptr<GridData> gridData, std::string wellGeneratorScript) : gridData(gridData) {
     this->checkGridData();
@@ -17,11 +18,11 @@ void WellGenerator::checkGridData() {
     if (this->gridData->dimension != 3)
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData dimension must be 3 and not " + std::to_string(this->gridData->dimension));
 
-    if (this->gridData->wells.size() != 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of wells in gridData must be 0 and not " + std::to_string(this->gridData->wells.size()));
+    if (std::count_if(this->gridData->connectivities.cbegin(), this->gridData->connectivities.cend(), [](const auto& c){return c[0] == BAR_2;}) != 0)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - gridData lines size must be 0");
 
-    if (this->gridData->lines.size() != 0u)
-        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of lines in gridData must be 0 and not " + std::to_string(this->gridData->lines.size()));
+    if (std::count_if(this->gridData->sections.cbegin(), this->gridData->sections.cend(), [](const auto& e){return e.dimension == 1;}) != 0)
+        throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of wells in gridData must be 0");
 }
 
 void WellGenerator::readScript() {
@@ -39,16 +40,15 @@ void WellGenerator::readScript() {
 }
 
 void WellGenerator::generateWells() {
-        this->linesShift = this->gridData->tetrahedrons.size() + this->gridData->hexahedrons.size() + this->gridData->prisms.size()
-                                        + this->gridData->pyramids.size() + this->gridData->triangles.size() + this->gridData->quadrangles.size();
+   auto position = std::find_if(this->gridData->connectivities.cbegin(), this->gridData->connectivities.cend(), [](const auto& c){return c[0] == BAR_2;});
+   this->linesShift = std::distance(this->gridData->connectivities.cbegin(), position);
 
-    for (auto wellGeneratorData : this->wellGeneratorDatum) {
+   for (auto wellGeneratorData : this->wellGeneratorDatum) {
+        auto region = std::find_if(this->gridData->sections.cbegin(), this->gridData->sections.cend(), [=](auto e){return e.name == wellGeneratorData.regionName;});
 
-        auto wellRegion = std::find_if(this->gridData->regions.cbegin(), this->gridData->regions.cend(), [=](auto r){return r.name == wellGeneratorData.regionName;});
-
-        for (auto i = this->gridData->prisms.cbegin(); i != this->gridData->prisms.cend(); ++i)
-            if (i->back() >= wellRegion->begin && i->back() < wellRegion->end)
-                this->prisms.emplace_back(i->cbegin(), i->cend()-1);
+        for (auto element = this->gridData->connectivities.cbegin() + region->begin; element != this->gridData->connectivities.cbegin() + region->end; ++element)
+            if (element->front() == PENTA_6)
+                this->prisms.emplace_back(element->cbegin() + 1, element->cend() - 1);
 
         for (const auto& prism : this->prisms)
             for (const auto& index : prism)
@@ -87,13 +87,11 @@ void WellGenerator::generateWells() {
         int numberOfLines = vertices.size() - 1;
 
         for (int i = 0; i < numberOfLines; ++i)
-            this->gridData->lines.emplace_back(std::array<int, 3>{vertices[i], vertices[i+1], int(i) + this->linesShift});
+            this->gridData->connectivities.emplace_back(std::vector<int>{BAR_2, vertices[i], vertices[i+1], i + this->linesShift});
 
         std::sort(vertices.begin(), vertices.end());
 
-        EntityData well{wellGeneratorData.wellName, this->linesShift, this->linesShift +  numberOfLines};
-        well.vertices = std::move(vertices);
-        this->gridData->wells.emplace_back(std::move(well));
+        this->gridData->sections.emplace_back(SectionData{wellGeneratorData.wellName, 1, this->linesShift, this->linesShift +  numberOfLines, vertices});
 
         this->linesShift +=  numberOfLines;
     }

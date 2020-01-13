@@ -17,4 +17,15 @@
 #define checkEqual BOOST_CHECK_EQUAL
 #define checkSmall BOOST_CHECK_SMALL
 
+#define checkEqualCollections BOOST_CHECK_EQUAL_COLLECTIONS
+
+#define checkCloseCollection(aa, bb, tolerance) { \
+    auto a = std::begin(aa), ae = std::end(aa); \
+    auto b = std::begin(bb); \
+    BOOST_REQUIRE_EQUAL(std::distance(a, ae), std::distance(b, std::end(bb))); \
+    for(; a != ae; ++a, ++b) { \
+        BOOST_CHECK_CLOSE(*a, *b, tolerance); \
+    } \
+}
+
 #endif

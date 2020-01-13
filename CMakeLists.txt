@@ -15,7 +15,7 @@ set(CMAKE_CXX_STANDARD 17)
 if(UNIX)
     set(CMAKE_C_COMPILER gcc)
     set(CMAKE_CXX_COMPILER g++)
-    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64 -std=c++17 -Wall -Wextra -Wnon-virtual-dtor -pedantic -Wno-parentheses -fsanitize=undefined" CACHE STRING "Default compiler flags")
+    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64 -std=c++17 -Wall -Wextra -Wnon-virtual-dtor -pedantic -Wno-parentheses" CACHE STRING "Default compiler flags")
 
     if(NOT CMAKE_BUILD_TYPE)
         set(CMAKE_BUILD_TYPE "Release")
@@ -42,7 +42,7 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 # ABOUT THE PROJECT
 ##################################################################
 project(MSHtoCGNS)
-set(VERSION_MAJOR "2")
+set(VERSION_MAJOR "3")
 set(VERSION_MINOR "0")
 set(VERSION_PATCH "0")
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
@@ -62,7 +62,7 @@ endif()
 ##############
 # BOOST
 ##############
-set(BOOST_VERSION "1.70.0")
+set(BOOST_VERSION "1.72.0")
 
 if(DEFINED ENV{BOOST_DIR})
     set(BOOST_ROOT $ENV{BOOST_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
@@ -97,15 +97,17 @@ endif()
 ##################################################################
 # MACROS
 ##################################################################
+set(TargetsConfig "${PROJECT_NAME}Targets")
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include)
+set(LIB_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+set(EXE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/bin)
+set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+
 macro(add_executable _target)
     _add_executable(${_target} ${ARGN})
     target_link_libraries(${_target} ${Boost_LIBRARIES})
     target_link_libraries(${_target} ${CGNS_LIBRARIES})
 endmacro()
-
-set(TargetsConfig "${PROJECT_NAME}Targets")
-set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include)
-set(LIB_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/lib)
 
 macro(add_library _target)
     _add_library(${_target} ${ARGN})
@@ -120,25 +122,35 @@ endmacro()
 ##################################################################
 # COMPONENTS
 ##################################################################
-enable_testing()
-option(SKIP_MSH "Skip MshInterface build" OFF)
-
-add_subdirectory(CgnsInterface)
-add_subdirectory(CgnsInterfaceTest)
-add_test(NAME CgnsInterfaceTest COMMAND CgnsInterfaceTest)
-
-add_subdirectory(Manipulation)
-add_subdirectory(ManipulationTest)
-add_test(NAME ManipulationTest COMMAND ManipulationTest)
+option(ENABLE_MSH "Enable MshInterface build" ON)
+option(ENABLE_TESTING "Enable testing" ON)
 
 add_subdirectory(Utilities)
-add_subdirectory(UtilitiesTest)
-add_test(NAME UtilitiesTest COMMAND UtilitiesTest)
 
-if(NOT SKIP_MSH)
+add_subdirectory(CgnsInterface)
+
+add_subdirectory(Manipulation)
+
+if(ENABLE_TESTING)
+    enable_testing()
+
+    add_subdirectory(UtilitiesTest)
+    add_test(NAME UtilitiesTest COMMAND UtilitiesTest)
+
+    add_subdirectory(CgnsInterfaceTest)
+    add_test(NAME CgnsInterfaceTest COMMAND CgnsInterfaceTest)
+
+    add_subdirectory(ManipulationTest)
+    add_test(NAME ManipulationTest COMMAND ManipulationTest)
+endif()
+
+if(ENABLE_MSH)
     add_subdirectory(MshInterface)
-    add_subdirectory(MshInterfaceTest)
-    add_test(NAME MshInterfaceTest COMMAND MshInterfaceTest)
+
+    if(ENABLE_TESTING)
+        add_subdirectory(MshInterfaceTest)
+        add_test(NAME MshInterfaceTest COMMAND MshInterfaceTest)
+    endif()
 
     add_subdirectory(Manipulator)
     add_subdirectory(MSHtoCGNS)

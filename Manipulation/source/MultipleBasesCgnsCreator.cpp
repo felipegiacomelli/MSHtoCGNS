@@ -17,9 +17,7 @@ void MultipleBasesCgnsCreator::create() {
         this->writeZone();
         this->writeCoordinates();
         this->buildGlobalConnectivities();
-        this->writeSections(gridData->regions);
-        this->writeSections(gridData->boundaries);
-        this->writeSections(gridData->wells);
+        this->writeSections(gridData->sections);
 
         this->global.clear();
         this->elementStart = 1;

@@ -1,5 +1,6 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
 #include "MSHtoCGNS/Manipulation/CgnsReader/SpecialCgnsReader.hpp"
+#include <cgnslib.h>
 
 #define TOLERANCE 1e-12
 
@@ -15,64 +16,53 @@ struct SpecialCgnsReaderFixture {
 FixtureTestSuite(SpecialCgnsReaderSuite, SpecialCgnsReaderFixture)
 
 TestCase(SpecialCgnsReaderCase) {
-    checkEqual(this->gridData->coordinates.size(), 12523u);
-    checkEqual(this->gridData->tetrahedrons.size(), 53352u);
-    checkEqual(this->gridData->hexahedrons.size(), 1848u);
-    checkEqual(this->gridData->prisms.size(), 924u);
-    checkEqual(this->gridData->pyramids.size(), 948u);
-    checkEqual(this->gridData->triangles.size(), 2862u);
-    checkEqual(this->gridData->quadrangles.size(), 24u);
-    checkEqual(this->gridData->lines.size(), 0u);
-    checkEqual(this->gridData->boundaries.size(), 6u);
-    checkEqual(this->gridData->regions.size(), 2u);
-    checkEqual(this->gridData->wells.size(), 0u);
+    {
+        std::vector<std::vector<int>> expected{
+            {10, 12522,   187,  8793,  3980,     0},
+            {10, 12150, 10771, 10772,  3620, 53351},
+            {17, 11573, 11567, 10039, 10052, 11574, 11568, 10041, 10054, 54300},
+            {17,  8689,  8690,  8692,  8691,  8693,  8694,  8696,  8695, 56147},
+            {14,  9471, 10275, 10278,  9484, 10287, 10290, 56148},
+            {14,  9770, 10554, 11061,  9783, 10566, 11067, 57071},
+            {12,  8796,  8794,  8793,  8795, 12522, 53352},
+            {12, 10060, 10047, 10044, 10057, 11575, 54299},
+            { 5,  8688,   911,  1025, 57072},
+            { 5,  8815,  8893,  8702, 59933},
+            { 7,  8946,  8948,  8698,  8694, 59934},
+            { 7,  8811,  8889,  8891,  8813, 59957}
+        };
 
-    auto tetrahedron = this->gridData->tetrahedrons.front();
-    checkEqual(tetrahedron[0], 12522); checkEqual(tetrahedron[1],  187); checkEqual(tetrahedron[2], 8793); checkEqual(tetrahedron[3], 3980);
-    checkEqual(tetrahedron.back(), 0);
+        auto connectivities = this->gridData->connectivities;
+        checkEqual(connectivities.size(), 59958u);
+        checkEqualCollections(connectivities[    0].cbegin(), connectivities[    0].cend(), expected[ 0].cbegin(), expected[ 0].cend());
+        checkEqualCollections(connectivities[53351].cbegin(), connectivities[53351].cend(), expected[ 1].cbegin(), expected[ 1].cend());
+        checkEqualCollections(connectivities[54300].cbegin(), connectivities[54300].cend(), expected[ 2].cbegin(), expected[ 2].cend());
+        checkEqualCollections(connectivities[56147].cbegin(), connectivities[56147].cend(), expected[ 3].cbegin(), expected[ 3].cend());
+        checkEqualCollections(connectivities[56148].cbegin(), connectivities[56148].cend(), expected[ 4].cbegin(), expected[ 4].cend());
+        checkEqualCollections(connectivities[57071].cbegin(), connectivities[57071].cend(), expected[ 5].cbegin(), expected[ 5].cend());
+        checkEqualCollections(connectivities[53352].cbegin(), connectivities[53352].cend(), expected[ 6].cbegin(), expected[ 6].cend());
+        checkEqualCollections(connectivities[54299].cbegin(), connectivities[54299].cend(), expected[ 7].cbegin(), expected[ 7].cend());
+        checkEqualCollections(connectivities[57072].cbegin(), connectivities[57072].cend(), expected[ 8].cbegin(), expected[ 8].cend());
+        checkEqualCollections(connectivities[59933].cbegin(), connectivities[59933].cend(), expected[ 9].cbegin(), expected[ 9].cend());
+        checkEqualCollections(connectivities[59934].cbegin(), connectivities[59934].cend(), expected[10].cbegin(), expected[10].cend());
+        checkEqualCollections(connectivities[59957].cbegin(), connectivities[59957].cend(), expected[11].cbegin(), expected[11].cend());
 
-    tetrahedron = this->gridData->tetrahedrons.back();
-    checkEqual(tetrahedron[0], 12150); checkEqual(tetrahedron[1],  10771); checkEqual(tetrahedron[2], 10772); checkEqual(tetrahedron[3], 3620);
-    checkEqual(tetrahedron.back(), 53351);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == TETRA_4;}), 53352);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == HEXA_8 ;}), 1848);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == PENTA_6;}), 924);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == PYRA_5 ;}), 948);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == TRI_3  ;}), 2862);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == QUAD_4 ;}), 24);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == BAR_2  ;}), 0);
+    }
 
-    auto hexahedron = this->gridData->hexahedrons.front();
-    checkEqual(hexahedron[0], 11573); checkEqual(hexahedron[1], 11567); checkEqual(hexahedron[2], 10039); checkEqual(hexahedron[3], 10052); checkEqual(hexahedron[4], 11574); checkEqual(hexahedron[5], 11568); checkEqual(hexahedron[6], 10041); checkEqual(hexahedron[7], 10054);
-    checkEqual(hexahedron.back(), 54300);
-
-    hexahedron = this->gridData->hexahedrons.back();
-    checkEqual(hexahedron.back(), 56147);
-
-    auto prism = this->gridData->prisms.front();
-    checkEqual(prism[0], 9471); checkEqual(prism[1], 10275); checkEqual(prism[2], 10278); checkEqual(prism[3], 9484); checkEqual(prism[4], 10287); checkEqual(prism[5], 10290);
-    checkEqual(prism.back(), 56148);
-
-    prism = this->gridData->prisms.back();
-    checkEqual(prism[0], 9770); checkEqual(prism[1], 10554); checkEqual(prism[2], 11061); checkEqual(prism[3], 9783); checkEqual(prism[4], 10566); checkEqual(prism[5], 11067);
-    checkEqual(prism.back(), 57071);
-
-    auto pyramid = this->gridData->pyramids.front();
-    checkEqual(pyramid[0], 8796); checkEqual(pyramid[1], 8794); checkEqual(pyramid[2], 8793); checkEqual(pyramid[3], 8795); checkEqual(pyramid[4], 12522);
-    checkEqual(pyramid.back(), 53352);
-
-    pyramid = this->gridData->pyramids.back();
-    checkEqual(pyramid[0], 10060); checkEqual(pyramid[1], 10047); checkEqual(pyramid[2], 10044); checkEqual(pyramid[3], 10057); checkEqual(pyramid[4], 11575);
-    checkEqual(pyramid.back(), 54299);
-
-    auto triangle = this->gridData->triangles.front();
-    checkEqual(triangle[0], 8688);  checkEqual(triangle[1], 911);   checkEqual(triangle[2], 1025);
-    checkEqual(triangle.back(), 57072);
-
-    triangle = this->gridData->triangles.back();
-    checkEqual(triangle[0], 8815);  checkEqual(triangle[1], 8893);  checkEqual(triangle[2], 8702);
-    checkEqual(triangle.back(), 59933);
-
-    auto quadrangle = this->gridData->quadrangles.front();
-    checkEqual(quadrangle[0], 8946);    checkEqual(quadrangle[1], 8948);    checkEqual(quadrangle[2], 8698);    checkEqual(quadrangle[3], 8694);
-    checkEqual(quadrangle.back(), 59934);
-
-    quadrangle = this->gridData->quadrangles.back();
-    checkEqual(quadrangle[0], 8811);    checkEqual(quadrangle[1], 8889);    checkEqual(quadrangle[2], 8891);    checkEqual(quadrangle[3], 8813);
-    checkEqual(quadrangle.back(), 59957);
+    {
+        auto sections = this->gridData->sections;
+        checkEqual(sections.size(), 8u);
+        checkEqual(std::count_if(sections.cbegin(), sections.cend(), [](const auto& e){return e.dimension == 3;}), 2);
+        checkEqual(std::count_if(sections.cbegin(), sections.cend(), [](const auto& e){return e.dimension == 2;}), 6);
+        checkEqual(std::count_if(sections.cbegin(), sections.cend(), [](const auto& e){return e.dimension == 1;}), 0);
+    }
 }
 
 TestSuiteEnd()

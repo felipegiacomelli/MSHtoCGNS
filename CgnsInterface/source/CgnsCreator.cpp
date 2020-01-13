@@ -13,10 +13,12 @@ void CgnsCreator::setDimensions() {
 
     this->sizes[0] = this->gridData->coordinates.size();
 
+    const auto& cs = this->gridData->connectivities;
+
     if (this->gridData->dimension == 2)
-        this->sizes[1] = this->gridData->triangles.size() + this->gridData->quadrangles.size();
+        this->sizes[1] = std::count_if(cs.begin(), cs.cend(), [](const auto& c){return c[0] == TRI_3 || c[0] == QUAD_4;});
     else
-        this->sizes[1] = this->gridData->tetrahedrons.size() + this->gridData->hexahedrons.size() + this->gridData->prisms.size() + this->gridData->pyramids.size();
+        this->sizes[1] = std::count_if(cs.cbegin(), cs.cend(), [](const auto& c){return c[0] == TETRA_4 || c[0] == HEXA_8 || c[0] == PENTA_6 || c[0] == PYRA_5;});
 
     this->sizes[2] = 0;
 }
@@ -41,9 +43,7 @@ void CgnsCreator::create() {
     this->writeZone();
     this->writeCoordinates();
     this->buildGlobalConnectivities();
-    this->writeSections(this->gridData->regions);
-    this->writeSections(this->gridData->boundaries);
-    this->writeSections(this->gridData->wells);
+    this->writeSections(this->gridData->sections);
 }
 
 void CgnsCreator::writeBase() {
@@ -77,17 +77,7 @@ void CgnsCreator::writeCoordinates() {
 }
 
 void CgnsCreator::buildGlobalConnectivities() {
-    this->global.reserve(this->gridData->tetrahedrons.size() + this->gridData->hexahedrons.size() + this->gridData->prisms.size() + this->gridData->pyramids.size() + this->gridData->triangles.size() + this->gridData->quadrangles.size() + this->gridData->lines.size());
-
-    append(TETRA_4, this->gridData->tetrahedrons, this->global);
-    append(HEXA_8, this->gridData->hexahedrons, this->global);
-    append(PENTA_6, this->gridData->prisms, this->global);
-    append(PYRA_5, this->gridData->pyramids, this->global);
-    append(TRI_3, this->gridData->triangles, this->global);
-    append(QUAD_4, this->gridData->quadrangles, this->global);
-    append(BAR_2, this->gridData->lines, this->global);
-
-    std::sort(this->global.begin(), this->global.end(), [](const auto& a, const auto& b){return a.back() < b.back();});
+    this->global = this->gridData->connectivities;
 
     for (auto& connectivity : this->global)
         connectivity.pop_back();
@@ -97,25 +87,25 @@ void CgnsCreator::buildGlobalConnectivities() {
             *vertex += 1;
 }
 
-void CgnsCreator::writeSections(std::vector<EntityData> entities) {
-    for (auto entity : entities) {
-        std::transform(entity.name.begin(), entity.name.end(), entity.name.begin(), ::toupper);
+void CgnsCreator::writeSections(std::vector<SectionData> sections) {
+    for (auto section : sections) {
+        std::transform(section.name.begin(), section.name.end(), section.name.begin(), ::toupper);
 
-        this->setElementType(entity.begin, entity.end);
+        this->setElementType(section.begin, section.end);
 
         if (this->elementType != MIXED) {
-            this->writeSection(entity.begin, entity.end, entity.name);
+            this->writeSection(section.begin, section.end, section.name);
         }
         else {
             std::vector<int> offsets;
-            offsets.reserve(entity.end - entity.begin + 1);
+            offsets.reserve(section.end - section.begin + 1);
             offsets.emplace_back(0);
 
-            for (auto element = this->global.begin() + entity.begin; element != this->global.begin() + entity.end; ++element) {
+            for (auto element = this->global.begin() + section.begin; element != this->global.begin() + section.end; ++element) {
                 offsets.emplace_back(offsets.back() + element->size());
             }
 
-            this->writePolySection(entity.begin, entity.end, entity.name, offsets);
+            this->writePolySection(section.begin, section.end, section.name, offsets);
         }
     }
 }

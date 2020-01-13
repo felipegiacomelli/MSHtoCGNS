@@ -1,6 +1,7 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
 #include "MSHtoCGNS/Manipulation/CgnsReader/SpecialCgnsReader.hpp"
 #include "MSHtoCGNS/Manipulation/WellGenerator.hpp"
+#include <cgnslib.h>
 
 struct WellGeneratorFixture {
     WellGeneratorFixture() {
@@ -16,110 +17,125 @@ struct WellGeneratorFixture {
 FixtureTestSuite(WellGeneratorSuite, WellGeneratorFixture)
 
 TestCase(WellGeneratorTest) {
-    checkEqual(this->gridData->wells.size(), 0u);
-    checkEqual(this->gridData->lines.size(), 0u);
+    checkEqual(std::count_if(this->gridData->sections.cbegin(), this->gridData->sections.cend(), [](const auto& e){return e.dimension == 1;}), 0);
+    checkEqual(std::count_if(this->gridData->connectivities.cbegin(), this->gridData->connectivities.cend(), [](const auto& c){return c.front() == BAR_2;}), 0);
 
     WellGenerator wellGenerator(this->gridData, this->wellGeneratorScript);
 
-    checkEqual(this->gridData->wells.size(), 3u);
+    checkEqual(std::count_if(this->gridData->sections.cbegin(), this->gridData->sections.cend(), [](const auto& e){return e.dimension == 1;}), 3);
+    checkEqual(std::count_if(this->gridData->connectivities.cbegin(), this->gridData->connectivities.cend(), [](const auto& c){return c.front() == BAR_2;}), 37);
 
-    auto lines = this->gridData->lines;
-    checkEqual(this->gridData->lines.size(), 37u);
-    checkEqual(lines[ 0][0], 8215);  checkEqual(lines[ 0][1], 7858);  checkEqual(lines[ 0][2], 50253);
-    checkEqual(lines[ 1][0], 7858);  checkEqual(lines[ 1][1], 7865);  checkEqual(lines[ 1][2], 50254);
-    checkEqual(lines[ 2][0], 7865);  checkEqual(lines[ 2][1], 7872);  checkEqual(lines[ 2][2], 50255);
-    checkEqual(lines[ 3][0], 7872);  checkEqual(lines[ 3][1], 7879);  checkEqual(lines[ 3][2], 50256);
-    checkEqual(lines[ 4][0], 7879);  checkEqual(lines[ 4][1], 7886);  checkEqual(lines[ 4][2], 50257);
-    checkEqual(lines[ 5][0], 7886);  checkEqual(lines[ 5][1], 7893);  checkEqual(lines[ 5][2], 50258);
-    checkEqual(lines[ 6][0], 7893);  checkEqual(lines[ 6][1], 7900);  checkEqual(lines[ 6][2], 50259);
-    checkEqual(lines[ 7][0], 7900);  checkEqual(lines[ 7][1], 8213);  checkEqual(lines[ 7][2], 50260);
-    checkEqual(lines[ 8][0], 8213);  checkEqual(lines[ 8][1], 8214);  checkEqual(lines[ 8][2], 50261);
-    checkEqual(lines[ 9][0], 8696);  checkEqual(lines[ 9][1], 8691);  checkEqual(lines[ 9][2], 50262);
-    checkEqual(lines[10][0], 8691);  checkEqual(lines[10][1], 8692);  checkEqual(lines[10][2], 50263);
-    checkEqual(lines[11][0], 8692);  checkEqual(lines[11][1], 8685);  checkEqual(lines[11][2], 50264);
-    checkEqual(lines[12][0], 8685);  checkEqual(lines[12][1], 8686);  checkEqual(lines[12][2], 50265);
-    checkEqual(lines[13][0], 8686);  checkEqual(lines[13][1], 8687);  checkEqual(lines[13][2], 50266);
-    checkEqual(lines[14][0], 8687);  checkEqual(lines[14][1], 8688);  checkEqual(lines[14][2], 50267);
-    checkEqual(lines[15][0], 8688);  checkEqual(lines[15][1], 8689);  checkEqual(lines[15][2], 50268);
-    checkEqual(lines[16][0], 8689);  checkEqual(lines[16][1], 8690);  checkEqual(lines[16][2], 50269);
-    checkEqual(lines[17][0], 8690);  checkEqual(lines[17][1], 8684);  checkEqual(lines[17][2], 50270);
-    checkEqual(lines[18][0], 8817);  checkEqual(lines[18][1], 8818);  checkEqual(lines[18][2], 50271);
-    checkEqual(lines[19][0], 8818);  checkEqual(lines[19][1], 8825);  checkEqual(lines[19][2], 50272);
-    checkEqual(lines[20][0], 8825);  checkEqual(lines[20][1], 8832);  checkEqual(lines[20][2], 50273);
-    checkEqual(lines[21][0], 8832);  checkEqual(lines[21][1], 8839);  checkEqual(lines[21][2], 50274);
-    checkEqual(lines[22][0], 8839);  checkEqual(lines[22][1], 8846);  checkEqual(lines[22][2], 50275);
-    checkEqual(lines[23][0], 8846);  checkEqual(lines[23][1], 8853);  checkEqual(lines[23][2], 50276);
-    checkEqual(lines[24][0], 8853);  checkEqual(lines[24][1], 8860);  checkEqual(lines[24][2], 50277);
-    checkEqual(lines[25][0], 8860);  checkEqual(lines[25][1], 8867);  checkEqual(lines[25][2], 50278);
-    checkEqual(lines[26][0], 8867);  checkEqual(lines[26][1], 8874);  checkEqual(lines[26][2], 50279);
-    checkEqual(lines[27][0], 8874);  checkEqual(lines[27][1], 8881);  checkEqual(lines[27][2], 50280);
-    checkEqual(lines[28][0], 8881);  checkEqual(lines[28][1], 8888);  checkEqual(lines[28][2], 50281);
-    checkEqual(lines[29][0], 8888);  checkEqual(lines[29][1], 8895);  checkEqual(lines[29][2], 50282);
-    checkEqual(lines[30][0], 8895);  checkEqual(lines[30][1], 8902);  checkEqual(lines[30][2], 50283);
-    checkEqual(lines[31][0], 8902);  checkEqual(lines[31][1], 8909);  checkEqual(lines[31][2], 50284);
-    checkEqual(lines[32][0], 8909);  checkEqual(lines[32][1], 8916);  checkEqual(lines[32][2], 50285);
-    checkEqual(lines[33][0], 8916);  checkEqual(lines[33][1], 8923);  checkEqual(lines[33][2], 50286);
-    checkEqual(lines[34][0], 8923);  checkEqual(lines[34][1], 8930);  checkEqual(lines[34][2], 50287);
-    checkEqual(lines[35][0], 8930);  checkEqual(lines[35][1], 8937);  checkEqual(lines[35][2], 50288);
-    checkEqual(lines[36][0], 8937);  checkEqual(lines[36][1], 8944);  checkEqual(lines[36][2], 50289);
+    {
+        std::vector<std::vector<int>> expected{
+            {3, 8215, 7858, 50253},
+            {3, 7858, 7865, 50254},
+            {3, 7865, 7872, 50255},
+            {3, 7872, 7879, 50256},
+            {3, 7879, 7886, 50257},
+            {3, 7886, 7893, 50258},
+            {3, 7893, 7900, 50259},
+            {3, 7900, 8213, 50260},
+            {3, 8213, 8214, 50261},
+            {3, 8696, 8691, 50262},
+            {3, 8691, 8692, 50263},
+            {3, 8692, 8685, 50264},
+            {3, 8685, 8686, 50265},
+            {3, 8686, 8687, 50266},
+            {3, 8687, 8688, 50267},
+            {3, 8688, 8689, 50268},
+            {3, 8689, 8690, 50269},
+            {3, 8690, 8684, 50270},
+            {3, 8817, 8818, 50271},
+            {3, 8818, 8825, 50272},
+            {3, 8825, 8832, 50273},
+            {3, 8832, 8839, 50274},
+            {3, 8839, 8846, 50275},
+            {3, 8846, 8853, 50276},
+            {3, 8853, 8860, 50277},
+            {3, 8860, 8867, 50278},
+            {3, 8867, 8874, 50279},
+            {3, 8874, 8881, 50280},
+            {3, 8881, 8888, 50281},
+            {3, 8888, 8895, 50282},
+            {3, 8895, 8902, 50283},
+            {3, 8902, 8909, 50284},
+            {3, 8909, 8916, 50285},
+            {3, 8916, 8923, 50286},
+            {3, 8923, 8930, 50287},
+            {3, 8930, 8937, 50288},
+            {3, 8937, 8944, 50289}
+        };
 
-    auto well = this->gridData->wells[0];
-    checkEqual(well.name, std::string("LINE_INJECTOR_WEST"));
-    checkEqual(well.begin, 50253);
-    checkEqual(well.end  , 50262);
-    checkEqual(well.vertices.size(), 10u);
-    checkEqual(well.vertices[0], 7858);
-    checkEqual(well.vertices[1], 7865);
-    checkEqual(well.vertices[2], 7872);
-    checkEqual(well.vertices[3], 7879);
-    checkEqual(well.vertices[4], 7886);
-    checkEqual(well.vertices[5], 7893);
-    checkEqual(well.vertices[6], 7900);
-    checkEqual(well.vertices[7], 8213);
-    checkEqual(well.vertices[8], 8214);
-    checkEqual(well.vertices[9], 8215);
+        auto connectivities = this->gridData->connectivities;
+        checkEqualCollections(connectivities[50253].cbegin(), connectivities[50253].cend(), expected[ 0].cbegin(), expected[ 0].cend());
+        checkEqualCollections(connectivities[50254].cbegin(), connectivities[50254].cend(), expected[ 1].cbegin(), expected[ 1].cend());
+        checkEqualCollections(connectivities[50255].cbegin(), connectivities[50255].cend(), expected[ 2].cbegin(), expected[ 2].cend());
+        checkEqualCollections(connectivities[50256].cbegin(), connectivities[50256].cend(), expected[ 3].cbegin(), expected[ 3].cend());
+        checkEqualCollections(connectivities[50257].cbegin(), connectivities[50257].cend(), expected[ 4].cbegin(), expected[ 4].cend());
+        checkEqualCollections(connectivities[50258].cbegin(), connectivities[50258].cend(), expected[ 5].cbegin(), expected[ 5].cend());
+        checkEqualCollections(connectivities[50259].cbegin(), connectivities[50259].cend(), expected[ 6].cbegin(), expected[ 6].cend());
+        checkEqualCollections(connectivities[50260].cbegin(), connectivities[50260].cend(), expected[ 7].cbegin(), expected[ 7].cend());
+        checkEqualCollections(connectivities[50261].cbegin(), connectivities[50261].cend(), expected[ 8].cbegin(), expected[ 8].cend());
+        checkEqualCollections(connectivities[50262].cbegin(), connectivities[50262].cend(), expected[ 9].cbegin(), expected[ 9].cend());
+        checkEqualCollections(connectivities[50263].cbegin(), connectivities[50263].cend(), expected[10].cbegin(), expected[10].cend());
+        checkEqualCollections(connectivities[50264].cbegin(), connectivities[50264].cend(), expected[11].cbegin(), expected[11].cend());
+        checkEqualCollections(connectivities[50265].cbegin(), connectivities[50265].cend(), expected[12].cbegin(), expected[12].cend());
+        checkEqualCollections(connectivities[50266].cbegin(), connectivities[50266].cend(), expected[13].cbegin(), expected[13].cend());
+        checkEqualCollections(connectivities[50267].cbegin(), connectivities[50267].cend(), expected[14].cbegin(), expected[14].cend());
+        checkEqualCollections(connectivities[50268].cbegin(), connectivities[50268].cend(), expected[15].cbegin(), expected[15].cend());
+        checkEqualCollections(connectivities[50269].cbegin(), connectivities[50269].cend(), expected[16].cbegin(), expected[16].cend());
+        checkEqualCollections(connectivities[50270].cbegin(), connectivities[50270].cend(), expected[17].cbegin(), expected[17].cend());
+        checkEqualCollections(connectivities[50271].cbegin(), connectivities[50271].cend(), expected[18].cbegin(), expected[18].cend());
+        checkEqualCollections(connectivities[50272].cbegin(), connectivities[50272].cend(), expected[19].cbegin(), expected[19].cend());
+        checkEqualCollections(connectivities[50273].cbegin(), connectivities[50273].cend(), expected[20].cbegin(), expected[20].cend());
+        checkEqualCollections(connectivities[50274].cbegin(), connectivities[50274].cend(), expected[21].cbegin(), expected[21].cend());
+        checkEqualCollections(connectivities[50275].cbegin(), connectivities[50275].cend(), expected[22].cbegin(), expected[22].cend());
+        checkEqualCollections(connectivities[50276].cbegin(), connectivities[50276].cend(), expected[23].cbegin(), expected[23].cend());
+        checkEqualCollections(connectivities[50277].cbegin(), connectivities[50277].cend(), expected[24].cbegin(), expected[24].cend());
+        checkEqualCollections(connectivities[50278].cbegin(), connectivities[50278].cend(), expected[25].cbegin(), expected[25].cend());
+        checkEqualCollections(connectivities[50279].cbegin(), connectivities[50279].cend(), expected[26].cbegin(), expected[26].cend());
+        checkEqualCollections(connectivities[50280].cbegin(), connectivities[50280].cend(), expected[27].cbegin(), expected[27].cend());
+        checkEqualCollections(connectivities[50281].cbegin(), connectivities[50281].cend(), expected[28].cbegin(), expected[28].cend());
+        checkEqualCollections(connectivities[50282].cbegin(), connectivities[50282].cend(), expected[29].cbegin(), expected[29].cend());
+        checkEqualCollections(connectivities[50283].cbegin(), connectivities[50283].cend(), expected[30].cbegin(), expected[30].cend());
+        checkEqualCollections(connectivities[50284].cbegin(), connectivities[50284].cend(), expected[31].cbegin(), expected[31].cend());
+        checkEqualCollections(connectivities[50285].cbegin(), connectivities[50285].cend(), expected[32].cbegin(), expected[32].cend());
+        checkEqualCollections(connectivities[50286].cbegin(), connectivities[50286].cend(), expected[33].cbegin(), expected[33].cend());
+        checkEqualCollections(connectivities[50287].cbegin(), connectivities[50287].cend(), expected[34].cbegin(), expected[34].cend());
+        checkEqualCollections(connectivities[50288].cbegin(), connectivities[50288].cend(), expected[35].cbegin(), expected[35].cend());
+        checkEqualCollections(connectivities[50289].cbegin(), connectivities[50289].cend(), expected[36].cbegin(), expected[36].cend());
+    }
 
-    well = this->gridData->wells[1];
-    checkEqual(well.name, std::string("LINE_INJECTOR_EAST"));
-    checkEqual(well.begin, 50262);
-    checkEqual(well.end  , 50271);
-    checkEqual(well.vertices.size(), 10u);
-    checkEqual(well.vertices[0], 8684);
-    checkEqual(well.vertices[1], 8685);
-    checkEqual(well.vertices[2], 8686);
-    checkEqual(well.vertices[3], 8687);
-    checkEqual(well.vertices[4], 8688);
-    checkEqual(well.vertices[5], 8689);
-    checkEqual(well.vertices[6], 8690);
-    checkEqual(well.vertices[7], 8691);
-    checkEqual(well.vertices[8], 8692);
-    checkEqual(well.vertices[9], 8696);
+    {
+        auto section = this->gridData->sections[8];
+        checkEqual(section.name, std::string("LINE_INJECTOR_WEST"));
+        checkEqual(section.dimension, 1);
+        checkEqual(section.begin, 50253);
+        checkEqual(section.end, 50262);
+        std::vector<int> expected{7858, 7865, 7872, 7879, 7886, 7893, 7900, 8213, 8214, 8215};
+        checkEqualCollections(section.vertices.cbegin(), section.vertices.cend(), expected.cbegin(), expected.cend());
+    }
 
-    well = this->gridData->wells[2];
-    checkEqual(well.name, std::string("LINE_WELL"));
-    checkEqual(well.begin, 50271);
-    checkEqual(well.end  , 50290);
-    checkEqual(well.vertices.size(), 20u);
-    checkEqual(well.vertices[ 0], 8817);
-    checkEqual(well.vertices[ 1], 8818);
-    checkEqual(well.vertices[ 2], 8825);
-    checkEqual(well.vertices[ 3], 8832);
-    checkEqual(well.vertices[ 4], 8839);
-    checkEqual(well.vertices[ 5], 8846);
-    checkEqual(well.vertices[ 6], 8853);
-    checkEqual(well.vertices[ 7], 8860);
-    checkEqual(well.vertices[ 8], 8867);
-    checkEqual(well.vertices[ 9], 8874);
-    checkEqual(well.vertices[10], 8881);
-    checkEqual(well.vertices[11], 8888);
-    checkEqual(well.vertices[12], 8895);
-    checkEqual(well.vertices[13], 8902);
-    checkEqual(well.vertices[14], 8909);
-    checkEqual(well.vertices[15], 8916);
-    checkEqual(well.vertices[16], 8923);
-    checkEqual(well.vertices[17], 8930);
-    checkEqual(well.vertices[18], 8937);
-    checkEqual(well.vertices[19], 8944);
+    {
+        auto section = this->gridData->sections[9];
+        checkEqual(section.name, std::string("LINE_INJECTOR_EAST"));
+        checkEqual(section.dimension, 1);
+        checkEqual(section.begin, 50262);
+        checkEqual(section.end, 50271);
+        std::vector<int> expected{8684, 8685, 8686, 8687, 8688, 8689, 8690, 8691, 8692, 8696};
+        checkEqualCollections(section.vertices.cbegin(), section.vertices.cend(), expected.cbegin(), expected.cend());
+    }
+
+
+    {
+        auto section = this->gridData->sections[10];
+        checkEqual(section.name, std::string("LINE_WELL"));
+        checkEqual(section.dimension, 1);
+        checkEqual(section.begin, 50271);
+        checkEqual(section.end, 50290);
+        std::vector<int> expected{8817, 8818, 8825, 8832, 8839, 8846, 8853, 8860, 8867, 8874, 8881, 8888, 8895, 8902, 8909, 8916, 8923, 8930, 8937, 8944};
+        checkEqualCollections(section.vertices.cbegin(), section.vertices.cend(), expected.cbegin(), expected.cend());
+    }
 }
 
 TestSuiteEnd()

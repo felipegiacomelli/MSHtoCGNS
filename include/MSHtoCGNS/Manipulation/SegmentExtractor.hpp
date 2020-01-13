@@ -1,5 +1,5 @@
-#ifndef __MANIPULATION_SEGMENT_GRID_EXTRACTOR_HPP__
-#define __MANIPULATION_SEGMENT_GRID_EXTRACTOR_HPP__
+#ifndef __MANIPULATION_SEGMENT_EXTRACTOR_HPP__
+#define __MANIPULATION_SEGMENT_EXTRACTOR_HPP__
 
 #include <set>
 #include <algorithm>
@@ -10,11 +10,11 @@
 #include "MSHtoCGNS/Utilities/Algorithm.hpp"
 #include "MSHtoCGNS/GridData/GridData.hpp"
 
-class SegmentGridExtractor {
+class SegmentExtractor {
     public:
-        SegmentGridExtractor(boost::shared_ptr<GridData> gridData);
+        SegmentExtractor(boost::shared_ptr<GridData> gridData);
 
-        ~SegmentGridExtractor() = default;
+        ~SegmentExtractor() = default;
 
         boost::shared_ptr<GridData> segment;
 
@@ -26,11 +26,7 @@ class SegmentGridExtractor {
         void createSegmentGrid();
         void copyVertices();
         void copyElements();
-        void copyFacets();
-        void copyLine();
-        void fixRegion();
-        void fixBoundaries();
-        void fixWell();
+        void findVertices(std::vector<SectionData>& sections );
 
         boost::shared_ptr<GridData> gridData;
 
@@ -39,9 +35,6 @@ class SegmentGridExtractor {
         int numberOfHexahedronsPerSegment;
         int numberOfHexahedronsPerRadius;
         int numberOfVerticesPerSection;
-
-        int vertexShift = 0;
-        int elementShift = 0;
 };
 
 #endif

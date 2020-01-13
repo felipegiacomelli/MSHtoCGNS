@@ -17,7 +17,7 @@ class RadialGridDataReordered {
 
         boost::shared_ptr<GridData> reordered;
 
-        double tolerance = 1e-4;
+        double tolerance = 1.0e-4;
 
     private:
         void checkGridData();
@@ -28,24 +28,15 @@ class RadialGridDataReordered {
         void reorder();
         void buildFirstSection();
         void addVertex(int vertex, int section);
-        void updateTriangle(std::vector<std::array<int, 7>>::iterator prism, std::vector<std::array<int, 4>>::iterator triangle);
-        void updateQuadrangle(std::vector<std::array<int, 9>>::iterator hexahedron, std::vector<std::array<int, 5>>::iterator quadrangle);
-        void copyHexahedron(std::vector<std::array<int, 9>>::iterator hexahedron);
-        void copyPrism(std::vector<std::array<int, 7>>::iterator prism);
+        void updateTriangle(std::vector<std::vector<int>>::iterator prism, std::vector<std::vector<int>>::iterator triangle);
+        void updateQuadrangle(std::vector<std::vector<int>>::iterator hexahedron, std::vector<std::vector<int>>::iterator quadrangle);
+        void copyHexahedron(std::vector<std::vector<int>>::iterator hexahedron);
+        void copyPrism(std::vector<std::vector<int>>::iterator prism);
         void copyVertices();
 
         void rectifyConnectivities();
-        template<typename T>
-        void rectifyConnectivity(std::unordered_map<int, int> conversionTable, std::vector<T>& connectivities) {
-            for (auto& connectivity : connectivities) {
-                for (auto index = connectivity.begin(); index != connectivity.end() - 1; ++index)
-                    *index = conversionTable[*index];
-            }
-        }
 
         void fixElementIndices();
-        void fixFacetIndices();
-        void fixLineIndices();
 
         boost::shared_ptr<GridData> gridData;
 
@@ -55,10 +46,10 @@ class RadialGridDataReordered {
         int numberOfHexahedronsPerRadius;
         int numberOfVerticesPerSection;
 
-        std::vector<std::array<int, 9>> hexahedrons;
-        std::vector<std::array<int, 7>> prisms;
-        std::vector<std::array<int, 4>> triangles;
-        std::vector<std::array<int, 5>> quadrangles;
+        std::vector<std::vector<int>> hexahedrons;
+        std::vector<std::vector<int>> prisms;
+        std::vector<std::vector<int>> triangles;
+        std::vector<std::vector<int>> quadrangles;
 
         std::vector<std::pair<int, int>> vertices;
 

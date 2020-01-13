@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LIBRARY="cgns-3.4.0"
+LIBRARY="cgns-$CGNS_VERSION"
 export FLIBS="-Wl,--no-as-needed -ldl -lz"
 export LIBS="-Wl,--no-as-needed -ldl -lz"
 export CLIBS="-ldl"
@@ -16,7 +16,7 @@ if [ ! -d "$LIBRARY" ]; then
 fi
 
 cd $LIBRARY
-git checkout v3.4.0
+git checkout "v$CGNS_VERSION"
 search="FIND_HDF_COMPONENTS C shared"
 replace="FIND_HDF_COMPONENTS C"
 sed -i "s/${search}/${replace}/g" CMakeLists.txt

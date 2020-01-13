@@ -1,8 +1,8 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/mandel.cgns",
-        "output"  : "/home/felipe/"
+        "input"  : "/home/felipe/Downloads/mandel.cgns",
+        "output"  : "/home/felipe/Downloads"
     },
 
     "ScriptWellGenerator" :

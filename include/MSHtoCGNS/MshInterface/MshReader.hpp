@@ -9,10 +9,6 @@
 #include "MSHtoCGNS/GridData/GridData.hpp"
 #include "MSHtoCGNS/Utilities/Vector.hpp"
 
-namespace msh {
-    int getMshGridDimension(std::string path);
-}
-
 class MshReader {
     public:
         MshReader(std::string filePath);
@@ -21,7 +17,7 @@ class MshReader {
 
         boost::shared_ptr<GridData> gridData;
 
-        std::vector<int> entitiesTypes;
+        std::vector<int> sectionsDimension;
 
     protected:
         void checkFile();
@@ -29,29 +25,25 @@ class MshReader {
         void readNodes();
         void readElements();
         void determinePhysicalEntitiesRange();
-        virtual void addPhysicalEntities() = 0;
-        void addRegion(std::string name, int begin, int end);
-        void addBoundary(std::string name, int begin, int end);
-        virtual void addElements() = 0;
-        virtual void addFacets() = 0;
-        virtual void findBoundaryVertices() = 0;
-        virtual void findRegionVertices() = 0;
+        void addSections();
+        void addElements(std::vector<SectionData>& sections);
+        void findVertices(std::vector<SectionData>& sections);
 
         std::string filePath;
         double version;
         std::ifstream file;
-        char buffer[1024];
+        char buffer[8192];
         int numberOfPhysicalEntities;
         std::vector<std::vector<int>> connectivities;
 
-        int typeIndex = 0;
-        int sectionIndex = 1;
+        int sectionIndex = 0;
+        int typeIndex = 1;
         int nodeIndex = 2;
 
-        std::vector<int> entitiesIndices;
-        std::vector<std::string> entitiesNames;
+        std::vector<int> sectionsIndices;
+        std::vector<std::string> sectionsNames;
 
-        std::vector<std::array<int, 2>> physicalEntitiesRange;
+        std::vector<std::array<long int, 2>> physicalEntitiesRange;
 
         int shift = 0;
 };

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __CGNS_INTERFACE_CGNS_READER_HPP__
+#define __CGNS_INTERFACE_CGNS_READER_HPP__
 
 #include <string>
 #include <set>
@@ -31,20 +32,16 @@ class CgnsReader : public CgnsOpener {
         void addConnectivities(const std::vector<int>& connectivities, int elementType);
         template<typename T> void addConnectivity(std::vector<T>& connectivities, const std::vector<int>& connectivity);
         template<typename T> void addConnectivity(std::vector<T>& connectivities, const std::vector<int>& connectivity, int numberOfElements, int numberOfVertices);
-        void addEntity(int elementType);
-        void addRegion();
-        void addBoundary();
-        void addWell();
+        void addSection(int elementType);
+        void addSection(std::vector<SectionData>& sections, int dimension);
 
-        void buildGlobalConnectivities();
-        void findVertices(std::vector<EntityData>& entities);
+        void findVertices(std::vector<SectionData>& sections);
 
         int readSolutionIndex(std::string solutionName);
 
         int numberOfSections;
         int one = 1;
         int elementStart, elementEnd;
-        std::vector<std::vector<int>> global;
 };
 
-#include "CgnsReader.tpp"
+#endif

@@ -1,9 +1,9 @@
 #ifndef __UNIT_TEST_FIXTURE_CGNS_CREATOR_HPP__
 #define __UNIT_TEST_FIXTURE_CGNS_CREATOR_HPP__
 
-#include <cgnslib.h>
 #include "MSHtoCGNS/CgnsInterface/CgnsReader.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator.hpp"
+#include <cgnslib.h>
 
 #define TOLERANCE 1.0e-12
 

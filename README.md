@@ -81,37 +81,31 @@ struct GridData {
 
     std::vector<std::array<double, 3>> coordinates;
 
-    std::vector<std::array<int, 5>> tetrahedrons;
-    std::vector<std::array<int, 9>> hexahedrons;
-    std::vector<std::array<int, 7>> prisms;
-    std::vector<std::array<int, 6>> pyramids;
-    std::vector<std::array<int, 4>> triangles;
-    std::vector<std::array<int, 5>> quadrangles;
-    std::vector<std::array<int, 3>> lines;
-    std::vector<std::array<int, 2>> points;
+    std::vector<std::vector<int>> connectivities;
 
-    std::vector<EntityData> boundaries;
-    std::vector<EntityData> regions;
-    std::vector<EntityData> wells;
+    std::vector<SectionData> sections;
 
     int numberOfLocalVertices;
 };
 ```
 
-Note that the element index is in the connectivity *std::array* back. As in a CGNS file, the sections (boundaries, regions and wells) hold a contiguous partition of elements. Its information is stored in the **EntityData**.
+Note that the element type is in the connectivity *std::vector* front, and the element index is at the connectivity *std::vector* back. As in a CGNS file, the sections hold a contiguous partition of elements -- its information is stored in the **SectionData**.
 
 ```cpp
-struct EntityData {
-    EntityData() = default;
-    EntityData(std::string name, int begin, int end) : name(name), begin(begin), end(end) {}
+struct SectionData {
+    SectionData() = default;
+
+    SectionData(std::string name, int dimension, int begin, int end, std::vector<int> vertices) :
+        name(name), dimension(dimension), begin(begin), end(end), vertices(vertices) {}
 
     std::string name;
+    int dimension;
     int begin;
     int end;
     std::vector<int> vertices;
 };
 ```
-It is necessary to remark that: *boundaries* are entities where the boundary conditions are applied, *regions* are employed to define different physical properties throughout the domain, and *wells* may be associated to source terms.
+It is necessary to remark that: *boundaries* are sections where the boundary conditions are applied, *regions* are employed to define different physical properties throughout the domain, and *wells* may be associated to source terms.
 
 Finally, the **CgnsWriter** is used to write the simulation results in the output file.
 

@@ -10,10 +10,6 @@
 #include <FileMend/RadialGridDataReordered.hpp>
 #include <FileMend/MultipleBasesCgnsCreator.hpp>
 
-// void renameZones(boost::shared_ptr<GridData> gridData, boost::property_tree::ptree) {
-
-// }
-
 void createSingleRegion(boost::shared_ptr<GridData> gridData, std::string regionName) {
     RegionData region;
     region.name = regionName;
@@ -78,35 +74,35 @@ int main() {
     if (menderScript.get_child_optional("ScriptGridDataExtractor")) {
         // boost::property_tree::ptree propertyTree;
 
-        // boost::property_tree::ptree entities;
+        // boost::property_tree::ptree sections;
 
         // std::vector<std::string> names{"WELL_BODY"};
         // for (auto name : names) {
-        //  boost::property_tree::ptree entity;
-        //  entity.put("", name);
-        //  entities.push_back(std::make_pair("", entity));
+        //  boost::property_tree::ptree section;
+        //  section.put("", name);
+        //  sections.push_back(std::make_pair("", section));
         // }
-        // propertyTree.add_child("regions", entities);
+        // propertyTree.add_child("regions", sections);
 
-        // entities.clear();
+        // sections.clear();
 
         // names = std::vector<std::string>{};
         // for (auto name : names) {
-        //  boost::property_tree::ptree entity;
-        //  entity.put("", name);
-        //  entities.push_back(std::make_pair("", entity));
+        //  boost::property_tree::ptree section;
+        //  section.put("", name);
+        //  sections.push_back(std::make_pair("", section));
         // }
-        // propertyTree.add_child("boundaries", entities);
+        // propertyTree.add_child("boundaries", sections);
 
-        // entities.clear();
+        // sections.clear();
 
         // names = std::vector<std::string>{"LINE_WELL"};
         // for (auto name : names) {
-        //  boost::property_tree::ptree entity;
-        //  entity.put("", name);
-        //  entities.push_back(std::make_pair("", entity));
+        //  boost::property_tree::ptree section;
+        //  section.put("", name);
+        //  sections.push_back(std::make_pair("", section));
         // }
-        // propertyTree.add_child("wells", entities);
+        // propertyTree.add_child("wells", sections);
 
         // GridDataExtractor gridDataExtractor(gridData, propertyTree);
         // radialGridData = gridDataExtractor.extract;

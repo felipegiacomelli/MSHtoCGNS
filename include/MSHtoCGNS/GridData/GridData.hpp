@@ -7,11 +7,14 @@
 
 #include "MSHtoCGNS/BoostInterface/SharedPointer.hpp"
 
-struct EntityData {
-    EntityData() = default;
-    EntityData(std::string name, int begin, int end) : name(name), begin(begin), end(end) {}
+struct SectionData {
+    SectionData() = default;
+
+    SectionData(std::string name, int dimension, int begin, int end, std::vector<int> vertices) :
+        name(name), dimension(dimension), begin(begin), end(end), vertices(vertices) {}
 
     std::string name;
+    int dimension;
     int begin;
     int end;
     std::vector<int> vertices;
@@ -21,19 +24,8 @@ struct GridData {
     int dimension;
 
     std::vector<std::array<double, 3>> coordinates;
-
-    std::vector<std::array<int, 5>> tetrahedrons;
-    std::vector<std::array<int, 9>> hexahedrons;
-    std::vector<std::array<int, 7>> prisms;
-    std::vector<std::array<int, 6>> pyramids;
-    std::vector<std::array<int, 4>> triangles;
-    std::vector<std::array<int, 5>> quadrangles;
-    std::vector<std::array<int, 3>> lines;
-    std::vector<std::array<int, 2>> points;
-
-    std::vector<EntityData> boundaries;
-    std::vector<EntityData> regions;
-    std::vector<EntityData> wells;
+    std::vector<std::vector<int>> connectivities;
+    std::vector<SectionData> sections;
 
     int numberOfLocalVertices;
 };

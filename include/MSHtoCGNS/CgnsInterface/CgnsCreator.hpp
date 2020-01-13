@@ -29,7 +29,7 @@ class CgnsCreator {
         void writeZone();
         void writeCoordinates();
         void buildGlobalConnectivities();
-        virtual void writeSections(std::vector<EntityData> entities);
+        virtual void writeSections(std::vector<SectionData> sections);
         void setElementType(int begin, int end);
         void writeSection(int begin, int end, std::string name);
         void writePolySection(int begin, int end, std::string name, const std::vector<int>& offsets);

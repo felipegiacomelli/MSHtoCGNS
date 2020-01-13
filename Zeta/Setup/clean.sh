@@ -2,12 +2,12 @@
 
 rm -rf *.tar.gz
 
-if [ ! -d "boost-1.70.0" ]; then
-    rm -rf boost-1.70.0
+if [ ! -d "boost-$BOOST_VERSION" ]; then
+    rm -rf boost-$BOOST_VERSION
 fi
 
-if [ ! -d "cgns-3.4.0" ]; then
-    rm -rf cgns-3.4.0
+if [ ! -d "cgns-$CGNS_VERSION" ]; then
+    rm -rf cgns-$CGNS_VERSION
 fi
 
 cd ..

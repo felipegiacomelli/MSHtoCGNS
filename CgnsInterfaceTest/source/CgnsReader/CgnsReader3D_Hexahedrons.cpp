@@ -8,250 +8,175 @@ struct ReaderFixtureHexahedrons : public FixtureCgnsReader {
 FixtureTestSuite(CgnsReader_Hexahedrons, ReaderFixtureHexahedrons)
 
 TestCase(Coordinates) {
-    checkEqual(this->gridData->numberOfLocalVertices, 27);
+    std::vector<std::array<double, 3>> expected{
+        {0.0, 0.0, 0.0},
+        {0.5, 0.0, 0.0},
+        {1.0, 0.0, 0.0},
+        {0.0, 0.5, 0.0},
+        {0.5, 0.5, 0.0},
+        {1.0, 0.5, 0.0},
+        {0.0, 1.0, 0.0},
+        {0.5, 1.0, 0.0},
+        {1.0, 1.0, 0.0},
+        {0.0, 0.0, 0.5},
+        {0.5, 0.0, 0.5},
+        {1.0, 0.0, 0.5},
+        {0.0, 0.5, 0.5},
+        {0.5, 0.5, 0.5},
+        {1.0, 0.5, 0.5},
+        {0.0, 1.0, 0.5},
+        {0.5, 1.0, 0.5},
+        {1.0, 1.0, 0.5},
+        {0.0, 0.0, 1.0},
+        {0.5, 0.0, 1.0},
+        {1.0, 0.0, 1.0},
+        {0.0, 0.5, 1.0},
+        {0.5, 0.5, 1.0},
+        {1.0, 0.5, 1.0},
+        {0.0, 1.0, 1.0},
+        {0.5, 1.0, 1.0},
+        {1.0, 1.0, 1.0}
+    };
 
     auto coordinates = this->gridData->coordinates;
     checkEqual(coordinates.size(), 27u);
-    checkClose(coordinates[ 0][0], 0.0, TOLERANCE); checkClose(coordinates[ 0][1], 0.0, TOLERANCE); checkClose(coordinates[ 0][2], 0.0, TOLERANCE);
-    checkClose(coordinates[ 1][0], 0.5, TOLERANCE); checkClose(coordinates[ 1][1], 0.0, TOLERANCE); checkClose(coordinates[ 1][2], 0.0, TOLERANCE);
-    checkClose(coordinates[ 2][0], 1.0, TOLERANCE); checkClose(coordinates[ 2][1], 0.0, TOLERANCE); checkClose(coordinates[ 2][2], 0.0, TOLERANCE);
-    checkClose(coordinates[ 3][0], 0.0, TOLERANCE); checkClose(coordinates[ 3][1], 0.5, TOLERANCE); checkClose(coordinates[ 3][2], 0.0, TOLERANCE);
-    checkClose(coordinates[ 4][0], 0.5, TOLERANCE); checkClose(coordinates[ 4][1], 0.5, TOLERANCE); checkClose(coordinates[ 4][2], 0.0, TOLERANCE);
-    checkClose(coordinates[ 5][0], 1.0, TOLERANCE); checkClose(coordinates[ 5][1], 0.5, TOLERANCE); checkClose(coordinates[ 5][2], 0.0, TOLERANCE);
-    checkClose(coordinates[ 6][0], 0.0, TOLERANCE); checkClose(coordinates[ 6][1], 1.0, TOLERANCE); checkClose(coordinates[ 6][2], 0.0, TOLERANCE);
-    checkClose(coordinates[ 7][0], 0.5, TOLERANCE); checkClose(coordinates[ 7][1], 1.0, TOLERANCE); checkClose(coordinates[ 7][2], 0.0, TOLERANCE);
-    checkClose(coordinates[ 8][0], 1.0, TOLERANCE); checkClose(coordinates[ 8][1], 1.0, TOLERANCE); checkClose(coordinates[ 8][2], 0.0, TOLERANCE);
-    checkClose(coordinates[ 9][0], 0.0, TOLERANCE); checkClose(coordinates[ 9][1], 0.0, TOLERANCE); checkClose(coordinates[ 9][2], 0.5, TOLERANCE);
-    checkClose(coordinates[10][0], 0.5, TOLERANCE); checkClose(coordinates[10][1], 0.0, TOLERANCE); checkClose(coordinates[10][2], 0.5, TOLERANCE);
-    checkClose(coordinates[11][0], 1.0, TOLERANCE); checkClose(coordinates[11][1], 0.0, TOLERANCE); checkClose(coordinates[11][2], 0.5, TOLERANCE);
-    checkClose(coordinates[12][0], 0.0, TOLERANCE); checkClose(coordinates[12][1], 0.5, TOLERANCE); checkClose(coordinates[12][2], 0.5, TOLERANCE);
-    checkClose(coordinates[13][0], 0.5, TOLERANCE); checkClose(coordinates[13][1], 0.5, TOLERANCE); checkClose(coordinates[13][2], 0.5, TOLERANCE);
-    checkClose(coordinates[14][0], 1.0, TOLERANCE); checkClose(coordinates[14][1], 0.5, TOLERANCE); checkClose(coordinates[14][2], 0.5, TOLERANCE);
-    checkClose(coordinates[15][0], 0.0, TOLERANCE); checkClose(coordinates[15][1], 1.0, TOLERANCE); checkClose(coordinates[15][2], 0.5, TOLERANCE);
-    checkClose(coordinates[16][0], 0.5, TOLERANCE); checkClose(coordinates[16][1], 1.0, TOLERANCE); checkClose(coordinates[16][2], 0.5, TOLERANCE);
-    checkClose(coordinates[17][0], 1.0, TOLERANCE); checkClose(coordinates[17][1], 1.0, TOLERANCE); checkClose(coordinates[17][2], 0.5, TOLERANCE);
-    checkClose(coordinates[18][0], 0.0, TOLERANCE); checkClose(coordinates[18][1], 0.0, TOLERANCE); checkClose(coordinates[18][2], 1.0, TOLERANCE);
-    checkClose(coordinates[19][0], 0.5, TOLERANCE); checkClose(coordinates[19][1], 0.0, TOLERANCE); checkClose(coordinates[19][2], 1.0, TOLERANCE);
-    checkClose(coordinates[20][0], 1.0, TOLERANCE); checkClose(coordinates[20][1], 0.0, TOLERANCE); checkClose(coordinates[20][2], 1.0, TOLERANCE);
-    checkClose(coordinates[21][0], 0.0, TOLERANCE); checkClose(coordinates[21][1], 0.5, TOLERANCE); checkClose(coordinates[21][2], 1.0, TOLERANCE);
-    checkClose(coordinates[22][0], 0.5, TOLERANCE); checkClose(coordinates[22][1], 0.5, TOLERANCE); checkClose(coordinates[22][2], 1.0, TOLERANCE);
-    checkClose(coordinates[23][0], 1.0, TOLERANCE); checkClose(coordinates[23][1], 0.5, TOLERANCE); checkClose(coordinates[23][2], 1.0, TOLERANCE);
-    checkClose(coordinates[24][0], 0.0, TOLERANCE); checkClose(coordinates[24][1], 1.0, TOLERANCE); checkClose(coordinates[24][2], 1.0, TOLERANCE);
-    checkClose(coordinates[25][0], 0.5, TOLERANCE); checkClose(coordinates[25][1], 1.0, TOLERANCE); checkClose(coordinates[25][2], 1.0, TOLERANCE);
-    checkClose(coordinates[26][0], 1.0, TOLERANCE); checkClose(coordinates[26][1], 1.0, TOLERANCE); checkClose(coordinates[26][2], 1.0, TOLERANCE);
+    checkCloseCollection(coordinates[ 0], expected[ 0], TOLERANCE);
+    checkCloseCollection(coordinates[ 1], expected[ 1], TOLERANCE);
+    checkCloseCollection(coordinates[ 2], expected[ 2], TOLERANCE);
+    checkCloseCollection(coordinates[ 3], expected[ 3], TOLERANCE);
+    checkCloseCollection(coordinates[ 4], expected[ 4], TOLERANCE);
+    checkCloseCollection(coordinates[ 5], expected[ 5], TOLERANCE);
+    checkCloseCollection(coordinates[ 6], expected[ 6], TOLERANCE);
+    checkCloseCollection(coordinates[ 7], expected[ 7], TOLERANCE);
+    checkCloseCollection(coordinates[ 8], expected[ 8], TOLERANCE);
+    checkCloseCollection(coordinates[ 9], expected[ 9], TOLERANCE);
+    checkCloseCollection(coordinates[10], expected[10], TOLERANCE);
+    checkCloseCollection(coordinates[11], expected[11], TOLERANCE);
+    checkCloseCollection(coordinates[12], expected[12], TOLERANCE);
+    checkCloseCollection(coordinates[13], expected[13], TOLERANCE);
+    checkCloseCollection(coordinates[14], expected[14], TOLERANCE);
+    checkCloseCollection(coordinates[15], expected[15], TOLERANCE);
+    checkCloseCollection(coordinates[16], expected[16], TOLERANCE);
+    checkCloseCollection(coordinates[17], expected[17], TOLERANCE);
+    checkCloseCollection(coordinates[18], expected[18], TOLERANCE);
+    checkCloseCollection(coordinates[19], expected[19], TOLERANCE);
+    checkCloseCollection(coordinates[20], expected[20], TOLERANCE);
+    checkCloseCollection(coordinates[21], expected[21], TOLERANCE);
+    checkCloseCollection(coordinates[22], expected[22], TOLERANCE);
+    checkCloseCollection(coordinates[23], expected[23], TOLERANCE);
+    checkCloseCollection(coordinates[24], expected[24], TOLERANCE);
+    checkCloseCollection(coordinates[25], expected[25], TOLERANCE);
+    checkCloseCollection(coordinates[26], expected[26], TOLERANCE);
 }
 
-TestCase(Elements) {
-    auto hexahedrons = this->gridData->hexahedrons;
 
-    checkEqual(hexahedrons.size(), 8u);
+TestCase(Connectivities) {
+    std::vector<std::vector<int>> expected{
+        {17,  0,  1,  4,  3,  9, 10, 13, 12, 0},
+        {17,  1,  2,  5,  4, 10, 11, 14, 13, 1},
+        {17,  3,  4,  7,  6, 12, 13, 16, 15, 2},
+        {17,  4,  5,  8,  7, 13, 14, 17, 16, 3},
+        {17,  9, 10, 13, 12, 18, 19, 22, 21, 4},
+        {17, 10, 11, 14, 13, 19, 20, 23, 22, 5},
+        {17, 12, 13, 16, 15, 21, 22, 25, 24, 6},
+        {17, 13, 14, 17, 16, 22, 23, 26, 25, 7},
+        { 7,  0,  9, 12,  3,  8},
+        { 7,  3, 12, 15,  6,  9},
+        { 7,  9, 18, 21, 12, 10},
+        { 7, 12, 21, 24, 15, 11},
+        { 7,  2,  5, 14, 11, 12},
+        { 7,  5,  8, 17, 14, 13},
+        { 7, 11, 14, 23, 20, 14},
+        { 7, 14, 17, 26, 23, 15},
+        { 7,  0,  1, 10,  9, 16},
+        { 7,  1,  2, 11, 10, 17},
+        { 7,  9, 10, 19, 18, 18},
+        { 7, 10, 11, 20, 19, 19},
+        { 7,  7,  6, 15, 16, 20},
+        { 7,  8,  7, 16, 17, 21},
+        { 7, 16, 15, 24, 25, 22},
+        { 7, 17, 16, 25, 26, 23},
+        { 7,  1,  0,  3,  4, 24},
+        { 7,  2,  1,  4,  5, 25},
+        { 7,  4,  3,  6,  7, 26},
+        { 7,  5,  4,  7,  8, 27},
+        { 7, 18, 19, 22, 21, 28},
+        { 7, 19, 20, 23, 22, 29},
+        { 7, 21, 22, 25, 24, 30},
+        { 7, 22, 23, 26, 25, 31}
+    };
 
-    checkEqual(hexahedrons[0][0],  0); checkEqual(hexahedrons[0][1],  1); checkEqual(hexahedrons[0][2],  4); checkEqual(hexahedrons[0][3],  3);
-    checkEqual(hexahedrons[1][0],  1); checkEqual(hexahedrons[1][1],  2); checkEqual(hexahedrons[1][2],  5); checkEqual(hexahedrons[1][3],  4);
-    checkEqual(hexahedrons[2][0],  3); checkEqual(hexahedrons[2][1],  4); checkEqual(hexahedrons[2][2],  7); checkEqual(hexahedrons[2][3],  6);
-    checkEqual(hexahedrons[3][0],  4); checkEqual(hexahedrons[3][1],  5); checkEqual(hexahedrons[3][2],  8); checkEqual(hexahedrons[3][3],  7);
-    checkEqual(hexahedrons[4][0],  9); checkEqual(hexahedrons[4][1], 10); checkEqual(hexahedrons[4][2], 13); checkEqual(hexahedrons[4][3], 12);
-    checkEqual(hexahedrons[5][0], 10); checkEqual(hexahedrons[5][1], 11); checkEqual(hexahedrons[5][2], 14); checkEqual(hexahedrons[5][3], 13);
-    checkEqual(hexahedrons[6][0], 12); checkEqual(hexahedrons[6][1], 13); checkEqual(hexahedrons[6][2], 16); checkEqual(hexahedrons[6][3], 15);
-    checkEqual(hexahedrons[7][0], 13); checkEqual(hexahedrons[7][1], 14); checkEqual(hexahedrons[7][2], 17); checkEqual(hexahedrons[7][3], 16);
-
-    checkEqual(hexahedrons[0][4],  9); checkEqual(hexahedrons[0][5], 10); checkEqual(hexahedrons[0][6], 13); checkEqual(hexahedrons[0][7], 12);
-    checkEqual(hexahedrons[1][4], 10); checkEqual(hexahedrons[1][5], 11); checkEqual(hexahedrons[1][6], 14); checkEqual(hexahedrons[1][7], 13);
-    checkEqual(hexahedrons[2][4], 12); checkEqual(hexahedrons[2][5], 13); checkEqual(hexahedrons[2][6], 16); checkEqual(hexahedrons[2][7], 15);
-    checkEqual(hexahedrons[3][4], 13); checkEqual(hexahedrons[3][5], 14); checkEqual(hexahedrons[3][6], 17); checkEqual(hexahedrons[3][7], 16);
-    checkEqual(hexahedrons[4][4], 18); checkEqual(hexahedrons[4][5], 19); checkEqual(hexahedrons[4][6], 22); checkEqual(hexahedrons[4][7], 21);
-    checkEqual(hexahedrons[5][4], 19); checkEqual(hexahedrons[5][5], 20); checkEqual(hexahedrons[5][6], 23); checkEqual(hexahedrons[5][7], 22);
-    checkEqual(hexahedrons[6][4], 21); checkEqual(hexahedrons[6][5], 22); checkEqual(hexahedrons[6][6], 25); checkEqual(hexahedrons[6][7], 24);
-    checkEqual(hexahedrons[7][4], 22); checkEqual(hexahedrons[7][5], 23); checkEqual(hexahedrons[7][6], 26); checkEqual(hexahedrons[7][7], 25);
-
-    checkEqual(hexahedrons[0][8], 0);
-    checkEqual(hexahedrons[1][8], 1);
-    checkEqual(hexahedrons[2][8], 2);
-    checkEqual(hexahedrons[3][8], 3);
-    checkEqual(hexahedrons[4][8], 4);
-    checkEqual(hexahedrons[5][8], 5);
-    checkEqual(hexahedrons[6][8], 6);
-    checkEqual(hexahedrons[7][8], 7);
+    auto connectivities = this->gridData->connectivities;
+    checkEqual(connectivities.size(), 32u);
+    checkEqualCollections(connectivities[ 0].cbegin(), connectivities[ 0].cend(), expected[ 0].cbegin(), expected[ 0].cend());
+    checkEqualCollections(connectivities[ 1].cbegin(), connectivities[ 1].cend(), expected[ 1].cbegin(), expected[ 1].cend());
+    checkEqualCollections(connectivities[ 2].cbegin(), connectivities[ 2].cend(), expected[ 2].cbegin(), expected[ 2].cend());
+    checkEqualCollections(connectivities[ 3].cbegin(), connectivities[ 3].cend(), expected[ 3].cbegin(), expected[ 3].cend());
+    checkEqualCollections(connectivities[ 4].cbegin(), connectivities[ 4].cend(), expected[ 4].cbegin(), expected[ 4].cend());
+    checkEqualCollections(connectivities[ 5].cbegin(), connectivities[ 5].cend(), expected[ 5].cbegin(), expected[ 5].cend());
+    checkEqualCollections(connectivities[ 6].cbegin(), connectivities[ 6].cend(), expected[ 6].cbegin(), expected[ 6].cend());
+    checkEqualCollections(connectivities[ 7].cbegin(), connectivities[ 7].cend(), expected[ 7].cbegin(), expected[ 7].cend());
+    checkEqualCollections(connectivities[ 8].cbegin(), connectivities[ 8].cend(), expected[ 8].cbegin(), expected[ 8].cend());
+    checkEqualCollections(connectivities[ 9].cbegin(), connectivities[ 9].cend(), expected[ 9].cbegin(), expected[ 9].cend());
+    checkEqualCollections(connectivities[10].cbegin(), connectivities[10].cend(), expected[10].cbegin(), expected[10].cend());
+    checkEqualCollections(connectivities[11].cbegin(), connectivities[11].cend(), expected[11].cbegin(), expected[11].cend());
+    checkEqualCollections(connectivities[12].cbegin(), connectivities[12].cend(), expected[12].cbegin(), expected[12].cend());
+    checkEqualCollections(connectivities[13].cbegin(), connectivities[13].cend(), expected[13].cbegin(), expected[13].cend());
+    checkEqualCollections(connectivities[14].cbegin(), connectivities[14].cend(), expected[14].cbegin(), expected[14].cend());
+    checkEqualCollections(connectivities[15].cbegin(), connectivities[15].cend(), expected[15].cbegin(), expected[15].cend());
+    checkEqualCollections(connectivities[16].cbegin(), connectivities[16].cend(), expected[16].cbegin(), expected[16].cend());
+    checkEqualCollections(connectivities[17].cbegin(), connectivities[17].cend(), expected[17].cbegin(), expected[17].cend());
+    checkEqualCollections(connectivities[18].cbegin(), connectivities[18].cend(), expected[18].cbegin(), expected[18].cend());
+    checkEqualCollections(connectivities[19].cbegin(), connectivities[19].cend(), expected[19].cbegin(), expected[19].cend());
+    checkEqualCollections(connectivities[20].cbegin(), connectivities[20].cend(), expected[20].cbegin(), expected[20].cend());
+    checkEqualCollections(connectivities[21].cbegin(), connectivities[21].cend(), expected[21].cbegin(), expected[21].cend());
+    checkEqualCollections(connectivities[22].cbegin(), connectivities[22].cend(), expected[22].cbegin(), expected[22].cend());
+    checkEqualCollections(connectivities[23].cbegin(), connectivities[23].cend(), expected[23].cbegin(), expected[23].cend());
+    checkEqualCollections(connectivities[24].cbegin(), connectivities[24].cend(), expected[24].cbegin(), expected[24].cend());
+    checkEqualCollections(connectivities[25].cbegin(), connectivities[25].cend(), expected[25].cbegin(), expected[25].cend());
+    checkEqualCollections(connectivities[26].cbegin(), connectivities[26].cend(), expected[26].cbegin(), expected[26].cend());
+    checkEqualCollections(connectivities[27].cbegin(), connectivities[27].cend(), expected[27].cbegin(), expected[27].cend());
+    checkEqualCollections(connectivities[28].cbegin(), connectivities[28].cend(), expected[28].cbegin(), expected[28].cend());
+    checkEqualCollections(connectivities[29].cbegin(), connectivities[29].cend(), expected[29].cbegin(), expected[29].cend());
+    checkEqualCollections(connectivities[30].cbegin(), connectivities[30].cend(), expected[30].cbegin(), expected[30].cend());
+    checkEqualCollections(connectivities[31].cbegin(), connectivities[31].cend(), expected[31].cbegin(), expected[31].cend());
 }
 
-TestCase(Facets) {
-    auto quadrangles = this->gridData->quadrangles;
+TestCase(Entities) {
+    checkEqual(this->gridData->sections.size(), 7u);
 
-    checkEqual(quadrangles[ 0][0],  0); checkEqual(quadrangles[ 0][1],  9); checkEqual(quadrangles[ 0][2], 12); checkEqual(quadrangles[ 0][3],  3); checkEqual(quadrangles[ 0][4],  8);
-    checkEqual(quadrangles[ 1][0],  3); checkEqual(quadrangles[ 1][1], 12); checkEqual(quadrangles[ 1][2], 15); checkEqual(quadrangles[ 1][3],  6); checkEqual(quadrangles[ 1][4],  9);
-    checkEqual(quadrangles[ 2][0],  9); checkEqual(quadrangles[ 2][1], 18); checkEqual(quadrangles[ 2][2], 21); checkEqual(quadrangles[ 2][3], 12); checkEqual(quadrangles[ 2][4], 10);
-    checkEqual(quadrangles[ 3][0], 12); checkEqual(quadrangles[ 3][1], 21); checkEqual(quadrangles[ 3][2], 24); checkEqual(quadrangles[ 3][3], 15); checkEqual(quadrangles[ 3][4], 11);
-    checkEqual(quadrangles[ 4][0],  2); checkEqual(quadrangles[ 4][1],  5); checkEqual(quadrangles[ 4][2], 14); checkEqual(quadrangles[ 4][3], 11); checkEqual(quadrangles[ 4][4], 12);
-    checkEqual(quadrangles[ 5][0],  5); checkEqual(quadrangles[ 5][1],  8); checkEqual(quadrangles[ 5][2], 17); checkEqual(quadrangles[ 5][3], 14); checkEqual(quadrangles[ 5][4], 13);
-    checkEqual(quadrangles[ 6][0], 11); checkEqual(quadrangles[ 6][1], 14); checkEqual(quadrangles[ 6][2], 23); checkEqual(quadrangles[ 6][3], 20); checkEqual(quadrangles[ 6][4], 14);
-    checkEqual(quadrangles[ 7][0], 14); checkEqual(quadrangles[ 7][1], 17); checkEqual(quadrangles[ 7][2], 26); checkEqual(quadrangles[ 7][3], 23); checkEqual(quadrangles[ 7][4], 15);
-    checkEqual(quadrangles[ 8][0],  0); checkEqual(quadrangles[ 8][1],  1); checkEqual(quadrangles[ 8][2], 10); checkEqual(quadrangles[ 8][3],  9); checkEqual(quadrangles[ 8][4], 16);
-    checkEqual(quadrangles[ 9][0],  1); checkEqual(quadrangles[ 9][1],  2); checkEqual(quadrangles[ 9][2], 11); checkEqual(quadrangles[ 9][3], 10); checkEqual(quadrangles[ 9][4], 17);
-    checkEqual(quadrangles[10][0],  9); checkEqual(quadrangles[10][1], 10); checkEqual(quadrangles[10][2], 19); checkEqual(quadrangles[10][3], 18); checkEqual(quadrangles[10][4], 18);
-    checkEqual(quadrangles[11][0], 10); checkEqual(quadrangles[11][1], 11); checkEqual(quadrangles[11][2], 20); checkEqual(quadrangles[11][3], 19); checkEqual(quadrangles[11][4], 19);
-    checkEqual(quadrangles[12][0],  7); checkEqual(quadrangles[12][1],  6); checkEqual(quadrangles[12][2], 15); checkEqual(quadrangles[12][3], 16); checkEqual(quadrangles[12][4], 20);
-    checkEqual(quadrangles[13][0],  8); checkEqual(quadrangles[13][1],  7); checkEqual(quadrangles[13][2], 16); checkEqual(quadrangles[13][3], 17); checkEqual(quadrangles[13][4], 21);
-    checkEqual(quadrangles[14][0], 16); checkEqual(quadrangles[14][1], 15); checkEqual(quadrangles[14][2], 24); checkEqual(quadrangles[14][3], 25); checkEqual(quadrangles[14][4], 22);
-    checkEqual(quadrangles[15][0], 17); checkEqual(quadrangles[15][1], 16); checkEqual(quadrangles[15][2], 25); checkEqual(quadrangles[15][3], 26); checkEqual(quadrangles[15][4], 23);
-    checkEqual(quadrangles[16][0],  1); checkEqual(quadrangles[16][1],  0); checkEqual(quadrangles[16][2],  3); checkEqual(quadrangles[16][3],  4); checkEqual(quadrangles[16][4], 24);
-    checkEqual(quadrangles[17][0],  2); checkEqual(quadrangles[17][1],  1); checkEqual(quadrangles[17][2],  4); checkEqual(quadrangles[17][3],  5); checkEqual(quadrangles[17][4], 25);
-    checkEqual(quadrangles[18][0],  4); checkEqual(quadrangles[18][1],  3); checkEqual(quadrangles[18][2],  6); checkEqual(quadrangles[18][3],  7); checkEqual(quadrangles[18][4], 26);
-    checkEqual(quadrangles[19][0],  5); checkEqual(quadrangles[19][1],  4); checkEqual(quadrangles[19][2],  7); checkEqual(quadrangles[19][3],  8); checkEqual(quadrangles[19][4], 27);
-    checkEqual(quadrangles[20][0], 18); checkEqual(quadrangles[20][1], 19); checkEqual(quadrangles[20][2], 22); checkEqual(quadrangles[20][3], 21); checkEqual(quadrangles[20][4], 28);
-    checkEqual(quadrangles[21][0], 19); checkEqual(quadrangles[21][1], 20); checkEqual(quadrangles[21][2], 23); checkEqual(quadrangles[21][3], 22); checkEqual(quadrangles[21][4], 29);
-    checkEqual(quadrangles[22][0], 21); checkEqual(quadrangles[22][1], 22); checkEqual(quadrangles[22][2], 25); checkEqual(quadrangles[22][3], 24); checkEqual(quadrangles[22][4], 30);
-    checkEqual(quadrangles[23][0], 22); checkEqual(quadrangles[23][1], 23); checkEqual(quadrangles[23][2], 26); checkEqual(quadrangles[23][3], 25); checkEqual(quadrangles[23][4], 31);
-}
+    {
+        auto section = this->gridData->sections[0];
+        checkEqual(section.name, std::string("GEOMETRY"));
+        checkEqual(section.dimension, 3);
+        checkEqual(section.begin, 0);
+        checkEqual(section.end, 8);
 
-TestCase(Regions) {
-    checkEqual(this->gridData->regions.size(), 1u);
-}
-
-TestCase(Geometry) {
-    auto region = this->gridData->regions[0];
-
-    checkEqual(region.name, std::string("GEOMETRY"));
-
-    checkEqual(region.begin, 0);
-    checkEqual(region.end, 8);
-
-    auto vertices = region.vertices;
-    checkEqual(vertices.size(), 27u);
-    for (int v = 0; v < 27; ++v) {
-        checkEqual(vertices[v],  v);
+        std::vector<int> expected{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
+        checkEqualCollections(section.vertices.cbegin(), section.vertices.cend(), expected.cbegin(), expected.cend());
     }
-}
 
-TestCase(Boundaries) {
-    auto boundaries = this->gridData->boundaries;
+    {
+        auto section = this->gridData->sections[2];
+        checkEqual(section.name, std::string("EAST"));
+        checkEqual(section.dimension, 2);
+        checkEqual(section.begin, 12);
+        checkEqual(section.end, 16);
 
-    checkEqual(boundaries.size(), 6u);
-}
+        std::vector<int> expected{2, 5, 8, 11, 14, 17, 20, 23, 26};
+        checkEqualCollections(section.vertices.cbegin(), section.vertices.cend(), expected.cbegin(), expected.cend());
+    }
 
-TestCase(West) {
-    auto boundary = this->gridData->boundaries[0];
+    {
+        auto section = this->gridData->sections[3];
+        checkEqual(section.name, std::string("SOUTH"));
+        checkEqual(section.dimension, 2);
+        checkEqual(section.begin, 16);
+        checkEqual(section.end, 20);
 
-    checkEqual(boundary.name, std::string("WEST"));
-
-    checkEqual(boundary.begin, 8);
-    checkEqual(boundary.end, 12);
-
-    auto vertices = boundary.vertices;
-    checkEqual(vertices.size(), 9u);
-    checkEqual(vertices[0],  0);
-    checkEqual(vertices[1],  3);
-    checkEqual(vertices[2],  6);
-    checkEqual(vertices[3],  9);
-    checkEqual(vertices[4], 12);
-    checkEqual(vertices[5], 15);
-    checkEqual(vertices[6], 18);
-    checkEqual(vertices[7], 21);
-    checkEqual(vertices[8], 24);
-}
-
-TestCase(East) {
-    auto boundary = this->gridData->boundaries[1];
-
-    checkEqual(boundary.name, std::string("EAST"));
-
-    checkEqual(boundary.begin, 12);
-    checkEqual(boundary.end, 16);
-
-    auto vertices = boundary.vertices;
-    checkEqual(vertices.size(), 9u);
-    checkEqual(vertices[0],  2);
-    checkEqual(vertices[1],  5);
-    checkEqual(vertices[2],  8);
-    checkEqual(vertices[3], 11);
-    checkEqual(vertices[4], 14);
-    checkEqual(vertices[5], 17);
-    checkEqual(vertices[6], 20);
-    checkEqual(vertices[7], 23);
-    checkEqual(vertices[8], 26);
-}
-
-TestCase(South) {
-    auto boundary = this->gridData->boundaries[2];
-
-    checkEqual(boundary.name, std::string("SOUTH"));
-
-    checkEqual(boundary.begin, 16);
-    checkEqual(boundary.end, 20);
-
-    auto vertices = boundary.vertices;
-    checkEqual(vertices.size(), 9u);
-    checkEqual(vertices[0],  0);
-    checkEqual(vertices[1],  1);
-    checkEqual(vertices[2],  2);
-    checkEqual(vertices[3],  9);
-    checkEqual(vertices[4], 10);
-    checkEqual(vertices[5], 11);
-    checkEqual(vertices[6], 18);
-    checkEqual(vertices[7], 19);
-    checkEqual(vertices[8], 20);
-}
-
-TestCase(North) {
-    auto boundary = this->gridData->boundaries[3];
-
-    checkEqual(boundary.name, std::string("NORTH"));
-
-    checkEqual(boundary.begin, 20);
-    checkEqual(boundary.end, 24);
-
-    auto vertices = boundary.vertices;
-    checkEqual(vertices.size(), 9u);
-    checkEqual(vertices[0],  6);
-    checkEqual(vertices[1],  7);
-    checkEqual(vertices[2],  8);
-    checkEqual(vertices[3], 15);
-    checkEqual(vertices[4], 16);
-    checkEqual(vertices[5], 17);
-    checkEqual(vertices[6], 24);
-    checkEqual(vertices[7], 25);
-    checkEqual(vertices[8], 26);
-}
-
-TestCase(Bottom) {
-    auto boundary = this->gridData->boundaries[4];
-
-    checkEqual(boundary.name, std::string("BOTTOM"));
-
-    checkEqual(boundary.begin, 24);
-    checkEqual(boundary.end, 28);
-
-    auto vertices = boundary.vertices;
-    checkEqual(vertices.size(), 9u);
-    checkEqual(vertices[0], 0);
-    checkEqual(vertices[1], 1);
-    checkEqual(vertices[2], 2);
-    checkEqual(vertices[3], 3);
-    checkEqual(vertices[4], 4);
-    checkEqual(vertices[5], 5);
-    checkEqual(vertices[6], 6);
-    checkEqual(vertices[7], 7);
-    checkEqual(vertices[8], 8);
-}
-
-TestCase(Top) {
-    auto boundary = this->gridData->boundaries[5];
-
-    checkEqual(boundary.name, std::string("TOP"));
-
-    checkEqual(boundary.begin, 28);
-    checkEqual(boundary.end, 32);
-
-    auto vertices = boundary.vertices;
-    checkEqual(vertices.size(), 9u);
-    checkEqual(vertices[0], 18);
-    checkEqual(vertices[1], 19);
-    checkEqual(vertices[2], 20);
-    checkEqual(vertices[3], 21);
-    checkEqual(vertices[4], 22);
-    checkEqual(vertices[5], 23);
-    checkEqual(vertices[6], 24);
-    checkEqual(vertices[7], 25);
-    checkEqual(vertices[8], 26);
+        std::vector<int> expected{0, 1, 2, 9, 10, 11, 18, 19, 20};
+        checkEqualCollections(section.vertices.cbegin(), section.vertices.cend(), expected.cbegin(), expected.cend());
+    }
 }
 
 TestSuiteEnd()

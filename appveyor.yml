@@ -34,10 +34,6 @@ install:
 
     cd bin/
 
-    ./CgnsInterfaceTest
-
-    ./ManipulationTest
-
     cd ..
 
     make test

@@ -7,12 +7,18 @@
 #include "MSHtoCGNS/Manipulation/WellGenerator.hpp"
 #include "MSHtoCGNS/Manipulation/GridDataExtractor.hpp"
 #include "MSHtoCGNS/Manipulation/RadialGridDataReordered.hpp"
-#include "MSHtoCGNS/Manipulation/SegmentGridExtractor.hpp"
+#include "MSHtoCGNS/Manipulation/SegmentExtractor.hpp"
 #include "MSHtoCGNS/Manipulation/MultipleBasesCgnsCreator.hpp"
 
 void unifyRegions(boost::shared_ptr<GridData> gridData, std::string name) {
-    gridData->regions.clear();
-    gridData->regions.emplace_back(EntityData{name, 0, int(gridData->tetrahedrons.size() + gridData->hexahedrons.size() + gridData->prisms.size() + gridData->pyramids.size())});
+    auto begin = std::find_if(gridData->sections.cbegin(), gridData->sections.cend(), [](const auto& e){return e.dimension == 3;})->begin;
+    auto end = std::find_if(gridData->sections.cbegin(), gridData->sections.cend(), [](const auto& e){return e.dimension == 3;})->end;
+    for (auto section : gridData->sections)
+        if (section.dimension == 3)
+            if (section.end > end)
+                end = section.end;
+    gridData->sections.erase(std::remove_if(gridData->sections.begin(), gridData->sections.end(), [](const auto& e){return e.dimension == 3;}), gridData->sections.end());
+    gridData->sections.insert(gridData->sections.begin(), SectionData{name, 3, begin, end, std::vector<int>{}});
 }
 
 void applyRatio(boost::shared_ptr<GridData> gridData, double ratio) {
@@ -22,10 +28,10 @@ void applyRatio(boost::shared_ptr<GridData> gridData, double ratio) {
 }
 
 int main() {
-    boost::property_tree::ptree menderScript;
-    boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "Manipulator.json", menderScript);
-    std::string inputPath  = menderScript.get<std::string>("path.input");
-    std::string outputPath = menderScript.get<std::string>("path.output");
+    boost::property_tree::ptree script;
+    boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "Manipulator.json", script);
+    std::string inputPath  = script.get<std::string>("path.input");
+    std::string outputPath = script.get<std::string>("path.output");
 
     auto start = std::chrono::steady_clock::now();
     SpecialCgnsReader specialCgnsReader(inputPath);
@@ -37,27 +43,27 @@ int main() {
 
     printGridDataInformation(gridData, purple("original gridData"));
 
-    if (menderScript.get_child_optional("ScriptWellGenerator"))
-        WellGenerator wellGenerator(gridData, menderScript.get_child("ScriptWellGenerator"));
+    if (script.get_child_optional("ScriptWellGenerator"))
+        WellGenerator wellGenerator(gridData, script.get_child("ScriptWellGenerator"));
 
     boost::shared_ptr<GridData> radialGridData, segmentGridData;
-    if (menderScript.get_child_optional("ScriptGridDataExtractor") && menderScript.get<bool>("extract")) {
-        GridDataExtractor gridDataExtractor(gridData, menderScript.get_child("ScriptGridDataExtractor"));
+    if (script.get_child_optional("ScriptGridDataExtractor") && script.get<bool>("extract")) {
+        GridDataExtractor gridDataExtractor(gridData, script.get_child("ScriptGridDataExtractor"));
         radialGridData = gridDataExtractor.extract;
 
         printGridDataInformation(radialGridData, purple("radial gridData"));
 
         RadialGridDataReordered radialGridDataReordered(radialGridData);
 
-        SegmentGridExtractor segmentGridExtractor(radialGridData);
-        segmentGridData = segmentGridExtractor.segment;
+        SegmentExtractor SegmentExtractor(radialGridData);
+        segmentGridData = SegmentExtractor.segment;
     }
 
     std::vector<boost::shared_ptr<GridData>> gridDatas{gridData};
     std::vector<std::string> baseNames{"BASE"};
 
-    if (menderScript.get_child_optional("unifyRegions"))
-        if (menderScript.get<bool>("unifyRegions"))
+    if (script.get_child_optional("unifyRegions"))
+        if (script.get<bool>("unifyRegions"))
             unifyRegions(gridData, "BODY");
 
     if (radialGridData) {

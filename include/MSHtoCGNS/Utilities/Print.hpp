@@ -17,11 +17,11 @@ void print1D(InputIt cbegin, InputIt cend, std::string&& message) {
 }
 
 template<typename InputIt>
-void print2D(InputIt cbegin, InputIt cend, std::string&& message) {
+void print2D(InputIt cbegin, InputIt cend, std::string&& message = "", std::string&& separator = "") {
     std::cout << message;
     for (auto i = cbegin; i != cend; ++i) {
         for (auto j = i->cbegin(); j != i->cend(); ++j) {
-            std::cout << "\t" << std::setw(3) << std::right << *j;
+            std::cout << separator << std::setw(3) << std::right << *j;
         }
         std::cout << std::endl;
     }

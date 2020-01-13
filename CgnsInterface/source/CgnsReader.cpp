@@ -17,10 +17,7 @@ void CgnsReader::read() {
     this->readNumberOfSections();
     this->readCoordinates();
     this->readSections();
-    this->buildGlobalConnectivities();
-    this->findVertices(this->gridData->regions);
-    this->findVertices(this->gridData->boundaries);
-    this->findVertices(this->gridData->wells);
+    this->findVertices(this->gridData->sections);
 }
 
 void CgnsReader::readNumberOfSections() {
@@ -78,9 +75,9 @@ void CgnsReader::readSections() {
         this->addConnectivities(connectivities, elementType);
 
         if (elementType == MIXED)
-            this->addEntity(connectivities[0]);
+            this->addSection(connectivities[0]);
         else
-            this->addEntity(elementType);
+            this->addSection(elementType);
     }
 }
 
@@ -88,33 +85,20 @@ bool CgnsReader::skipSection(std::string, int) {
     return false;
 }
 
-void CgnsReader::addEntity(int elementType) {
-    if (this->cellDimension == 2) {
-        if (elementType == TRI_3 || elementType == QUAD_4)
-            this->addRegion();
-        else if (elementType == BAR_2)
-            this->addBoundary();
-    }
-    else if (this->cellDimension == 3) {
-        if (elementType == TETRA_4 || elementType == HEXA_8 || elementType == PENTA_6 || elementType == PYRA_5)
-            this->addRegion();
-        else if (elementType == TRI_3 || elementType == QUAD_4)
-            this->addBoundary();
-        else if (elementType == BAR_2)
-            this->addWell();
-    }
+void CgnsReader::addSection(int elementType) {
+    int dimension = 0;
+    if (elementType == TETRA_4 || elementType == HEXA_8 || elementType == PENTA_6 || elementType == PYRA_5)
+        dimension = 3;
+    else if (elementType == TRI_3 || elementType == QUAD_4)
+        dimension = 2;
+    else if (elementType == BAR_2)
+        dimension = 1;
+
+    this->addSection(this->gridData->sections, dimension);
 }
 
-void CgnsReader::addRegion() {
-    this->gridData->regions.emplace_back(EntityData{boost::to_upper_copy(std::string(this->buffer)), this->elementStart - 1, this->elementEnd});
-}
-
-void CgnsReader::addBoundary() {
-    this->gridData->boundaries.emplace_back(EntityData{boost::to_upper_copy(std::string(this->buffer)), this->elementStart - 1, this->elementEnd});
-}
-
-void CgnsReader::addWell() {
-    this->gridData->wells.emplace_back(EntityData{boost::to_upper_copy(std::string(this->buffer)), this->elementStart - 1, this->elementEnd});
+void CgnsReader::addSection(std::vector<SectionData>& sections, int dimension) {
+    sections.emplace_back(SectionData{boost::to_upper_copy(std::string(this->buffer)), dimension, this->elementStart - 1, this->elementEnd, std::vector<int>{}});
 }
 
 void CgnsReader::addConnectivities(const std::vector<int>& connectivities, int elementType) {
@@ -124,87 +108,40 @@ void CgnsReader::addConnectivities(const std::vector<int>& connectivities, int e
 
     int numberOfElements = this->elementEnd - this->elementStart + 1;
 
-    switch (elementType) {
-        case MIXED : {
-            int position = 0;
-            for (int e = 0; e < numberOfElements; ++e) {
-                cg_npe(ElementType_t(connectivities[position]), &numberOfVertices);
-                std::vector<int> element(numberOfVertices);
-                for (int k = 0; k < numberOfVertices; ++k) {
-                    element[k] = connectivities[position + 1 + k] - 1;
-                }
-                element.emplace_back(this->elementStart - 1 + e);
-                switch (connectivities[position]) {
-                    case TETRA_4:
-                        this->addConnectivity(this->gridData->tetrahedrons, element);
-                        break;
-                    case HEXA_8:
-                        this->addConnectivity(this->gridData->hexahedrons, element);
-                        break;
-                    case PENTA_6:
-                        this->addConnectivity(this->gridData->prisms, element);
-                        break;
-                    case PYRA_5:
-                        this->addConnectivity(this->gridData->pyramids, element);
-                        break;
-                    case TRI_3:
-                        this->addConnectivity(this->gridData->triangles, element);
-                        break;
-                    case QUAD_4:
-                        this->addConnectivity(this->gridData->quadrangles, element);
-                        break;
-                }
-                position += numberOfVertices + 1;
+    if (elementType != MIXED) {
+        for (int e = 0; e < numberOfElements; ++e) {
+            this->gridData->connectivities.emplace_back(std::vector<int>(numberOfVertices + 2));
+            auto& element = this->gridData->connectivities.back();
+            element.front() = elementType;
+            for (int k = 0; k < numberOfVertices; ++k) {
+                element[k + 1] = connectivities[e * numberOfVertices + k] - 1;
             }
-            break;
+            element.back() = this->elementStart - 1 + e;
         }
-        case TETRA_4:
-            addConnectivity(this->gridData->tetrahedrons, connectivities, numberOfElements, numberOfVertices);
-            break;
-        case HEXA_8:
-            addConnectivity(this->gridData->hexahedrons, connectivities, numberOfElements, numberOfVertices);
-            break;
-        case PENTA_6:
-            addConnectivity(this->gridData->prisms, connectivities, numberOfElements, numberOfVertices);
-            break;
-       case PYRA_5:
-            addConnectivity(this->gridData->pyramids, connectivities, numberOfElements, numberOfVertices);
-            break;
-        case TRI_3:
-            addConnectivity(this->gridData->triangles, connectivities, numberOfElements, numberOfVertices);
-            break;
-        case QUAD_4:
-            addConnectivity(this->gridData->quadrangles, connectivities, numberOfElements, numberOfVertices);
-            break;
-        case BAR_2:
-            addConnectivity(this->gridData->lines, connectivities, numberOfElements, numberOfVertices);
-            break;
-        default:
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Section " + std::string(this->buffer) + " element type " + std::to_string(elementType) + " not supported");
+    }
+    else {
+        int position = 0;
+        for (int e = 0; e < numberOfElements; ++e) {
+            cg_npe(ElementType_t(connectivities[position]), &numberOfVertices);
+            std::vector<int> element(numberOfVertices + 2);
+            element.front() = connectivities[position];
+            for (int k = 0; k < numberOfVertices; ++k) {
+                element[k + 1] = connectivities[position + 1 + k] - 1;
+            }
+            element.back() = this->elementStart - 1 + e;
+            this->gridData->connectivities.emplace_back(element);
+            position += numberOfVertices + 1;
+        }
     }
 }
 
-void CgnsReader::buildGlobalConnectivities() {
-    this->global.reserve(this->gridData->tetrahedrons.size() + this->gridData->hexahedrons.size() + this->gridData->prisms.size() + this->gridData->pyramids.size() + this->gridData->triangles.size() + this->gridData->quadrangles.size() + this->gridData->lines.size());
-
-    append(this->gridData->tetrahedrons, this->global);
-    append(this->gridData->hexahedrons, this->global);
-    append(this->gridData->prisms, this->global);
-    append(this->gridData->pyramids, this->global);
-    append(this->gridData->triangles, this->global);
-    append(this->gridData->quadrangles, this->global);
-    append(this->gridData->lines, this->global);
-
-    std::sort(this->global.begin(), this->global.end(), [](const auto& a, const auto& b){return a.back() < b.back();});
-}
-
-void CgnsReader::findVertices(std::vector<EntityData>& entities) {
-    for (auto& entity : entities) {
+void CgnsReader::findVertices(std::vector<SectionData>& sections) {
+    for (auto& section : sections) {
         std::set<int> vertices;
-        for (auto position = this->global.cbegin() + entity.begin; position != this->global.cbegin() + entity.end; ++position) {
-            vertices.insert(position->cbegin(), position->cend() - 1);
+        for (auto position = this->gridData->connectivities.cbegin() + section.begin; position != this->gridData->connectivities.cbegin() + section.end; ++position) {
+            vertices.insert(position->cbegin() + 1, position->cend() - 1);
         }
-        entity.vertices = std::vector<int>{vertices.begin(), vertices.end()};
+        section.vertices = std::vector<int>{vertices.begin(), vertices.end()};
     }
 }
 

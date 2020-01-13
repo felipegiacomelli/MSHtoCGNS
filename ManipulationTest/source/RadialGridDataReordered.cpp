@@ -1,22 +1,18 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
-#include "MSHtoCGNS/CgnsInterface/CgnsReader.hpp"
+#include "MSHtoCGNS/UnitTest/FixtureCgnsReader.hpp"
 #include "MSHtoCGNS/Manipulation/RadialGridDataReordered.hpp"
+#include <cgnslib.h>
 #include <cmath>
 
-#define TOLERANCE 1e-4
+#undef TOLERANCE
+#define TOLERANCE 1.0e-4
 
-struct RadialGridDataReorderedFixture {
-    RadialGridDataReorderedFixture() {
-        CgnsReader cgnsReader(this->inputPath);
-        this->gridData = cgnsReader.gridData;
-    }
+struct RadialGridDataReorderedFixture : public FixtureCgnsReader {
+    RadialGridDataReorderedFixture() : FixtureCgnsReader("Manipulation/RadialGridDataReordered/370v_324e.cgns") {}
 
     double calculateDistance(std::array<double, 3> a, std::array<double, 3> b) {
         return std::sqrt(std::inner_product(a.cbegin(), a.cend(), b.cbegin(), 0.0, std::plus<>(), [](auto c, auto d){return (c-d)*(c-d);}));
     }
-
-    std::string inputPath = std::string(TEST_INPUT_DIRECTORY) + "Manipulation/RadialGridDataReordered/370v_324e.cgns";
-    boost::shared_ptr<GridData> gridData;
 };
 
 FixtureTestSuite(RadialGridDataReorderedSuite, RadialGridDataReorderedFixture)
@@ -28,61 +24,96 @@ TestCase(RadialGridDataReorderedTest) {
 
     checkEqual(reordered->coordinates.size(), 370u);
 
-    checkEqual(reordered->tetrahedrons.size(), 0u);
-    checkEqual(reordered->hexahedrons.size(), 216u);
-    checkEqual(reordered->prisms.size(), 108u);
-    checkEqual(reordered->pyramids.size(), 0u);
-
-    checkEqual(reordered->triangles.size(),  24u);
-    checkEqual(reordered->quadrangles.size(), 156u);
-
-    checkEqual(reordered->lines.size(), 9u);
-
-    checkEqual(reordered->boundaries.size(), 3u);
-    checkEqual(reordered->regions.size(), 1u);
-    checkEqual(reordered->wells.size(), 1u);
-
-    checkEqual(reordered->boundaries[0].begin, 324);
-    checkEqual(reordered->boundaries[0].end, 432);
-
-    checkEqual(reordered->boundaries[1].begin, 432);
-    checkEqual(reordered->boundaries[1].end, 468);
-
-    checkEqual(reordered->boundaries[2].begin, 468);
-    checkEqual(reordered->boundaries[2].end, 504);
-
-    checkEqual(reordered->wells[0].begin, 504);
-    checkEqual(reordered->wells[0].end, 513);
-    checkEqual(reordered->wells[0].vertices.size(), 10u);
-    for (int j = 0; j < 10; ++j)
-        checkEqual(reordered->wells[0].vertices[j], j * 37);
-
-    for (int i = 0; i < 9; ++i) {
-        int shift = 36 * i;
-
-        for (int j = 0; j < 12; ++j)
-            checkEqual(reordered->prisms[12*i + j].back(), shift++);
-
-        for (int j = 0; j < 24; ++j)
-            checkEqual(reordered->hexahedrons[24*i + j].back(), shift++);
+    {
+        auto connectivities = reordered->connectivities;
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == TETRA_4;}),   0);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == HEXA_8 ;}), 216);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == PENTA_6;}), 108);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == PYRA_5 ;}),   0);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == TRI_3  ;}),  24);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == QUAD_4 ;}), 156);
+        checkEqual(std::count_if(connectivities.cbegin(), connectivities.cend(), [](const auto& c){return c.front() == BAR_2  ;}),   9);
     }
 
-    for (int i = 0; i < 108; ++i) {
-        checkEqual(reordered->quadrangles[i].back(), 324 + i);
+    {
+        auto sections = reordered->sections;
+        checkEqual(sections.size(), 5u);
+
+        checkEqual(std::count_if(sections.cbegin(), sections.cend(), [](const auto& e){return e.dimension == 3;}), 1);
+        checkEqual(std::count_if(sections.cbegin(), sections.cend(), [](const auto& e){return e.dimension == 2;}), 3);
+        checkEqual(std::count_if(sections.cbegin(), sections.cend(), [](const auto& e){return e.dimension == 1;}), 1);
+
+        {
+            auto section = sections[0];
+            checkEqual(section.name, std::string("BODY_WELL"));
+            checkEqual(section.dimension, 3);
+            checkEqual(section.begin, 0);
+            checkEqual(section.end, 324);
+        }
+
+        {
+            auto section = sections[1];
+            checkEqual(section.name, std::string("BOUNDARY_SURFACE"));
+            checkEqual(section.dimension, 2);
+            checkEqual(section.begin, 324);
+            checkEqual(section.end, 432);
+        }
+
+        {
+            auto section = sections[2];
+            checkEqual(section.name, std::string("BOUNDARY_BOTTOM"));
+            checkEqual(section.dimension, 2);
+            checkEqual(section.begin, 432);
+            checkEqual(section.end, 468);
+        }
+
+        {
+            auto section = sections[3];
+            checkEqual(section.name, std::string("BOUNDARY_TOP"));
+            checkEqual(section.dimension, 2);
+            checkEqual(section.begin, 468);
+            checkEqual(section.end, 504);
+        }
+
+        {
+            auto section = sections[4];
+            checkEqual(section.name, std::string("LINE_WELL"));
+            checkEqual(section.dimension, 1);
+            checkEqual(section.begin, 504);
+            checkEqual(section.end, 513);
+            std::vector<int> expected{0, 37, 74, 111, 148, 185, 222, 259, 296, 333};
+            checkEqualCollections(section.vertices.cbegin(), section.vertices.cend(), expected.cbegin(), expected.cend());
+        }
     }
 
-    for (int i = 0; i < 12; ++i) {
-        checkEqual(reordered->triangles[i     ].back(), 432 + i);
-        checkEqual(reordered->triangles[i + 12].back(), 468 + i);
-    }
+    int shift = 0;
+    {
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 12; ++j)
+                checkEqual(reordered->connectivities[shift++].front(), PENTA_6);
 
-    for (int i = 0; i < 24; ++i) {
-        checkEqual(reordered->quadrangles[i + 108].back(), 444 + i);
-        checkEqual(reordered->quadrangles[i + 132].back(), 480 + i);
-    }
+            for (int j = 0; j < 24; ++j)
+                checkEqual(reordered->connectivities[shift++].front(), HEXA_8);
+        }
 
-    for (int i = 0; i < 9; ++i)
-        checkEqual(reordered->lines[i].back(), 504 + i);
+        for (int i = 0; i < 108; ++i) {
+            checkEqual(reordered->connectivities[shift++].front(), QUAD_4);
+        }
+
+        for (int i = 0; i < 2; ++i) {
+            for (int j = 0; j < 12; ++j) {
+                checkEqual(reordered->connectivities[shift++].front(), TRI_3);
+            }
+
+            for (int j = 0; j < 24; ++j) {
+                checkEqual(reordered->connectivities[shift++].front(), QUAD_4);
+            }
+        }
+
+        for (int i = 0; i < 9; ++i) {
+            checkEqual(reordered->connectivities[shift++].front(), BAR_2);
+        }
+    }
 
     for (int i = 0; i < 37; ++i) {
         checkSmall(reordered->coordinates[37 * 0 + i][2], TOLERANCE);

@@ -1,41 +1,8 @@
 #include "MSHtoCGNS/MshInterface/MshReader.hpp"
+#include <cgnslib.h>
 
-namespace msh {
-    int getMshGridDimension(std::string path) {
-        if (!boost::filesystem::exists(boost::filesystem::path(path).parent_path()))
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - The parent path does not exist");
+std::unordered_map<int, int> mshToCgns{{1, BAR_2}, {2, TRI_3}, {3, QUAD_4}, {4, TETRA_4}, {5, HEXA_8}, {6, PENTA_6}, {7, PYRA_5}};
 
-        if (!boost::filesystem::exists(path))
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no file in the given path");
-
-        char buffer[1024];
-        std::ifstream file(std::ifstream(path.c_str()));
-
-        file.seekg(0, std::ios::beg);
-        while (strcmp(buffer, "$PhysicalNames") && !file.eof())
-            file >> buffer;
-
-        if (file.eof())
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - There is no Physical Entities data in the grid file");
-
-        int numberOfPhysicalEntities;
-        file >> numberOfPhysicalEntities;
-        std::vector<int> dimensions;
-        for (int i = 0; i < numberOfPhysicalEntities; ++i) {
-            int type;
-            int index;
-            std::string name;
-            file >> type >> index >> name;
-            dimensions.push_back(type);
-        }
-
-        int dimension = *std::max_element(dimensions.cbegin(), dimensions.cend());
-        if (dimension == 2 || dimension == 3)
-            return dimension;
-        else
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Dimension must be either 2 or 3, not " + std::to_string(dimension));
-    }
-}
 MshReader::MshReader(std::string filePath) : filePath(filePath) {
     this->checkFile();
     this->gridData = boost::make_shared<GridData>();
@@ -43,6 +10,9 @@ MshReader::MshReader(std::string filePath) : filePath(filePath) {
     this->readNodes();
     this->readElements();
     this->determinePhysicalEntitiesRange();
+    this->addSections();
+    this->addElements(this->gridData->sections);
+    this->findVertices(this->gridData->sections);
 }
 
 void MshReader::checkFile() {
@@ -79,11 +49,13 @@ void MshReader::readPhysicalNames() {
         int type, index;
         std::string name;
         this->file >> type >> index >> name;
-        this->entitiesTypes.push_back(type - 1);
-        this->entitiesIndices.push_back(index - 1);
-        this->entitiesNames.emplace_back(std::string());
-        std::transform(name.begin() + 1, name.end() - 1, std::back_inserter(this->entitiesNames.back()), ::toupper);
+        this->sectionsDimension.push_back(type);
+        this->sectionsIndices.push_back(index - 1);
+        this->sectionsNames.emplace_back();
+        std::transform(name.begin() + 1, name.end() - 1, std::back_inserter(this->sectionsNames.back()), ::toupper);
     }
+
+    this->gridData->dimension = *std::max_element(this->sectionsDimension.cbegin(), this->sectionsDimension.cend());
 }
 
 void MshReader::readNodes() {
@@ -128,16 +100,18 @@ void MshReader::readElements() {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Elements must have exactly 2 tags");
 
     // Before
-    // index, type, number-of-tags, physical-entity-index, geometrical-entity-index, node-number-list
+    // index, type, number-of-tags, physical-section-index, geometrical-section-index, node-number-list
 
     for (unsigned i = 0; i < this->connectivities.size(); ++i) {
         this->connectivities[i].erase(this->connectivities[i].begin() + 4);
         this->connectivities[i].erase(this->connectivities[i].begin() + 2);
         this->connectivities[i].erase(this->connectivities[i].begin());
+        this->connectivities[i][0] = mshToCgns[this->connectivities[i][0] + 1];
+        std::iter_swap(this->connectivities[i].begin(), this->connectivities[i].begin() + 1);
     }
 
     // After
-    // type, physical-entity-index, node-number-list
+    // physical-section-index, type, node-number-list
 }
 
 void MshReader::determinePhysicalEntitiesRange() {
@@ -147,22 +121,43 @@ void MshReader::determinePhysicalEntitiesRange() {
     for (const auto& connectivity : this->connectivities)
         indices.emplace_back(connectivity[this->sectionIndex]);
 
-    for (int index : this->entitiesIndices) {
+    for (int index : this->sectionsIndices) {
         auto range = std::equal_range(indices.cbegin(), indices.cend(), index);
-        this->physicalEntitiesRange.emplace_back(std::array<int, 2>{static_cast<int>(std::distance(indices.cbegin(), range.first)), static_cast<int>(std::distance(indices.cbegin(), range.second))});
+        this->physicalEntitiesRange.emplace_back(std::array<long int, 2>{std::distance(indices.cbegin(), range.first), std::distance(indices.cbegin(), range.second)});
     }
 }
 
-void MshReader::addRegion(std::string name, int begin, int end) {
-    this->gridData->regions.emplace_back();
-    this->gridData->regions.back().name = name;
-    this->gridData->regions.back().begin = begin;
-    this->gridData->regions.back().end = end;
+void MshReader::addSections() {
+    for (int physicalEntity = 0; physicalEntity < this->numberOfPhysicalEntities; ++physicalEntity) {
+        this->gridData->sections.emplace_back();
+        this->gridData->sections.back().name = this->sectionsNames[physicalEntity];
+        this->gridData->sections.back().dimension = this->sectionsDimension[physicalEntity];
+        this->gridData->sections.back().begin = this->physicalEntitiesRange[physicalEntity].front();
+        this->gridData->sections.back().end = this->physicalEntitiesRange[physicalEntity].back();
+    }
+    std::stable_sort(this->gridData->sections.begin(), this->gridData->sections.end(), [=](const auto& a, const auto& b){return a.dimension > b.dimension;});
 }
 
-void MshReader::addBoundary(std::string name, int begin, int end) {
-    this->gridData->boundaries.emplace_back();
-    this->gridData->boundaries.back().name = name;
-    this->gridData->boundaries.back().begin = begin;
-    this->gridData->boundaries.back().end = end;
+void MshReader::addElements(std::vector<SectionData>& sections) {
+    for (auto& sections : sections) {
+        auto position = this->connectivities.begin() + sections.begin;
+        auto end = this->connectivities.begin() + sections.end;
+        sections.begin = this->shift;
+        while (position != end) {
+            position->push_back(this->shift++);
+            this->gridData->connectivities.emplace_back(position->begin() + 1, position->end());
+            ++position;
+        }
+        sections.end = this->shift;
+    }
+}
+
+void MshReader::findVertices(std::vector<SectionData>& sections) {
+    for (auto& section : sections) {
+        std::set<int> vertices;
+        for (auto connectivity = this->gridData->connectivities.cbegin() + section.begin; connectivity != this->gridData->connectivities.cbegin() + section.end; ++connectivity) {
+            vertices.insert(connectivity->cbegin() + 1, connectivity->cend() - 1);
+        }
+        section.vertices = std::vector<int>{vertices.begin(), vertices.end()};
+    }
 }
