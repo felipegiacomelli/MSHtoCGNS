@@ -15,14 +15,14 @@ This project currently supports
 
 ## MSH IO
 - [msh 2.2](http://www.manpagez.com/info/gmsh/gmsh-2.2.6/gmsh_63.php/)
+- [msh 4.1](https://gmsh.info/doc/texinfo/gmsh.html#MSH-file-format)
 - read grids composed of linear elements
-- supports Physical Line, Physical Surface and Physical Volume
 
 ## CGNS IO
 - [cgns 3.10 - 3.4.0](https://cgns.github.io/)
 - HDF mothernode
 - read/write unstructured grids composed of linear elements
-- write simulation data
+- write simulation results
 
 <img src="Zeta/Images/paraview_hybrid_3d_with_well.png"  height=250 width=600  />
 
@@ -32,14 +32,40 @@ This project currently supports
 
 To build, it is necessary
 
-- [g++/gcc](https://gcc.gnu.org/) 7.4 (at least)
+- [g++/gcc](https://gcc.gnu.org/) 8.4 (at least)
 - [cmake](https://cmake.org/) 3.14.4
 - [make](https://www.gnu.org/software/make/)
 - [HDF5](https://www.hdfgroup.org/solutions/hdf5/) 1.10.0 (at least)
-- [CGNS](https://cgns.github.io/index.html) 3.4.0
-- [Boost](https://www.boost.org/) 1.70
+- [CGNS](https://cgns.github.io/index.html) 4.1.1
+- [Boost](https://www.boost.org/) 1.72.0
 
-Once you have installed the first three dependecies, you may install **Boost**, **HDF5**, **CGNS** by executing **setup.sh** located in *Zeta/Setup/*. This script will install **shared libraries** in **release** variant.
+In **Arch Linux/Manjaro**, all dependencies may be installed through [LibraryInstaller](https://github.com/felipegiacomelli/LibraryInstaller/). Just set the following options in
+[Settings.py](https://github.com/felipegiacomelli/LibraryInstaller/blob/master/Settings.py)
+
+```python
+
+libraries = {
+    "openmpi"  : {"version" : "4.0.2" , "install" : True},
+
+    "boost"    : {"version" : "1.72.0", "install" : True},
+
+    "metis"    : {"version" : "5.1.0" , "install" : False},
+    "petsc"    : {"version" : "3.12.2", "install" : False},
+
+    "hdf5"     : {"version" : "1.10.5", "install" : True},
+    "cgns"     : {"version" : "4.1.1" , "install" : True},
+    "mshtocgns": {"version" : "4.0.0" , "install" : True},
+
+    "dei"      : {"version" : "1.0.0" , "install" : False},
+
+    "muparser" : {"version" : "2.2.6" , "install" : False},
+
+    "triangle" : {"version" : "1.6.0" , "install" : False},
+    "tetgen"   : {"version" : "1.5.1" , "install" : False}
+}
+```
+
+In **Ubuntu 18.04**, once the first four dependencies have been installed, you may install **Boost** and **CGNS** by executing [*setup.sh*](Zeta/CMakeModules/FindMSHtoCGNS.cmake). This script will install **shared libraries** in **release** variant.
 
 ## Build
 
@@ -59,7 +85,7 @@ $ make install
 ```
 ## Convert
 
-The file **MSHtoCGNS.json**, located in *Zeta/*, specifies the paths to the msh files (**inputs**) and the path where the directory containing the CGNS files will be created (**output**). Thus, once you have set this, you may execute
+The file [*MSHtoCGNS.json*](Zeta/MSHtoCGNS.json), located in *Zeta/*, specifies the paths to the msh files (**inputs**) and the path where the directory containing the CGNS files will be created (**output**). Thus, once you have set this, you may execute
 
 ```shell
 $ ./MSHtoCGNS
@@ -143,7 +169,7 @@ Easily visualised results with [paraview](https://www.paraview.org/).
 
 ## Import
 
-MSHtoCGNS may be easily imported to any project using **CMake**, just make sure [*FindMSHtoCGNS.cmake*](Zeta/CMakeModules/FindMSHtoCGNS.cmake)  is on your CMAKE_MODULE_PATH. Hence, you may use this snippet
+MSHtoCGNS may be easily imported to any project using **CMake**, just make sure [*FindMSHtoCGNS.cmake*](Zeta/CMakeModules/FindMSHtoCGNS.cmake) is on your CMAKE_MODULE_PATH. Hence, you may use this snippet
 
 ```cmake
 set (MSHTOCGNS_DIR $ENV{MSHTOCGNS_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
@@ -165,3 +191,9 @@ Usually,
 *${LIBRARY_TYPE}* is the lower case library type - **shared** OR **static**
 
 You may also set ${MSHTOCGNS_DIR} (on your project's CMakeLists.txt) to the installation directory of MSHtoCGNS.
+
+---
+
+## Note
+
+For MSH file format version 4.1, geometrical entities may be associated to **none** or a **single** physical entity. Otherwise, the MSH reader may not work properly.

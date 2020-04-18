@@ -34,17 +34,17 @@ TestCase(Coordinates) {
 
     auto coordinates = this->gridData->coordinates;
     checkEqual(coordinates.size(), 11u);
-    checkEqualCollections(coordinates[ 0].cbegin(), coordinates[ 0].cend(), expected[ 0].cbegin(), expected[ 0].cend());
-    checkEqualCollections(coordinates[ 1].cbegin(), coordinates[ 1].cend(), expected[ 1].cbegin(), expected[ 1].cend());
-    checkEqualCollections(coordinates[ 2].cbegin(), coordinates[ 2].cend(), expected[ 2].cbegin(), expected[ 2].cend());
-    checkEqualCollections(coordinates[ 3].cbegin(), coordinates[ 3].cend(), expected[ 3].cbegin(), expected[ 3].cend());
-    checkEqualCollections(coordinates[ 4].cbegin(), coordinates[ 4].cend(), expected[ 4].cbegin(), expected[ 4].cend());
-    checkEqualCollections(coordinates[ 5].cbegin(), coordinates[ 5].cend(), expected[ 5].cbegin(), expected[ 5].cend());
-    checkEqualCollections(coordinates[ 6].cbegin(), coordinates[ 6].cend(), expected[ 6].cbegin(), expected[ 6].cend());
-    checkEqualCollections(coordinates[ 7].cbegin(), coordinates[ 7].cend(), expected[ 7].cbegin(), expected[ 7].cend());
-    checkEqualCollections(coordinates[ 8].cbegin(), coordinates[ 8].cend(), expected[ 8].cbegin(), expected[ 8].cend());
-    checkEqualCollections(coordinates[ 9].cbegin(), coordinates[ 9].cend(), expected[ 9].cbegin(), expected[ 9].cend());
-    checkEqualCollections(coordinates[10].cbegin(), coordinates[10].cend(), expected[10].cbegin(), expected[10].cend());
+    checkCloseCollection(coordinates[ 0], expected[ 0], TOLERANCE);
+    checkCloseCollection(coordinates[ 1], expected[ 1], TOLERANCE);
+    checkCloseCollection(coordinates[ 2], expected[ 2], TOLERANCE);
+    checkCloseCollection(coordinates[ 3], expected[ 3], TOLERANCE);
+    checkCloseCollection(coordinates[ 4], expected[ 4], TOLERANCE);
+    checkCloseCollection(coordinates[ 5], expected[ 5], TOLERANCE);
+    checkCloseCollection(coordinates[ 6], expected[ 6], TOLERANCE);
+    checkCloseCollection(coordinates[ 7], expected[ 7], TOLERANCE);
+    checkCloseCollection(coordinates[ 8], expected[ 8], TOLERANCE);
+    checkCloseCollection(coordinates[ 9], expected[ 9], TOLERANCE);
+    checkCloseCollection(coordinates[10], expected[10], TOLERANCE);
 }
 
 TestCase(Connectivities) {

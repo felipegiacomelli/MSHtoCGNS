@@ -42,7 +42,7 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 # ABOUT THE PROJECT
 ##################################################################
 project(MSHtoCGNS)
-set(VERSION_MAJOR "3")
+set(VERSION_MAJOR "4")
 set(VERSION_MINOR "0")
 set(VERSION_PATCH "0")
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
@@ -79,9 +79,22 @@ if(Boost_FOUND)
 endif()
 
 ##############
+# HDF5
+##############
+set(HDF5_VERSION "1.10.5")
+
+if(DEFINED ENV{HDF5_DIR})
+    set(HDF5_ROOT $ENV{HDF5_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
+else()
+    set(HDF5_ROOT "/usr/lib/x86_64-linux-gnu/hdf5/openmpi")
+endif()
+
+find_package (HDF5 NAMES hdf5 COMPONENTS C ${LIBRARY_TYPE})
+
+##############
 # CGNS
 ##############
-set(CGNS_VERSION "3.4.0")
+set(CGNS_VERSION "4.1.1")
 
 if(DEFINED ENV{CGNS_DIR})
     set(CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})

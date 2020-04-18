@@ -14,11 +14,8 @@ void CgnsCreator::setDimensions() {
     this->sizes[0] = this->gridData->coordinates.size();
 
     const auto& cs = this->gridData->connectivities;
-
-    if (this->gridData->dimension == 2)
-        this->sizes[1] = std::count_if(cs.begin(), cs.cend(), [](const auto& c){return c[0] == TRI_3 || c[0] == QUAD_4;});
-    else
-        this->sizes[1] = std::count_if(cs.cbegin(), cs.cend(), [](const auto& c){return c[0] == TETRA_4 || c[0] == HEXA_8 || c[0] == PENTA_6 || c[0] == PYRA_5;});
+    auto elementTypes = this->gridData->dimension == 2 ? std::vector<int>{TRI_3, QUAD_4} : std::vector<int>{TETRA_4, HEXA_8, PENTA_6, PYRA_5};
+    this->sizes[1] = std::count_if(cs.cbegin(), cs.cend(), [&](const auto& c){return hasElement(elementTypes.cbegin(), elementTypes.cend(), c[0]);});
 
     this->sizes[2] = 0;
 }
@@ -27,13 +24,13 @@ void CgnsCreator::setupFile() {
     if (this->output.extension() == std::string(".cgns")) {
         if (boost::filesystem::exists(this->output))
             boost::filesystem::remove_all(this->output);
-        this->fileName = this->output.string();
+        this->fileName = boost::replace_all_copy(this->output.string(), "//", "/");
     }
     else {
-        boost::filesystem::path folderName(boost::filesystem::absolute(this->output).string() + std::string("/") + std::to_string(this->sizes[0]) + std::string("v_") + std::to_string(this->sizes[1]) + "e/");
-        if (!boost::filesystem::exists(folderName))
-            boost::filesystem::create_directory(folderName);
-        this->fileName = folderName.string() + std::string("Grid.cgns");
+        auto directory(boost::filesystem::absolute(this->output) / boost::str(boost::format("/%iv_%ie/") % this->sizes[0] % this->sizes[1]));
+        if (!boost::filesystem::exists(directory))
+            boost::filesystem::create_directory(directory);
+        this->fileName = boost::replace_all_copy(directory.string(), "//", "/") + std::string("Grid.cgns");
     }
     cg_open(this->fileName.c_str(), CG_MODE_WRITE, &this->fileIndex);
 }

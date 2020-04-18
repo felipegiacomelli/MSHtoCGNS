@@ -8,7 +8,7 @@ struct MultipleBasesCgnsReaderFixture {
 
 FixtureTestSuite(MultipleBasesCgnsReaderSuite, MultipleBasesCgnsReaderFixture)
 
-TestCase(Base1Case) {
+TestCase(Base0Case) {
     auto gridData = this->multipleBasesCgnsReader3D.read("BASE");
 
     checkEqual(gridData->coordinates.size(), 110u);
@@ -58,8 +58,8 @@ TestCase(Base1Case) {
     }
 }
 
-TestCase(Base2Case) {
-    auto gridData = this->multipleBasesCgnsReader3D.read(2);
+TestCase(Base1Case) {
+    auto gridData = this->multipleBasesCgnsReader3D.read(1);
 
     checkEqual(gridData->coordinates.size(), 48u);
 

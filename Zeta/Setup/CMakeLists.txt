@@ -14,8 +14,7 @@ install(TARGETS "cgns_shared" EXPORT ${TargetsConfig} DESTINATION ${LIB_INSTALL_
 include(CMakePackageConfigHelpers)
 configure_package_config_file(${TemplateConfig} ${ProjectConfig} INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX} PATH_VARS PROJECT_NAME_UPPER PROJECT_NAME INCLUDE_INSTALL_DIR LIB_INSTALL_DIR PROJECT_LIBRARIES)
 
-set(VERSION "3.4.0")
-write_basic_package_version_file(${VersionConfig} VERSION ${VERSION} COMPATIBILITY ExactVersion)
+write_basic_package_version_file(${VersionConfig} VERSION ${INSTALL_VERSION} COMPATIBILITY ExactVersion)
 
 install(FILES ${ProjectConfig} ${VersionConfig} DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(EXPORT ${TargetsConfig} DESTINATION ${CMAKE_INSTALL_PREFIX})

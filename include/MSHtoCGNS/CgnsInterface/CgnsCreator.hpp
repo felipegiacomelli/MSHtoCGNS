@@ -1,11 +1,11 @@
 #ifndef __CGNS_INTERFACE_CGNS_CREATOR_HPP__
 #define __CGNS_INTERFACE_CGNS_CREATOR_HPP__
 
-#include <algorithm>
 #include <numeric>
 #include <unordered_map>
-
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
+#include "MSHtoCGNS/BoostInterface/String.hpp"
+#include "MSHtoCGNS/Utilities/Algorithm.hpp"
 #include "MSHtoCGNS/Utilities/Vector.hpp"
 #include "MSHtoCGNS/Utilities/Error.hpp"
 #include "MSHtoCGNS/GridData/GridData.hpp"

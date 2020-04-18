@@ -39,7 +39,7 @@ boost::shared_ptr<GridData> MultipleBasesCgnsReader::read(std::string name) {
 }
 
 boost::shared_ptr<GridData> MultipleBasesCgnsReader::read(int baseIndex) {
-    auto entry = std::find_if(this->bases.cbegin(), this->bases.cend(), [=](auto e){return e.second == baseIndex;});
+    auto entry = std::find_if(this->bases.cbegin(), this->bases.cend(), [=](auto e){return e.second == baseIndex + 1;});
     if (entry == this->bases.cend())
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Base " + std::to_string(baseIndex) + " not found");
 

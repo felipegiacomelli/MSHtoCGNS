@@ -3,11 +3,11 @@
 
 #define TOLERANCE 1e-12
 
-struct Read_Region1_Hexahedrons_Well1_3D_Fixture : public FixtureMshReader {
-    Read_Region1_Hexahedrons_Well1_3D_Fixture() : FixtureMshReader("MshInterface/3D-Region3-Hexahedrons-Well1/88v_30e.msh") {}
+struct Read_Region3_Hexahedrons_Well1_3D_Fixture : public FixtureMshReader {
+    Read_Region3_Hexahedrons_Well1_3D_Fixture() : FixtureMshReader("MshInterface/3D-Region3-Hexahedrons-Well1/88v_30e.msh") {}
 };
 
-FixtureTestSuite(Read_Region3_Hexahedrons_Well1_3D_Suite, Read_Region1_Hexahedrons_Well1_3D_Fixture)
+FixtureTestSuite(Read_Region3_Hexahedrons_Well1_3D_Suite, Read_Region3_Hexahedrons_Well1_3D_Fixture)
 
 TestCase(Connectivities) {
     std::vector<std::vector<int>> expected{

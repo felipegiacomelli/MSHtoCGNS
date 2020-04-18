@@ -10,13 +10,18 @@
 
 int main(int argc, char** argv) {
     boost::property_tree::ptree propertyTree;
-    if (argc == 2) {
-       boost::property_tree::ptree inputs;
-       boost::property_tree::ptree input;
-       input.put("",  argv[1]);
-       inputs.push_back(std::make_pair("", input));
-       propertyTree.add_child("inputs", inputs);
-       propertyTree.put("output", "./");
+    if (argc > 1) {
+        boost::property_tree::ptree inputs;
+        boost::property_tree::ptree input;
+        input.put("", boost::filesystem::absolute(argv[1]).string());
+        inputs.push_back(std::make_pair("", input));
+        propertyTree.add_child("inputs", inputs);
+        if (argc > 2) {
+            propertyTree.put("output", argv[2]);
+        }
+        else {
+            propertyTree.put("output", std::getenv("PWD"));
+        }
     }
     else {
         boost::property_tree::read_json(std::string(SCRIPT_DIRECTORY) + "MSHtoCGNS.json", propertyTree);
@@ -29,15 +34,15 @@ int main(int argc, char** argv) {
         boost::shared_ptr<GridData> gridData(mshReader.gridData);
         auto end = std::chrono::steady_clock::now();
         std::chrono::duration<double> elapsedSeconds = end - start;
-        std::cout << std::endl << "\tGrid path: " << input.second.data();
-        std::cout << std::endl << "\tRead in  : " << elapsedSeconds.count() << " s" << std::endl;
+        std::cout << boost::str(boost::format("\n\tGrid path: %s") % input.second.data());
+        std::cout << boost::str(boost::format("\n\tRead in  : %.6f s\n") % elapsedSeconds.count());
 
         start = std::chrono::steady_clock::now();
         CgnsCreator cgnsCreator(gridData, propertyTree.get<std::string>("output"));
         end = std::chrono::steady_clock::now();
         elapsedSeconds = end - start;
-        std::cout << std::endl << "\tConverted to CGNS format in: " << elapsedSeconds.count() << " s";
-        std::cout << std::endl << "\tOutput file location       : " << cgnsCreator.getFileName() << std::endl << std::endl;
+        std::cout << boost::str(boost::format("\n\tConverted to CGNS format in: %.6f s") % elapsedSeconds.count());
+        std::cout << boost::str(boost::format("\n\tOutput file location       : %s\n\n") % cgnsCreator.getFileName());
     }
 
     return 0;

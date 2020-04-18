@@ -10,7 +10,7 @@
 struct SectionData {
     SectionData() = default;
 
-    SectionData(std::string name, int dimension, int begin, int end, std::vector<int> vertices) :
+    SectionData(std::string name, int dimension, int begin, int end, std::vector<int> vertices = std::vector<int>{}) :
         name(name), dimension(dimension), begin(begin), end(end), vertices(vertices) {}
 
     std::string name;
