@@ -89,7 +89,7 @@ else()
     set(HDF5_ROOT "/usr/lib/x86_64-linux-gnu/hdf5/openmpi")
 endif()
 
-find_package (HDF5 NAMES hdf5 COMPONENTS C ${LIBRARY_TYPE})
+find_package(HDF5 NAMES hdf5 COMPONENTS C ${LIBRARY_TYPE})
 
 ##############
 # CGNS
