@@ -24,7 +24,6 @@ HDF5_LIBS="-DHDF5_LIBRARIES=$HDF5_DIR/lib/libhdf5.so;$HDF5_DIR/lib/libhdf5_hl.so
 search="FIND_HDF_COMPONENTS C shared"
 replace="FIND_HDF_COMPONENTS C"
 sed -i "s/${search}/${replace}/g" CMakeLists.txt
-cat $SETUP_DIRECTORY/CMakeLists.txt >> CMakeLists.txt
 
 mkdir build
 cd build
