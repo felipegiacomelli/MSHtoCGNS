@@ -42,13 +42,15 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 # ABOUT THE PROJECT
 ##################################################################
 project(MSHtoCGNS)
-set(VERSION_MAJOR "4")
+set(VERSION_MAJOR "5")
 set(VERSION_MINOR "0")
 set(VERSION_PATCH "0")
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+string(COMPARE EQUAL $VERSION $VERSION_OLD $VERSION_SAME)
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR NOT $VERSION_SAME)
     set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/Libraries/mshtocgns-${VERSION}/${BUILD_TYPE}/${LIBRARY_TYPE}" CACHE PATH "Installation location" FORCE)
 endif()
+set(VERSION_OLD "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 ##################################################################
 # EXTERNAL LIBRARIES
@@ -89,12 +91,12 @@ else()
     set(HDF5_ROOT "/usr/lib/x86_64-linux-gnu/hdf5/openmpi")
 endif()
 
-find_package (HDF5 NAMES hdf5 COMPONENTS C ${LIBRARY_TYPE})
+find_package(HDF5 NAMES hdf5 COMPONENTS C ${LIBRARY_TYPE})
 
 ##############
 # CGNS
 ##############
-set(CGNS_VERSION "4.1.1")
+set(CGNS_VERSION "3.4.0")
 
 if(DEFINED ENV{CGNS_DIR})
     set(CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})

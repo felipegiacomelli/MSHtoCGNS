@@ -4,5 +4,6 @@
 #include <string>
 
 std::string error(const char* prettyFunction, std::string message, const char* cgError);
+std::string error(const char* prettyFunction, std::string message);
 
 #endif

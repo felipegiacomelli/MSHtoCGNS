@@ -5,6 +5,7 @@
 #include <set>
 
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
+#include "MSHtoCGNS/Utilities/Error.hpp"
 
 class CgnsOpener {
     public:
