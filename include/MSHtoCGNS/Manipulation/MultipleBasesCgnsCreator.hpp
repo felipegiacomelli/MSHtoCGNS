@@ -1,8 +1,6 @@
 #ifndef __MANIPULATION_MULTIPLE_BASES_CGNS_CREATOR_HPP__
 #define __MANIPULATION_MULTIPLE_BASES_CGNS_CREATOR_HPP__
 
-#include <boost/algorithm/string/case_conv.hpp>
-
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator.hpp"
 
 class MultipleBasesCgnsCreator : public CgnsCreator {

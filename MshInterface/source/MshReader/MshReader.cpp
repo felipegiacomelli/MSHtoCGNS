@@ -1,7 +1,7 @@
 #include "MSHtoCGNS/MshInterface/MshReader.hpp"
 #include <cgnslib.h>
 
-std::unordered_map<int, int> mshToCgns{{1, BAR_2}, {2, TRI_3}, {3, QUAD_4}, {4, TETRA_4}, {5, HEXA_8}, {6, PENTA_6}, {7, PYRA_5}};
+boost::unordered_map<int, int> mshToCgns{{1, BAR_2}, {2, TRI_3}, {3, QUAD_4}, {4, TETRA_4}, {5, HEXA_8}, {6, PENTA_6}, {7, PYRA_5}};
 
 MshReader::MshReader(std::string filePath) : filePath(filePath) {
     this->checkFile();

@@ -4,7 +4,8 @@
 #include <set>
 #include <algorithm>
 #include <numeric>
-#include <unordered_map>
+
+#include <boost/unordered_map.hpp>
 
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 #include "MSHtoCGNS/BoostInterface/PropertyTree.hpp"

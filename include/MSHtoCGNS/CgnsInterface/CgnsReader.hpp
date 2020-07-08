@@ -1,13 +1,12 @@
 #ifndef __CGNS_INTERFACE_CGNS_READER_HPP__
 #define __CGNS_INTERFACE_CGNS_READER_HPP__
 
-#include <string>
 #include <set>
-#include <boost/algorithm/string/case_conv.hpp>
 
+#include "MSHtoCGNS/BoostInterface/String.hpp"
 #include "MSHtoCGNS/Utilities/Vector.hpp"
-#include "MSHtoCGNS/CgnsInterface/CgnsOpener.hpp"
 #include "MSHtoCGNS/GridData/GridData.hpp"
+#include "MSHtoCGNS/CgnsInterface/CgnsOpener.hpp"
 
 class CgnsReader : public CgnsOpener {
     public:

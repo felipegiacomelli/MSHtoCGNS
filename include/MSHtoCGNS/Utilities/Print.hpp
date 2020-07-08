@@ -36,6 +36,6 @@ std::string purple(std::string message);
 
 std::string cyan(std::string message);
 
-void printGridDataInformation(boost::shared_ptr<GridData> gD, std::string message);
+void printGridDataInformation(boost::shared_ptr<GridData> gD, std::string message = "");
 
 #endif

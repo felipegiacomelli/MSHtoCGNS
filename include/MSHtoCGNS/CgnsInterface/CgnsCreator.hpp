@@ -2,7 +2,7 @@
 #define __CGNS_INTERFACE_CGNS_CREATOR_HPP__
 
 #include <numeric>
-#include <unordered_map>
+
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 #include "MSHtoCGNS/BoostInterface/String.hpp"
 #include "MSHtoCGNS/Utilities/Algorithm.hpp"

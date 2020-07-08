@@ -108,8 +108,8 @@ TestCase(Base1Case) {
 }
 
 TestCase(ExistsCase) {
-    check(this->multipleBasesCgnsReader3D.exists("SEGMENT"));
-    check(!this->multipleBasesCgnsReader3D.exists("YELLOW"));
+    checkEqual(this->multipleBasesCgnsReader3D.exists("SEGMENT"), true);
+    checkEqual(this->multipleBasesCgnsReader3D.exists("YELLOW"), false);
 }
 
 TestSuiteEnd()

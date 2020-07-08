@@ -3,5 +3,6 @@
 
 #include <boost/format.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
 
 #endif

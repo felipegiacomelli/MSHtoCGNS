@@ -42,15 +42,13 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 # ABOUT THE PROJECT
 ##################################################################
 project(MSHtoCGNS)
-set(VERSION_MAJOR "5")
+set(VERSION_MAJOR "6")
 set(VERSION_MINOR "0")
 set(VERSION_PATCH "0")
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
-string(COMPARE EQUAL $VERSION $VERSION_OLD $VERSION_SAME)
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR NOT $VERSION_SAME)
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/Libraries/mshtocgns-${VERSION}/${BUILD_TYPE}/${LIBRARY_TYPE}" CACHE PATH "Installation location" FORCE)
 endif()
-set(VERSION_OLD "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 ##################################################################
 # EXTERNAL LIBRARIES
