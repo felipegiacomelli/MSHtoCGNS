@@ -1,21 +1,21 @@
 {
-    "wellRegions" :
+    "wells" :
     [
         {
             "regionName": "BODY_INJECTOR_WEST",
-            "wellStart": [-80.0, 60.0, 0.0],
+            "wellStart": "-80.0 60.0 0.0",
             "wellName": "LINE_INJECTOR_WEST"
         },
 
         {
             "regionName": "BODY_INJECTOR_EAST",
-            "wellStart": [80.0, 60.0, 0.0],
+            "wellStart": "80.0 60.0 0.0",
             "wellName": "LINE_INJECTOR_EAST"
         },
 
         {
             "regionName": "BODY_WELL",
-            "wellStart": [0.0, -100.0, 30.0],
+            "wellStart": "0.0 -100.0 30.0",
             "wellName": "LINE_WELL"
         }
     ]

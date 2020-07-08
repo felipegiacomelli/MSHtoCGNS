@@ -1,16 +1,13 @@
-#include "MSHtoCGNS/Manipulation/WellGenerator.hpp"
+#include "MSHtoCGNS/Manipulation/Generator/WellGenerator.hpp"
 #include <cgnslib.h>
 
-WellGenerator::WellGenerator(boost::shared_ptr<GridData> gridData, std::string wellGeneratorScript) : gridData(gridData) {
+WellGenerator::WellGenerator(boost::shared_ptr<GridData> gridData, std::string scriptPath) : Generator(gridData, scriptPath) {
     this->checkGridData();
-    boost::property_tree::read_json(wellGeneratorScript, this->propertyTree);
-    this->readScript();
     this->generateWells();
 }
 
-WellGenerator::WellGenerator(boost::shared_ptr<GridData> gridData, boost::property_tree::ptree propertyTree) : gridData(gridData), propertyTree(propertyTree) {
+WellGenerator::WellGenerator(boost::shared_ptr<GridData> gridData, boost::property_tree::ptree script) : Generator(gridData, script) {
     this->checkGridData();
-    this->readScript();
     this->generateWells();
 }
 
@@ -25,26 +22,23 @@ void WellGenerator::checkGridData() {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Number of wells in gridData must be 0");
 }
 
-void WellGenerator::readScript() {
-    for (const auto& wellRegion : this->propertyTree.get_child("wellRegions")) {
-        this->wellGeneratorDatum.emplace_back();
-
-        this->wellGeneratorDatum.back().regionName = wellRegion.second.get<std::string>("regionName");
-
-        int index = 0;
-        for (const auto& coordinate : wellRegion.second.get_child("wellStart"))
-            this->wellGeneratorDatum.back().wellStart[index++] = coordinate.second.get_value<double>();
-
-        this->wellGeneratorDatum.back().wellName = wellRegion.second.get<std::string>("wellName");
-    }
-}
-
 void WellGenerator::generateWells() {
    auto position = std::find_if(this->gridData->connectivities.cbegin(), this->gridData->connectivities.cend(), [](const auto& c){return c[0] == BAR_2;});
    this->linesShift = std::distance(this->gridData->connectivities.cbegin(), position);
 
-   for (auto wellGeneratorData : this->wellGeneratorDatum) {
-        auto region = std::find_if(this->gridData->sections.cbegin(), this->gridData->sections.cend(), [=](auto e){return e.name == wellGeneratorData.regionName;});
+    std::vector<Point> coordinates;
+    coordinates.reserve(this->gridData->coordinates.size());
+    for (auto c : this->gridData->coordinates) {
+        coordinates.emplace_back(Point(c[0], c[1], c[2]));
+    }
+
+    for (const auto& wellRegion : this->script.get_child("wells")) {
+        auto regionName = wellRegion.second.get<std::string>("regionName");
+        auto wellName = wellRegion.second.get<std::string>("wellName");
+        Point begin;
+        boost::geometry::read_wkt(boost::str(boost::format("POINT(%s)") % wellRegion.second.get<std::string>("wellStart")), begin);
+
+        auto region = std::find_if(this->gridData->sections.cbegin(), this->gridData->sections.cend(), [=](auto e){return e.name == regionName;});
 
         for (auto element = this->gridData->connectivities.cbegin() + region->begin; element != this->gridData->connectivities.cbegin() + region->end; ++element)
             if (element->front() == PENTA_6)
@@ -52,7 +46,7 @@ void WellGenerator::generateWells() {
 
         for (const auto& prism : this->prisms)
             for (const auto& index : prism)
-                if (isClose(this->gridData->coordinates[index], wellGeneratorData.wellStart))
+                if (boost::geometry::distance(coordinates[index], begin) < this->tolerance)
                     this->currentIndex = index;
 
         this->defineQuantities();
@@ -70,7 +64,7 @@ void WellGenerator::generateWells() {
             for (const auto& prismIndex : wellStartPrisms)
                 wellStartVertices.insert(this->prisms[prismIndex].cbegin(), this->prisms[prismIndex].cend());
 
-            std::unordered_map<int, int> map;
+            boost::unordered_map<int, int> map;
             for (const auto& vertexIndex : wellStartVertices)
                 for (const auto& prismIndex : wellStartPrisms)
                     if (std::find(this->prisms[prismIndex].cbegin(), this->prisms[prismIndex].cend(), vertexIndex) != this->prisms[prismIndex].cend())
@@ -91,7 +85,7 @@ void WellGenerator::generateWells() {
 
         std::sort(vertices.begin(), vertices.end());
 
-        this->gridData->sections.emplace_back(SectionData{wellGeneratorData.wellName, 1, this->linesShift, this->linesShift +  numberOfLines, vertices});
+        this->gridData->sections.emplace_back(SectionData{wellName, 1, this->linesShift, this->linesShift +  numberOfLines, vertices});
 
         this->linesShift +=  numberOfLines;
     }
@@ -106,13 +100,4 @@ void WellGenerator::defineQuantities() {
     this->numberOfPrisms = this->prisms.size();
     this->numberOfElementsPerSection = wellStartPrisms.size();
     this->numberOfSegments = this->numberOfPrisms / this->numberOfElementsPerSection;
-}
-
-bool WellGenerator::isClose(const std::array<double, 3>& coordinate, const std::array<double, 3>& referencePoint) {
-    bool close = true;
-
-    for (int i = 0; i < 3; ++i)
-        close &= fabs(coordinate[i] - referencePoint[i]) < this->tolerance;
-
-    return close;
 }

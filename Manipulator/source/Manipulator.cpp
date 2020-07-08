@@ -4,7 +4,7 @@
 #include "MSHtoCGNS/GridData/GridData.hpp"
 #include "MSHtoCGNS/Manipulation/CgnsReader/SpecialCgnsReader.hpp"
 #include "MSHtoCGNS/CgnsInterface/CgnsCreator.hpp"
-#include "MSHtoCGNS/Manipulation/WellGenerator.hpp"
+#include "MSHtoCGNS/Manipulation/Generator/WellGenerator.hpp"
 #include "MSHtoCGNS/Manipulation/GridDataExtractor.hpp"
 #include "MSHtoCGNS/Manipulation/RadialGridDataReordered.hpp"
 #include "MSHtoCGNS/Manipulation/SegmentExtractor.hpp"

@@ -75,7 +75,7 @@ void GridDataExtractor::extractVertices() {
 }
 
 void GridDataExtractor::rectifyConnectivities() {
-    std::unordered_map<int, int> originalToExtract;
+    boost::unordered_map<int, int> originalToExtract;
     int index = 0;
     for (auto vertex : vertices)
         originalToExtract[vertex] = index++;

@@ -189,7 +189,7 @@ void RadialGridDataReordered::copyVertices() {
 }
 
 void RadialGridDataReordered::rectifyConnectivities() {
-    std::unordered_map<int, int> originalToReordered;
+    boost::unordered_map<int, int> originalToReordered;
     for (auto vertex : this->vertices)
         originalToReordered[vertex.first] = vertex.second;
 

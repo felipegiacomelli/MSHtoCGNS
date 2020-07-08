@@ -12,7 +12,6 @@
 #define FixtureTestSuite BOOST_FIXTURE_TEST_SUITE
 #define TestGlobalFixture BOOST_TEST_GLOBAL_FIXTURE
 
-#define check BOOST_CHECK
 #define checkClose BOOST_CHECK_CLOSE
 #define checkEqual BOOST_CHECK_EQUAL
 #define checkSmall BOOST_CHECK_SMALL

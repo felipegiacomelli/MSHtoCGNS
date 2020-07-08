@@ -1,7 +1,7 @@
 {
     "path" :
     {
-        "input"  : "/home/felipe/Downloads/mandel.cgns",
+        "input"  : "/home/felipe/Github/MSHtoCGNS/Zeta/Test/mandel.cgns",
         "output"  : "/home/felipe/Downloads"
     },
 
@@ -11,7 +11,7 @@
         [
             {
                 "regionName": "SOLID",
-                "wellStart": [0.5, 0.5, 1.0],
+                "wellStart": "0.5 0.5 1.0",
                 "wellName": "LINE"
             }
         ]

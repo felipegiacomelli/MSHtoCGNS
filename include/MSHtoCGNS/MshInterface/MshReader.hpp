@@ -4,6 +4,9 @@
 #include <set>
 #include <sstream>
 #include <fstream>
+
+#include <boost/unordered_map.hpp>
+
 #include "MSHtoCGNS/BoostInterface/String.hpp"
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 #include "MSHtoCGNS/GridData/GridData.hpp"
