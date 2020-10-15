@@ -1,5 +1,14 @@
 # Changelog
 
+## [7.0.0] - 2020-10-15
+
+### Changed
+
+- Using boost-1.74.0
+- Using CGNS-4.1.2
+
+[7.0.0]: https://github.com/felipegiacomelli/MSHtoCGNS/compare/v6.0.0...v7.0.0
+
 ## [6.0.0] - 2020-07-08
 
 ### Added

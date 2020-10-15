@@ -42,7 +42,7 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 # ABOUT THE PROJECT
 ##################################################################
 project(MSHtoCGNS)
-set(VERSION_MAJOR "6")
+set(VERSION_MAJOR "7")
 set(VERSION_MINOR "0")
 set(VERSION_PATCH "0")
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
@@ -62,7 +62,7 @@ endif()
 ##############
 # BOOST
 ##############
-set(BOOST_VERSION "1.72.0")
+set(BOOST_VERSION "1.74.0")
 
 if(DEFINED ENV{BOOST_DIR})
     set(BOOST_ROOT $ENV{BOOST_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
@@ -94,7 +94,7 @@ find_package(HDF5 NAMES hdf5 COMPONENTS C ${LIBRARY_TYPE})
 ##############
 # CGNS
 ##############
-set(CGNS_VERSION "3.4.0")
+set(CGNS_VERSION "4.1.2")
 
 if(DEFINED ENV{CGNS_DIR})
     set(CGNS_DIR $ENV{CGNS_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})

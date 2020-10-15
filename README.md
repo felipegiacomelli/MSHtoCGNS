@@ -19,9 +19,9 @@ This project currently supports
 - read grids composed of linear elements
 
 ## CGNS IO
-- [cgns 3.10 - 3.4.0](https://cgns.github.io/)
+- [cgns 3.10 - 4.1.2](https://cgns.github.io/)
 - HDF mothernode
-- read/write unstructured grids composed of linear elements
+- read/write unstructured grids
 - write simulation results
 
 <img src="Zeta/Images/paraview_hybrid_3d_with_well.png"  height=250 width=600  />
@@ -36,8 +36,8 @@ To build, it is necessary
 - [cmake](https://cmake.org/) 3.14.4
 - [make](https://www.gnu.org/software/make/)
 - [HDF5](https://www.hdfgroup.org/solutions/hdf5/) 1.10.0 (at least)
-- [CGNS](https://cgns.github.io/index.html) 4.1.1
-- [Boost](https://www.boost.org/) 1.72.0
+- [CGNS](https://cgns.github.io/index.html) 4.1.2
+- [Boost](https://www.boost.org/) 1.74.0
 
 In **Arch Linux/Manjaro**, all dependencies may be installed through [LibraryInstaller](https://github.com/felipegiacomelli/LibraryInstaller/). Just set the following options in
 [Settings.py](https://github.com/felipegiacomelli/LibraryInstaller/blob/master/Settings.py)
@@ -47,13 +47,13 @@ In **Arch Linux/Manjaro**, all dependencies may be installed through [LibraryIns
 libraries = {
     "openmpi"  : {"version" : "4.0.2" , "install" : True},
 
-    "boost"    : {"version" : "1.72.0", "install" : True},
+    "boost"    : {"version" : "1.74.0", "install" : True},
 
     "metis"    : {"version" : "5.1.0" , "install" : False},
     "petsc"    : {"version" : "3.12.2", "install" : False},
 
     "hdf5"     : {"version" : "1.10.5", "install" : True},
-    "cgns"     : {"version" : "4.1.1" , "install" : True},
+    "cgns"     : {"version" : "4.1.2" , "install" : True},
     "mshtocgns": {"version" : "4.0.0" , "install" : True},
 
     "dei"      : {"version" : "1.0.0" , "install" : False},
@@ -196,4 +196,4 @@ You may also set ${MSHTOCGNS_DIR} (on your project's CMakeLists.txt) to the inst
 
 ## Note
 
-For MSH file format version 4.1, geometrical entities may be associated to **none** or a **single** physical entity. Otherwise, the MSH reader may not work properly.
+For MSH file format version 4.1, geometrical entities **must** be associated to **none** or a **single** physical entity. Otherwise, the MSH reader may not work properly.
