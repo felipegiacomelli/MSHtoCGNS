@@ -14,7 +14,13 @@ void CgnsCreator::setDimensions() {
     this->sizes[0] = this->gridData->coordinates.size();
 
     const auto& cs = this->gridData->connectivities;
-    auto elementTypes = this->gridData->dimension == 2 ? std::vector<int>{TRI_3, QUAD_4} : std::vector<int>{TETRA_4, HEXA_8, PENTA_6, PYRA_5};
+
+    std::vector<int> elementTypes;
+    if (this->gridData->dimension == 2)
+        elementTypes = std::vector<int>{TRI_3, TRI_6, TRI_10, QUAD_4, QUAD_9, QUAD_8};
+    else
+        elementTypes = std::vector<int>{TETRA_4, TETRA_10, TETRA_20, HEXA_8, HEXA_27, HEXA_20, HEXA_64, PENTA_6, PENTA_18, PENTA_15, PYRA_5, PYRA_14, PYRA_13};
+
     this->sizes[1] = std::count_if(cs.cbegin(), cs.cend(), [&](const auto& c){return hasElement(elementTypes.cbegin(), elementTypes.cend(), c[0]);});
 
     this->sizes[2] = 0;
