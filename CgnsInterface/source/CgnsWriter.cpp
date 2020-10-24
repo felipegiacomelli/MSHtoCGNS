@@ -36,6 +36,14 @@ void CgnsWriter::writeField(std::string name, const std::vector<int>& values) {
         throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write field " + name);
 }
 
+#if __PYTHON_ENABLED__
+    void CgnsWriter::writeField(std::string name, const boost::python::list& values) {
+        auto converted = std::vector<double>(boost::python::stl_input_iterator<double>(values), boost::python::stl_input_iterator<double>());
+        if (cg_field_write(this->fileIndex, this->baseIndex, this->zoneIndex, this->solutionIndex, RealDouble, name.c_str(), &converted[0], &this->fieldIndex))
+            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " - Could not write field " + name);
+    }
+#endif
+
 void CgnsWriter::finalizeTransient() {
     if (!this->isFinalized) {
         this->isFinalized = true;

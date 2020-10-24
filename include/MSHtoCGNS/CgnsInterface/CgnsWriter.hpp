@@ -1,6 +1,10 @@
 #ifndef __CGNS_INTERFACE_CGNS_WRITER_HPP__
 #define __CGNS_INTERFACE_CGNS_WRITER_HPP__
 
+#if __PYTHON_ENABLED__
+    #include "MSHtoCGNS/BoostInterface/Python.hpp"
+#endif
+
 #include "MSHtoCGNS/CgnsInterface/CgnsOpener.hpp"
 
 class CgnsWriter : public CgnsOpener {
@@ -13,6 +17,10 @@ class CgnsWriter : public CgnsOpener {
 
         void writeField(std::string name, const std::vector<double>& values);
         void writeField(std::string name, const std::vector<int>& values);
+
+        #if __PYTHON_ENABLED__
+            void writeField(std::string name, const boost::python::list& values);
+        #endif
 
         void finalizeTransient();
 

@@ -42,7 +42,7 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 # ABOUT THE PROJECT
 ##################################################################
 project(MSHtoCGNS)
-set(VERSION_MAJOR "7")
+set(VERSION_MAJOR "8")
 set(VERSION_MINOR "0")
 set(VERSION_PATCH "0")
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
@@ -62,6 +62,7 @@ endif()
 ##############
 # BOOST
 ##############
+option(ENABLE_PYTHON "Enable Boost.Python wrappers" OFF)
 set(BOOST_VERSION "1.74.0")
 
 if(DEFINED ENV{BOOST_DIR})
@@ -72,6 +73,15 @@ endif()
 
 set(Components_Boost system filesystem unit_test_framework test_exec_monitor)
 set(Boost_USE_MULTITHREADED ON)
+
+if(ENABLE_PYTHON)
+    add_definitions("-D__PYTHON_ENABLED__")
+    set(Components_Boost ${Components_Boost} python38)
+    find_package(Python3 COMPONENTS Development)
+    if(Python3_FOUND)
+        include_directories(SYSTEM ${Python3_INCLUDE_DIRS})
+    endif()
+endif()
 
 find_package(Boost ${BOOST_VERSION} EXACT COMPONENTS ${Components_Boost} REQUIRED)
 if(Boost_FOUND)
@@ -118,12 +128,14 @@ set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 
 macro(add_executable _target)
     _add_executable(${_target} ${ARGN})
+    target_link_libraries(${_target} ${Python3_LIBRARIES})
     target_link_libraries(${_target} ${Boost_LIBRARIES})
     target_link_libraries(${_target} ${CGNS_LIBRARIES})
 endmacro()
 
 macro(add_library _target)
     _add_library(${_target} ${ARGN})
+    target_link_libraries(${_target} ${Python3_LIBRARIES})
     target_link_libraries(${_target} ${Boost_LIBRARIES})
     target_link_libraries(${_target} ${CGNS_LIBRARIES})
     set_target_properties(${_target}  PROPERTIES PREFIX "")
@@ -167,6 +179,10 @@ if(ENABLE_MSH)
 
     add_subdirectory(Manipulator)
     add_subdirectory(MSHtoCGNS)
+endif()
+
+if(ENABLE_PYTHON)
+    add_subdirectory(PyCgnsInterface)
 endif()
 
 ##################################################################
