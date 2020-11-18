@@ -185,6 +185,8 @@ if(ENABLE_PYTHON)
     add_subdirectory(PyCgnsInterface)
 endif()
 
+add_subdirectory(ElementTypes)
+
 ##################################################################
 # INSTALLATION
 ##################################################################
