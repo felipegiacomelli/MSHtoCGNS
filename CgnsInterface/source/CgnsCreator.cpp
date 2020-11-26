@@ -15,11 +15,24 @@ void CgnsCreator::setDimensions() {
 
     const auto& cs = this->gridData->connectivities;
 
+    std::vector<int> triangles{TRI_3, TRI_6, TRI_9, TRI_10};
+    std::vector<int> quadrangles{QUAD_4, QUAD_8, QUAD_9, QUAD_12, QUAD_16};
+    std::vector<int> tetrahedrons{TETRA_4, TETRA_10, TETRA_16, TETRA_20};
+    std::vector<int> hexahedrons{HEXA_8, HEXA_20, HEXA_27, HEXA_32, HEXA_56, HEXA_64};
+    std::vector<int> prisms{PENTA_6, PENTA_15, PENTA_18, PENTA_24, PENTA_38, PENTA_40};
+    std::vector<int> pyramids{PYRA_5, PYRA_14, PYRA_13, PYRA_21, PYRA_29, PYRA_30};
+
     std::vector<int> elementTypes;
-    if (this->gridData->dimension == 2)
-        elementTypes = std::vector<int>{TRI_3, TRI_6, TRI_10, QUAD_4, QUAD_9, QUAD_8};
-    else
-        elementTypes = std::vector<int>{TETRA_4, TETRA_10, TETRA_20, HEXA_8, HEXA_27, HEXA_20, HEXA_64, PENTA_6, PENTA_18, PENTA_15, PYRA_5, PYRA_14, PYRA_13};
+    if (this->gridData->dimension == 2) {
+        elementTypes.insert(elementTypes.end(), triangles.begin(), triangles.end());
+        elementTypes.insert(elementTypes.end(), quadrangles.begin(), quadrangles.end());
+    }
+    else {
+        elementTypes.insert(elementTypes.end(), tetrahedrons.begin(), tetrahedrons.end());
+        elementTypes.insert(elementTypes.end(), hexahedrons.begin(), hexahedrons.end());
+        elementTypes.insert(elementTypes.end(), prisms.begin(), prisms.end());
+        elementTypes.insert(elementTypes.end(), pyramids.begin(), pyramids.end());
+    }
 
     this->sizes[1] = std::count_if(cs.cbegin(), cs.cend(), [&](const auto& c){return hasElement(elementTypes.cbegin(), elementTypes.cend(), c[0]);});
 
