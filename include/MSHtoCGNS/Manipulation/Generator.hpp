@@ -1,5 +1,5 @@
-#ifndef __MANIPULATION_GENERATOR_HPP_HPP__
-#define __MANIPULATION_GENERATOR_HPP_HPP__
+#ifndef __MANIPULATION_GENERATOR_HPP__
+#define __MANIPULATION_GENERATOR_HPP__
 
 #include "MSHtoCGNS/BoostInterface/Filesystem.hpp"
 #include "MSHtoCGNS/BoostInterface/PropertyTree.hpp"

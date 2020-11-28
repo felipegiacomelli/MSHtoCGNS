@@ -50,6 +50,8 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/Libraries/mshtocgns-${VERSION}/${BUILD_TYPE}/${LIBRARY_TYPE}" CACHE PATH "Installation location" FORCE)
 endif()
 
+add_definitions("-DMSHTOCGNS_VERSION=\"${VERSION}\"")
+
 ##################################################################
 # EXTERNAL LIBRARIES
 ##################################################################
@@ -100,7 +102,9 @@ else()
 endif()
 
 find_package(HDF5 NAMES hdf5 COMPONENTS C ${LIBRARY_TYPE})
-
+if(HDF5_FOUND)
+    add_definitions("-DHDF5_VERSION=\"${HDF5_VERSION}\"")
+endif()
 ##############
 # CGNS
 ##############
