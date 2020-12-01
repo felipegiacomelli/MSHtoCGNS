@@ -3,13 +3,13 @@
 #include "MSHtoCGNS/Manipulation/SerendipityConverter.hpp"
 #include <cgnslib.h>
 
-struct SerendipityConverterFixture : public FixtureCgnsReader {
-    SerendipityConverterFixture() : FixtureCgnsReader("Manipulation/SerendipityConverter/49v_6e_cubic.cgns") {}
+struct Cubic2DFixture : public FixtureCgnsReader {
+    Cubic2DFixture() : FixtureCgnsReader("Manipulation/SerendipityConverter/49v_6e_cubic.cgns") {}
 };
 
-FixtureTestSuite(SerendipityConverterSuite, SerendipityConverterFixture)
+FixtureTestSuite(Cubic2DSuite, Cubic2DFixture)
 
-TestCase(SerendipityConverterTest) {
+TestCase(Cubic2DTest) {
     SerendipityConverter serendipityConverter(this->gridData);
 
     checkEqual(this->gridData->coordinates.size(), 49u);

@@ -1,11 +1,11 @@
 #include "MSHtoCGNS/BoostInterface/Test.hpp"
 #include "MSHtoCGNS/UnitTest/FixtureCgnsReader.hpp"
 
-struct ReaderReaderFixtureMixed2D : public FixtureCgnsReader {
-    ReaderReaderFixtureMixed2D() : FixtureCgnsReader("CgnsInterface/2D-Region1-ElementType2/11v_10e.cgns") {}
+struct ReaderFixtureMixed2D : public FixtureCgnsReader {
+    ReaderFixtureMixed2D() : FixtureCgnsReader("CgnsInterface/2D-Region1-ElementType2/11v_10e.cgns") {}
 };
 
-FixtureTestSuite(CgnsReader_Mixed2D, ReaderReaderFixtureMixed2D)
+FixtureTestSuite(CgnsReader_Mixed2D, ReaderFixtureMixed2D)
 
 TestCase(Connectivities) {
     std::vector<std::vector<int>> expected{
