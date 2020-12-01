@@ -13,21 +13,12 @@ SerendipityConverter::SerendipityConverter(boost::shared_ptr<GridData> gridData)
 }
 
 void SerendipityConverter::convert() {
+    this->convertElements();
     this->setCoordinates();
-    this->doStuff();
+    this->rectifyConnectivities();
 }
 
-void SerendipityConverter::setCoordinates() {
-    this->coordinates.reserve(this->gridData->coordinates.size());
-    for (unsigned c = 0; c < this->gridData->coordinates.size(); ++c)
-        this->coordinates.emplace_back(std::make_pair(c, this->gridData->coordinates[c]));
-
-    printf("\n\nbefore: %lu", this->coordinates.size());
-    for (auto c : this->coordinates)
-        printf("\n%2i: %.3f %.3f %.3f", c.first, c.second[0], c.second[1], c.second[2]);
-}
-
-void SerendipityConverter::doStuff() {
+void SerendipityConverter::convertElements() {
     for (auto& connectivity : this->serendipity->connectivities) {
         std::vector<int> remove;
         switch (connectivity.front()) {
@@ -51,37 +42,6 @@ void SerendipityConverter::doStuff() {
         }
         this->convertToSerendipity(connectivity, remove);
     }
-
-    printf("\n\nto remove: %lu\n", this->verticesToRemove.size());
-    for (auto c : this->verticesToRemove)
-        printf(" %2i", c);
-
-    for (auto v = this->verticesToRemove.crbegin(); v != this->verticesToRemove.crend(); ++v)
-        this->coordinates.erase(this->coordinates.begin() + *v);
-
-    printf("\n\nafter: %lu", this->coordinates.size());
-    for (auto c : this->coordinates)
-        printf("\n%2i: %.3f %.3f %.3f", c.first, c.second[0], c.second[1], c.second[2]);
-
-    std::unordered_map<int, int> originalToSerendipity;
-    int counter = 0;
-    for (auto coordinate : this->coordinates)
-        originalToSerendipity[coordinate.first] = counter++;
-
-    printf("\n\nconversion table: %lu\n", originalToSerendipity.size());
-    for (auto c : originalToSerendipity)
-        printf("\n%2u -> %2i", c.first, c.second);
-
-    this->serendipity->numberOfLocalVertices = this->coordinates.size();
-    this->serendipity->coordinates.reserve(this->coordinates.size());
-    for (auto coordinate : this->coordinates)
-        this->serendipity->coordinates.emplace_back(coordinate.second);
-
-    for (auto& connectivity : this->serendipity->connectivities)
-        for (auto index = connectivity.begin() + 1; index != connectivity.end() - 1; ++index)
-            *index = originalToSerendipity[*index];
-
-    printf("\n");
 }
 
 void SerendipityConverter::convertToSerendipity(std::vector<int>& connectivity, std::vector<int> remove) {
@@ -89,4 +49,29 @@ void SerendipityConverter::convertToSerendipity(std::vector<int>& connectivity, 
         this->verticesToRemove.insert(connectivity[r]);
         connectivity.erase(connectivity.begin() + r);
     }
+}
+
+void SerendipityConverter::setCoordinates() {
+    this->coordinates.reserve(this->gridData->coordinates.size());
+    for (unsigned c = 0; c < this->gridData->coordinates.size(); ++c)
+        this->coordinates.emplace_back(std::make_pair(c, this->gridData->coordinates[c]));
+
+    for (auto v = this->verticesToRemove.crbegin(); v != this->verticesToRemove.crend(); ++v)
+        this->coordinates.erase(this->coordinates.begin() + *v);
+
+    this->serendipity->numberOfLocalVertices = this->coordinates.size();
+    this->serendipity->coordinates.reserve(this->coordinates.size());
+    for (auto coordinate : this->coordinates)
+        this->serendipity->coordinates.emplace_back(coordinate.second);
+}
+
+void SerendipityConverter::rectifyConnectivities() {
+    std::unordered_map<int, int> originalToSerendipity;
+    int counter = 0;
+    for (auto coordinate : this->coordinates)
+        originalToSerendipity[coordinate.first] = counter++;
+
+    for (auto& connectivity : this->serendipity->connectivities)
+        for (auto index = connectivity.begin() + 1; index != connectivity.end() - 1; ++index)
+            *index = originalToSerendipity[*index];
 }

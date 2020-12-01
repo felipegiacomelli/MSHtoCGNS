@@ -18,10 +18,10 @@ class SerendipityConverter {
 
     protected:
         void convert();
-        void setCoordinates();
-        void doStuff();
+        void convertElements();
         void convertToSerendipity(std::vector<int>& connectivity, std::vector<int> remove);
-
+        void setCoordinates();
+        void rectifyConnectivities();
 
         boost::shared_ptr<GridData> gridData;
 
