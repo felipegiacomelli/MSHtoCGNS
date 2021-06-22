@@ -64,7 +64,7 @@ endif()
 ##############
 # BOOST
 ##############
-option(ENABLE_PYTHON "Enable Boost.Python wrappers" OFF)
+option(ENABLE_PYTHON "Enable Boost.Python wrappers" ON)
 set(BOOST_VERSION "1.74.0")
 
 if(DEFINED ENV{BOOST_DIR})
@@ -77,8 +77,11 @@ set(Components_Boost system filesystem unit_test_framework test_exec_monitor)
 set(Boost_USE_MULTITHREADED ON)
 
 if(ENABLE_PYTHON)
+    find_package(Python3 COMPONENTS Interpreter Development)
+    set(BoostPythonPackage "python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}")
+
     add_definitions("-D__PYTHON_ENABLED__")
-    set(Components_Boost ${Components_Boost} python38)
+    set(Components_Boost ${Components_Boost} BoostPythonPackage)
     find_package(Python3 COMPONENTS Development)
     if(Python3_FOUND)
         include_directories(SYSTEM ${Python3_INCLUDE_DIRS})
@@ -105,6 +108,7 @@ find_package(HDF5 NAMES hdf5 COMPONENTS C ${LIBRARY_TYPE})
 if(HDF5_FOUND)
     add_definitions("-DHDF5_VERSION=\"${HDF5_VERSION}\"")
 endif()
+
 ##############
 # CGNS
 ##############
@@ -119,6 +123,15 @@ endif()
 find_package(CGNS ${CGNS_VERSION} EXACT COMPONENTS cgns_${LIBRARY_TYPE} REQUIRED)
 if(CGNS_FOUND)
     include_directories(${CGNS_INCLUDE_DIR})
+endif()
+
+##############
+# PYBIND11
+##############
+if(ENABLE_PYTHON)
+    find_package(Python3 COMPONENTS Interpreter Development)
+    find_package(pybind11 CONFIG)
+    message("Python3_VERSION: ${Python3_VERSION}")
 endif()
 
 ##################################################################
@@ -186,6 +199,7 @@ if(ENABLE_MSH)
 endif()
 
 if(ENABLE_PYTHON)
+    add_subdirectory(PybindCgnsInterface)
     add_subdirectory(PyCgnsInterface)
 endif()
 
