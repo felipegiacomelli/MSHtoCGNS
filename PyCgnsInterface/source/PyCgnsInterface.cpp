@@ -17,6 +17,10 @@ void appendConnectivity(GridDataPtr gridData, const boost::python::list& connect
     gridData->connectivities.emplace_back(converted);
 }
 
+void appendSection(GridDataPtr gridData, const SectionData& sectionData) {
+    gridData->sections.emplace_back(sectionData);
+}
+
 BOOST_PYTHON_MODULE(PyCgnsInterface) {
 
     // py::class_<std::array<double, 3>>("Double3Array")
@@ -57,7 +61,8 @@ BOOST_PYTHON_MODULE(PyCgnsInterface) {
         .def_readwrite("numberOfLocalVertices", &GridData::numberOfLocalVertices);
 
     py::def("AppendCoordinate", &appendCoordinate, (py::arg("gridData"), py::arg("coordinate")));
-    py::def("AppendConnectivity", &appendCoordinate, (py::arg("gridData"), py::arg("connectivity")));
+    py::def("AppendConnectivity", &appendConnectivity, (py::arg("gridData"), py::arg("connectivity")));
+    py::def("AppendSection", &appendSection, (py::arg("gridData"), py::arg("sectionData")));
 
     py::class_<CgnsCreator>(
         "CgnsCreator",
