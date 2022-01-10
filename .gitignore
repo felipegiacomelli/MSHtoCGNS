@@ -44,4 +44,5 @@ Zeta/Libraries
 Zeta/Setup/cgns-*
 Zeta/Setup/boost-*
 Zeta/Setup/hdf5-*
+Zeta/Python/*.cgns
 !*.sh
