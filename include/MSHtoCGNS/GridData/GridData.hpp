@@ -30,6 +30,9 @@ struct SectionData {
 };
 
 struct GridData {
+    GridData(int dimension = 0) :
+        dimension(dimension) {}
+
     int dimension;
 
     std::vector<std::array<double, 3>> coordinates;

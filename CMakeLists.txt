@@ -100,8 +100,10 @@ set(HDF5_VERSION "1.10.5")
 
 if(DEFINED ENV{HDF5_DIR})
     set(HDF5_ROOT $ENV{HDF5_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
+    set(HDF5_DIR $ENV{HDF5_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
 else()
     set(HDF5_ROOT "/usr/lib/x86_64-linux-gnu/hdf5/openmpi")
+    set(HDF5_DIR "/usr/lib/x86_64-linux-gnu/hdf5/openmpi")
 endif()
 
 find_package(HDF5 NAMES hdf5 COMPONENTS C ${LIBRARY_TYPE})
@@ -129,9 +131,14 @@ endif()
 # PYBIND11
 ##############
 if(ENABLE_PYTHON)
+    set(pybind11_DIR "/home/felipe/github/pybind11")
     find_package(Python3 COMPONENTS Interpreter Development)
-    find_package(pybind11 CONFIG)
+    add_subdirectory(${pybind11_DIR} ${CMAKE_SOURCE_DIR}/)
+    # find_package(pybind11 CONFIG REQUIRED)
     message("Python3_VERSION: ${Python3_VERSION}")
+    if(pybind11_FOUND)
+        include_directories(${pybind11_INCLUDE_DIR})
+    endif()
 endif()
 
 ##################################################################

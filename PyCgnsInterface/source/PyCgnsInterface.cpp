@@ -22,22 +22,6 @@ void appendSection(GridDataPtr gridData, const SectionData& sectionData) {
 }
 
 BOOST_PYTHON_MODULE(PyCgnsInterface) {
-
-    // py::class_<std::array<double, 3>>("Double3Array")
-    //     .def(py::vector_indexing_suite<std::array<double, 3>>());
-
-    // py::class_<std::vector<std::array<double, 3>>>("Double3ArrayVector")
-    //     .def(py::vector_indexing_suite<std::vector<std::array<double, 3>>>());
-
-    py::class_<std::vector<int>>("IntVector")
-        .def(py::vector_indexing_suite<std::vector<int>>());
-
-    py::class_<std::vector<std::vector<int>>>("IntVector2D")
-        .def(py::vector_indexing_suite<std::vector<std::vector<int>>>());
-
-    py::class_<std::vector<double>>("DoubleVector")
-        .def(py::vector_indexing_suite<std::vector<double>>());
-
     py::class_<SectionData>(
         "SectionData",
         py::init<std::string, int, int, int>(
@@ -53,24 +37,24 @@ BOOST_PYTHON_MODULE(PyCgnsInterface) {
     py::class_<std::vector<SectionData>>("SectionDataVector")
         .def(py::vector_indexing_suite<std::vector<SectionData>>());
 
-    py::class_<GridData, GridDataPtr>("GridData")
+    py::class_<GridData, GridDataPtr>("GridData", py::init<int>((py::arg("dimension"))))
         .def_readwrite("dimension", &GridData::dimension)
         .def_readwrite("coordinates", &GridData::coordinates)
         .def_readwrite("connectivities", &GridData::connectivities)
         .def_readwrite("sections", &GridData::sections)
-        .def_readwrite("numberOfLocalVertices", &GridData::numberOfLocalVertices);
+        .def_readwrite("number_of_local_vertices", &GridData::numberOfLocalVertices);
 
-    py::def("AppendCoordinate", &appendCoordinate, (py::arg("gridData"), py::arg("coordinate")));
-    py::def("AppendConnectivity", &appendConnectivity, (py::arg("gridData"), py::arg("connectivity")));
-    py::def("AppendSection", &appendSection, (py::arg("gridData"), py::arg("sectionData")));
+    py::def("AppendCoordinate", &appendCoordinate, (py::arg("grid_data"), py::arg("coordinate")));
+    py::def("AppendConnectivity", &appendConnectivity, (py::arg("grid_data"), py::arg("connectivity")));
+    py::def("AppendSection", &appendSection, (py::arg("grid_data"), py::arg("section_data")));
 
     py::class_<CgnsCreator>(
         "CgnsCreator",
         py::init<GridDataPtr, std::string>(
-            (py::arg("gridData"), py::arg("outputPath"))
+            (py::arg("grid_data"), py::arg("output_path"))
         )
     )
-        .def("getFileName", &CgnsCreator::getFileName);
+        .def("GetFileName", &CgnsCreator::getFileName);
 
     void (CgnsWriter::*writeSolutionString)(std::string) = &CgnsWriter::writeSolution;
     void (CgnsWriter::*writeSolutionDouble)(double) = &CgnsWriter::writeSolution;
@@ -79,11 +63,11 @@ BOOST_PYTHON_MODULE(PyCgnsInterface) {
     py::class_<CgnsWriter>(
         "CgnsWriter",
         py::init<std::string, std::string>(
-            (py::arg("filePath"), py::arg("gridLocation"))
+            (py::arg("file_path"), py::arg("grid_location"))
         )
     )
-        .def("writeSolution", writeSolutionString)
-        .def("writeSolution", writeSolutionDouble)
-        .def("writeField", writeFieldList)
-        .def("finalizeTransient", &CgnsWriter::finalizeTransient);
+        .def("WriteSolution", writeSolutionString)
+        .def("WriteSolution", writeSolutionDouble)
+        .def("WriteField", writeFieldList)
+        .def("FinalizeTransient", &CgnsWriter::finalizeTransient);
 }

@@ -1,9 +1,13 @@
 #include <pybind11/pybind11.h>
 
-#include "MSHtoCGNS/CgnsInterface/CgnsReader.hpp"
+namespace py = pybind11;
 
-void registerCgnsWriter(pybind11::module& m);
+void registerCgnsCreator(py::module& m);
+void registerCgnsWriter(py::module& m);
+void registerGridData(py::module& m);
 
 PYBIND11_MODULE(PybindCgnsInterface, m) {
+    registerCgnsCreator(m);
     registerCgnsWriter(m);
+    registerGridData(m);
 }
