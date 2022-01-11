@@ -1,0 +1,6 @@
+export C_INCLUDE_PATH="$C_INCLUDE_PATH:/home/felipe/Work/miniconda/include/python3.6m"
+export CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:/home/felipe/Work/miniconda/include/python3.6m"
+export PATH=/home/felipe/Work/miniconda/bin:/home/felipe/Work/miniconda/condabin:/home/felipe/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/puppetlabs/bin
+
+export C_INCLUDE_PATH="$C_INCLUDE_PATH:/home/felipe/Work/miniconda/envs/mshtocgns-py38/include/python3.8"
+export CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:/home/felipe/Work/miniconda/envs/mshtocgns-py38/include/python3.8"

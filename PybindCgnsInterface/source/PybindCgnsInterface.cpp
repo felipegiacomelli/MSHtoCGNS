@@ -2,12 +2,10 @@
 
 namespace py = pybind11;
 
-void registerCgnsCreator(py::module& m);
-void registerCgnsWriter(py::module& m);
+void registerCgnsInterface(py::module& m);
 void registerGridData(py::module& m);
 
 PYBIND11_MODULE(PybindCgnsInterface, m) {
-    registerCgnsCreator(m);
-    registerCgnsWriter(m);
+    registerCgnsInterface(m);
     registerGridData(m);
 }

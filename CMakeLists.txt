@@ -131,10 +131,8 @@ endif()
 # PYBIND11
 ##############
 if(ENABLE_PYTHON)
-    set(pybind11_DIR "/home/felipe/github/pybind11")
     find_package(Python3 COMPONENTS Interpreter Development)
-    add_subdirectory(${pybind11_DIR} ${CMAKE_SOURCE_DIR}/)
-    # find_package(pybind11 CONFIG REQUIRED)
+    find_package(pybind11 REQUIRED)
     message("Python3_VERSION: ${Python3_VERSION}")
     if(pybind11_FOUND)
         include_directories(${pybind11_INCLUDE_DIR})

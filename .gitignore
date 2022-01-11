@@ -44,5 +44,7 @@ Zeta/Libraries
 Zeta/Setup/cgns-*
 Zeta/Setup/boost-*
 Zeta/Setup/hdf5-*
-Zeta/Python/*.cgns
+Zeta/Python/*
+!Zeta/Python/boost_main.py
+!Zeta/Python/pybind11_main.py
 !*.sh
