@@ -1,2 +1,0 @@
-"using mpi ;"
-using python : 3.6 : /usr/bin/python3 : /usr/include/python3.6 : /usr/lib ;

@@ -64,7 +64,7 @@ endif()
 ##############
 # BOOST
 ##############
-option(ENABLE_PYTHON "Enable Boost.Python wrappers" ON)
+option(ENABLE_PYTHON "Enable python bindings" ON)
 set(BOOST_VERSION "1.74.0")
 
 if(DEFINED ENV{BOOST_DIR})
@@ -75,18 +75,6 @@ endif()
 
 set(Components_Boost system filesystem unit_test_framework test_exec_monitor)
 set(Boost_USE_MULTITHREADED ON)
-
-if(ENABLE_PYTHON)
-    find_package(Python3 COMPONENTS Interpreter Development)
-    set(BoostPythonPackage "python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}")
-
-    add_definitions("-D__PYTHON_ENABLED__")
-    set(Components_Boost ${Components_Boost} BoostPythonPackage)
-    find_package(Python3 COMPONENTS Development)
-    if(Python3_FOUND)
-        include_directories(SYSTEM ${Python3_INCLUDE_DIRS})
-    endif()
-endif()
 
 find_package(Boost ${BOOST_VERSION} EXACT COMPONENTS ${Components_Boost} REQUIRED)
 if(Boost_FOUND)
@@ -132,6 +120,10 @@ endif()
 ##############
 if(ENABLE_PYTHON)
     find_package(Python3 COMPONENTS Interpreter Development)
+    if(Python3_FOUND)
+        include_directories(SYSTEM ${Python3_INCLUDE_DIRS})
+    endif()
+
     find_package(pybind11 REQUIRED)
     message("Python3_VERSION: ${Python3_VERSION}")
     if(pybind11_FOUND)
@@ -205,7 +197,6 @@ endif()
 
 if(ENABLE_PYTHON)
     add_subdirectory(PybindCgnsInterface)
-    add_subdirectory(PyCgnsInterface)
 endif()
 
 add_subdirectory(ElementTypes)

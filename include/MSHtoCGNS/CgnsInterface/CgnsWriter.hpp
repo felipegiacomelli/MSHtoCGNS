@@ -18,10 +18,6 @@ class CgnsWriter : public CgnsOpener {
         void writeField(std::string name, const std::vector<double>& values);
         void writeField(std::string name, const std::vector<int>& values);
 
-        #if __PYTHON_ENABLED__
-            void writeField(std::string name, const boost::python::list& values);
-        #endif
-
         void finalizeTransient();
 
         ~CgnsWriter();
