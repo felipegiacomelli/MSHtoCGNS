@@ -1,6 +1,10 @@
 #ifndef __CGNS_INTERFACE_CGNS_WRITER_HPP__
 #define __CGNS_INTERFACE_CGNS_WRITER_HPP__
 
+#if __PYTHON_ENABLED__
+    #include "MSHtoCGNS/BoostInterface/Python.hpp"
+#endif
+
 #include "MSHtoCGNS/CgnsInterface/CgnsOpener.hpp"
 
 class CgnsWriter : public CgnsOpener {

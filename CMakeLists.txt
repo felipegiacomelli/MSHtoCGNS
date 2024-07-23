@@ -42,13 +42,15 @@ add_definitions("-DSCRIPT_DIRECTORY=\"${CMAKE_SOURCE_DIR}/Zeta/\"")
 # ABOUT THE PROJECT
 ##################################################################
 project(MSHtoCGNS)
-set(VERSION_MAJOR "7")
+set(VERSION_MAJOR "8")
 set(VERSION_MINOR "0")
 set(VERSION_PATCH "0")
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/Libraries/mshtocgns-${VERSION}/${BUILD_TYPE}/${LIBRARY_TYPE}" CACHE PATH "Installation location" FORCE)
 endif()
+
+add_definitions("-DMSHTOCGNS_VERSION=\"${VERSION}\"")
 
 ##################################################################
 # EXTERNAL LIBRARIES
@@ -62,6 +64,7 @@ endif()
 ##############
 # BOOST
 ##############
+option(ENABLE_PYTHON "Enable python bindings" ON)
 set(BOOST_VERSION "1.74.0")
 
 if(DEFINED ENV{BOOST_DIR})
@@ -85,11 +88,16 @@ set(HDF5_VERSION "1.10.5")
 
 if(DEFINED ENV{HDF5_DIR})
     set(HDF5_ROOT $ENV{HDF5_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
+    set(HDF5_DIR $ENV{HDF5_DIR}/${BUILD_TYPE}/${LIBRARY_TYPE})
 else()
     set(HDF5_ROOT "/usr/lib/x86_64-linux-gnu/hdf5/openmpi")
+    set(HDF5_DIR "/usr/lib/x86_64-linux-gnu/hdf5/openmpi")
 endif()
 
 find_package(HDF5 NAMES hdf5 COMPONENTS C ${LIBRARY_TYPE})
+if(HDF5_FOUND)
+    add_definitions("-DHDF5_VERSION=\"${HDF5_VERSION}\"")
+endif()
 
 ##############
 # CGNS
@@ -107,6 +115,22 @@ if(CGNS_FOUND)
     include_directories(${CGNS_INCLUDE_DIR})
 endif()
 
+##############
+# PYBIND11
+##############
+if(ENABLE_PYTHON)
+    find_package(Python3 COMPONENTS Interpreter Development)
+    if(Python3_FOUND)
+        include_directories(SYSTEM ${Python3_INCLUDE_DIRS})
+    endif()
+
+    find_package(pybind11 REQUIRED)
+    message("Python3_VERSION: ${Python3_VERSION}")
+    if(pybind11_FOUND)
+        include_directories(${pybind11_INCLUDE_DIR})
+    endif()
+endif()
+
 ##################################################################
 # MACROS
 ##################################################################
@@ -118,12 +142,14 @@ set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 
 macro(add_executable _target)
     _add_executable(${_target} ${ARGN})
+    target_link_libraries(${_target} ${Python3_LIBRARIES})
     target_link_libraries(${_target} ${Boost_LIBRARIES})
     target_link_libraries(${_target} ${CGNS_LIBRARIES})
 endmacro()
 
 macro(add_library _target)
     _add_library(${_target} ${ARGN})
+    target_link_libraries(${_target} ${Python3_LIBRARIES})
     target_link_libraries(${_target} ${Boost_LIBRARIES})
     target_link_libraries(${_target} ${CGNS_LIBRARIES})
     set_target_properties(${_target}  PROPERTIES PREFIX "")
@@ -168,6 +194,12 @@ if(ENABLE_MSH)
     add_subdirectory(Manipulator)
     add_subdirectory(MSHtoCGNS)
 endif()
+
+if(ENABLE_PYTHON)
+    add_subdirectory(PybindCgnsInterface)
+endif()
+
+add_subdirectory(ElementTypes)
 
 ##################################################################
 # INSTALLATION

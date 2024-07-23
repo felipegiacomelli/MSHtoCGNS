@@ -1,5 +1,14 @@
 # Changelog
 
+## [8.0.0] - 2020-11-xx
+
+### Added
+
+- Support for higher order elements
+- Experimental Python interface
+
+[8.0.0]: https://github.com/felipegiacomelli/MSHtoCGNS/compare/v7.0.0...v8.0.0
+
 ## [7.0.0] - 2020-10-15
 
 ### Changed

@@ -1,5 +1,5 @@
-#ifndef __MANIPULATION_WELL_GENERATOR_HPP_HPP__
-#define __MANIPULATION_WELL_GENERATOR_HPP_HPP__
+#ifndef __MANIPULATION_WELL_GENERATOR_HPP__
+#define __MANIPULATION_WELL_GENERATOR_HPP__
 
 #include <set>
 #include <algorithm>

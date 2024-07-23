@@ -86,12 +86,16 @@ bool CgnsReader::skipSection(std::string, int) {
 }
 
 void CgnsReader::addSection(int elementType) {
+    std::vector<int> three{TETRA_4, TETRA_10, TETRA_20, HEXA_8, HEXA_27, HEXA_20, HEXA_64, PENTA_6, PENTA_18, PENTA_15, PYRA_5, PYRA_14, PYRA_13};
+    std::vector<int> two{TRI_3, TRI_6, TRI_10, QUAD_4, QUAD_9, QUAD_8};
+    std::vector<int> one{BAR_2, BAR_3, BAR_4};
+
     int dimension = 0;
-    if (elementType == TETRA_4 || elementType == HEXA_8 || elementType == PENTA_6 || elementType == PYRA_5)
+    if (std::find(three.cbegin(), three.cend(), elementType) != three.cend())
         dimension = 3;
-    else if (elementType == TRI_3 || elementType == QUAD_4)
+    else if (std::find(two.cbegin(), two.cend(), elementType) != two.cend())
         dimension = 2;
-    else if (elementType == BAR_2)
+    else if (std::find(one.cbegin(), one.cend(), elementType) != one.cend())
         dimension = 1;
 
     this->addSection(this->gridData->sections, dimension);

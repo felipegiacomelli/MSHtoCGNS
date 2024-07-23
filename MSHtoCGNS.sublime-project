@@ -9,6 +9,7 @@
     ],
     "settings":
     {
+        "rulers": [88],
         "sublimegdb_executables":
         {
             "CgnsInterfaceTest":

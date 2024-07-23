@@ -1,0 +1,27 @@
+# conda install conda-devenv -c conda-forge
+# conda devenv
+
+# conda env create -f environment.yml
+# conda env update --file environment.yml  --prune
+
+name: mshtocgns-py38
+
+channels:
+  - defaults
+
+dependencies:
+  - gcc_linux-64=9.3.0
+  - gxx_linux-64=9.3.0
+  - cmake=3.18.4
+  - hdf5=1.10.5
+  - python=3.8
+  - pybind11
+  - esss_fix_format
+  - pytest
+  - numpy
+  - pandas
+  - pip
+  - pip:
+    - pre-commit
+    - coverage
+    - pytest-regressions
